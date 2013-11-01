@@ -1,0 +1,67 @@
+
+set(target template)
+message(STATUS "Configuring ${target}")
+
+set(SOURCES
+
+    source/Application.cpp
+    source/Application.h
+    source/Painter.cpp
+    source/Painter.h
+    source/main.cpp
+)
+
+source_group_by_path(${CMAKE_CURRENT_SOURCE_DIR} "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$|\\\\.ui$" 
+    ${GLWHITE_SOURCE_GROUP} ${SOURCES})
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR})
+
+add_executable(${target} ${SOURCES})
+
+
+if(OPTION_USE_QT4)
+    set(QT_USE_CORE TRUE)
+    set(QT_USE_UI TRUE)
+    target_link_libraries(${target}
+        ${QT_LIBRARIES})
+else()
+    qt5_use_modules(${target} Core Gui Widgets)
+
+	if(MSVC)
+		_populate_Core_target_properties   (DEBUG "Qt5Core.dll"    "Qt5Core.lib"    )
+		_populate_Gui_target_properties	   (DEBUG "Qt5Gui.dll"     "Qt5Gui.lib"     )
+		_populate_Widgets_target_properties(DEBUG "Qt5Widgets.dll" "Qt5Widgets.lib" )
+	endif()
+
+endif()
+
+
+target_link_libraries(${target} 
+    glwhite)
+
+set_target_properties(${target}
+    PROPERTIES
+    LINKER_LANGUAGE CXX
+    COMPILE_DEFINITIONS_DEBUG   "${DEFAULT_COMPILE_DEFS_DEBUG}"
+    COMPILE_DEFINITIONS_RELEASE "${DEFAULT_COMPILE_DEFS_RELEASE}"
+    COMPILE_FLAGS               "${DEFAULT_COMPILE_FLAGS}"
+    LINK_FLAGS_DEBUG            "${DEFAULT_LINKER_FLAGS_DEBUG}"
+    LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
+    DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
+
+if(OPTION_USE_QT4)
+    add_definitions("-DGLWHITE_USE_QT4")
+endif()
+
+
+# Deployment
+
+if(WIN32)
+    install(FILES ${GLEW_INCLUDE_DIR}/../bin/glew32.dll DESTINATION ${INSTALL_EXAMPLES})
+endif()
+
+install(DIRECTORY ${GLWHITE_SOURCE_DIR}/template DESTINATION ${INSTALL_EXAMPLES}
+        PATTERN "CMakeLists*" EXCLUDE)
+install(FILES CMakeLists.template DESTINATION ${INSTALL_EXAMPLES}/template RENAME CMakeLists.txt)
+install(TARGETS ${target} RUNTIME DESTINATION ${INSTALL_EXAMPLES})

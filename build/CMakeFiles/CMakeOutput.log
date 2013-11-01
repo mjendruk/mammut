@@ -1,0 +1,249 @@
+The system is: Windows - 6.2 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:08 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdC\CompilerIdC.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "Debug\".
+  Creating directory "Debug\CompilerIdC.tlog\".
+InitializeBuildStatus:
+  Creating "Debug\CompilerIdC.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /nologo /W0 /WX- /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X64 Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdC\.\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\cl.exe
+FinalizeBuildStatus:
+  Deleting file "Debug\CompilerIdC.tlog\unsuccessfulbuild".
+  Touching "Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdC\CompilerIdC.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.42
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "C:/Projects/mammut/build/CMakeFiles/2.8.12/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:09 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdCXX\CompilerIdCXX.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "Debug\".
+  Creating directory "Debug\CompilerIdCXX.tlog\".
+InitializeBuildStatus:
+  Creating "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /nologo /W0 /WX- /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdCXX\.\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\cl.exe
+FinalizeBuildStatus:
+  Deleting file "Debug\CompilerIdCXX.tlog\unsuccessfulbuild".
+  Touching "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\2.8.12\CompilerIdCXX\CompilerIdCXX.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.58
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "C:/Projects/mammut/build/CMakeFiles/2.8.12/CompilerIdCXX/CompilerIdCXX.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: C:/Projects/mammut/build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\PROGRA~2\MSBuild\12.0\Bin\MSBuild.exe cmTryCompileExec1897401776.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=12.0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:09 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec1897401776.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTryCompileExec1897401776.dir\Debug\".
+  Creating directory "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTryCompileExec1897401776.dir\Debug\cmTryCom.A90F522E.tlog\".
+InitializeBuildStatus:
+  Creating "cmTryCompileExec1897401776.dir\Debug\cmTryCom.A90F522E.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1897401776.dir\Debug\\" /Fd"cmTryCompileExec1897401776.dir\Debug\vc120.pdb" /Gd /TC /errorReport:queue testCCompiler.c
+  Microsoft (R) C/C++ Optimizing Compiler Version 18.00.21005.1 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1897401776.dir\Debug\\" /Fd"cmTryCompileExec1897401776.dir\Debug\vc120.pdb" /Gd /TC /errorReport:queue testCCompiler.c
+  
+  testCCompiler.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1897401776.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1897401776.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1897401776.lib" /MACHINE:X64  /machine:x64 /debug cmTryCompileExec1897401776.dir\Debug\testCCompiler.obj
+  cmTryCompileExec1897401776.vcxproj -> C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1897401776.exe
+FinalizeBuildStatus:
+  Deleting file "cmTryCompileExec1897401776.dir\Debug\cmTryCom.A90F522E.tlog\unsuccessfulbuild".
+  Touching "cmTryCompileExec1897401776.dir\Debug\cmTryCom.A90F522E.tlog\cmTryCompileExec1897401776.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec1897401776.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.53
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Projects/mammut/build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\PROGRA~2\MSBuild\12.0\Bin\MSBuild.exe cmTryCompileExec4119779979.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=12.0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:10 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec4119779979.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTryCompileExec4119779979.dir\Debug\".
+  Creating directory "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTryCompileExec4119779979.dir\Debug\cmTryCom.23E4DF4F.tlog\".
+InitializeBuildStatus:
+  Creating "cmTryCompileExec4119779979.dir\Debug\cmTryCom.23E4DF4F.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4119779979.dir\Debug\\" /Fd"cmTryCompileExec4119779979.dir\Debug\vc120.pdb" /Gd /TC /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 18.00.21005.1 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4119779979.dir\Debug\\" /Fd"cmTryCompileExec4119779979.dir\Debug\vc120.pdb" /Gd /TC /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c"
+  
+  CMakeCCompilerABI.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4119779979.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4119779979.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4119779979.lib" /MACHINE:X64  /machine:x64 /debug cmTryCompileExec4119779979.dir\Debug\CMakeCCompilerABI.obj
+  cmTryCompileExec4119779979.vcxproj -> C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4119779979.exe
+FinalizeBuildStatus:
+  Deleting file "cmTryCompileExec4119779979.dir\Debug\cmTryCom.23E4DF4F.tlog\unsuccessfulbuild".
+  Touching "cmTryCompileExec4119779979.dir\Debug\cmTryCom.23E4DF4F.tlog\cmTryCompileExec4119779979.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec4119779979.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.59
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: C:/Projects/mammut/build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\PROGRA~2\MSBuild\12.0\Bin\MSBuild.exe cmTryCompileExec909967850.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=12.0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:11 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec909967850.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTryCompileExec909967850.dir\Debug\".
+  Creating directory "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTryCompileExec909967850.dir\Debug\cmTryCom.FAA07908.tlog\".
+InitializeBuildStatus:
+  Creating "cmTryCompileExec909967850.dir\Debug\cmTryCom.FAA07908.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec909967850.dir\Debug\\" /Fd"cmTryCompileExec909967850.dir\Debug\vc120.pdb" /Gd /TP /errorReport:queue testCXXCompiler.cxx
+  Microsoft (R) C/C++ Optimizing Compiler Version 18.00.21005.1 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec909967850.dir\Debug\\" /Fd"cmTryCompileExec909967850.dir\Debug\vc120.pdb" /Gd /TP /errorReport:queue testCXXCompiler.cxx
+  
+  testCXXCompiler.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec909967850.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec909967850.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec909967850.lib" /MACHINE:X64  /machine:x64 /debug cmTryCompileExec909967850.dir\Debug\testCXXCompiler.obj
+  cmTryCompileExec909967850.vcxproj -> C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec909967850.exe
+FinalizeBuildStatus:
+  Deleting file "cmTryCompileExec909967850.dir\Debug\cmTryCom.FAA07908.tlog\unsuccessfulbuild".
+  Touching "cmTryCompileExec909967850.dir\Debug\cmTryCom.FAA07908.tlog\cmTryCompileExec909967850.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec909967850.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.70
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Projects/mammut/build/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\PROGRA~2\MSBuild\12.0\Bin\MSBuild.exe cmTryCompileExec1874703209.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=12.0
+Microsoft (R) Build Engine version 12.0.21005.1
+[Microsoft .NET Framework, version 4.0.30319.34003]
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 11/1/2013 11:37:12 AM.
+Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec1874703209.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTryCompileExec1874703209.dir\Debug\".
+  Creating directory "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTryCompileExec1874703209.dir\Debug\cmTryCom.7AD6FF79.tlog\".
+InitializeBuildStatus:
+  Creating "cmTryCompileExec1874703209.dir\Debug\cmTryCom.7AD6FF79.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec1874703209.dir\Debug\\" /Fd"cmTryCompileExec1874703209.dir\Debug\vc120.pdb" /Gd /TP /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp"
+  Microsoft (R) C/C++ Optimizing Compiler Version 18.00.21005.1 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec1874703209.dir\Debug\\" /Fd"cmTryCompileExec1874703209.dir\Debug\vc120.pdb" /Gd /TP /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp"
+  
+  CMakeCXXCompilerABI.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1874703209.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1874703209.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Projects/mammut/build/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1874703209.lib" /MACHINE:X64  /machine:x64 /debug cmTryCompileExec1874703209.dir\Debug\CMakeCXXCompilerABI.obj
+  cmTryCompileExec1874703209.vcxproj -> C:\Projects\mammut\build\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1874703209.exe
+FinalizeBuildStatus:
+  Deleting file "cmTryCompileExec1874703209.dir\Debug\cmTryCom.7AD6FF79.tlog\unsuccessfulbuild".
+  Touching "cmTryCompileExec1874703209.dir\Debug\cmTryCom.7AD6FF79.tlog\cmTryCompileExec1874703209.lastbuildstate".
+Done Building Project "C:\Projects\mammut\build\CMakeFiles\CMakeTmp\cmTryCompileExec1874703209.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.59
+
+

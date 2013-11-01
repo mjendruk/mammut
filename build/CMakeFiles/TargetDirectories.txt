@@ -1,0 +1,3 @@
+C:/Projects/mammut/build/CMakeFiles/ALL_BUILD.dir
+C:/Projects/mammut/build/CMakeFiles/ZERO_CHECK.dir
+C:/Projects/mammut/build/CMakeFiles/mammut.dir

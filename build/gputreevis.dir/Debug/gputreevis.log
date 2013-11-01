@@ -1,0 +1,34 @@
+﻿Der Buildvorgang wurde am 11/1/2013 10:52:58 AM gestartet.
+     1>Projekt "C:\Projects\mammut\build\gputreevis.vcxproj" auf Knoten "2", Build Ziel(e).
+     1>PreBuildEvent:
+         setlocal
+         cd C:\Projects\mammut\build
+         if %errorlevel% neq 0 goto :cmEnd
+         C:
+         if %errorlevel% neq 0 goto :cmEnd
+         "C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" -E cmake_automoc C:/Projects/mammut/build/CMakeFiles/gputreevis_automoc.dir/ Debug
+         if %errorlevel% neq 0 goto :cmEnd
+         :cmEnd
+         endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+         :cmErrorLevel
+         exit /b %1
+         :cmDone
+         if %errorlevel% neq 0 goto :VCEnd
+         :VCEnd
+       CustomBuild:
+         Building Custom Rule C:/Projects/mammut/CMakeLists.txt
+         CMake does not need to re-run because C:\Projects\mammut\build\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /IC:/Projects/mammut/build /IC:/Libraries/glm /I"C:/Libraries/glew-1.10.0/include" /IC:/Libraries/glow/install/include /IC:/Projects/mammut/include /IC:/Projects/mammut/libs /IC:/Qt/5.1.1_12/qtbase/include /IC:/Qt/5.1.1_12/qtbase/include/QtOpenGL /IC:/Qt/5.1.1_12/qtbase/include/QtWidgets /IC:/Qt/5.1.1_12/qtbase/include/QtGui /IC:/Qt/5.1.1_12/qtbase/include/QtCore /I"C:/Qt/5.1.1_12/qtbase/mkspecs/win32-msvc2013" /Zi /nologo /W3 /WX- /MP /Od /Ob0 /GL /D WIN32 /D _WINDOWS /D _DEBUG /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /D WIN32 /D UNICODE /D _UNICODE /D _SCL_SECURE_NO_WARNINGS /D _CRT_SECURE_NO_DEPRECATE /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _UNICODE /D UNICODE /GF /Gm- /EHsc /RTC1 /MDd /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"gputreevis.dir\Debug\\" /Fd"gputreevis.dir\Debug\vc120.pdb" /Gd /TP /wd4267 /errorReport:prompt ..\source\Main.cpp ..\source\Application.cpp ..\source\Painter.cpp gputreevis_automoc.cpp
+         Application.cpp
+         Main.cpp
+         Painter.cpp
+         gputreevis_automoc.cpp
+     1>..\source\Application.cpp(4): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "glwhite/Viewer.h": No such file or directory
+     1>c:\projects\mammut\source\Application.h(6): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "glwhite/AbstractApplication.h": No such file or directory (..\source\Main.cpp)
+     1>..\source\Painter.cpp(13): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "glwhite/Format.h": No such file or directory
+     1>Die Erstellung des Projekts "C:\Projects\mammut\build\gputreevis.vcxproj" ist abgeschlossen, Build Ziel(e) -- FEHLER.
+
+Fehler beim Buildvorgang.
+
+Verstrichene Zeit 00:00:01.28
