@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 
 # PROJECT DESCRIPTION
@@ -90,7 +90,7 @@ if(WIN32)
     set(INSTALL_INIT          "")                       # Not available under Windows
     set(INSTALL_DATA          ".")                      # C:\Programme\<project>
     set(INSTALL_EXAMPLES      ".")                      # C:\Programme\<project>
-elseif(LINUX)
+elseif(LINUX OR APPLE)
     set(INSTALL_BIN           "bin")                    # /usr/[local]/bin
     set(INSTALL_SHARED        "lib")                    # /usr/[local]/lib
     set(INSTALL_LIB           "lib")                    # /usr/[local]/lib
@@ -135,10 +135,6 @@ file(WRITE ${CMAKE_BINARY_DIR}/revision ${GIT_REV})
 install(FILES ${CMAKE_BINARY_DIR}/revision DESTINATION .)
 
 # [TODO] Deal with GIT-NOTFOUND
-
-
-# GLOWMETA_VERSION LIBRARY
-
 
 # Target
 set(target mammut)
@@ -188,7 +184,7 @@ include_directories(
     ${GLEW_INCLUDE_DIR}
     
     ${GLOW_INCLUDE_DIR}
-    )
+)
 
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
@@ -200,30 +196,10 @@ set(sources
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
-    ${source_path}/AbstractContext.cpp
-    ${source_path}/AbstractContext.h
-    ${source_path}/AbstractContext.h
-    ${source_path}/AbstractPainter.cpp
-    ${source_path}/AbstractPainter.h
-    ${source_path}/DebugPainter.cpp
-    ${source_path}/DebugPainter.h
-    ${source_path}/PrintPainter.cpp
-    ${source_path}/PrintPainter.h
-    ${source_path}/Canvas.cpp
-    ${source_path}/Canvas.h
-    ${source_path}/Viewer.cpp
-    ${source_path}/Viewer.h
-    ${source_path}/MessageHandler.cpp
-    ${source_path}/MessageHandler.h
-    ${source_path}/Format.cpp
-    ${source_path}/Format.h
     ${source_path}/Application.cpp
     ${source_path}/Application.h
-    ${source_path}/Painter.cpp
-    ${source_path}/Painter.h
-
-    ${source_path}/Viewer.ui
-
+    ${source_path}/MessageHandler.cpp
+    ${source_path}/MessageHandler.h
 )
 
 # Group source files
@@ -263,20 +239,13 @@ set_target_properties(${target}
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
 # Deployment
-# install(TARGETS ${target}
-#     RUNTIME DESTINATION ${INSTALL_BIN}
-#     LIBRARY DESTINATION ${INSTALL_SHARED}
-#     ARCHIVE DESTINATION ${INSTALL_LIB}
-# )
-# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_INCLUDE})
-
-
-# # DEPLOYMENT
-
-# # Data files
-# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data
-#     DESTINATION ${INSTALL_DATA}
-# )
+install(TARGETS ${target}
+    RUNTIME DESTINATION ${INSTALL_BIN}
+    LIBRARY DESTINATION ${INSTALL_SHARED}
+    ARCHIVE DESTINATION ${INSTALL_LIB}
+)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_INCLUDE})
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA})
 
 # Packaging
 # add_subdirectory(packages)
