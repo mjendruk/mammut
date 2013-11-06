@@ -10,8 +10,7 @@
 #include <glow/Array.h>
 #include <glow/Error.h>
 
-#include <glwhite/Format.h>
-
+#include "Format.h"
 #include "Painter.h"
 
 
@@ -26,12 +25,12 @@ Painter::~Painter()
 {
 }
 
-glwhite::AbstractContext * Painter::context() const
+AbstractContext * Painter::context() const
 {
 	return nullptr;
 }
 
-const bool Painter::initialize(const glwhite::Format & format)
+const bool Painter::initialize(const Format & format)
 {
 	if (isValid())
 		return true;

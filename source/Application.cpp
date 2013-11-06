@@ -1,14 +1,11 @@
 
 #include <GL/glew.h>
 
-#include <glwhite/Viewer.h>
-#include <glwhite/Canvas.h>
+#include "Viewer.h"
+#include "Canvas.h"
 
 #include "Application.h"
 #include "Painter.h"
-
-
-using namespace glwhite;
 
 
 Application::Application(

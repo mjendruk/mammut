@@ -5,18 +5,18 @@
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 
-#include <glwhite/AbstractPainter.h>
+#include "AbstractPainter.h"
 
 
-class Painter : public glwhite::AbstractPainter
+class Painter : public AbstractPainter
 {
 public:
     Painter();
 	virtual ~Painter();
 
-	virtual glwhite::AbstractContext * context() const;
+	virtual AbstractContext * context() const;
 
-    virtual const bool initialize(const glwhite::Format & format);
+    virtual const bool initialize(const Format & format);
 
 	virtual void paint(const unsigned int targetFBO);
     virtual void resize(

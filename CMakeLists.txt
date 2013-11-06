@@ -149,7 +149,6 @@ find_package(GLM REQUIRED)
 find_package(GLEW REQUIRED)
 
 find_package(GLOW REQUIRED)
-find_package(GLWHITE REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(AUTOMOC_MOC_OPTIONS PROPERTIES FOLDER CMakeAutomocTargets)
@@ -189,7 +188,6 @@ include_directories(
     ${GLEW_INCLUDE_DIR}
     
     ${GLOW_INCLUDE_DIR}
-    ${GLWHITE_INCLUDE_DIR}
     )
 
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
@@ -200,10 +198,31 @@ configure_file(${source_path}/mammut-version.h.in mammut-version.h)
 set(sources
     ${source_path}/main.cpp
 
+    ${source_path}/AbstractApplication.cpp
+    ${source_path}/AbstractApplication.h
+    ${source_path}/AbstractContext.cpp
+    ${source_path}/AbstractContext.h
+    ${source_path}/AbstractContext.h
+    ${source_path}/AbstractPainter.cpp
+    ${source_path}/AbstractPainter.h
+    ${source_path}/DebugPainter.cpp
+    ${source_path}/DebugPainter.h
+    ${source_path}/PrintPainter.cpp
+    ${source_path}/PrintPainter.h
+    ${source_path}/Canvas.cpp
+    ${source_path}/Canvas.h
+    ${source_path}/Viewer.cpp
+    ${source_path}/Viewer.h
+    ${source_path}/MessageHandler.cpp
+    ${source_path}/MessageHandler.h
+    ${source_path}/Format.cpp
+    ${source_path}/Format.h
     ${source_path}/Application.cpp
     ${source_path}/Application.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
+
+    ${source_path}/Viewer.ui
 
 )
 
@@ -231,7 +250,6 @@ target_link_libraries(${target}
 
     ${GLOW_LIBRARY}
     ${GLOWUTILS_LIBRARY}
-    ${GLWHITE_LIBRARY}
 )
 
 set_target_properties(${target}
@@ -245,20 +263,20 @@ set_target_properties(${target}
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
 # Deployment
-install(TARGETS ${target}
-    RUNTIME DESTINATION ${INSTALL_BIN}
-    LIBRARY DESTINATION ${INSTALL_SHARED}
-    ARCHIVE DESTINATION ${INSTALL_LIB}
-)
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_INCLUDE})
+# install(TARGETS ${target}
+#     RUNTIME DESTINATION ${INSTALL_BIN}
+#     LIBRARY DESTINATION ${INSTALL_SHARED}
+#     ARCHIVE DESTINATION ${INSTALL_LIB}
+# )
+# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${INSTALL_INCLUDE})
 
 
-# DEPLOYMENT
+# # DEPLOYMENT
 
-# Data files
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data
-    DESTINATION ${INSTALL_DATA}
-)
+# # Data files
+# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data
+#     DESTINATION ${INSTALL_DATA}
+# )
 
 # Packaging
 # add_subdirectory(packages)

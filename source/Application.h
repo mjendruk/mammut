@@ -3,25 +3,22 @@
 
 #include <memory>
 
-#include <glwhite/AbstractApplication.h>
+#include "AbstractApplication.h"
 
 class Painter;
 
-namespace glwhite
-{
-    class Viewer;
-	class Canvas;
-}
+class Viewer;
+class Canvas;
 
-class Application : public glwhite::AbstractApplication
+class Application : public AbstractApplication
 {
 public:
     Application(int & argc, char ** argv);
     virtual ~Application();
 
 protected:
-    glwhite::Viewer * m_viewer;
-	glwhite::Canvas * m_canvas;
+    Viewer * m_viewer;
+	Canvas * m_canvas;
 
 	Painter * m_painter;
 };
