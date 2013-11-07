@@ -200,8 +200,6 @@ set(sources
     ${source_path}/AbstractCoordinateProvider.h
     ${source_path}/AbstractPainter.cpp
     ${source_path}/AbstractPainter.h
-    ${source_path}/AdaptiveGrid.cpp
-    ${source_path}/AdaptiveGrid.h
     ${source_path}/Application.cpp
     ${source_path}/Application.h
     ${source_path}/AxisAlignedBoundingBox.cpp
@@ -260,8 +258,8 @@ target_link_libraries(${target}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARY}
 
-    ${GLOW_LIBRARY}
-    ${GLOWUTILS_LIBRARY}
+    ${GLOW_LIBRARIES}
+    ${GLOW_UTILS_LIBRARIES}
 )
 
 set_target_properties(${target}
