@@ -19,7 +19,11 @@ class Camera;
 class Navigation;
 class Timer;
 class CyclicTime;
-class AdaptiveGrid;
+
+namespace glow 
+{
+    class AdaptiveGrid;
+}
 
 
 class Canvas : public QWindow, protected QOpenGLFunctions_3_2_Core
@@ -109,7 +113,7 @@ protected:
 
     QScopedPointer<CyclicTime> m_time; ///< this is used as "game time"
 
-    QScopedPointer<AdaptiveGrid> m_grid;
+    QScopedPointer<glow::AdaptiveGrid> m_grid;
 
     long double m_swapts;
     unsigned int m_swaps;

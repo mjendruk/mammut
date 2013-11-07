@@ -6,8 +6,11 @@
 #include <QBasicTimer>
 #include <QResizeEvent>
 
+#include <glm/gtc/type_ptr.hpp>
+
+#include <glowutils/AdaptiveGrid.h>
+
 #include "AbstractPainter.h"
-#include "AdaptiveGrid.h"
 #include "FileAssociatedShader.h"
 #include "Camera.h"
 #include "Navigation.h"
@@ -121,7 +124,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
     verifyExtensions(); // false if no painter ...
 
-    m_grid.reset(new AdaptiveGrid(*this));
+    m_grid.reset(new glow::AdaptiveGrid());
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
 
     connect(m_camera.data(), &Camera::changed, this, &Canvas::cameraChanged);
@@ -142,7 +145,12 @@ void Canvas::resizeEvent(QResizeEvent * event)
     m_context->makeCurrent(this);
 
     m_painter->resize(event->size().width(), event->size().height());
-    m_grid->update(m_camera->eye(), m_camera->viewProjection());
+    
+    glm::vec3 eye(m_camera->eye().x(), m_camera->eye().y(), m_camera->eye().z());
+    QMatrix4x4 qmatrix = m_camera->viewProjection();
+    glm::mat4x4 viewProjection = glm::make_mat4x4(qmatrix.data());
+    
+    m_grid->update(eye, viewProjection);
 
     m_context->doneCurrent();
 
@@ -161,7 +169,11 @@ void Canvas::paintGL()
     if (m_update)
     {
         m_painter->update();
-        m_grid->update(m_camera->eye(), m_camera->viewProjection());
+        glm::vec3 eye(m_camera->eye().x(), m_camera->eye().y(), m_camera->eye().z());
+        QMatrix4x4 qmatrix = m_camera->viewProjection();
+        glm::mat4x4 viewProjection = glm::make_mat4x4(qmatrix.data());
+        
+        m_grid->update(eye, viewProjection);
 
         m_update = false;
     }
@@ -169,7 +181,7 @@ void Canvas::paintGL()
         m_painter->update(programsWithInvalidatedUniforms);
 
 	m_painter->paint(m_time->getf(true));
-    m_grid->draw(*this);
+    m_grid->draw();
 
     m_context->swapBuffers(this);
     m_context->doneCurrent();
