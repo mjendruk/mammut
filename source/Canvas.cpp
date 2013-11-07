@@ -1,14 +1,15 @@
 
 #include <cassert>
 
+#include <GL/glew.h>
+#include <glowutils/AdaptiveGrid.h>
+
 #include <QDebug>
 #include <QApplication>
 #include <QBasicTimer>
 #include <QResizeEvent>
 
 #include <glm/gtc/type_ptr.hpp>
-
-#include <glowutils/AdaptiveGrid.h>
 
 #include "AbstractPainter.h"
 #include "FileAssociatedShader.h"
@@ -57,6 +58,7 @@ QSurfaceFormat Canvas::format() const
         return QSurfaceFormat();
 
     return m_context->format();
+
 }
 
 void Canvas::setContinuousRepaint(
@@ -108,7 +110,14 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         qCritical() << "Initializing OpenGL failed.";
         return;
     }
-
+    
+    glewExperimental = GL_TRUE;
+    if (!(glewInit() == GLEW_OK))
+    {
+        qCritical() << "Initializing GLEW failed.";
+        return;
+    }
+    
     // print some hardware information
 
     qDebug();
