@@ -1,13 +1,19 @@
-
 #include "FileAssociatedShader.h"
 
 #include <cassert>
+
 #include <QFileSystemWatcher>
 #include <QTextStream>
 #include <QFileInfo>
+#include <QDebug>
 
-QMap<QString, QOpenGLShader *> FileAssociatedShader::s_shaderByFilePath;
-QMultiMap<QOpenGLShader *, QOpenGLShaderProgram *> FileAssociatedShader::s_programsByShader;
+#include <glow/Program.h>
+#include <glow/Shader.h>
+#include <glow/ShaderFile.h>
+
+
+QMap<QString, glow::Shader *> FileAssociatedShader::s_shaderByFilePath;
+QMultiMap<glow::Shader *, glow::Program *> FileAssociatedShader::s_programsByShader;
 
 FileAssociatedShader::FileAssociatedShader()
 {}
@@ -18,12 +24,12 @@ FileAssociatedShader::~FileAssociatedShader()
     s_programsByShader.clear();
 }
 
-QOpenGLShader * FileAssociatedShader::getOrCreate(
-    QOpenGLShader::ShaderType type
+glow::Shader * FileAssociatedShader::getOrCreate(
+    GLenum type
 ,   const QString & fileName
-,   QOpenGLShaderProgram & program)
+,   glow::Program & program)
 {
-    QOpenGLShader * shader(nullptr);
+    glow::Shader * shader(nullptr);
 	
 	QFileInfo fi(fileName);
 	if (!fi.exists())
@@ -41,33 +47,34 @@ QOpenGLShader * FileAssociatedShader::getOrCreate(
     {
 		instance()->addResourcePath(filePath);
 
-        shader = new QOpenGLShader(type);
-        shader->compileSourceFile(filePath);
+        shader = glow::Shader::fromFile(type, filePath.toStdString());
+        shader->compile();
 
+        /*
         connect(
 			shader,
 			&QOpenGLShader::destroyed,
 			static_cast<FileAssociatedShader*>(instance()),
 			&FileAssociatedShader::shaderDestroyed);
-
+            *///TODO
         s_shaderByFilePath.insert(filePath, shader);
     }
 
     if (!s_programsByShader.contains(shader, &program))
     {
-        connect(
+        /*connect(
 			&program,
 			&QOpenGLShaderProgram::destroyed,
 			static_cast<FileAssociatedShader*>(instance()),
 			&FileAssociatedShader::programDestroyed);
-
+            *///TODO
         s_programsByShader.insert(shader, &program);
 
-        program.addShader(shader);
+        program.attach(shader);
     }
     return shader;
 }
-
+/*
 void FileAssociatedShader::shaderDestroyed(QObject * object)
 {
     QOpenGLShader * shader = static_cast<QOpenGLShader*>(object);
@@ -115,41 +122,32 @@ void FileAssociatedShader::programDestroyed(QObject * object)
 				&FileAssociatedShader::shaderDestroyed);
         }
 }
-
-QList<QOpenGLShaderProgram *> FileAssociatedShader::process()
+*/
+QList<glow::Program *> FileAssociatedShader::process()
 {
-    QList<QOpenGLShaderProgram *> programsWithInvalidatedUniforms;
+    QList<glow::Program *> programsWithInvalidatedUniforms;
 
     while (!s_queue.isEmpty())
     {
         QString filePath = s_queue.first();
         s_queue.removeFirst();
 
-        QOpenGLShader * shader(s_shaderByFilePath[filePath]);
+        glow::Shader * shader(s_shaderByFilePath[filePath]);
         assert(shader != nullptr);
 
         qDebug() << "Recompiling" << filePath;
 
-        if (shader->isCompiled())
-        {
-            const QByteArray backup(shader->sourceCode());
-
-            // if current version works, use its source code as
-            // backup if new changes lead to uncompilable shader.
-            if (!shader->compileSourceFile(filePath))
-                shader->compileSourceCode(backup);
-        }
-        else
-            shader->compileSourceFile(filePath);
+        // if current version works, use its source code as
+        // backup if new changes lead to uncompilable shader.
+        shader->setSource(new glow::ShaderFile(filePath.toStdString()));
 
         auto programs(s_programsByShader.values(shader));
         assert(!programs.isEmpty());
 
         programsWithInvalidatedUniforms << programs;
 
-        for (QOpenGLShaderProgram * program : programs)
-            if (!program->link())
-                qWarning() << program->log();         
+        for (glow::Program * program : programs)
+            program->link();   
     }
 
     return programsWithInvalidatedUniforms;

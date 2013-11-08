@@ -7,8 +7,12 @@
 #include <glowutils/AbstractCoordinateProvider.h>
 
 class QStringList;
-class QOpenGLShaderProgram;
 class QKeyEvent;
+
+namespace glow
+{
+    class Program;
+}
 
 class Camera;
 
@@ -43,7 +47,7 @@ public:
     virtual void resize(int width, int height) = 0;
 
     virtual void update() = 0;
-    virtual void update(const QList<QOpenGLShaderProgram *> & programs) = 0;
+    virtual void update(const QList<glow::Program *> & programs) = 0;
 
     // AbstractCoordinateProvider interface
 
