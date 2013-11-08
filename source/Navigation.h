@@ -7,7 +7,7 @@
 #include <QMatrix4x4>
 #include <QMap>
 
-#include <glowutils\AxisAlignedBoundingBox.h>
+#include <glowutils/AxisAlignedBoundingBox.h>
 
 class QVector2D;
 class QVector3D;

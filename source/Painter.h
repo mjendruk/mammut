@@ -3,7 +3,7 @@
 
 #include <QMatrix4x4>
 
-//#include <glow\Shader.h>
+//#include <glow/Shader.h>
 
 #include "AbstractPainter.h"
 

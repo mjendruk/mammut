@@ -5,7 +5,7 @@
 #include <QSize>
 
 #include <QOpenGLFunctions_3_2_Core>
-#include <glowutils\AbstractCoordinateProvider.h>
+#include <glowutils/AbstractCoordinateProvider.h>
 #include "PainterMode.h"
 
 class QStringList;
@@ -15,8 +15,7 @@ class QKeyEvent;
 class Camera;
 
 
-class AbstractPainter : public glow::AbstractCoordinateProvider
-    , protected QOpenGLFunctions_3_2_Core
+class AbstractPainter : public glow::AbstractCoordinateProvider, protected QOpenGLFunctions_3_2_Core
 {
 public:
     AbstractPainter();

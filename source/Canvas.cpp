@@ -3,8 +3,8 @@
 
 #include <GL/glew.h>
 #include <glowutils/AdaptiveGrid.h>
-#include <glowutils\NavigationMath.h>
-#include <glow\Timer.h>
+#include <glowutils/NavigationMath.h>
+#include <glow/Timer.h>
 
 #include <QDebug>
 #include <QApplication>

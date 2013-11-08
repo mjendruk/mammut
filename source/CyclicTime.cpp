@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include <glow\Timer.h>
-#include <glowutils\MathMacros.h>
+#include <glow/Timer.h>
+#include <glowutils/MathMacros.h>
 
 #include "CyclicTime.h"
 

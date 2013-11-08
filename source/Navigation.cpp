@@ -5,11 +5,11 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 
-#include <glm\glm.hpp>
-#include <glm\gtx\transform.hpp>
-#include <glowutils\MathMacros.h>
-#include <glowutils\AbstractCoordinateProvider.h>
-#include <glowutils\NavigationMath.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glowutils/MathMacros.h>
+#include <glowutils/AbstractCoordinateProvider.h>
+#include <glowutils/NavigationMath.h>
 
 #include "Camera.h"
 #include "Navigation.h"
