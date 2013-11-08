@@ -4,9 +4,9 @@
 #include <QStringList>
 #include <QKeyEvent>
 
-#include <glowutils\Camera.h>
 
 #include "AbstractPainter.h"
+#include "Camera.h"
 
 
 AbstractPainter::AbstractPainter()
@@ -33,7 +33,7 @@ void AbstractPainter::hide()
 {
 }
 
-void AbstractPainter::setCamera(glow::Camera * camera)
+void AbstractPainter::setCamera(Camera * camera)
 {
     if (m_camera == camera)
         return;
@@ -42,7 +42,7 @@ void AbstractPainter::setCamera(glow::Camera * camera)
     update();
 }
 
-glow::Camera * AbstractPainter::camera()
+Camera * AbstractPainter::camera()
 {
     return m_camera;
 }

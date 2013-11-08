@@ -4,8 +4,8 @@
 
 Camera::Camera(const glm::vec3 & eye, const glm::vec3 & center, 
     const glm::vec3 & up)
-:    glow::Camera(eye, center, up)
-,    m_canvas(nullptr)
+:   glow::Camera(eye, center, up),
+    m_canvas(nullptr)
 {
 }
 
@@ -22,7 +22,7 @@ void Camera::changed() const
     m_canvas->cameraChanged();
 }
 
-void Camera::setCanvas(Canvas *canvas)    
+void Camera::setCanvas(Canvas * canvas)    
 {
     m_canvas = canvas;
 }

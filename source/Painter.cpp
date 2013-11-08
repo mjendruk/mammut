@@ -2,9 +2,8 @@
 #include <cassert>
 
 #include "FileAssociatedShader.h"
-#include <glowutils\Camera.h>
-
 #include "Painter.h"
+#include "Camera.h"
 
 
 Painter::Painter()

@@ -12,10 +12,7 @@ class QStringList;
 class QOpenGLShaderProgram;
 class QKeyEvent;
 
-namespace glow
-{
-    class Camera;
-}
+class Camera;
 
 
 class AbstractPainter : public glow::AbstractCoordinateProvider
@@ -25,8 +22,8 @@ public:
     AbstractPainter();
     virtual ~AbstractPainter();
 
-    void setCamera(glow::Camera * camera);
-    glow::Camera * camera();
+    void setCamera(Camera * camera);
+    Camera * camera();
 
     /** return list of mandatory extensions (verify results in fatal if one is
         not supported).
@@ -68,7 +65,7 @@ public:
 	virtual void keyPressEvent(QKeyEvent * event);
 
 protected:
-    glow::Camera * m_camera;
+    Camera * m_camera;
 
 	PainterMode m_mode;
 };

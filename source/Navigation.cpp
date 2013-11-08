@@ -9,9 +9,9 @@
 #include <glm\gtx\transform.hpp>
 #include <glowutils\MathMacros.h>
 #include <glowutils\AbstractCoordinateProvider.h>
-#include <glowutils\Camera.h>
 #include <glowutils\NavigationMath.h>
 
+#include "Camera.h"
 #include "Navigation.h"
 
 
@@ -36,7 +36,7 @@ namespace
     static const float CONSTRAINT_ROT_MAX_V_LO = 0.98f * static_cast<float>(PI);
 }
 
-Navigation::Navigation(glow::Camera & camera)
+Navigation::Navigation(Camera & camera)
 : m_camera(camera)
 , m_coordsProvider(nullptr)
 , m_rotationHappened(false)

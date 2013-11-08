@@ -19,8 +19,9 @@ class QWheelEvent;
 
 namespace glow {
     class AbstractCoordinateProvider;
-    class Camera;
 }
+
+class Camera;
 
 
 
@@ -36,7 +37,7 @@ class Navigation: public QObject
 	};
 
 public:
-	Navigation(glow::Camera & camera);
+	Navigation(Camera & camera);
 	virtual ~Navigation();
 
     void setBoundaryHint(const glow::AxisAlignedBoundingBox & aabb);
@@ -100,7 +101,7 @@ protected:
 	,	const glm::mat4x4 & viewProjectionInverted) const;
 
 protected:
-    glow::Camera & m_camera;
+    Camera & m_camera;
     glow::AxisAlignedBoundingBox m_aabb;
 
     glow::AbstractCoordinateProvider * m_coordsProvider;
