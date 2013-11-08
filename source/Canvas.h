@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include <QWindow>
+#include <GL/glew.h>
 
+#include <QWindow>
 #include <QList>
 #include <QScopedPointer>
 

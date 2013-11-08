@@ -1,6 +1,6 @@
 
-#include "Canvas.h"
 #include "Camera.h"
+#include "Canvas.h"
 
 Camera::Camera(const glm::vec3 & eye, const glm::vec3 & center, 
     const glm::vec3 & up)

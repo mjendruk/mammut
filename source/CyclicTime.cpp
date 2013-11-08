@@ -1,11 +1,11 @@
 
+#include "CyclicTime.h"
 
 #include <cmath>
 
 #include <glow/Timer.h>
 #include <glowutils/MathMacros.h>
 
-#include "CyclicTime.h"
 
 
 const long CyclicTime::utcOffset()

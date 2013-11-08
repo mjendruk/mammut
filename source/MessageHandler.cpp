@@ -1,4 +1,6 @@
 
+#include "MessageHandler.h"
+
 #include <cassert>
 
 #include <QString>
@@ -6,8 +8,6 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QTextStream>
-
-#include "MessageHandler.h"
 
 MessageHandler * MessageHandler::m_instance = nullptr;
 

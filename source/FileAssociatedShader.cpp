@@ -1,9 +1,10 @@
 
+#include "FileAssociatedShader.h"
+
 #include <cassert>
 #include <QFileSystemWatcher>
 #include <QTextStream>
 #include <QFileInfo>
-#include "FileAssociatedShader.h"
 
 QMap<QString, QOpenGLShader *> FileAssociatedShader::s_shaderByFilePath;
 QMultiMap<QOpenGLShader *, QOpenGLShaderProgram *> FileAssociatedShader::s_programsByShader;

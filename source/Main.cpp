@@ -1,6 +1,6 @@
 
-#include "Application.h"
 #include "Canvas.h"
+#include "Application.h"
 #include "Painter.h"
 
 int main(int argc, char* argv[])

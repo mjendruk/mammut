@@ -1,4 +1,6 @@
 
+#include "Navigation.h"
+
 #include <cassert>
 
 #include <QVector2D>
@@ -12,7 +14,6 @@
 #include <glowutils/NavigationMath.h>
 
 #include "Camera.h"
-#include "Navigation.h"
 
 
 namespace

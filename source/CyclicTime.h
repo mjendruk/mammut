@@ -5,7 +5,7 @@ typedef long double t_longf;
 
 #include <time.h>
 
-namespace
+namespace glow
 {
     class Timer;
 }

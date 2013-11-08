@@ -1,10 +1,10 @@
 
+#include "Painter.h"
+
 #include <cassert>
 
 #include "FileAssociatedShader.h"
-#include "Painter.h"
 #include "Camera.h"
-
 
 Painter::Painter()
 : m_program(nullptr)

@@ -1,10 +1,11 @@
+
+#include "FileAssociatedAsset.h"
+
 #include <QFileSystemWatcher>
 #include <QMap>
 #include <QList>
 #include <QQueue>
 
-
-#include "FileAssociatedAsset.h"
 
 QQueue<QString> FileAssociatedAsset::s_queue;
 

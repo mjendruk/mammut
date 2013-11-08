@@ -1,7 +1,8 @@
 
+#include "Canvas.h"
+
 #include <cassert>
 
-#include <GL/glew.h>
 #include <glowutils/AdaptiveGrid.h>
 #include <glowutils/NavigationMath.h>
 #include <glow/Timer.h>
@@ -10,15 +11,14 @@
 #include <QApplication>
 #include <QBasicTimer>
 #include <QResizeEvent>
+#include <QOpenGLContext>
 
 #include <glm/gtc/type_ptr.hpp>
-
 
 #include "AbstractPainter.h"
 #include "FileAssociatedShader.h"
 #include "Navigation.h"
 #include "CyclicTime.h"
-#include "Canvas.h"
 #include "Camera.h"
 
 

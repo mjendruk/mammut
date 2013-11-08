@@ -1,4 +1,6 @@
 
+#include "AbstractPainter.h"
+
 #include <cassert>
 
 #include <GL/glew.h>
@@ -6,8 +8,6 @@
 #include <QStringList>
 #include <QKeyEvent>
 
-
-#include "AbstractPainter.h"
 #include "Camera.h"
 
 

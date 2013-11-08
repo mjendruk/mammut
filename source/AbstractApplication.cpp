@@ -1,11 +1,11 @@
 
+#include "AbstractApplication.h"
+
 #include <QApplication>
 #include <QFileInfo>
 #include <QStringList>
 
 #include "mammut-version.h"
-
-#include "AbstractApplication.h"
 #include "MessageHandler.h"
 
 AbstractApplication::AbstractApplication(
