@@ -27,11 +27,11 @@ CyclicTime::CyclicTime(
 	t_longf time
 ,   t_longf secondsPerCycle)
 :   m_timer(new glow::Timer())
-,   m_secondsPerCycle(secondsPerCycle)
-,   m_mode(TimePausing)
-,   m_offset(0.f)
-,   m_lastModeChangeTime(0.f)
 ,   m_utcOffset(0)
+,   m_offset(0.f)
+,   m_mode(TimePausing)
+,   m_lastModeChangeTime(0.f)
+,   m_secondsPerCycle(secondsPerCycle)
 {
 	initialize();
 	setf(time, true);
@@ -42,11 +42,11 @@ CyclicTime::CyclicTime(
 ,   const time_t & utcOffset
 ,   t_longf secondsPerCycle)
 :   m_timer(new glow::Timer())
-,   m_secondsPerCycle(secondsPerCycle)
-,   m_mode(TimePausing)
-,   m_offset(0.f)
-,   m_lastModeChangeTime(0.f)
 ,   m_utcOffset(utcOffset)
+,   m_offset(0.f)
+,   m_mode(TimePausing)
+,   m_lastModeChangeTime(0.f)
+,   m_secondsPerCycle(secondsPerCycle)
 {
     m_timer->setAutoUpdating(true);
 
@@ -84,7 +84,8 @@ inline long double CyclicTime::elapsed() const
 
 void CyclicTime::update()
 {
-    const t_longf elapsed = TimeCycling == m_mode ? this->elapsed() : m_lastModeChangeTime;
+    // const t_longf elapsed = TimeCycling == m_mode ? this->elapsed() : m_lastModeChangeTime;
+    // unused
 
     const t_longf elapsedTimef = m_secondsPerCycle > 0.f ? this->elapsed() / m_secondsPerCycle : 0.f;
 
