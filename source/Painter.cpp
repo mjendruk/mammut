@@ -85,19 +85,11 @@ void Painter::paint(float timef)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    switch (m_mode)
+    if (m_program->isLinked())
     {
-    case DEMO_MODE:
-        {
-            if (m_program->isLinked())
-            {
-                m_program->bind();
-                // Custom shizzle
-                m_program->release();
-            }
-        }
-        break;
-    // add other case statements for other exercise modes here.
-    default: break;
+        m_program->bind();
+        // Custom shizzle
+        m_program->release();
     }
+ 
 }

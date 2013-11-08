@@ -217,7 +217,6 @@ set(sources
     ${source_path}/Navigation.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
-    ${source_path}/PainterMode.h
 )
 
 # Group source files

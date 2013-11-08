@@ -370,9 +370,6 @@ void Canvas::keyPressEvent(QKeyEvent * event)
         return;
 
     m_navigation->keyPressEvent(event);
-
-	// forward event to painter for exercise mode switching
-	m_painter->keyPressEvent(event);
 }
 void Canvas::keyReleaseEvent(QKeyEvent * event)
 {

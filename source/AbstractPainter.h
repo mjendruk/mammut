@@ -6,7 +6,6 @@
 
 #include <QOpenGLFunctions_3_2_Core>
 #include <glowutils/AbstractCoordinateProvider.h>
-#include "PainterMode.h"
 
 class QStringList;
 class QOpenGLShaderProgram;
@@ -61,10 +60,7 @@ public:
     ,   const float depth
     ,   const glm::mat4x4 & viewProjectionInverted);
 
-	virtual void keyPressEvent(QKeyEvent * event);
-
 protected:
     Camera * m_camera;
 
-	PainterMode m_mode;
 };

@@ -10,7 +10,7 @@
 
 
 AbstractPainter::AbstractPainter()
-: m_camera(nullptr), m_mode(DEMO_MODE)
+:   m_camera(nullptr)
 {
 }
  
@@ -97,25 +97,4 @@ const glm::vec3 AbstractPainter::objAt(
     // unproject this point back to object space
     glm::vec4 temp = viewProjectionInverted * p;
     return glm::vec3(temp / temp.w);
-}
-
-void AbstractPainter::keyPressEvent(QKeyEvent * event)
-{
-	switch (event->key())
-	{
-	case Qt::Key_0:
-		m_mode = DEMO_MODE;
-		break;
-	case Qt::Key_1:
-		m_mode = EXERCISE_1;
-		break;
-	case Qt::Key_2:
-		m_mode = EXERCISE_2;
-		break;
-	case Qt::Key_3:
-		m_mode = EXERCISE_3;
-		break;
-	default:
-		break;
-	}
 }
