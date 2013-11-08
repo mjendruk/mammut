@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     Application * app = new Application(argc, argv);
 
     QSurfaceFormat format;
-    format.setVersion(3, 2);
+    format.setVersion(4, 1);
     format.setProfile(QSurfaceFormat::CoreProfile);
     Canvas * canvas = new Canvas(format);
     canvas->setContinuousRepaint(true, 0);

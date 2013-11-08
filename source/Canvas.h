@@ -6,8 +6,6 @@
 #include <QList>
 #include <QScopedPointer>
 
-#include <QOpenGLFunctions_3_2_Core>
-
 class QOpenGLContext;
 class QSurfaceFormat;
 class QBasicTimer;
@@ -26,7 +24,7 @@ namespace glow
 }
 
 
-class Canvas : public QWindow, protected QOpenGLFunctions_3_2_Core
+class Canvas : public QWindow
 {
     Q_OBJECT
 

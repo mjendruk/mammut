@@ -23,8 +23,6 @@ Painter::~Painter()
 
 bool Painter::initialize()
 {
-    initializeOpenGLFunctions();
-
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
     m_program = new QOpenGLShaderProgram();

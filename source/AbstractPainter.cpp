@@ -1,6 +1,8 @@
 
 #include <cassert>
 
+#include <GL/glew.h>
+
 #include <QStringList>
 #include <QKeyEvent>
 
