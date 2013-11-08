@@ -2,7 +2,7 @@
 #include <cassert>
 
 #include "FileAssociatedShader.h"
-#include "Camera.h"
+#include <glowutils\Camera.h>
 
 #include "Painter.h"
 
@@ -48,7 +48,10 @@ void Painter::resize(
     if (m_program->isLinked())
     {
         m_program->bind();
-        m_program->setUniformValue("transform", camera()->viewProjection());
+        QMatrix4x4 mat;
+        for (int i = 0; i < 16; i++)
+            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
+        m_program->setUniformValue("transform", mat);
         m_program->release();
     }
 }
@@ -58,7 +61,10 @@ void Painter::update()
     if (m_program->isLinked())
     {
         m_program->bind();
-        m_program->setUniformValue("transform", camera()->viewProjection());
+        QMatrix4x4 mat;
+        for (int i = 0; i < 16; i++)
+            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
+        m_program->setUniformValue("transform", mat);
         m_program->release();
     }
 }
@@ -68,7 +74,10 @@ void Painter::update(const QList<QOpenGLShaderProgram *> & programs)
     if (programs.contains(m_program) && m_program->isLinked())
     {
         m_program->bind();
-        m_program->setUniformValue("transform", camera()->viewProjection());
+        QMatrix4x4 mat;
+        for (int i = 0; i < 16; i++)
+            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
+        m_program->setUniformValue("transform", mat);
         m_program->release();
     }
 }

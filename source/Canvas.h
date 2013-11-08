@@ -15,14 +15,14 @@ class QTimerEvent;
 class QKeyEvent;
 
 class AbstractPainter;
-class Camera;
 class Navigation;
-class Timer;
 class CyclicTime;
+class Camera;
 
 namespace glow 
 {
     class AdaptiveGrid;
+    class Timer;
 }
 
 
@@ -58,8 +58,6 @@ public:
 
 public slots:
     void toggleSwapInterval();
-    
-protected slots:
     void cameraChanged();
 
 protected:
@@ -109,7 +107,7 @@ protected:
     SwapInterval m_swapInterval;    ///< required for toggle
 
     QScopedPointer<QBasicTimer> m_repaintTimer;
-    QScopedPointer<Timer> m_fpsTimer;
+    QScopedPointer<glow::Timer> m_fpsTimer;
 
     QScopedPointer<CyclicTime> m_time; ///< this is used as "game time"
 

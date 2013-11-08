@@ -197,43 +197,27 @@ set(sources
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
-    ${source_path}/AbstractCoordinateProvider.h
     ${source_path}/AbstractPainter.cpp
     ${source_path}/AbstractPainter.h
     ${source_path}/Application.cpp
     ${source_path}/Application.h
-    ${source_path}/AxisAlignedBoundingBox.cpp
-    ${source_path}/AxisAlignedBoundingBox.h
-    ${source_path}/CachedValue.h
-    ${source_path}/CachedValue.hpp
     ${source_path}/Camera.cpp
     ${source_path}/Camera.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
-    ${source_path}/ChronoTimer.cpp
-    ${source_path}/ChronoTimer.h
     ${source_path}/CyclicTime.cpp
     ${source_path}/CyclicTime.h
     ${source_path}/FileAssociatedAsset.cpp
     ${source_path}/FileAssociatedAsset.h
     ${source_path}/FileAssociatedShader.cpp
     ${source_path}/FileAssociatedShader.h
-    ${source_path}/MathMacros.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
     ${source_path}/Navigation.cpp
     ${source_path}/Navigation.h
-    ${source_path}/NavigationMath.cpp
-    ${source_path}/NavigationMath.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
     ${source_path}/PainterMode.h
-    ${source_path}/Plane3.cpp
-    ${source_path}/Plane3.h
-    ${source_path}/Timer.cpp
-    ${source_path}/Timer.h
-
-
 )
 
 # Group source files

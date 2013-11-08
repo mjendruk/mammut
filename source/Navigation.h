@@ -7,7 +7,7 @@
 #include <QMatrix4x4>
 #include <QMap>
 
-#include "AxisAlignedBoundingBox.h"
+#include <glowutils\AxisAlignedBoundingBox.h>
 
 class QVector2D;
 class QVector3D;
@@ -17,8 +17,11 @@ class QKeyEvent;
 class QMouseEvent;
 class QWheelEvent;
 
-class AbstractCoordinateProvider;
-class Camera;
+namespace glow {
+    class AbstractCoordinateProvider;
+    class Camera;
+}
+
 
 
 class Navigation: public QObject
@@ -33,11 +36,11 @@ class Navigation: public QObject
 	};
 
 public:
-	Navigation(Camera & camera);
+	Navigation(glow::Camera & camera);
 	virtual ~Navigation();
 
-    void setBoundaryHint(const AxisAlignedBoundingBox & aabb);
-    void setCoordinateProvider(AbstractCoordinateProvider * provider);
+    void setBoundaryHint(const glow::AxisAlignedBoundingBox & aabb);
+    void setCoordinateProvider(glow::AbstractCoordinateProvider * provider);
 
 	virtual void reset(bool update = true);
 
@@ -54,63 +57,63 @@ public:
 	virtual void wheelEvent           (QWheelEvent * event);
 
 protected:
-	void panningBegin(const QPoint & mouse);
-	void panningProcess(const QPoint & mouse);
+	void panningBegin(const glm::ivec2 & mouse);
+	void panningProcess(const glm::ivec2 & mouse);
 	void panningEnd();
 
-	void rotatingBegin(const QPoint & mouse);
-	void rotatingProcess(const QPoint & mouse);
+	void rotatingBegin(const glm::ivec2 & mouse);
+	void rotatingProcess(const glm::ivec2 & mouse);
 	void rotatingEnd();
 
-    void pan(QVector3D t);
+    void pan(glm::vec3 t);
     void rotate(float hAngle, float vAngle);
 
 	void scaleAtCenter(float scale);
-	void scaleAtMouse(const QPoint & mouse,	float scale);
-	void resetScaleAtMouse(const QPoint & mouse);
+	void scaleAtMouse(const glm::ivec2 & mouse,	float scale);
+	void resetScaleAtMouse(const glm::ivec2 & mouse);
 
 //	void enforceWholeMapVisible(const float offset = 0.08);
 
 	// constraints
 
-	void enforceTranslationConstraints(QVector3D & p) const;
+	void enforceTranslationConstraints(glm::vec3 & p) const;
 	void enforceRotationConstraints(
 		float & hAngle
 	,	float & vAngle) const;
 	void enforceScaleConstraints(
 		float & scale
-	,	QVector3D & i) const;
+	,	glm::vec3 & i) const;
 
 	// math
 
-	const QVector3D mouseRayPlaneIntersection(
+	const glm::vec3 mouseRayPlaneIntersection(
         bool & intersects
-    ,   const QPoint & mouse) const;
-    const QVector3D mouseRayPlaneIntersection(
+    ,   const glm::ivec2 & mouse) const;
+    const glm::vec3 mouseRayPlaneIntersection(
         bool & intersects
-    ,   const QPoint & mouse
-    ,   const QVector3D & p0) const;
-    const QVector3D mouseRayPlaneIntersection(
+    ,   const glm::ivec2 & mouse
+    ,   const glm::vec3 & p0) const;
+    const glm::vec3 mouseRayPlaneIntersection(
         bool & intersects
-    ,   const QPoint & mouse
-	,	const QVector3D & p0
-	,	const QMatrix4x4 & viewProjectionInverted) const;
+    ,   const glm::ivec2 & mouse
+	,	const glm::vec3 & p0
+	,	const glm::mat4x4 & viewProjectionInverted) const;
 
 protected:
-    Camera & m_camera;
-    AxisAlignedBoundingBox m_aabb;
+    glow::Camera & m_camera;
+    glow::AxisAlignedBoundingBox m_aabb;
 
-    AbstractCoordinateProvider * m_coordsProvider;
+    glow::AbstractCoordinateProvider * m_coordsProvider;
 
     bool m_rotationHappened;
 	InteractionMode m_mode;
 
-    QVector3D m_eye;
-    QVector3D m_center;
-    QMatrix4x4 m_viewProjectionInverted;
+    glm::vec3 m_eye;
+    glm::vec3 m_center;
+    glm::mat4x4 m_viewProjectionInverted;
 
-    QVector3D  m_i0;
-    QVector3D  m_i1;
+    glm::vec3  m_i0;
+    glm::vec3  m_i1;
     bool  m_i0Valid; // stores if initial interaction pick yielded valid depth
-    QPointF    m_m0;
+    glm::vec2  m_m0;
 };

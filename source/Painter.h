@@ -3,10 +3,13 @@
 
 #include <QMatrix4x4>
 
+//#include <glow\Shader.h>
+
 #include "AbstractPainter.h"
 
 class QOpenGLShader;
 class QOpenGLShaderProgram;
+
 
 
 class Painter : public AbstractPainter

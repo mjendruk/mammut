@@ -5,25 +5,28 @@
 #include <QSize>
 
 #include <QOpenGLFunctions_3_2_Core>
-#include "AbstractCoordinateProvider.h"
+#include <glowutils\AbstractCoordinateProvider.h>
 #include "PainterMode.h"
 
 class QStringList;
 class QOpenGLShaderProgram;
 class QKeyEvent;
 
-class Camera;
+namespace glow
+{
+    class Camera;
+}
 
 
-class AbstractPainter : public AbstractCoordinateProvider
+class AbstractPainter : public glow::AbstractCoordinateProvider
     , protected QOpenGLFunctions_3_2_Core
 {
 public:
     AbstractPainter();
     virtual ~AbstractPainter();
 
-    void setCamera(Camera * camera);
-    Camera * camera();
+    void setCamera(glow::Camera * camera);
+    glow::Camera * camera();
 
     /** return list of mandatory extensions (verify results in fatal if one is
         not supported).
@@ -50,22 +53,22 @@ public:
 
     // AbstractCoordinateProvider interface
 
-    virtual const float depthAt(const QPointF & windowCoordinates);
+    virtual const float depthAt(const glm::ivec2 & windowCoordinates);
 
-    virtual const QVector3D objAt(
-        const QPointF & windowCoordinates);
-    const QVector3D objAt(
-        const QPointF & windowCoordinates
+    virtual const glm::vec3 objAt(
+        const glm::ivec2 & windowCoordinates);
+    const glm::vec3 objAt(
+        const glm::ivec2 & windowCoordinates
     ,   const float depth);
-    const QVector3D objAt(
-        const QPointF & windowCoordinates
+    const glm::vec3 objAt(
+        const glm::ivec2 & windowCoordinates
     ,   const float depth
-    ,   const QMatrix4x4 & viewProjectionInverted);
+    ,   const glm::mat4x4 & viewProjectionInverted);
 
 	virtual void keyPressEvent(QKeyEvent * event);
 
 protected:
-    Camera * m_camera;
+    glow::Camera * m_camera;
 
 	PainterMode m_mode;
 };

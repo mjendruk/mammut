@@ -5,7 +5,10 @@ typedef long double t_longf;
 
 #include <time.h>
 
-class Timer;
+namespace
+{
+    class Timer;
+}
 
 /** CyclicTime manages an osg::Timer and features an interface for floating time
     in the closed interval [0;1] representing a full day and standard c 
@@ -90,7 +93,7 @@ protected:
 
     t_longf elapsed() const;
 protected:
-	Timer * m_timer;
+	glow::Timer * m_timer;
 
 	time_t m_utcOffset;
 

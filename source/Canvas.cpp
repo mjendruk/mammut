@@ -3,6 +3,8 @@
 
 #include <GL/glew.h>
 #include <glowutils/AdaptiveGrid.h>
+#include <glowutils\NavigationMath.h>
+#include <glow\Timer.h>
 
 #include <QDebug>
 #include <QApplication>
@@ -11,14 +13,14 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+
 #include "AbstractPainter.h"
 #include "FileAssociatedShader.h"
-#include "Camera.h"
 #include "Navigation.h"
-#include "NavigationMath.h"
-#include "Timer.h"
 #include "CyclicTime.h"
 #include "Canvas.h"
+#include "Camera.h"
+
 
 
 Canvas::Canvas(
@@ -136,7 +138,8 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     m_grid.reset(new glow::AdaptiveGrid());
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
 
-    connect(m_camera.data(), &Camera::changed, this, &Canvas::cameraChanged);
+    m_camera->setCanvas(this);
+    //connect(m_camera.data(), &glow::Camera::changed, this, &Canvas::cameraChanged); TODO
 
     m_context->doneCurrent();
 
@@ -149,17 +152,15 @@ void Canvas::resizeEvent(QResizeEvent * event)
     if (!m_painter)
         return;
 
-    m_camera->setViewport(event->size());
+    m_camera->setViewport(glm::ivec2(event->size().width(), event->size().height()));
 
     m_context->makeCurrent(this);
 
     m_painter->resize(event->size().width(), event->size().height());
     
-    glm::vec3 eye(m_camera->eye().x(), m_camera->eye().y(), m_camera->eye().z());
-    QMatrix4x4 qmatrix = m_camera->viewProjection();
-    glm::mat4x4 viewProjection = glm::make_mat4x4(qmatrix.data());
+    glm::vec3 eye(m_camera->eye().x, m_camera->eye().y, m_camera->eye().z);
     
-    m_grid->update(eye, viewProjection);
+    m_grid->update(eye, m_camera->viewProjection());
 
     m_context->doneCurrent();
 
@@ -178,11 +179,9 @@ void Canvas::paintGL()
     if (m_update)
     {
         m_painter->update();
-        glm::vec3 eye(m_camera->eye().x(), m_camera->eye().y(), m_camera->eye().z());
-        QMatrix4x4 qmatrix = m_camera->viewProjection();
-        glm::mat4x4 viewProjection = glm::make_mat4x4(qmatrix.data());
+        glm::vec3 eye(m_camera->eye().x, m_camera->eye().y, m_camera->eye().z);
         
-        m_grid->update(eye, viewProjection);
+        m_grid->update(eye, m_camera->viewProjection());
 
         m_update = false;
     }
@@ -199,7 +198,7 @@ void Canvas::paintGL()
 
     if (!m_fpsTimer)
     {
-        m_fpsTimer.reset(new Timer(true, false));
+        m_fpsTimer.reset(new glow::Timer(true, false));
         m_swapts = 0.0;
     }
     else
@@ -394,8 +393,9 @@ void Canvas::mouseMoveEvent(QMouseEvent * event)
     emit mouseUpdate(event->pos());
     if (m_painter)
     {
-        if (NavigationMath::validDepth(m_painter->depthAt(event->pos())))
-            emit objUpdate(m_painter->objAt(event->pos()));
+        glm::ivec2 pos = glm::ivec2(event->pos().x(), event->pos().y());
+        if (glow::NavigationMath::validDepth(m_painter->depthAt(pos)))
+            ;//emit objUpdate(m_painter->objAt(event->pos())); TODO
         else
             emit objUpdate(QVector3D());
     }

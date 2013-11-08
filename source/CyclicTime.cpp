@@ -2,8 +2,9 @@
 
 #include <cmath>
 
-#include "Timer.h"
-#include "MathMacros.h"
+#include <glow\Timer.h>
+#include <glowutils\MathMacros.h>
+
 #include "CyclicTime.h"
 
 
@@ -25,7 +26,7 @@ const long CyclicTime::utcOffset()
 CyclicTime::CyclicTime(
 	t_longf time
 ,   t_longf secondsPerCycle)
-:   m_timer(new Timer())
+:   m_timer(new glow::Timer())
 ,   m_secondsPerCycle(secondsPerCycle)
 ,   m_mode(TimePausing)
 ,   m_offset(0.f)
@@ -40,7 +41,7 @@ CyclicTime::CyclicTime(
 	const time_t & time
 ,   const time_t & utcOffset
 ,   t_longf secondsPerCycle)
-:   m_timer(new Timer())
+:   m_timer(new glow::Timer())
 ,   m_secondsPerCycle(secondsPerCycle)
 ,   m_mode(TimePausing)
 ,   m_offset(0.f)
@@ -247,7 +248,7 @@ void CyclicTime::reset(const bool forceUpdate)
 	m_time[0] = m_time[2];
 
 	delete m_timer;
-	m_timer = new Timer();
+	m_timer = new glow::Timer();
 
 	if (forceUpdate)
 		update();
