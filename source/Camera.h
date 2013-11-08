@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glowutils\Camera.h>
+#include <glowutils/Camera.h>
 
 
 class Canvas;
