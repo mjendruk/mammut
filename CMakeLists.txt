@@ -147,6 +147,7 @@ find_package(GLEW REQUIRED)
 find_package(GLOW REQUIRED)
 
 find_package(BULLET REQUIRED)
+find_package(FMOD REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 set(AUTOMOC_MOC_OPTIONS PROPERTIES FOLDER CMakeAutomocTargets)
@@ -189,6 +190,7 @@ include_directories(
     ${GLOW_INCLUDE_DIR}
 
     ${BULLET_INCLUDE_DIRS}
+    ${FMOD_INCLUDE_DIR}
 )
 
 message(STATUS ${BULLET_INCLUDE_DIRS})
@@ -252,6 +254,7 @@ target_link_libraries(${target}
     ${GLOW_UTILS_LIBRARIES}
 
     ${BULLET_LIBRARIES}
+    ${FMOD_LIBRARY}
 )
 
 set_target_properties(${target}
