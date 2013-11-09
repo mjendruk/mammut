@@ -134,7 +134,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
 
     m_camera->setCanvas(this);
-    //connect(m_camera.data(), &glow::Camera::changed, this, &Canvas::cameraChanged); TODO
 
     m_context->doneCurrent();
 
