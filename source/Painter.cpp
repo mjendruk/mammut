@@ -1,7 +1,9 @@
-
 #include "Painter.h"
 
 #include <cassert>
+
+#include <glow/Program.h>
+#include <glow/Shader.h>
 
 #include "FileAssociatedShader.h"
 #include "Camera.h"
@@ -25,12 +27,12 @@ bool Painter::initialize()
 {
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
-    m_program = new QOpenGLShaderProgram();
+    m_program = new glow::Program();
 
     m_fragShader = FileAssociatedShader::getOrCreate(
-        QOpenGLShader::Fragment, "data/default.frag", *m_program);
+        GL_FRAGMENT_SHADER, "data/default.frag", *m_program);
     m_vertShader = FileAssociatedShader::getOrCreate(
-        QOpenGLShader::Vertex, "data/default.vert", *m_program);
+        GL_VERTEX_SHADER, "data/default.vert", *m_program);
     m_program->link();
 
     return true;
@@ -44,11 +46,8 @@ void Painter::resize(
 
     if (m_program->isLinked())
     {
-        m_program->bind();
-        QMatrix4x4 mat;
-        for (int i = 0; i < 16; i++)
-            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
-        m_program->setUniformValue("transform", mat);
+        m_program->use();
+        m_program->setUniform("transform", camera()->viewProjection());
         m_program->release();
     }
 }
@@ -57,24 +56,18 @@ void Painter::update()
 {
     if (m_program->isLinked())
     {
-        m_program->bind();
-        QMatrix4x4 mat;
-        for (int i = 0; i < 16; i++)
-            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
-        m_program->setUniformValue("transform", mat);
+        m_program->use();
+        m_program->setUniform("transform", camera()->viewProjection());
         m_program->release();
     }
 }
 
-void Painter::update(const QList<QOpenGLShaderProgram *> & programs)
+void Painter::update(const QList<glow::Program *> & programs)
 {
     if (programs.contains(m_program) && m_program->isLinked())
     {
-        m_program->bind();
-        QMatrix4x4 mat;
-        for (int i = 0; i < 16; i++)
-            mat.data()[i] = camera()->viewProjection()[i%4][i/4]; //TODO
-        m_program->setUniformValue("transform", mat);
+        m_program->use();
+        m_program->setUniform("transform", camera()->viewProjection());
         m_program->release();
     }
 }
@@ -85,7 +78,7 @@ void Painter::paint(float timef)
 
     if (m_program->isLinked())
     {
-        m_program->bind();
+        m_program->use();
         // Custom shizzle
         m_program->release();
     }

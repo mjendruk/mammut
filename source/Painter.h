@@ -8,8 +8,12 @@
 #include "AbstractPainter.h"
 
 class QOpenGLShader;
-class QOpenGLShaderProgram;
 
+namespace glow
+{
+    class Program;
+    class Shader;
+}
 
 
 class Painter : public AbstractPainter
@@ -26,11 +30,11 @@ public:
     ,   int height);
 
     virtual void update();
-    virtual void update(const QList<QOpenGLShaderProgram *> & programs);
+    virtual void update(const QList<glow::Program *> & programs);
 
 protected:
-    QOpenGLShaderProgram * m_program;
+    glow::Program * m_program;
 
-    QOpenGLShader * m_fragShader;
-    QOpenGLShader * m_vertShader;
+    glow::Shader * m_fragShader;
+    glow::Shader * m_vertShader;
 };
