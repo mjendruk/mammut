@@ -146,6 +146,8 @@ find_package(GLEW REQUIRED)
 
 find_package(GLOW REQUIRED)
 
+find_package(BULLET REQUIRED)
+
 set(CMAKE_AUTOMOC ON)
 set(AUTOMOC_MOC_OPTIONS PROPERTIES FOLDER CMakeAutomocTargets)
 
@@ -185,7 +187,12 @@ include_directories(
     ${GLEW_INCLUDE_DIR}
     
     ${GLOW_INCLUDE_DIR}
+
+    ${BULLET_INCLUDE_DIRS}
 )
+
+message(STATUS ${BULLET_INCLUDE_DIRS})
+message(STATUS ${BULLET_LIBRARIES})
 
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
@@ -243,6 +250,8 @@ target_link_libraries(${target}
 
     ${GLOW_LIBRARIES}
     ${GLOW_UTILS_LIBRARIES}
+
+    ${BULLET_LIBRARIES}
 )
 
 set_target_properties(${target}
