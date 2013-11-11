@@ -9,7 +9,6 @@
 
 #include <QDebug>
 #include <QApplication>
-#include <QBasicTimer>
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
@@ -32,13 +31,11 @@ Canvas::Canvas(
 , m_camera(new Camera())
 , m_navigation(new Navigation(*m_camera))
 , m_swapInterval(VerticalSyncronization)
-, m_repaintTimer(new QBasicTimer())
 , m_fpsTimer(nullptr)
 , m_time(new CyclicTime(0.0L, 60.0)) // this is one day in 60 seconds (1d/1h)
 , m_swapts(0.0)
 , m_swaps(0)
 , m_update(false)
-, m_continuousRepaint(true)
 {
     setSurfaceType(OpenGLSurface); 
 
@@ -61,24 +58,6 @@ QSurfaceFormat Canvas::format() const
 
     return m_context->format();
 
-}
-
-void Canvas::setContinuousRepaint(
-    bool enable
-,   int msec)
-{
-    if (m_continuousRepaint)
-        m_repaintTimer->stop();
-
-	m_continuousRepaint = enable;
-
-    if (m_continuousRepaint)
-        m_repaintTimer->start(msec, this);
-}
-
-bool Canvas::continuousRepaint() const
-{
-	return m_continuousRepaint;
 }
 
 const QString Canvas::querys(const GLenum penum) 
@@ -215,16 +194,6 @@ void Canvas::paintGL()
 void Canvas::cameraChanged()
 {
     m_update = true;
-}
-
-void Canvas::timerEvent(QTimerEvent * event)
-{
-    assert(m_repaintTimer);
-
-    if(event->timerId() != m_repaintTimer->timerId())
-        return;
-
-    paintGL();
 }
 
 void Canvas::assignPainter(AbstractPainter * painter)

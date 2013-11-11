@@ -9,8 +9,6 @@
 
 class QOpenGLContext;
 class QSurfaceFormat;
-class QBasicTimer;
-class QTimerEvent;
 class QKeyEvent;
 
 class AbstractPainter;
@@ -46,14 +44,13 @@ public:
     // from QWindow
     virtual QSurfaceFormat format() const;
 
-    void setContinuousRepaint(bool enable, int msec = 1000 / 60);
-	bool continuousRepaint() const;
-
     void assignPainter(AbstractPainter * painter);
     AbstractPainter * painter();
 
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
+
+    virtual void paintGL();
 
 public slots:
     void toggleSwapInterval();
@@ -64,7 +61,6 @@ protected:
     const GLint queryi(const GLenum penum);
 
     virtual void initializeGL(const QSurfaceFormat & format);
-	virtual void paintGL();
 
 	//virtual void showEvent(QShowEvent * event);
 	//virtual void hideEvent(QHideEvent * event);
@@ -88,8 +84,6 @@ protected:
     */
     bool verifyExtensions() const;
 
-	void timerEvent(QTimerEvent * event);
-
 signals:
     void fpsUpdate(float fps);
     void mouseUpdate(const QPoint & mouse);
@@ -105,9 +99,7 @@ protected:
 
     SwapInterval m_swapInterval;    ///< required for toggle
 
-    QScopedPointer<QBasicTimer> m_repaintTimer;
     QScopedPointer<glow::Timer> m_fpsTimer;
-
     QScopedPointer<CyclicTime> m_time; ///< this is used as "game time"
 
     QScopedPointer<glow::AdaptiveGrid> m_grid;
@@ -117,5 +109,4 @@ protected:
 
     bool m_update; // checked in paintGL, if true, update of program gets triggered
 
-    bool m_continuousRepaint;
 };
