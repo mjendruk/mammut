@@ -4,14 +4,16 @@
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
+#include <glowutils/Icosahedron.h>
 
 #include "FileAssociatedShader.h"
 #include "Camera.h"
+#include "Quad.h"
 
 Painter::Painter()
-: m_program(nullptr)
-, m_fragShader(nullptr)
-, m_vertShader(nullptr)
+:   m_program(nullptr)
+,   m_fragShader(nullptr)
+,   m_vertShader(nullptr)
 {
 }
 
@@ -21,6 +23,8 @@ Painter::~Painter()
 
     delete m_fragShader;
     delete m_vertShader;
+    
+    delete m_quad;
 }
 
 bool Painter::initialize()
@@ -34,6 +38,8 @@ bool Painter::initialize()
     m_vertShader = FileAssociatedShader::getOrCreate(
         GL_VERTEX_SHADER, "data/default.vert", *m_program);
     m_program->link();
+    
+    m_quad = new Quad();
 
     return true;
 }
@@ -79,7 +85,7 @@ void Painter::paint(float timef)
     if (m_program->isLinked())
     {
         m_program->use();
-        // Custom shizzle
+        m_quad->draw();
         m_program->release();
     }
  

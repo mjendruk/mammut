@@ -226,6 +226,8 @@ set(sources
     ${source_path}/Navigation.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
+    ${source_path}/Quad.cpp
+    ${source_path}/Quad.h
 )
 
 # Group source files

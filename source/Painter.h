@@ -13,7 +13,10 @@ namespace glow
 {
     class Program;
     class Shader;
+    class Icosahedron;
 }
+
+class Quad;
 
 
 class Painter : public AbstractPainter
@@ -37,4 +40,6 @@ protected:
 
     glow::Shader * m_fragShader;
     glow::Shader * m_vertShader;
+    
+    Quad * m_quad;
 };
