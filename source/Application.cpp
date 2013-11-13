@@ -17,6 +17,7 @@ Application::Application(
 {
     QSurfaceFormat format;
     format.setVersion(4, 1);
+    format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
     m_canvas = new Canvas(format);
