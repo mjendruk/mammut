@@ -88,6 +88,16 @@ glow::Array<glm::lowp_uvec3> Quad::indices()
     return glow::Array<glm::lowp_uvec3>
     {
         glm::lowp_uvec3(0, 1, 2),
-        glm::lowp_uvec3(0, 3, 2)
+        glm::lowp_uvec3(0, 3, 2),
+        glm::lowp_uvec3(0, 1, 5),
+        glm::lowp_uvec3(0, 4, 5),
+        glm::lowp_uvec3(0, 4, 7),
+        glm::lowp_uvec3(0, 3, 7),
+        glm::lowp_uvec3(6, 2, 1),
+        glm::lowp_uvec3(6, 5, 1),
+        glm::lowp_uvec3(6, 5, 4),
+        glm::lowp_uvec3(6, 7, 4),
+        glm::lowp_uvec3(6, 2, 3),
+        glm::lowp_uvec3(6, 7, 3)
     };
 }
