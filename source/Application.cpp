@@ -1,49 +1,20 @@
-
 #include "Application.h"
 
-#include <iostream>
 #include <QTimer>
 
-#include "Painter.h"
-#include "Canvas.h"
+#include "Game.h"
 
 Application::Application(
     int & argc
 ,   char ** argv)
 :   AbstractApplication(argc, argv)
-,   m_canvas(nullptr)
-,   m_painter(new Painter())
-,   m_loop(false)
+,   m_game(new Game(this))
 {
-    QSurfaceFormat format;
-    format.setVersion(4, 1);
-    format.setDepthBufferSize(24);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-
-    m_canvas = new Canvas(format);
-    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-    
-    m_canvas->setWidth(1024);
-    m_canvas->setHeight(768);
-    
-    m_canvas->assignPainter(m_painter);
-    m_canvas->show();
-
-    QTimer::singleShot(0, this, SLOT(run()));
+    QTimer::singleShot(0, m_game, SLOT(run()));
 }
 
 Application::~Application()
 {
-    delete m_canvas;
-    delete m_painter;
+    delete m_game;
 }
 
-void Application::run()
-{
-    m_loop = true;
-
-    while(m_loop) {
-        processEvents();
-        m_canvas->paintGL();
-    }
-}

@@ -211,6 +211,12 @@ set(sources
     ${source_path}/Canvas.h
     ${source_path}/CyclicTime.cpp
     ${source_path}/CyclicTime.h
+    ${source_path}/Game.cpp
+    ${source_path}/Game.h
+    ${source_path}/GameLogic.cpp
+    ${source_path}/GameLogic.h
+    ${source_path}/Renderer.cpp
+    ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp
     ${source_path}/FileAssociatedAsset.h
     ${source_path}/FileAssociatedShader.cpp
