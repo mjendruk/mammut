@@ -21,8 +21,6 @@ int main(int argc, char* argv[])
     int result = -1;
     
     Application * app = new Application(argc, argv);
-
-    playStartUpSound();
     
     result = app->exec();
     
