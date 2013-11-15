@@ -10,6 +10,7 @@
 #include <glow/Program.h>
 #include <glow/Shader.h>
 #include <glow/ShaderFile.h>
+#include <glowutils/File.h>
 
 
 QMap<QString, glow::Shader *> FileAssociatedShader::s_shaderByFilePath;
@@ -47,7 +48,7 @@ glow::Shader * FileAssociatedShader::getOrCreate(
     {
 		instance()->addResourcePath(filePath);
 
-        shader = glow::Shader::fromFile(type, filePath.toStdString());
+		shader = glow::createShaderFromFile(type, filePath.toStdString());
         shader->compile();
 
         /*
@@ -139,7 +140,7 @@ QList<glow::Program *> FileAssociatedShader::process()
 
         // if current version works, use its source code as
         // backup if new changes lead to uncompilable shader.
-        shader->setSource(new glow::ShaderFile(filePath.toStdString()));
+        shader->setSource(new glow::File(filePath.toStdString()));
 
         auto programs(s_programsByShader.values(shader));
         assert(!programs.isEmpty());

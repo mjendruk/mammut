@@ -128,7 +128,7 @@ void Navigation::panningBegin(const glm::ivec2 & mouse)
     
     bool intersects;
     m_i0 = mouseRayPlaneIntersection(intersects, mouse);
-    m_i0Valid = intersects && glow::NavigationMath::validDepth(m_coordsProvider->depthAt(mouse));
+	m_i0Valid = intersects && glow::AbstractCoordinateProvider::validDepth(m_coordsProvider->depthAt(mouse));
 
     m_eye = m_camera.eye();
     m_center = m_camera.center();
@@ -184,7 +184,7 @@ void Navigation::rotatingBegin(const glm::ivec2 & mouse)
 
     bool intersects;
     m_i0 = mouseRayPlaneIntersection(intersects, mouse);
-    m_i0Valid = intersects && glow::NavigationMath::validDepth(m_coordsProvider->depthAt(mouse));
+	m_i0Valid = intersects && glow::AbstractCoordinateProvider::validDepth(m_coordsProvider->depthAt(mouse));
 
     m_m0 = mouse;
 
@@ -253,7 +253,7 @@ void Navigation::scaleAtMouse(
 
     glm::vec3 i = mouseRayPlaneIntersection(intersects, mouse);
 
-    if(!intersects && !glow::NavigationMath::validDepth(m_coordsProvider->depthAt(mouse)))
+	if (!intersects && !glow::AbstractCoordinateProvider::validDepth(m_coordsProvider->depthAt(mouse)))
         return;
 
     // scale the distance between the pointed position in the scene and the 
@@ -285,7 +285,7 @@ void Navigation::resetScaleAtMouse(const glm::ivec2 & mouse)
     // default distance
     bool intersects;
     glm::vec3 i = mouseRayPlaneIntersection(intersects, mouse);
-    if (!intersects && !glow::NavigationMath::validDepth(m_coordsProvider->depthAt(mouse)))
+	if (!intersects && !glow::AbstractCoordinateProvider::validDepth(m_coordsProvider->depthAt(mouse)))
         return;
 
     float scale = (DEFAULT_DISTANCE / (ln - i).length());

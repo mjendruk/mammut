@@ -354,7 +354,7 @@ void Canvas::mouseMoveEvent(QMouseEvent * event)
     if (m_painter)
     {
         glm::ivec2 pos = glm::ivec2(event->pos().x(), event->pos().y());
-        if (glow::NavigationMath::validDepth(m_painter->depthAt(pos)))
+        if (glow::AbstractCoordinateProvider::validDepth(m_painter->depthAt(pos)))
             ;//emit objUpdate(m_painter->objAt(event->pos())); TODO
         else
             emit objUpdate(QVector3D());
