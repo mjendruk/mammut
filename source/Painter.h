@@ -16,6 +16,9 @@ namespace glow
     class Icosahedron;
 }
 
+class btDiscreteDynamicsWorld;
+class btRigidBody;
+
 class Quad;
 
 
@@ -41,5 +44,8 @@ protected:
     glow::Shader * m_fragShader;
     glow::Shader * m_vertShader;
     
-    Quad * m_quad;
+    QVector<Quad *> m_quads;
+    
+    btDiscreteDynamicsWorld * m_dynamicsWorld;
+    btRigidBody * m_fallRigidBody;
 };

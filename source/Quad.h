@@ -13,8 +13,11 @@ namespace glow {
 class Quad
 {
 public:
-    Quad();
-    Quad(const glm::mat4 & matrix);
+    Quad(const glm::vec3 & size);
+    
+    Quad(const glm::vec3 & size,
+         const glm::mat4 & matrix);
+         
     ~Quad();
 
     void draw();
@@ -23,9 +26,9 @@ public:
     void setMatrix(const glm::mat4 & matrix);
 
 protected:
-    static glow::Vec3Array vertices();
+    static glow::Vec3Array vertices(const glm::vec3 & size);
     static glow::Array<glm::lowp_uvec3> indices();
-    void initialize();
+    void initialize(const glm::vec3 & size);
     
     glow::ref_ptr<glow::VertexArrayObject> m_vao;
     glow::ref_ptr<glow::Buffer> m_vertices;

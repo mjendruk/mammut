@@ -1,7 +1,6 @@
 
 #include "AbstractApplication.h"
 
-#include <QApplication>
 #include <QFileInfo>
 #include <QStringList>
 

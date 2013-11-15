@@ -22,7 +22,10 @@ Application::Application(
 
     m_canvas = new Canvas(format);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-
+    
+    m_canvas->setWidth(1024);
+    m_canvas->setHeight(768);
+    
     m_canvas->assignPainter(m_painter);
     m_canvas->show();
 
