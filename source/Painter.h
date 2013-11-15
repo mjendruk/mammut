@@ -1,7 +1,7 @@
-
 #pragma once
 
-#include <QMatrix4x4>
+#include <QList>
+#include <QVector>
 
 //#include <glow/Shader.h>
 
@@ -9,17 +9,14 @@
 
 class QOpenGLShader;
 
+class Quad;
+
 namespace glow
 {
     class Program;
     class Shader;
     class Icosahedron;
 }
-
-class btDiscreteDynamicsWorld;
-class btRigidBody;
-
-class Quad;
 
 
 class Painter : public AbstractPainter
@@ -38,14 +35,12 @@ public:
     virtual void update();
     virtual void update(const QList<glow::Program *> & programs);
 
+	QVector<Quad *> * m_quads;
+
 protected:
     glow::Program * m_program;
 
     glow::Shader * m_fragShader;
     glow::Shader * m_vertShader;
-    
-    QVector<Quad *> m_quads;
-    
-    btDiscreteDynamicsWorld * m_dynamicsWorld;
-    btRigidBody * m_fallRigidBody;
+
 };

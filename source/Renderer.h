@@ -1,7 +1,7 @@
 #pragma once
 
 class Canvas;
-class AbstractPainter;
+class Painter;
 class GameLogic;
 
 class Renderer
@@ -14,6 +14,6 @@ public:
 
 protected:
 	Canvas * m_canvas;
-	AbstractPainter * m_painter;
+	Painter * m_painter;
 	GameLogic * m_gameLogic;
 };

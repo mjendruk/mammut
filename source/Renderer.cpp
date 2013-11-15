@@ -3,6 +3,7 @@
 #include <QThread>
 #include "Painter.h"
 #include "Canvas.h"
+#include "GameLogic.h"
 
 Renderer::Renderer(GameLogic * gameLogic)
 :   m_canvas(nullptr)
@@ -21,6 +22,7 @@ Renderer::Renderer(GameLogic * gameLogic)
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
     
+	m_painter->m_quads = m_gameLogic->quads();
     m_canvas->assignPainter(m_painter);
     m_canvas->show();
 }
