@@ -146,6 +146,8 @@ find_package(GLEW REQUIRED)
 
 find_package(GLOW REQUIRED)
 
+set(BULLET_ROOT $ENV{BULLET_ROOT})
+
 find_package(BULLET REQUIRED)
 find_package(FMOD REQUIRED)
 
@@ -170,13 +172,6 @@ find_package(Qt5Core    REQUIRED)
 find_package(Qt5Gui     REQUIRED)
 find_package(Qt5Widgets REQUIRED) # this is important in order to get uic working 
 find_package(Qt5OpenGL  REQUIRED)
-
-if(MSVC)
-	_populate_Core_target_properties   (DEBUG "Qt5Core.dll"    "Qt5Core.lib"    )
-	_populate_Gui_target_properties	   (DEBUG "Qt5Gui.dll"     "Qt5Gui.lib"     )
-	_populate_Widgets_target_properties(DEBUG "Qt5Widgets.dll" "Qt5Widgets.lib" )
-	_populate_OpenGL_target_properties (DEBUG "Qt5OpenGL.dll"  "Qt5OpenGL.lib"  )
-endif()
 
 
 # Include directories
