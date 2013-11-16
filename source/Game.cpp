@@ -1,13 +1,12 @@
 #include "Game.h"
 
-#include "Application.h"
+#include <QCoreApplication>
 #include "Renderer.h"
 #include "GameLogic.h"
 
 
-Game::Game(Application * application)
-:	m_application(application)
-,   m_gameLogic(new GameLogic())
+Game::Game()
+:   m_gameLogic(new GameLogic())
 ,   m_renderer(new Renderer(m_gameLogic))
 ,   m_loop(false)
 {
@@ -26,7 +25,7 @@ void Game::run()
 
     while(m_loop) 
 	{
-        m_application->processEvents();
+        QCoreApplication::processEvents();
         m_gameLogic->update(9001);
 		m_renderer->render();
     }
