@@ -15,12 +15,12 @@ public:
 
     void update(int ms);
 
-	QVector<Quad *> * quads();
+	const QVector<Quad *> & quads() const;
 
 protected:
 	void initialize();
-	bool m_initialized;
 
+protected:
 	QVector<Quad *> m_quads;
 
 	btDiscreteDynamicsWorld * m_dynamicsWorld;

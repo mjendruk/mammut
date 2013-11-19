@@ -11,9 +11,8 @@
 #include "Quad.h"
 
 GameLogic::GameLogic()
-: m_initialized(false)
 {
-
+	initialize();
 }  
 
 GameLogic::~GameLogic()
@@ -21,19 +20,16 @@ GameLogic::~GameLogic()
 	qDeleteAll(m_quads);
 }
 
-QVector<Quad *> * GameLogic::quads()
+const QVector<Quad *> & GameLogic::quads() const
 {
-	return &m_quads;
+	return m_quads;
 }
 
 void GameLogic::initialize()
 {
 	glm::mat4 mat = glm::translate(0.f, 10.0f, 0.0f);
-	//mat *= glm::rotate(45.f, 0.f, 0.f, 1.f);
 
-	glm::mat4 mat2;
-
-	m_quads << new Quad(glm::vec3(.3, .5f, 2.f), mat2);
+	m_quads << new Quad(glm::vec3(.3, .5f, 2.f));
 	m_quads << new Quad(glm::vec3(.5f, .5f, 1.f), mat);
 
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
@@ -69,14 +65,6 @@ void GameLogic::initialize()
 
 void GameLogic::update(int ms)
 {
-	//do this lazily to ensure that a context extists
-	if (!m_initialized)
-	{
-		initialize();
-		m_initialized = true;
-	}
-
-	//Do heavy weight lifting
 	QThread::msleep(2);
 
 	m_dynamicsWorld->stepSimulation(1 / 200.f);
