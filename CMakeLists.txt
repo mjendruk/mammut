@@ -209,6 +209,8 @@ set(sources
     ${source_path}/Camera.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
+    ${source_path}/Cuboid.cpp
+    ${source_path}/Cuboid.h
     ${source_path}/CyclicTime.cpp
     ${source_path}/CyclicTime.h
     ${source_path}/Game.cpp
@@ -227,8 +229,6 @@ set(sources
     ${source_path}/Navigation.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
-    ${source_path}/Quad.cpp
-    ${source_path}/Quad.h
 )
 
 # Group source files

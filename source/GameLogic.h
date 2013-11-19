@@ -5,7 +5,7 @@
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
-class Quad;
+class Cuboid;
 
 class GameLogic
 {
@@ -15,13 +15,13 @@ public:
 
     void update(int ms);
 
-	const QVector<Quad *> & quads() const;
+    const QVector<Cuboid *> & cuboids() const;
 
 protected:
 	void initialize();
 
 protected:
-	QVector<Quad *> m_quads;
+    QVector<Cuboid *> m_cuboids;
 
 	btDiscreteDynamicsWorld * m_dynamicsWorld;
 	btRigidBody * m_fallRigidBody;

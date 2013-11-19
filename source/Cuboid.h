@@ -3,15 +3,15 @@
 
 #include <glm/glm.hpp>
 
-class Quad
+class Cuboid
 {
 public:
-    Quad(const glm::vec3 & size);
+    Cuboid(const glm::vec3 & size);
     
-    Quad(const glm::vec3 & size,
+    Cuboid(const glm::vec3 & size,
          const glm::mat4 & matrix);
          
-    ~Quad();
+    ~Cuboid();
 
 	const glm::vec3 & size() const;
     const glm::mat4 & matrix() const;

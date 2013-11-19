@@ -13,7 +13,7 @@
 
 #include "FileAssociatedShader.h"
 #include "Camera.h"
-#include "Quad.h"
+#include "Cuboid.h"
 
 Painter::Painter()
 : m_initialized(false)
@@ -117,9 +117,9 @@ void Painter::paint(float timef)
     if (m_program->isLinked())
     {
         m_program->use();
-        for (Quad * quad : *m_quads) {
-            glm::mat4 scaleMatrix = glm::scale(quad->size());
-            m_program->setUniform("model", quad->matrix() * scaleMatrix);
+        for (Cuboid * cuboid : *m_cuboids) {
+            glm::mat4 scaleMatrix = glm::scale(cuboid->size());
+            m_program->setUniform("model", cuboid->matrix() * scaleMatrix);
             drawCuboid();
         }
         m_program->release();

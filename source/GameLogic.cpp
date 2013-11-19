@@ -8,7 +8,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Application.h"
-#include "Quad.h"
+#include "Cuboid.h"
 
 GameLogic::GameLogic()
 {
@@ -17,20 +17,20 @@ GameLogic::GameLogic()
 
 GameLogic::~GameLogic()
 {
-	qDeleteAll(m_quads);
+	qDeleteAll(m_cuboids);
 }
 
-const QVector<Quad *> & GameLogic::quads() const
+const QVector<Cuboid *> & GameLogic::cuboids() const
 {
-	return m_quads;
+	return m_cuboids;
 }
 
 void GameLogic::initialize()
 {
 	glm::mat4 mat = glm::translate(0.f, 10.0f, 0.0f);
 
-	m_quads << new Quad(glm::vec3(.3, .5f, 2.f));
-	m_quads << new Quad(glm::vec3(.5f, .5f, 1.f), mat);
+    m_cuboids << new Cuboid(glm::vec3(.3, .5f, 2.f));
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f), mat);
 
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
 	btDefaultCollisionConfiguration * collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -77,6 +77,6 @@ void GameLogic::update(int ms)
 	glm::mat4 mat;
 	mat *= glm::translate(origin.x(), origin.y(), origin.z());
 	mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
-	m_quads.at(1)->setMatrix(mat);
+	m_cuboids.at(1)->setMatrix(mat);
 
 }

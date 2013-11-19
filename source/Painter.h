@@ -13,7 +13,7 @@
 
 class QOpenGLShader;
 
-class Quad;
+class Cuboid;
 
 namespace glow
 {
@@ -43,7 +43,7 @@ public:
 	void drawCuboid();
 
 
-    const QVector<Quad *> * m_quads;
+    const QVector<Cuboid *> * m_cuboids;
 
 protected:
 	void initializeCuboidData();

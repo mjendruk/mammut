@@ -22,7 +22,7 @@ Renderer::Renderer(GameLogic * gameLogic)
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
     
-	m_painter->m_quads = &m_gameLogic->quads();
+	m_painter->m_cuboids = &m_gameLogic->cuboids();
     m_canvas->assignPainter(m_painter);
     m_canvas->show();
 }
