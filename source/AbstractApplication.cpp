@@ -8,14 +8,14 @@
 #include "MessageHandler.h"
 
 AbstractApplication::AbstractApplication(
-	int & argc
+    int & argc
 ,   char ** argv)
 
 :   QApplication(argc, argv)
 {
-	const QFileInfo fi(QCoreApplication::applicationFilePath());
+    const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-	QApplication::setApplicationDisplayName(fi.baseName());
+    QApplication::setApplicationDisplayName(fi.baseName());
 
     QApplication::setApplicationName(MAMMUT_PROJECT_NAME);
     QApplication::setApplicationVersion(MAMMUT_VERSION);
@@ -37,6 +37,6 @@ const QString AbstractApplication::title() const
 {
     return QString("%1 - %2 %3")
         .arg(QApplication::applicationDisplayName())
-		.arg(QApplication::applicationName())
-		.arg(QApplication::applicationVersion());
+        .arg(QApplication::applicationName())
+        .arg(QApplication::applicationVersion());
 }

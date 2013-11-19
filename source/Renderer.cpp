@@ -22,7 +22,7 @@ Renderer::Renderer(GameLogic * gameLogic)
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
     
-	m_painter->m_cuboids = &m_gameLogic->cuboids();
+    m_painter->m_cuboids = &m_gameLogic->cuboids();
     m_canvas->assignPainter(m_painter);
     m_canvas->show();
 }
@@ -35,10 +35,10 @@ Renderer::~Renderer()
 
 void Renderer::render()
 {
-	m_canvas->paintGL();
+    m_canvas->paintGL();
 
-	//do stuff with m_gameLogic
+    //do stuff with m_gameLogic
 
-	//We promised to make the rendering slow
-	QThread::msleep(10);
+    //We promised to make the rendering slow
+    QThread::msleep(10);
 }

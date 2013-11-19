@@ -13,7 +13,7 @@ public:
          
     ~Cuboid();
 
-	const glm::vec3 & size() const;
+    const glm::vec3 & size() const;
     const glm::mat4 & matrix() const;
     void setMatrix(const glm::mat4 & matrix);
 

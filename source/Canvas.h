@@ -62,10 +62,10 @@ protected:
 
     virtual void initializeGL(const QSurfaceFormat & format);
 
-	//virtual void showEvent(QShowEvent * event);
-	//virtual void hideEvent(QHideEvent * event);
+    //virtual void showEvent(QShowEvent * event);
+    //virtual void hideEvent(QHideEvent * event);
 
-	virtual void resizeEvent(QResizeEvent * event);
+    virtual void resizeEvent(QResizeEvent * event);
 
     // navigation event forwarding
 

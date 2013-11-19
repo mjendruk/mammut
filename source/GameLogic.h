@@ -18,11 +18,11 @@ public:
     const QVector<Cuboid *> & cuboids() const;
 
 protected:
-	void initialize();
+    void initialize();
 
 protected:
     QVector<Cuboid *> m_cuboids;
 
-	btDiscreteDynamicsWorld * m_dynamicsWorld;
-	btRigidBody * m_fallRigidBody;
+    btDiscreteDynamicsWorld * m_dynamicsWorld;
+    btRigidBody * m_fallRigidBody;
 };

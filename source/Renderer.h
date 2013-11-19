@@ -13,7 +13,7 @@ public:
     void render();
 
 protected:
-	Canvas * m_canvas;
-	Painter * m_painter;
-	GameLogic * m_gameLogic;
+    Canvas * m_canvas;
+    Painter * m_painter;
+    GameLogic * m_gameLogic;
 };

@@ -80,10 +80,10 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 {
     m_context->setFormat(format);
     if (!m_context->create())
-	{
-		qCritical() << "Errors during creation of OpenGL context.";
-		return;
-	}
+    {
+        qCritical() << "Errors during creation of OpenGL context.";
+        return;
+    }
 
     m_context->makeCurrent(this);
     
@@ -161,7 +161,7 @@ void Canvas::paintGL()
     else
         m_painter->update(programsWithInvalidatedUniforms);
 
-	m_painter->paint(m_time->getf(true));
+    m_painter->paint(m_time->getf(true));
     m_grid->draw();
 
     m_context->swapBuffers(this);

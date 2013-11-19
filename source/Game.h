@@ -7,13 +7,13 @@ class Renderer;
 
 class Game : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
     Game();
     ~Game();
 
 public slots:
-	void run();
+    void run();
 
 protected:
     GameLogic * m_gameLogic;

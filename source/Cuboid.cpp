@@ -18,7 +18,7 @@ Cuboid::~Cuboid()
 
 const glm::vec3 & Cuboid::size() const
 {
-	return m_size;
+    return m_size;
 }
 
 const glm::mat4 & Cuboid::matrix() const
