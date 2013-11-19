@@ -203,8 +203,6 @@ set(sources
     ${source_path}/AbstractApplication.h
     ${source_path}/AbstractPainter.cpp
     ${source_path}/AbstractPainter.h
-    ${source_path}/Application.cpp
-    ${source_path}/Application.h
     ${source_path}/Camera.cpp
     ${source_path}/Camera.h
     ${source_path}/Canvas.cpp

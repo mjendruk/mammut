@@ -7,7 +7,6 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "Application.h"
 #include "Cuboid.h"
 
 GameLogic::GameLogic()

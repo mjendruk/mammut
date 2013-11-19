@@ -1,7 +1,7 @@
 
 #include "fmod.hpp"
 
-#include "Application.h"
+#include "Game.h"
 
 void playStartUpSound()
 {
@@ -20,9 +20,9 @@ int main(int argc, char* argv[])
 {
     int result = -1;
     
-    Application * app = new Application(argc, argv);
+    Game * game = new Game(argc, argv);
     
-    result = app->exec();
+    result = game->exec();
     
     return result;
 }

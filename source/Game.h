@@ -1,16 +1,16 @@
 #pragma once
 
-#include <QObject>
+#include "AbstractApplication.h"
 
 class GameLogic;
 class Renderer;
 
-class Game : public QObject
+class Game : public AbstractApplication
 {
     Q_OBJECT
 public:
-    Game();
-    ~Game();
+    Game(int & argc, char ** argv);
+    virtual ~Game();
 
 public slots:
     void run();

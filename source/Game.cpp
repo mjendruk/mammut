@@ -1,16 +1,18 @@
 #include "Game.h"
 
 #include <QCoreApplication>
+#include <QTimer>
 
 #include "Renderer.h"
 #include "GameLogic.h"
 
-Game::Game()
-:   m_gameLogic(new GameLogic())
+Game::Game(int & argc, char ** argv)
+: AbstractApplication(argc, argv)
+,   m_gameLogic(new GameLogic())
 ,   m_renderer(new Renderer(m_gameLogic))
 ,   m_loop(false)
 {
-
+    QTimer::singleShot(0, this, SLOT(run()));
 }
 
 Game::~Game()
