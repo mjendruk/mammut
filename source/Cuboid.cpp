@@ -1,4 +1,3 @@
-
 #include "Cuboid.h"
 
 Cuboid::Cuboid(const glm::vec3 & size)

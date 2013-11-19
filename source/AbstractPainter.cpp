@@ -1,4 +1,3 @@
-
 #include "AbstractPainter.h"
 
 #include <cassert>

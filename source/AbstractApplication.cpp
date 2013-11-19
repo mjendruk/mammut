@@ -1,4 +1,3 @@
-
 #include "AbstractApplication.h"
 
 #include <QFileInfo>

@@ -1,9 +1,9 @@
 #include "Game.h"
 
 #include <QCoreApplication>
+
 #include "Renderer.h"
 #include "GameLogic.h"
-
 
 Game::Game()
 :   m_gameLogic(new GameLogic())

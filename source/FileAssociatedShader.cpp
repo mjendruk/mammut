@@ -9,7 +9,6 @@
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
-#include <glow/ShaderFile.h>
 #include <glowutils/File.h>
 
 

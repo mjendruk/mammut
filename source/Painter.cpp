@@ -9,7 +9,6 @@
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
-#include <glowutils/Icosahedron.h>
 
 #include "FileAssociatedShader.h"
 #include "Camera.h"

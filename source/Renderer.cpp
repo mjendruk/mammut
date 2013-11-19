@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include <QThread>
+
 #include "Painter.h"
 #include "Canvas.h"
 #include "GameLogic.h"

@@ -7,13 +7,7 @@
 #include <glow/ref_ptr.h>
 #include <glow/Array.h>
 
-//#include <glow/Shader.h>
-
 #include "AbstractPainter.h"
-
-class QOpenGLShader;
-
-class Cuboid;
 
 namespace glow
 {
@@ -23,6 +17,8 @@ namespace glow
     class VertexArrayObject;
     class Buffer;
 }
+
+class Cuboid;
 
 
 class Painter : public AbstractPainter

@@ -2,8 +2,8 @@
 
 #include <glowutils/Camera.h>
 
-
 class Canvas;
+
 
 class Camera : public glow::Camera
 {
