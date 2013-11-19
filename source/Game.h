@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AbstractApplication.h"
+#include "GameLogic.h"
+#include "Renderer.h"
 
 class GameLogic;
 class Renderer;
@@ -16,9 +18,8 @@ public slots:
     void run();
 
 protected:
-    GameLogic * m_gameLogic;
-    Renderer * m_renderer;
+    GameLogic m_gameLogic;
+    Renderer m_renderer;
 
     bool m_loop;
-
 };

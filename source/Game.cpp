@@ -8,8 +8,8 @@
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
-,   m_gameLogic(new GameLogic())
-,   m_renderer(new Renderer(m_gameLogic))
+,   m_gameLogic(GameLogic())
+,   m_renderer(Renderer(m_gameLogic))
 ,   m_loop(false)
 {
     QTimer::singleShot(0, this, SLOT(run()));
@@ -17,8 +17,6 @@ Game::Game(int & argc, char ** argv)
 
 Game::~Game()
 {
-    delete m_renderer;
-    delete m_gameLogic;
 }
 
 void Game::run()
@@ -28,7 +26,7 @@ void Game::run()
     while(m_loop) 
     {
         QCoreApplication::processEvents();
-        m_gameLogic->update(9001);
-        m_renderer->render();
+        m_gameLogic.update(9001);
+        m_renderer.render();
     }
 }
