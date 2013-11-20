@@ -21,7 +21,7 @@ namespace glow {
     class AbstractCoordinateProvider;
 }
 
-class Camera;
+class RenderCamera;
 
 
 
@@ -37,7 +37,7 @@ class Navigation: public QObject
 	};
 
 public:
-	Navigation(Camera & camera);
+    Navigation(RenderCamera & camera);
 	virtual ~Navigation();
 
     void setBoundaryHint(const glow::AxisAlignedBoundingBox & aabb);
@@ -101,7 +101,7 @@ protected:
 	,	const glm::mat4x4 & viewProjectionInverted) const;
 
 protected:
-    Camera & m_camera;
+    RenderCamera & m_camera;
     glow::AxisAlignedBoundingBox m_aabb;
 
     glow::AbstractCoordinateProvider * m_coordsProvider;

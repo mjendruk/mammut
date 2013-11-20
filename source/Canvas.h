@@ -13,7 +13,7 @@ class QKeyEvent;
 class AbstractPainter;
 class Navigation;
 class CyclicTime;
-class Camera;
+class RenderCamera;
 
 namespace glow 
 {
@@ -70,7 +70,7 @@ protected:
     QScopedPointer<QOpenGLContext> m_context;
 
     AbstractPainter * m_painter;
-    QScopedPointer<Camera> m_camera;
+    QScopedPointer<RenderCamera> m_camera;
 
     SwapInterval m_swapInterval;    ///< required for toggle
 

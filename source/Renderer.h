@@ -4,6 +4,7 @@
 
 class Canvas;
 class GameLogic;
+class KeyHandler;
 
 class Renderer
 {
@@ -12,6 +13,8 @@ public:
     ~Renderer();
 
     void render();
+
+    void registerKeyHandler(KeyHandler & keyHandler);
 
 protected:
     Canvas * m_canvas;

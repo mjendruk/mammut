@@ -17,15 +17,14 @@
 #include "FileAssociatedShader.h"
 #include "Navigation.h"
 #include "CyclicTime.h"
-#include "Camera.h"
-
+#include "RenderCamera.h"
 
 
 Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen)
 :   QWindow(screen)
 ,   m_context(new QOpenGLContext)
 ,   m_painter(nullptr)
-,   m_camera(new Camera())
+,   m_camera(new RenderCamera())
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_time(new CyclicTime(0.0L, 60.0)) // this is one day in 60 seconds (1d/1h)
 ,   m_swapts(0.0)
@@ -147,9 +146,8 @@ void Canvas::paintGL()
     if (m_update)
     {
         m_painter->update();
-        glm::vec3 eye(m_camera->eye().x, m_camera->eye().y, m_camera->eye().z);
         
-        m_grid->update(eye, m_camera->viewProjection());
+        m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
         m_update = false;
     }

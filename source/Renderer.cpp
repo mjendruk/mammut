@@ -40,3 +40,8 @@ void Renderer::render()
     //We promised to make the rendering slow
     QThread::msleep(10);
 }
+
+void Renderer::registerKeyHandler(KeyHandler & keyHandler)
+{
+    m_canvas->installEventFilter(&keyHandler);
+}

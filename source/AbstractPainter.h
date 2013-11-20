@@ -11,7 +11,7 @@ namespace glow
     class Program;
 }
 
-class Camera;
+class RenderCamera;
 
 
 class AbstractPainter
@@ -20,8 +20,8 @@ public:
     AbstractPainter();
     virtual ~AbstractPainter();
 
-    void setCamera(Camera * camera);
-    Camera * camera();
+    void setCamera(RenderCamera * camera);
+    RenderCamera * camera();
 
     virtual bool initialize() = 0;
 
@@ -31,6 +31,6 @@ public:
     virtual void update(const QList<glow::Program *> & programs) = 0;
 
 protected:
-    Camera * m_camera;
+    RenderCamera * m_camera;
 
 };
