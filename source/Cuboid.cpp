@@ -5,9 +5,9 @@ Cuboid::Cuboid(const glm::vec3 & size)
 {
 }
 
-Cuboid::Cuboid(const glm::vec3 & size, const glm::mat4 & matrix)
+Cuboid::Cuboid(const glm::vec3 & size, const glm::mat4 & modelMatrix)
 :   m_size(size)
-,   m_matrix(matrix)
+,   m_modelMatrix(modelMatrix)
 {
 }
 
@@ -20,12 +20,12 @@ const glm::vec3 & Cuboid::size() const
     return m_size;
 }
 
-const glm::mat4 & Cuboid::matrix() const
+const glm::mat4 & Cuboid::modelMatrix() const
 {
-    return m_matrix;
+    return m_modelMatrix;
 }
 
-void Cuboid::setMatrix(const glm::mat4 & matrix)
+void Cuboid::setModelMatrix(const glm::mat4 & matrix)
 {
-    m_matrix = matrix;
+    m_modelMatrix = matrix;
 }

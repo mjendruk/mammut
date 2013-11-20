@@ -77,7 +77,7 @@ void GameLogic::update(int ms)
     glm::mat4 mat;
     mat *= glm::translate(origin.x(), origin.y(), origin.z());
     mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
-    m_cuboids.at(1)->setMatrix(mat);
+    m_cuboids.at(1)->setModelMatrix(mat);
 
 }
 

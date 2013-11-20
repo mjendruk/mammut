@@ -13,10 +13,10 @@ public:
     ~Cuboid();
 
     const glm::vec3 & size() const;
-    const glm::mat4 & matrix() const;
-    void setMatrix(const glm::mat4 & matrix);
+    const glm::mat4 & modelMatrix() const;
+    void setModelMatrix(const glm::mat4 & modelMatrix);
 
 protected:
-    glm::mat4 m_matrix;
+    glm::mat4 m_modelMatrix;
     glm::vec3 m_size;
 };
