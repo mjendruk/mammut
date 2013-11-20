@@ -8,10 +8,9 @@
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
-,   m_painter(Painter())
+,   m_painter()
 ,   m_gameLogic(gameLogic)
 {
-
     QSurfaceFormat format;
     format.setVersion(4, 1);
     format.setDepthBufferSize(24);
@@ -23,7 +22,6 @@ Renderer::Renderer(GameLogic & gameLogic)
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
     
-    m_painter.m_cuboids = &m_gameLogic.cuboids();
     m_canvas->assignPainter(&m_painter);
     m_canvas->show();
 }

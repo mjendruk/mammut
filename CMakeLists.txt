@@ -211,6 +211,8 @@ set(sources
     ${source_path}/Cuboid.h
     ${source_path}/CyclicTime.cpp
     ${source_path}/CyclicTime.h
+    ${source_path}/Drawable.cpp
+    ${source_path}/Drawable.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
     ${source_path}/GameLogic.cpp

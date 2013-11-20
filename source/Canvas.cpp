@@ -21,27 +21,25 @@
 
 
 
-Canvas::Canvas(
-    const QSurfaceFormat & format
-,   QScreen * screen)
-: QWindow(screen)
-, m_context(new QOpenGLContext)
-, m_painter(nullptr)
-, m_camera(new Camera())
-, m_navigation(new Navigation(*m_camera))
-, m_swapInterval(VerticalSyncronization)
-, m_fpsTimer(nullptr)
-, m_time(new CyclicTime(0.0L, 60.0)) // this is one day in 60 seconds (1d/1h)
-, m_swapts(0.0)
-, m_swaps(0)
-, m_update(false)
+Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen)
+:   QWindow(screen)
+,   m_context(new QOpenGLContext)
+,   m_painter(nullptr)
+,   m_camera(new Camera())
+,   m_swapInterval(VerticalSyncronization)
+,   m_time(new CyclicTime(0.0L, 60.0)) // this is one day in 60 seconds (1d/1h)
+,   m_swapts(0.0)
+,   m_swaps(0)
+,   m_update(false)
 {
     setSurfaceType(OpenGLSurface); 
 
     create();
-
+    
+    m_camera->setEye(glm::vec3(0.f, 1.2f, 2.4f));
+    m_camera->setCenter(glm::vec3(0.f, 0.0f, 0.0f));
+    m_camera->setUp(glm::vec3(0.f, 1.0f, 0.0f));
     m_camera->setFovy(40.0);
-    m_navigation->reset();
 
     initializeGL(format);
 }
@@ -56,7 +54,6 @@ QSurfaceFormat Canvas::format() const
         return QSurfaceFormat();
 
     return m_context->format();
-
 }
 
 const QString Canvas::querys(const GLenum penum) 
@@ -106,12 +103,12 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
 
-    verifyExtensions(); // false if no painter ...
-
     m_grid.reset(new glow::AdaptiveGrid());
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
 
     m_camera->setCanvas(this);
+    
+    glClearColor(1.f, 1.f, 1.f, 0.f);
 
     m_context->doneCurrent();
 
@@ -128,11 +125,10 @@ void Canvas::resizeEvent(QResizeEvent * event)
 
     m_context->makeCurrent(this);
 
-    m_painter->resize(event->size().width(), event->size().height());
+    glViewport(0, 0, event->size().width(), event->size().height());
+    m_painter->update();
     
-    glm::vec3 eye(m_camera->eye().x, m_camera->eye().y, m_camera->eye().z);
-    
-    m_grid->update(eye, m_camera->viewProjection());
+    m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
     m_context->doneCurrent();
 
@@ -166,28 +162,28 @@ void Canvas::paintGL()
     m_context->swapBuffers(this);
     m_context->doneCurrent();
 
-    emit timeUpdate(m_time->getf());
+    // emit timeUpdate(m_time->getf());
 
-    if (!m_fpsTimer)
-    {
-        m_fpsTimer.reset(new glow::Timer(true, false));
-        m_swapts = 0.0;
-    }
-    else
-        m_fpsTimer->update();
+    // if (!m_fpsTimer)
+    // {
+    //     m_fpsTimer.reset(new glow::Timer(true, false));
+    //     m_swapts = 0.0;
+    // }
+    // else
+    //     m_fpsTimer->update();
 
-    ++m_swaps;
+    // ++m_swaps;
 
-    if (m_fpsTimer->elapsed() - m_swapts >= 1e+9)
-    {
-        const float fps = 1e+9f * static_cast<float>(static_cast<long double>
-            (m_swaps) / (m_fpsTimer->elapsed() - m_swapts));
+    // if (m_fpsTimer->elapsed() - m_swapts >= 1e+9)
+    // {
+    //     const float fps = 1e+9f * static_cast<float>(static_cast<long double>
+    //         (m_swaps) / (m_fpsTimer->elapsed() - m_swapts));
 
-        emit fpsUpdate(fps);
+    //     emit fpsUpdate(fps);
 
-        m_swapts = m_fpsTimer->elapsed();
-        m_swaps = 0;
-    }
+    //     m_swapts = m_fpsTimer->elapsed();
+    //     m_swaps = 0;
+    // }
 }
 
 void Canvas::cameraChanged()
@@ -209,45 +205,7 @@ void Canvas::assignPainter(AbstractPainter * painter)
     m_painter->initialize();
     m_painter->setCamera(m_camera.data());
 
-    verifyExtensions();
-
     m_context->doneCurrent();
-
-    m_navigation->setCoordinateProvider(m_painter);
-}
-
-bool Canvas::verifyExtensions() const
-{
-    if (!m_painter)
-        return false;
-
-    if (!m_context->isValid())
-    {
-        qWarning("Extensions cannot be verified due to invalid context.");
-        return false;
-    }
-
-    QStringList unsupported;
-
-    const QStringList & extensions(m_painter->extensions());
-    foreach(const QString & extension, extensions)
-    if (!m_context->hasExtension(qPrintable(extension)))
-        unsupported << extension;
-
-    if (unsupported.isEmpty())
-        return true;
-
-    if (unsupported.size() > 1)
-        qWarning("The following mandatory OpenGL extensions are not supported:");
-    else
-        qWarning("The following mandatory OpenGL extension is not supported:");
-
-    foreach(const QString & extension, unsupported)
-        qWarning() << extension;
-
-    qWarning("");
-
-    return false;
 }
 
 void Canvas::setSwapInterval(SwapInterval swapInterval)
@@ -323,80 +281,4 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
     default:
         return QString();
     }
-}
-
-
-void Canvas::keyPressEvent(QKeyEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_navigation->keyPressEvent(event);
-}
-void Canvas::keyReleaseEvent(QKeyEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_navigation->keyReleaseEvent(event);
-}
-
-void Canvas::mouseMoveEvent(QMouseEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_context->makeCurrent(this);
-    m_navigation->mouseMoveEvent(event);
-
-    emit mouseUpdate(event->pos());
-    if (m_painter)
-    {
-        glm::ivec2 pos = glm::ivec2(event->pos().x(), event->pos().y());
-        if (glow::AbstractCoordinateProvider::validDepth(m_painter->depthAt(pos)))
-            ;//emit objUpdate(m_painter->objAt(event->pos())); TODO
-        else
-            emit objUpdate(QVector3D());
-    }
-    m_context->doneCurrent();        
-}
-
-void Canvas::mousePressEvent(QMouseEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_context->makeCurrent(this);
-    m_navigation->mousePressEvent(event);
-    m_context->doneCurrent();
-}
-
-void Canvas::mouseReleaseEvent(QMouseEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_context->makeCurrent(this);
-    m_navigation->mouseReleaseEvent(event);
-    m_context->doneCurrent();
-}
-
-void Canvas::mouseDoubleClickEvent(QMouseEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_context->makeCurrent(this);
-    m_navigation->mouseDoubleClickEvent(event);
-    m_context->doneCurrent();
-}
-
-void Canvas::wheelEvent(QWheelEvent * event)
-{
-    if (!m_navigation)
-        return;
-
-    m_context->makeCurrent(this);
-    m_navigation->wheelEvent(event);
-    m_context->doneCurrent();
 }

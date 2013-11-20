@@ -66,39 +66,14 @@ protected:
 
     virtual void resizeEvent(QResizeEvent * event);
 
-    // navigation event forwarding
-
-    virtual void keyPressEvent        (QKeyEvent   * event);
-    virtual void keyReleaseEvent      (QKeyEvent   * event);
-
-    virtual void mouseMoveEvent       (QMouseEvent * event);
-    virtual void mousePressEvent      (QMouseEvent * event);
-    virtual void mouseReleaseEvent    (QMouseEvent * event);
-    virtual void mouseDoubleClickEvent(QMouseEvent * event);
-
-    virtual void wheelEvent           (QWheelEvent * event);
-
-
-    /** uses the context to verify existence/support of each mandatory extension
-    */
-    bool verifyExtensions() const;
-
-signals:
-    void fpsUpdate(float fps);
-    void mouseUpdate(const QPoint & mouse);
-    void timeUpdate(float timef);
-    void objUpdate(const QVector3D & obj);
-
 protected:
     QScopedPointer<QOpenGLContext> m_context;
 
     AbstractPainter * m_painter;
     QScopedPointer<Camera> m_camera;
-    QScopedPointer<Navigation> m_navigation;
 
     SwapInterval m_swapInterval;    ///< required for toggle
 
-    QScopedPointer<glow::Timer> m_fpsTimer;
     QScopedPointer<CyclicTime> m_time; ///< this is used as "game time"
 
     QScopedPointer<glow::AdaptiveGrid> m_grid;
