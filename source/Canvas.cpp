@@ -17,7 +17,7 @@
 #include "FileAssociatedShader.h"
 #include "Navigation.h"
 #include "CyclicTime.h"
-#include "Camera.h"
+#include "RenderCamera.h"
 
 
 
@@ -27,7 +27,7 @@ Canvas::Canvas(
 : QWindow(screen)
 , m_context(new QOpenGLContext)
 , m_painter(nullptr)
-, m_camera(new Camera())
+, m_camera(new RenderCamera())
 , m_navigation(new Navigation(*m_camera))
 , m_swapInterval(VerticalSyncronization)
 , m_fpsTimer(nullptr)
@@ -151,9 +151,8 @@ void Canvas::paintGL()
     if (m_update)
     {
         m_painter->update();
-        glm::vec3 eye(m_camera->eye().x, m_camera->eye().y, m_camera->eye().z);
         
-        m_grid->update(eye, m_camera->viewProjection());
+        m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
         m_update = false;
     }

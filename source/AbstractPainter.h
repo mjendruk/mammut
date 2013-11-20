@@ -13,7 +13,7 @@ namespace glow
     class Program;
 }
 
-class Camera;
+class RenderCamera;
 
 
 class AbstractPainter : public glow::AbstractCoordinateProvider
@@ -22,8 +22,8 @@ public:
     AbstractPainter();
     virtual ~AbstractPainter();
 
-    void setCamera(Camera * camera);
-    Camera * camera();
+    void setCamera(RenderCamera * camera);
+    RenderCamera * camera();
 
     /** return list of mandatory extensions (verify results in fatal if one is
         not supported).
@@ -63,6 +63,6 @@ public:
     ,   const glm::mat4x4 & viewProjectionInverted);
 
 protected:
-    Camera * m_camera;
+    RenderCamera * m_camera;
 
 };

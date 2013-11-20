@@ -11,7 +11,7 @@
 #include <glow/VertexAttributeBinding.h>
 
 #include "FileAssociatedShader.h"
-#include "Camera.h"
+#include "RenderCamera.h"
 #include "Cuboid.h"
 
 Painter::Painter()

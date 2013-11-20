@@ -1,7 +1,9 @@
 #include "Game.h"
 
+#include <QDebug>
 #include <QCoreApplication>
 #include <QTimer>
+#include <QMouseEvent>
 
 #include "Renderer.h"
 #include "GameLogic.h"
@@ -12,6 +14,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_renderer(Renderer(m_gameLogic))
 ,   m_loop(false)
 {
+    m_renderer.registerKeyHandler(m_gameLogic.keyHandler());
     QTimer::singleShot(0, this, SLOT(run()));
 }
 
@@ -29,4 +32,10 @@ void Game::run()
         m_gameLogic.update(9001);
         m_renderer.render();
     }
+}
+
+
+void Game::mouseMoveEvent(QMouseEvent * event)
+{
+    qDebug() << "hi";
 }

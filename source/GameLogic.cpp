@@ -24,6 +24,12 @@ const QVector<Cuboid *> & GameLogic::cuboids() const
     return m_cuboids;
 }
 
+
+KeyHandler & GameLogic::keyHandler()
+{
+    return m_keyHandler;
+}
+
 void GameLogic::initialize()
 {
     glm::mat4 mat = glm::translate(0.f, 10.0f, 0.0f);

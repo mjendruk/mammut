@@ -13,7 +13,7 @@
 #include <glowutils/AbstractCoordinateProvider.h>
 #include <glowutils/NavigationMath.h>
 
-#include "Camera.h"
+#include "RenderCamera.h"
 
 
 namespace
@@ -37,7 +37,7 @@ namespace
     static const float CONSTRAINT_ROT_MAX_V_LO = 0.98f * static_cast<float>(PI);
 }
 
-Navigation::Navigation(Camera & camera)
+Navigation::Navigation(RenderCamera & camera)
 : m_camera(camera)
 , m_coordsProvider(nullptr)
 , m_rotationHappened(false)

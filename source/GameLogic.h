@@ -2,6 +2,8 @@
 
 #include <QVector>
 
+#include "KeyHandler.h"
+
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
@@ -16,11 +18,13 @@ public:
     void update(int ms);
 
     const QVector<Cuboid *> & cuboids() const;
+    KeyHandler & keyHandler();
 
 protected:
     void initialize();
 
 protected:
+    KeyHandler m_keyHandler;
     QVector<Cuboid *> m_cuboids;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;

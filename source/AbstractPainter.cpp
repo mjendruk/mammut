@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QKeyEvent>
 
-#include "Camera.h"
+#include "RenderCamera.h"
 
 
 AbstractPainter::AbstractPainter()
@@ -34,7 +34,7 @@ void AbstractPainter::hide()
 {
 }
 
-void AbstractPainter::setCamera(Camera * camera)
+void AbstractPainter::setCamera(RenderCamera * camera)
 {
     if (m_camera == camera)
         return;
@@ -43,7 +43,7 @@ void AbstractPainter::setCamera(Camera * camera)
     update();
 }
 
-Camera * AbstractPainter::camera()
+RenderCamera * AbstractPainter::camera()
 {
     return m_camera;
 }

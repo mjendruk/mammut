@@ -1,8 +1,11 @@
 #pragma once
 
+
 #include "AbstractApplication.h"
 #include "GameLogic.h"
 #include "Renderer.h"
+
+class QMouseEvent;
 
 class GameLogic;
 class Renderer;
@@ -16,6 +19,9 @@ public:
 
 public slots:
     void run();
+
+protected:
+    void mouseMoveEvent(QMouseEvent * event);
 
 protected:
     GameLogic m_gameLogic;

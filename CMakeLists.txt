@@ -203,8 +203,6 @@ set(sources
     ${source_path}/AbstractApplication.h
     ${source_path}/AbstractPainter.cpp
     ${source_path}/AbstractPainter.h
-    ${source_path}/Camera.cpp
-    ${source_path}/Camera.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
     ${source_path}/Cuboid.cpp
@@ -215,6 +213,8 @@ set(sources
     ${source_path}/Game.h
     ${source_path}/GameLogic.cpp
     ${source_path}/GameLogic.h
+    ${source_path}/KeyHandler.cpp
+    ${source_path}/KeyHandler.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp
@@ -227,6 +227,8 @@ set(sources
     ${source_path}/Navigation.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
+    ${source_path}/RenderCamera.cpp
+    ${source_path}/RenderCamera.h
 )
 
 # Group source files
