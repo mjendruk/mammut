@@ -22,6 +22,7 @@ public slots:
 
 protected:
     void mouseMoveEvent(QMouseEvent * event);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 protected:
     GameLogic m_gameLogic;

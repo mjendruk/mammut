@@ -2,6 +2,7 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include <QDebug>
 #include <QThread>
 #include <QVector>
 
@@ -22,12 +23,6 @@ GameLogic::~GameLogic()
 const QVector<Cuboid *> & GameLogic::cuboids() const
 {
     return m_cuboids;
-}
-
-
-KeyHandler & GameLogic::keyHandler()
-{
-    return m_keyHandler;
 }
 
 void GameLogic::initialize()
@@ -84,4 +79,36 @@ void GameLogic::update(int ms)
     mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
     m_cuboids.at(1)->setMatrix(mat);
 
+}
+
+void GameLogic::keyPressed(int key)
+{
+    switch (key)
+    {
+    case Qt::Key_W: m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() + btVector3(0, 0, 5));
+                    qDebug() << "Key  w pressed";
+                    break;
+    case Qt::Key_A: qDebug() << "Key  a pressed";
+                    break;
+    case Qt::Key_S: qDebug() << "Key  s pressed";
+                    break;
+    case Qt::Key_D: qDebug() << "Key  d pressed";
+                    break;
+    }
+}
+
+void GameLogic::keyReleased(int key)
+{
+    switch (key)
+    {
+    case Qt::Key_W: m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() - btVector3(0, 0, 5));
+                    qDebug() << "Key  w released";
+                    break;
+    case Qt::Key_A: qDebug() << "Key  a released";
+        break;
+    case Qt::Key_S: qDebug() << "Key  s released";
+        break;
+    case Qt::Key_D: qDebug() << "Key  d released";
+        break;
+    }
 }

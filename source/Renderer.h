@@ -5,6 +5,7 @@
 class Canvas;
 class GameLogic;
 class KeyHandler;
+class QObject;
 
 class Renderer
 {
@@ -14,7 +15,7 @@ public:
 
     void render();
 
-    void registerKeyHandler(KeyHandler & keyHandler);
+    void registerKeyHandler(QObject & keyHandler);
 
 protected:
     Canvas * m_canvas;

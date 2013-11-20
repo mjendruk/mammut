@@ -41,7 +41,7 @@ void Renderer::render()
     QThread::msleep(10);
 }
 
-void Renderer::registerKeyHandler(KeyHandler & keyHandler)
+void Renderer::registerKeyHandler(QObject & keyHandler)
 {
     m_canvas->installEventFilter(&keyHandler);
 }

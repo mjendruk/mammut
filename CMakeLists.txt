@@ -215,8 +215,6 @@ set(sources
     ${source_path}/Game.h
     ${source_path}/GameLogic.cpp
     ${source_path}/GameLogic.h
-    ${source_path}/KeyHandler.cpp
-    ${source_path}/KeyHandler.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp

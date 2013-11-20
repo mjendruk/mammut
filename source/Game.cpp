@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include <QDebug>
 #include <QCoreApplication>
 #include <QTimer>
 #include <QMouseEvent>
@@ -14,7 +13,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_renderer(m_gameLogic)
 ,   m_loop(false)
 {
-    m_renderer.registerKeyHandler(m_gameLogic.keyHandler());
+    m_renderer.registerKeyHandler(*this);
     QTimer::singleShot(0, this, SLOT(run()));
 }
 
@@ -34,8 +33,23 @@ void Game::run()
     }
 }
 
-
-void Game::mouseMoveEvent(QMouseEvent * event)
+bool Game::eventFilter(QObject *obj, QEvent *event)
 {
-    qDebug() << "hi";
+    if (event->type() == QEvent::KeyPress) {
+        if (!((QKeyEvent*)event)->isAutoRepeat())
+        {   
+            m_gameLogic.keyPressed(((QKeyEvent*)event)->key());
+        }
+        
+    }
+    if (event->type() == QEvent::KeyRelease) {
+        if (!((QKeyEvent*)event)->isAutoRepeat())
+        {
+            m_gameLogic.keyReleased(((QKeyEvent*)event)->key());
+        }
+    }
+    else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+    }
 }
