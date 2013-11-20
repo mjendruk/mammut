@@ -10,8 +10,8 @@
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
-,   m_gameLogic(GameLogic())
-,   m_renderer(Renderer(m_gameLogic))
+,   m_gameLogic()
+,   m_renderer(m_gameLogic)
 ,   m_loop(false)
 {
     m_renderer.registerKeyHandler(m_gameLogic.keyHandler());
