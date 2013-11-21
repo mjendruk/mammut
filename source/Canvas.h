@@ -36,7 +36,7 @@ public:
 public:
     Canvas(
         const QSurfaceFormat & format
-    ,   QScreen * screen = nullptr);
+    ,   QScreen * screen, RenderCamera * camera);
     virtual ~Canvas();
 
     // from QWindow
@@ -51,12 +51,10 @@ public:
     void beginPaintGL();
     void endPaintGL();
 
-    //quick hack for navigation testing
-    QScopedPointer<RenderCamera> m_camera;
+    RenderCamera * m_camera;
 
 public slots:
     void toggleSwapInterval();
-    void cameraChanged();
 
 protected:
     const QString querys(const GLenum penum);

@@ -1,8 +1,11 @@
 #pragma once
 
+#include <QScopedPointer>
 #include <QVector>
+
 #include "Drawable.h"
 #include "Painter.h"
+#include "RenderCamera.h";
 
 class QObject;
 
@@ -28,6 +31,8 @@ protected:
     Painter m_painter;
     GameLogic & m_gameLogic;
     bool m_initialized;
+
+    RenderCamera m_camera;
 
     const QVector<Cuboid *> * m_cuboids;
     Drawable m_cuboidDrawable;

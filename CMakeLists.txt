@@ -213,6 +213,8 @@ set(sources
     ${source_path}/Game.h
     ${source_path}/GameLogic.cpp
     ${source_path}/GameLogic.h
+    ${source_path}/GameCamera.cpp
+    ${source_path}/GameCamera.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp

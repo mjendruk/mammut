@@ -15,14 +15,18 @@ Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
 ,   m_gameLogic(gameLogic)
 ,   m_painter(Painter(m_cuboidDrawable))
-, m_initialized(false)
+,   m_camera(RenderCamera())
+,   m_initialized(false)
 {
     QSurfaceFormat format;
     format.setVersion(4, 1);
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
-    m_canvas = new Canvas(format);
+    m_camera.setFovy(40.0);
+
+    m_canvas = new Canvas(format, nullptr, &m_camera);
+
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
     m_canvas->setWidth(1024);
@@ -32,9 +36,6 @@ Renderer::Renderer(GameLogic & gameLogic)
     m_canvas->show();
 
     m_cuboids = &gameLogic.cuboids();
-    
-    //quick hack for navigation
-    gameLogic.assignCamera(m_canvas->m_camera.data());
 }
 
 Renderer::~Renderer()
@@ -48,6 +49,8 @@ void Renderer::render()
     if (!m_initialized)
         initialize();
 
+    m_camera.update(m_gameLogic.camera());
+    m_painter.setTransformUniform(m_camera.viewProjection());
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

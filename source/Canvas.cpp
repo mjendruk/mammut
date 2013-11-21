@@ -18,24 +18,19 @@
 #include "RenderCamera.h"
 
 
-Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen)
+Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen, RenderCamera * camera)
 :   QWindow(screen)
 ,   m_context(new QOpenGLContext)
 ,   m_painter(nullptr)
-,   m_camera(new RenderCamera())
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
 ,   m_update(false)
+,   m_camera(camera)
 {
     setSurfaceType(OpenGLSurface); 
 
     create();
-    
-    m_camera->setEye(glm::vec3(0.f, 1.2f, 2.4f));
-    m_camera->setCenter(glm::vec3(0.f, 0.0f, 0.0f));
-    m_camera->setUp(glm::vec3(0.f, 1.0f, 0.0f));
-    m_camera->setFovy(40.0);
 
     initializeGL(format);
 }
@@ -101,8 +96,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
     m_grid.reset(new glow::AdaptiveGrid());
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
-
-    m_camera->setCanvas(this);
     
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
@@ -119,7 +112,6 @@ void Canvas::resizeEvent(QResizeEvent * event)
     m_context->makeCurrent(this);
 
     glViewport(0, 0, event->size().width(), event->size().height());
-    m_painter->update();
     
     m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
@@ -132,18 +124,11 @@ void Canvas::beginPaintGL()
         return;
 
     m_context->makeCurrent(this);
+
+    m_grid->update(m_camera->eye(), m_camera->viewProjection());
+
     auto programsWithInvalidatedUniforms(FileAssociatedShader::process()); // recompile file associated shaders if required
-
-    if (m_update)
-    {
-        m_painter->update();
-
-        m_grid->update(m_camera->eye(), m_camera->viewProjection());
-
-        m_update = false;
-    }
-    else
-        m_painter->update(programsWithInvalidatedUniforms);
+    m_painter->update(programsWithInvalidatedUniforms);
 }
 
 void Canvas::endPaintGL()
@@ -152,34 +137,6 @@ void Canvas::endPaintGL()
 
     m_context->swapBuffers(this);
     m_context->doneCurrent();
-
-    // emit timeUpdate(m_time->getf());
-
-    // if (!m_fpsTimer)
-    // {
-    //     m_fpsTimer.reset(new glow::Timer(true, false));
-    //     m_swapts = 0.0;
-    // }
-    // else
-    //     m_fpsTimer->update();
-
-    // ++m_swaps;
-
-    // if (m_fpsTimer->elapsed() - m_swapts >= 1e+9)
-    // {
-    //     const float fps = 1e+9f * static_cast<float>(static_cast<long double>
-    //         (m_swaps) / (m_fpsTimer->elapsed() - m_swapts));
-
-    //     emit fpsUpdate(fps);
-
-    //     m_swapts = m_fpsTimer->elapsed();
-    //     m_swaps = 0;
-    // }
-}
-
-void Canvas::cameraChanged()
-{
-    m_update = true;
 }
 
 void Canvas::assignPainter(AbstractPainter * painter)
@@ -194,7 +151,6 @@ void Canvas::assignPainter(AbstractPainter * painter)
     m_context->makeCurrent(this);
 
     m_painter->initialize();
-    m_painter->setCamera(m_camera.data());
 
     m_context->doneCurrent();
 }

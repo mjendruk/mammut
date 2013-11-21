@@ -2,11 +2,12 @@
 
 #include <QVector>
 
+#include "GameCamera.h"
+
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
 class Cuboid;
-class RenderCamera;
 
 class GameLogic
 {
@@ -17,7 +18,8 @@ public:
     void update(int ms);
     void keyPressed(int key);
     void keyReleased(int key);
-    void assignCamera(RenderCamera * camera);
+    //void assignCamera(RenderCamera * camera);
+    const GameCamera & camera() const;
 
     const QVector<Cuboid *> & cuboids() const;
 
@@ -26,7 +28,7 @@ protected:
 
 protected:
     QVector<Cuboid *> m_cuboids;
-    RenderCamera * m_camera;
+    GameCamera m_camera;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;
     btRigidBody * m_fallRigidBody;

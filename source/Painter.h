@@ -22,7 +22,7 @@ public:
     
     virtual void paint(Drawable & drawable, glm::mat4 & modelMatrix);
 
-    virtual void update();
+    void setTransformUniform(const glm::mat4 & viewProjection);
     virtual void update(const QList<glow::Program *> & programs);
 
 protected:

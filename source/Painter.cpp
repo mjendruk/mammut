@@ -1,19 +1,12 @@
 #include "Painter.h"
 
-#include <cassert>
-
 #include <glm/gtx/transform.hpp>
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
-#include <glow/VertexArrayObject.h>
-#include <glow/Buffer.h>
-#include <glow/VertexAttributeBinding.h>
 
 #include "Drawable.h"
 #include "FileAssociatedShader.h"
-#include "RenderCamera.h"
-#include "Cuboid.h"
 
 Painter::Painter(Drawable & cuboidDrawable)
 :   m_cuboidDrawable(cuboidDrawable)
@@ -43,12 +36,12 @@ bool Painter::initialize()
     return true;
 }
 
-void Painter::update()
+void Painter::setTransformUniform(const glm::mat4 & viewProjection)
 {
     if (m_program->isLinked())
     {
         m_program->use();
-        m_program->setUniform("transform", camera()->viewProjection());
+        m_program->setUniform("transform", viewProjection);
         m_program->release();
     }
 }
@@ -58,7 +51,7 @@ void Painter::update(const QList<glow::Program *> & programs)
     if (programs.contains(m_program) && m_program->isLinked())
     {
         m_program->use();
-        m_program->setUniform("transform", camera()->viewProjection());
+        //do necessary updates
         m_program->release();
     }
 }
@@ -71,6 +64,7 @@ void Painter::paint(Drawable & drawable, glm::mat4 & modelMatrix)
 
         m_program->setUniform("model", modelMatrix);
         drawable.draw();
+
         m_program->release();
     }
 }
