@@ -15,7 +15,6 @@
 
 #include "AbstractPainter.h"
 #include "FileAssociatedShader.h"
-#include "Navigation.h"
 #include "CyclicTime.h"
 #include "RenderCamera.h"
 

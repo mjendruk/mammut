@@ -223,8 +223,6 @@ set(sources
     ${source_path}/FileAssociatedShader.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
-    ${source_path}/Navigation.cpp
-    ${source_path}/Navigation.h
     ${source_path}/Painter.cpp
     ${source_path}/Painter.h
     ${source_path}/RenderCamera.cpp
