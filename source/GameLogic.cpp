@@ -79,6 +79,7 @@ void GameLogic::update(int ms)
     mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
     m_cuboids.at(1)->setModelMatrix(mat);
 
+    m_camera->pan();
 }
 
 void GameLogic::keyPressed(int key)
@@ -86,16 +87,16 @@ void GameLogic::keyPressed(int key)
     switch (key)
     {
     case Qt::Key_W: //m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() + btVector3(0, 0, 5));
-                    m_camera->pan(glm::vec3(0.0f, 0.0f, -0.1f));
+                    m_camera->modifyPanVector(glm::vec3(0.0f, 0.0f, -0.1f));
                     qDebug() << "Key  w pressed";
                     break;
-    case Qt::Key_A: m_camera->pan(glm::vec3(-0.1f, 0.0f, 0.0f)); 
+    case Qt::Key_A: m_camera->modifyPanVector(glm::vec3(-0.1f, 0.0f, 0.0f));
                     qDebug() << "Key  a pressed";
                     break;
-    case Qt::Key_S: m_camera->pan(glm::vec3(0.0f, 0.0f, 0.1f)); 
+    case Qt::Key_S: m_camera->modifyPanVector(glm::vec3(0.0f, 0.0f, 0.1f));
                     qDebug() << "Key  s pressed";
                     break;
-    case Qt::Key_D: m_camera->pan(glm::vec3(0.1f, 0.0f, 0.0f)); 
+    case Qt::Key_D: m_camera->modifyPanVector(glm::vec3(0.1f, 0.0f, 0.0f));
                     qDebug() << "Key  d pressed";
                     break;
     }
@@ -105,15 +106,19 @@ void GameLogic::keyReleased(int key)
 {
     switch (key)
     {
-    case Qt::Key_W: m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() - btVector3(0, 0, 5));
+    case Qt::Key_W: //m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() - btVector3(0, 0, 5));
+                    m_camera->modifyPanVector(glm::vec3(0.0f, 0.0f, 0.1f));
                     qDebug() << "Key  w released";
                     break;
-    case Qt::Key_A: qDebug() << "Key  a released";
-        break;
-    case Qt::Key_S: qDebug() << "Key  s released";
-        break;
-    case Qt::Key_D: qDebug() << "Key  d released";
-        break;
+    case Qt::Key_A: m_camera->modifyPanVector(glm::vec3(0.1f, 0.0f, 0.0f)); 
+                    qDebug() << "Key  a released";
+                    break;
+    case Qt::Key_S: m_camera->modifyPanVector(glm::vec3(0.0f, 0.0f, -0.1f)); 
+                    qDebug() << "Key  s released";
+                    break;
+    case Qt::Key_D: m_camera->modifyPanVector(glm::vec3(-0.1f, 0.0f, 0.0f)); 
+                    qDebug() << "Key  d released";
+                    break;
     }
 }
 
