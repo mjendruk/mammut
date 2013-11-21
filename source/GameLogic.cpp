@@ -39,8 +39,7 @@ void GameLogic::initialize()
 
     glm::mat4 mat = glm::translate(0.f, 10.0f, 0.0f);
 
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(0.5f, 0.0f, 0.0f));
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.f, 1.0f, 0.0f));
+    initializeTestlevel();
 }
 
 void GameLogic::update(int ms)
@@ -48,8 +47,6 @@ void GameLogic::update(int ms)
     QThread::msleep(2);
 
     m_dynamicsWorld->stepSimulation(1 / 200.f);
-    qDebug() << "update Positions";
-    qDebug();
 
     for (Cuboid * cuboid : m_cuboids)
     {
@@ -76,6 +73,12 @@ void GameLogic::keyPressed(int key)
     case Qt::Key_D: m_camera->modifyPanVector(glm::vec3(0.01f, 0.0f, 0.0f));
                     qDebug() << "Key  d pressed";
                     break;
+    case Qt::Key_Z: m_camera->modifyPanVector(glm::vec3(0.0f, 0.01f, 0.0f));
+                    qDebug() << "Key  z pressed";
+                    break;
+    case Qt::Key_H: m_camera->modifyPanVector(glm::vec3(0.0f, -0.01f, 0.0f));
+                    qDebug() << "Key  h pressed";
+                    break;
     }
 }
 
@@ -96,10 +99,40 @@ void GameLogic::keyReleased(int key)
     case Qt::Key_D: m_camera->modifyPanVector(glm::vec3(-0.01f, 0.0f, 0.0f)); 
                     qDebug() << "Key  d released";
                     break;
+    case Qt::Key_Z: m_camera->modifyPanVector(glm::vec3(0.0f , -0.01f, 0.0f));
+        qDebug() << "Key  z released";
+        break;
+    case Qt::Key_H: m_camera->modifyPanVector(glm::vec3(0.0f, 0.01f, 0.0f));
+        qDebug() << "Key  h released";
+        break;
     }
 }
 
 void GameLogic::assignCamera(RenderCamera * camera)
 {
     m_camera = camera;
+}
+
+void GameLogic::initializeTestlevel()
+{
+    //m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.0f, 0.0f));
+
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.5f, 0.2f, 2.5f), glm::vec3(-0.25f, .5f, 3.0f));
+
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(0.5f, 0.0f, 0.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(-1.f, .50f, 0.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -3.0f));
+
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -5.0f));
+
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -3.0f));
+
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.5f, 0.8f, -5.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(-0.3f, 0.2f, -6.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.4f, -0.3f, -7.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.4f, .5f, 1.5f), glm::vec3(-0.2f, 0.8f, -5.4f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.1, .3f, 2.f), glm::vec3(-0.6f, -0.2f, -4.5f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.7f), glm::vec3(-0.4f, -0.3f, -8.f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.35, .5f, 2.f), glm::vec3(0.f, 0.0f, -10.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.f, 0.0f, -6.0f));
 }

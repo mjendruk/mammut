@@ -16,7 +16,7 @@ Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, 
     btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
         btVector3(translationVector.x, translationVector.y, translationVector.z)));
 
-    btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(1, motionState, shape, btVector3(0, 0, 0));
+    btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, motionState, shape, btVector3(0, 0, 0));
     m_rigidBody = new btRigidBody(groundRigidBodyCI);
 
     m_dynamicsWorld->addRigidBody(m_rigidBody);
@@ -52,6 +52,4 @@ void Cuboid::updatePhysics()
     mat *= glm::translate(origin.x(), origin.y(), origin.z());
     mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
     this->setModelMatrix(mat);
-
-    qDebug() << "Position: " << origin.x() << " " << origin.y() << " " << origin.z();
 }

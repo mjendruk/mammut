@@ -30,4 +30,6 @@ protected:
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;
     btRigidBody * m_fallRigidBody;
+
+    void initializeTestlevel();
 };
