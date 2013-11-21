@@ -48,7 +48,8 @@ public:
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
 
-    virtual void paintGL();
+    void beginPaintGL();
+    void endPaintGL();
 
     //quick hack for navigation testing
     QScopedPointer<RenderCamera> m_camera;
