@@ -6,6 +6,7 @@
 #include <QVector>
 
 #include "Cuboid.h"
+#include "Mammoth.h"
 #include "Painter.h"
 #include "Canvas.h"
 #include "GameLogic.h"
@@ -35,6 +36,7 @@ Renderer::Renderer(GameLogic & gameLogic)
     m_canvas->show();
 
     m_cuboids = &gameLogic.cuboids();
+    m_mammoth = gameLogic.mammoth();
 }
 
 Renderer::~Renderer()
@@ -63,6 +65,10 @@ void Renderer::render()
         glm::mat4 scaleMatrix = glm::scale(cuboid->size());
         m_painter.paint(m_cuboidDrawable, cuboid->modelMatrix() * scaleMatrix);
     }
+
+    glm::mat4 scaleMatrix = glm::scale(m_mammoth->size());
+    m_painter.paint(m_cuboidDrawable, m_mammoth->modelMatrix() * scaleMatrix);
+
     m_canvas->endPaintGL();
 
     //do stuff with m_gameLogic

@@ -1,4 +1,4 @@
-#include "Cuboid.h"
+#include "Mammoth.h"
 
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
@@ -6,7 +6,7 @@
 #include <QDebug>
 
 
-Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
+Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
 :   m_dynamicsWorld(dynamicsWorld),
     m_size(size)
 {
@@ -16,32 +16,38 @@ Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, 
     btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
         btVector3(translationVector.x, translationVector.y, translationVector.z)));
 
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motionState, shape, btVector3(0, 0, 0));
+    btScalar mass = 1;
+    btVector3 fallInertia(0, 0, 0);
+    shape->calculateLocalInertia(mass, fallInertia);
+
+    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, shape, fallInertia);
     m_rigidBody = new btRigidBody(rigidBodyCI);
+    //add first impulse to mammoth
+    m_rigidBody->setLinearVelocity(btVector3(0, 0, -10));
 
     m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
-Cuboid::~Cuboid()
+Mammoth::~Mammoth()
 {
 }
 
-const glm::vec3 & Cuboid::size() const
+const glm::vec3 & Mammoth::size() const
 {
     return m_size;
 }
 
-const glm::mat4 & Cuboid::modelMatrix() const
+const glm::mat4 & Mammoth::modelMatrix() const
 {
     return m_modelMatrix;
 }
 
-void Cuboid::setModelMatrix(const glm::mat4 & matrix)
+void Mammoth::setModelMatrix(const glm::mat4 & matrix)
 {
     m_modelMatrix = matrix;
 }
 
-void Cuboid::updatePhysics()
+void Mammoth::updatePhysics()
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);

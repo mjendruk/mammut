@@ -8,6 +8,7 @@ class btDiscreteDynamicsWorld;
 class btRigidBody;
 
 class Cuboid;
+class Mammoth;
 
 class GameLogic
 {
@@ -22,12 +23,14 @@ public:
     const GameCamera & camera() const;
 
     const QVector<Cuboid *> & cuboids() const;
+    const Mammoth * mammoth() const;
 
 protected:
     void initialize();
 
 protected:
     QVector<Cuboid *> m_cuboids;
+    Mammoth * m_mammoth;
     GameCamera m_camera;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;

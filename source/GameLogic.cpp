@@ -9,6 +9,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Cuboid.h"
+#include "Mammoth.h"
 #include "RenderCamera.h"
 
 GameLogic::GameLogic()
@@ -19,12 +20,18 @@ GameLogic::GameLogic()
 
 GameLogic::~GameLogic()
 {
+    delete m_mammoth;
     qDeleteAll(m_cuboids);
 }
 
 const QVector<Cuboid *> & GameLogic::cuboids() const
 {
     return m_cuboids;
+}
+
+const Mammoth * GameLogic::mammoth() const
+{
+    return m_mammoth;
 }
 
 void GameLogic::initialize()
@@ -39,6 +46,8 @@ void GameLogic::initialize()
 
     glm::mat4 mat = glm::translate(0.f, 10.0f, 0.0f);
 
+    m_mammoth = new Mammoth(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(-0.05f, .7f, 2.f));
+ 
     initializeTestlevel();
 }
 
@@ -52,7 +61,9 @@ void GameLogic::update(int ms)
     {
         cuboid->updatePhysics();
     }
-     
+    
+    m_mammoth->updatePhysics();
+
     m_camera.pan();
 }
 
@@ -62,22 +73,16 @@ void GameLogic::keyPressed(int key)
     {
     case Qt::Key_W: //m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() + btVector3(0, 0, 5));
                     m_camera.modifyPanVector(glm::vec3(0.0f, 0.0f, -0.01f));
-                    qDebug() << "Key  w pressed";
                     break;
     case Qt::Key_A: m_camera.modifyPanVector(glm::vec3(-0.01f, 0.0f, 0.0f));
-                    qDebug() << "Key  a pressed";
                     break;
     case Qt::Key_S: m_camera.modifyPanVector(glm::vec3(0.0f, 0.0f, 0.01f));
-                    qDebug() << "Key  s pressed";
                     break;
     case Qt::Key_D: m_camera.modifyPanVector(glm::vec3(0.01f, 0.0f, 0.0f));
-                    qDebug() << "Key  d pressed";
                     break;
     case Qt::Key_Z: m_camera.modifyPanVector(glm::vec3(0.0f, 0.01f, 0.0f));
-                    qDebug() << "Key  z pressed";
                     break;
     case Qt::Key_H: m_camera.modifyPanVector(glm::vec3(0.0f, -0.01f, 0.0f));
-                    qDebug() << "Key  h pressed";
                     break;
     }
 }
@@ -88,23 +93,17 @@ void GameLogic::keyReleased(int key)
     {
     case Qt::Key_W: //m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() - btVector3(0, 0, 5));
                     m_camera.modifyPanVector(glm::vec3(0.0f, 0.0f, 0.01f));
-                    qDebug() << "Key  w released";
                     break;
     case Qt::Key_A: m_camera.modifyPanVector(glm::vec3(0.01f, 0.0f, 0.0f)); 
-                    qDebug() << "Key  a released";
                     break;
     case Qt::Key_S: m_camera.modifyPanVector(glm::vec3(0.0f, 0.0f, -0.01f)); 
-                    qDebug() << "Key  s released";
                     break;
     case Qt::Key_D: m_camera.modifyPanVector(glm::vec3(-0.01f, 0.0f, 0.0f)); 
-                    qDebug() << "Key  d released";
                     break;
     case Qt::Key_Z: m_camera.modifyPanVector(glm::vec3(0.0f , -0.01f, 0.0f));
-        qDebug() << "Key  z released";
-        break;
+                    break;
     case Qt::Key_H: m_camera.modifyPanVector(glm::vec3(0.0f, 0.01f, 0.0f));
-        qDebug() << "Key  h released";
-        break;
+                    break;
     }
 }
 
@@ -117,11 +116,8 @@ void GameLogic::initializeTestlevel()
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(0.5f, 0.0f, 0.0f));
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(-1.f, .50f, 0.0f));
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -3.0f));
-
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -5.0f));
-
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f), glm::vec3(0.7f, -0.2f, -3.0f));
-
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.5f, 0.8f, -5.0f));
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(-0.3f, 0.2f, -6.0f));
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(0.4f, -0.3f, -7.0f));

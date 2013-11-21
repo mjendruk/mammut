@@ -215,6 +215,8 @@ set(sources
     ${source_path}/GameLogic.h
     ${source_path}/GameCamera.cpp
     ${source_path}/GameCamera.h
+    ${source_path}/Mammoth.cpp
+    ${source_path}/Mammoth.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp
