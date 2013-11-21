@@ -63,10 +63,8 @@ void Painter::update(const QList<glow::Program *> & programs)
     }
 }
 
-void Painter::paint(Drawable & drawable, glm::mat4 modelMatrix)
+void Painter::paint(Drawable & drawable, glm::mat4 & modelMatrix)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if (m_program->isLinked())
     {
         m_program->use();

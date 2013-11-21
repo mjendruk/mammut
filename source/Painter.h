@@ -20,7 +20,7 @@ public:
 
     virtual bool initialize();
     
-    virtual void paint(Drawable & drawable, glm::mat4 modelMatrix);
+    virtual void paint(Drawable & drawable, glm::mat4 & modelMatrix);
 
     virtual void update();
     virtual void update(const QList<glow::Program *> & programs);

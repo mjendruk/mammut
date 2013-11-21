@@ -48,6 +48,9 @@ void Renderer::render()
     if (!m_initialized)
         initialize();
 
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     for (Cuboid * cuboid : *m_cuboids)
     {
         glm::mat4 scaleMatrix = glm::scale(cuboid->size());
