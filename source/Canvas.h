@@ -42,9 +42,6 @@ public:
     // from QWindow
     virtual QSurfaceFormat format() const;
 
-    void assignPainter(AbstractPainter * painter);
-    AbstractPainter * painter();
-
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
 
@@ -69,8 +66,6 @@ protected:
 
 protected:
     QScopedPointer<QOpenGLContext> m_context;
-
-    AbstractPainter * m_painter;
 
     SwapInterval m_swapInterval;    ///< required for toggle
 

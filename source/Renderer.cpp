@@ -10,6 +10,7 @@
 #include "Canvas.h"
 #include "GameLogic.h"
 #include "RenderCamera.h"
+#include "FileAssociatedShader.h"
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
@@ -31,8 +32,6 @@ Renderer::Renderer(GameLogic & gameLogic)
     
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
-    
-    m_canvas->assignPainter(&m_painter);
     m_canvas->show();
 
     m_cuboids = &gameLogic.cuboids();
@@ -46,8 +45,13 @@ Renderer::~Renderer()
 void Renderer::render()
 {
     m_canvas->beginPaintGL();
+
     if (!m_initialized)
         initialize();
+
+    // recompile file associated shaders if required
+    auto programsWithInvalidatedUniforms(FileAssociatedShader::process());
+    m_painter.update(programsWithInvalidatedUniforms);
 
     m_camera.update(m_gameLogic.camera());
     m_painter.setTransformUniform(m_camera.viewProjection());
@@ -69,6 +73,7 @@ void Renderer::render()
 
 void Renderer::initialize()
 {
+    m_painter.initialize();
     m_cuboidDrawable.initialize();
     m_initialized = true;
 }

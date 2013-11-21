@@ -13,15 +13,12 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "AbstractPainter.h"
-#include "FileAssociatedShader.h"
 #include "RenderCamera.h"
 
 
 Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen, RenderCamera * camera)
 :   QWindow(screen)
 ,   m_context(new QOpenGLContext)
-,   m_painter(nullptr)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
@@ -104,9 +101,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
 void Canvas::resizeEvent(QResizeEvent * event)
 {
-    if (!m_painter)
-        return;
-
     m_camera->setViewport(glm::ivec2(event->size().width(), event->size().height()));
 
     m_context->makeCurrent(this);
@@ -120,15 +114,13 @@ void Canvas::resizeEvent(QResizeEvent * event)
 
 void Canvas::beginPaintGL()
 {
-    if (!m_painter || !isExposed() || Hidden == visibility())
+    if (!isExposed() || Hidden == visibility())
         return;
 
     m_context->makeCurrent(this);
 
     m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
-    auto programsWithInvalidatedUniforms(FileAssociatedShader::process()); // recompile file associated shaders if required
-    m_painter->update(programsWithInvalidatedUniforms);
 }
 
 void Canvas::endPaintGL()
@@ -139,21 +131,6 @@ void Canvas::endPaintGL()
     m_context->doneCurrent();
 }
 
-void Canvas::assignPainter(AbstractPainter * painter)
-{
-    if (m_painter == painter)
-        return;
-
-    m_painter = painter;
-    if (!m_painter)
-        return;
-
-    m_context->makeCurrent(this);
-
-    m_painter->initialize();
-
-    m_context->doneCurrent();
-}
 
 void Canvas::setSwapInterval(SwapInterval swapInterval)
 {
