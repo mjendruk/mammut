@@ -15,7 +15,6 @@
 
 #include "AbstractPainter.h"
 #include "FileAssociatedShader.h"
-#include "CyclicTime.h"
 #include "RenderCamera.h"
 
 
@@ -25,7 +24,6 @@ Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen)
 ,   m_painter(nullptr)
 ,   m_camera(new RenderCamera())
 ,   m_swapInterval(VerticalSyncronization)
-,   m_time(new CyclicTime(0.0L, 60.0)) // this is one day in 60 seconds (1d/1h)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
 ,   m_update(false)
@@ -109,9 +107,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
     m_context->doneCurrent();
-
-    m_time->setf(0.0);
-    m_time->start();
 }
 
 void Canvas::resizeEvent(QResizeEvent * event)
@@ -153,7 +148,7 @@ void Canvas::paintGL()
     else
         m_painter->update(programsWithInvalidatedUniforms);
 
-    m_painter->paint(m_time->getf(true));
+    m_painter->paint();
     m_grid->draw();
 
     m_context->swapBuffers(this);

@@ -12,7 +12,6 @@ class QKeyEvent;
 
 class AbstractPainter;
 class Navigation;
-class CyclicTime;
 class RenderCamera;
 
 namespace glow 
@@ -75,8 +74,6 @@ protected:
     AbstractPainter * m_painter;
 
     SwapInterval m_swapInterval;    ///< required for toggle
-
-    QScopedPointer<CyclicTime> m_time; ///< this is used as "game time"
 
     QScopedPointer<glow::AdaptiveGrid> m_grid;
 

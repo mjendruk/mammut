@@ -21,7 +21,7 @@ public:
 
     virtual bool initialize();
     
-    virtual void paint(float timef);
+    virtual void paint();
 
     virtual void update();
     virtual void update(const QList<glow::Program *> & programs);
