@@ -124,12 +124,9 @@ void Canvas::resizeEvent(QResizeEvent * event)
     m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
     m_context->doneCurrent();
-
-    if (isExposed() && Hidden != visibility())
-        paintGL();
 }
 
-void Canvas::paintGL()
+void Canvas::beginPaintGL()
 {
     if (!m_painter || !isExposed() || Hidden == visibility())
         return;
@@ -140,15 +137,17 @@ void Canvas::paintGL()
     if (m_update)
     {
         m_painter->update();
-        
+
         m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
         m_update = false;
     }
     else
         m_painter->update(programsWithInvalidatedUniforms);
+}
 
-    m_painter->paint();
+void Canvas::endPaintGL()
+{
     m_grid->draw();
 
     m_context->swapBuffers(this);

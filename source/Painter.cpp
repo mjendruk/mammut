@@ -10,12 +10,13 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
+#include "Drawable.h"
 #include "FileAssociatedShader.h"
 #include "RenderCamera.h"
 #include "Cuboid.h"
 
-Painter::Painter()
-:   m_initialized(false)
+Painter::Painter(Drawable & cuboidDrawable)
+:   m_cuboidDrawable(cuboidDrawable)
 ,   m_program(nullptr)
 ,   m_fragShader(nullptr)
 ,   m_vertShader(nullptr)
@@ -62,18 +63,16 @@ void Painter::update(const QList<glow::Program *> & programs)
     }
 }
 
-void Painter::paint()
+void Painter::paint(Drawable & drawable, glm::mat4 modelMatrix)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_program->isLinked())
     {
         m_program->use();
-        // for (Cuboid * cuboid : *m_cuboids) {
-            // glm::mat4 scaleMatrix = glm::scale(cuboid->size());
-            // m_program->setUniform("model", cuboid->matrix() * scaleMatrix);
-            // drawCuboid();
-        // }
+
+        m_program->setUniform("model", modelMatrix);
+        drawable.draw();
         m_program->release();
     }
 }
