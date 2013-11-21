@@ -26,3 +26,10 @@ void RenderCamera::setCanvas(Canvas * canvas)
 {
     m_canvas = canvas;
 }
+
+void RenderCamera::pan(glm::vec3 panVector)
+{
+    setEye(panVector + m_eye);
+    setCenter(panVector + m_center);
+    update();
+}

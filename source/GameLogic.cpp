@@ -9,6 +9,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Cuboid.h"
+#include "RenderCamera.h"
 
 GameLogic::GameLogic()
 {
@@ -60,7 +61,6 @@ void GameLogic::initialize()
     btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, fallMotionState, fallShape, fallInertia);
     m_fallRigidBody = new btRigidBody(fallRigidBodyCI);
     m_dynamicsWorld->addRigidBody(m_fallRigidBody);
-
 }
 
 void GameLogic::update(int ms)
@@ -85,14 +85,18 @@ void GameLogic::keyPressed(int key)
 {
     switch (key)
     {
-    case Qt::Key_W: m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() + btVector3(0, 0, 5));
+    case Qt::Key_W: //m_fallRigidBody->setLinearVelocity(m_fallRigidBody->getLinearVelocity() + btVector3(0, 0, 5));
+                    m_camera->pan(glm::vec3(0.0f, 0.0f, -0.1f));
                     qDebug() << "Key  w pressed";
                     break;
-    case Qt::Key_A: qDebug() << "Key  a pressed";
+    case Qt::Key_A: m_camera->pan(glm::vec3(-0.1f, 0.0f, 0.0f)); 
+                    qDebug() << "Key  a pressed";
                     break;
-    case Qt::Key_S: qDebug() << "Key  s pressed";
+    case Qt::Key_S: m_camera->pan(glm::vec3(0.0f, 0.0f, 0.1f)); 
+                    qDebug() << "Key  s pressed";
                     break;
-    case Qt::Key_D: qDebug() << "Key  d pressed";
+    case Qt::Key_D: m_camera->pan(glm::vec3(0.1f, 0.0f, 0.0f)); 
+                    qDebug() << "Key  d pressed";
                     break;
     }
 }
@@ -111,4 +115,9 @@ void GameLogic::keyReleased(int key)
     case Qt::Key_D: qDebug() << "Key  d released";
         break;
     }
+}
+
+void GameLogic::assignCamera(RenderCamera * camera)
+{
+    m_camera = camera;
 }

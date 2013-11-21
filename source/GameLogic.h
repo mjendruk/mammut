@@ -6,6 +6,7 @@ class btDiscreteDynamicsWorld;
 class btRigidBody;
 
 class Cuboid;
+class RenderCamera;
 
 class GameLogic
 {
@@ -16,6 +17,7 @@ public:
     void update(int ms);
     void keyPressed(int key);
     void keyReleased(int key);
+    void assignCamera(RenderCamera * camera);
 
     const QVector<Cuboid *> & cuboids() const;
 
@@ -24,6 +26,7 @@ protected:
 
 protected:
     QVector<Cuboid *> m_cuboids;
+    RenderCamera * m_camera;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;
     btRigidBody * m_fallRigidBody;

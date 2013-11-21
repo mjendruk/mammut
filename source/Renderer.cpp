@@ -5,6 +5,7 @@
 #include "Painter.h"
 #include "Canvas.h"
 #include "GameLogic.h"
+#include "RenderCamera.h"
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
@@ -24,6 +25,9 @@ Renderer::Renderer(GameLogic & gameLogic)
     
     m_canvas->assignPainter(&m_painter);
     m_canvas->show();
+    
+    //quick hack for navigation
+    gameLogic.assignCamera(m_canvas->m_camera.data());
 }
 
 Renderer::~Renderer()

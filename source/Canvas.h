@@ -51,6 +51,9 @@ public:
 
     virtual void paintGL();
 
+    //quick hack for navigation testing
+    QScopedPointer<RenderCamera> m_camera;
+
 public slots:
     void toggleSwapInterval();
     void cameraChanged();
@@ -70,7 +73,6 @@ protected:
     QScopedPointer<QOpenGLContext> m_context;
 
     AbstractPainter * m_painter;
-    QScopedPointer<RenderCamera> m_camera;
 
     SwapInterval m_swapInterval;    ///< required for toggle
 

@@ -15,6 +15,7 @@ public:
     virtual ~RenderCamera();
 
     void setCanvas(Canvas * canvas);
+    void pan(glm::vec3 panVector);
 
 protected:
     virtual void changed() const;
