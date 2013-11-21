@@ -62,7 +62,7 @@ void Painter::update(const QList<glow::Program *> & programs)
     }
 }
 
-void Painter::paint(float timef)
+void Painter::paint()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -207,8 +207,6 @@ set(sources
     ${source_path}/Canvas.h
     ${source_path}/Cuboid.cpp
     ${source_path}/Cuboid.h
-    ${source_path}/CyclicTime.cpp
-    ${source_path}/CyclicTime.h
     ${source_path}/Drawable.cpp
     ${source_path}/Drawable.h
     ${source_path}/Game.cpp
