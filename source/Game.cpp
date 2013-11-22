@@ -28,7 +28,7 @@ void Game::run()
     while(m_loop) 
     {
         QCoreApplication::processEvents();
-        m_gameLogic.update(9001);
+        m_gameLogic.update(16);
         m_renderer.render();
     }
 }

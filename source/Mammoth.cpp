@@ -12,7 +12,7 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
 {
     m_modelMatrix = glm::translate(translationVector);
 
-    btCollisionShape * shape = new btBoxShape(btVector3(size.x, size.y, size.z));
+    btCollisionShape * shape = new btBoxShape(btVector3(size.x/2.0, size.y/2.0, size.z/2.0));
     btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
         btVector3(translationVector.x, translationVector.y, translationVector.z)));
 
@@ -23,7 +23,9 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, shape, fallInertia);
     m_rigidBody = new btRigidBody(rigidBodyCI);
     //add first impulse to mammoth
-    m_rigidBody->setLinearVelocity(btVector3(0, 0, -10));
+    m_rigidBody->setLinearVelocity(btVector3(0, 0, -5));
+    m_rigidBody->setDamping(0.0, 0.0);
+    m_rigidBody->setFriction(0.0);
 
     m_dynamicsWorld->addRigidBody(m_rigidBody);
 }

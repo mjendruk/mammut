@@ -21,7 +21,7 @@ GameLogic::GameLogic()
     m_dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
     m_dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
-    m_mammoth.reset(new Mammoth(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(-0.05f, .7f, 2.f)));
+    m_mammoth.reset(new Mammoth(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(0.0f, .7f, 4.5f)));
 
     m_camera.reset(new GameCamera(*m_mammoth));
 
@@ -47,7 +47,7 @@ void GameLogic::update(int ms)
 {
     QThread::msleep(2);
 
-    m_dynamicsWorld->stepSimulation(1 / 200.f);
+    m_dynamicsWorld->stepSimulation(ms / 1000.0f, 50, 0.001);
 
     for (Cuboid * cuboid : m_cuboids)
     {
@@ -103,7 +103,7 @@ void GameLogic::initializeTestlevel()
 {
     //m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.f, 0.f, 1.f), glm::vec3(0.f, 0.0f, 0.0f));
 
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.5f, 0.2f, 2.5f), glm::vec3(-0.25f, .5f, 3.0f));
+    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.5f, 0.2f, 2.5f), glm::vec3(0.0f, .5f, 3.0f));
 
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f), glm::vec3(0.5f, 0.0f, 0.0f));
     m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f), glm::vec3(-1.f, .50f, 0.0f));

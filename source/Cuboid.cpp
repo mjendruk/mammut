@@ -12,7 +12,7 @@ Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, 
 {
     m_modelMatrix = glm::translate(translationVector);
 
-    btCollisionShape * shape = new btBoxShape(btVector3(size.x, size.y, size.z));
+    btCollisionShape * shape = new btBoxShape(btVector3(size.x / 2.0, size.y / 2.0, size.z / 2.0));
     btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
         btVector3(translationVector.x, translationVector.y, translationVector.z)));
 
