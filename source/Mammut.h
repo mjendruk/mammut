@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "Commons.h"
+
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
@@ -18,7 +20,7 @@ public:
     const glm::mat4 rotation() const;
     const glm::mat4 & modelMatrix() const;
     void setModelMatrix(const glm::mat4 & modelMatrix);
-    void setGravity(int gravity);
+    void setGravity(Gravity gravity);
 
     void update();
 

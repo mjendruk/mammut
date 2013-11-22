@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-
 #include <QVector>
+#include "Commons.h"
 
 class btDiscreteDynamicsWorld;
 class btRigidBody;
@@ -20,20 +20,18 @@ public:
     void update(int ms);
     void keyPressed(int key);
     void keyReleased(int key);
+    
     const GameCamera & camera() const;
-
     const QVector<Cuboid *> & cuboids() const;
     const Mammut & mammut() const;
 
 protected:
-    enum gravity
-    {
-        up = 0,
-        right = 1,
-        down = 2,
-        left = 3
-    };
-
+    void initializeDynamicsWorld();
+    void initializeTestlevel();
+    
+    void changeGravity(Gravity direction);
+    
+protected:
     QVector<Cuboid *> m_cuboids;
     std::unique_ptr<Mammut> m_mammut;
     std::unique_ptr<GameCamera> m_camera;
@@ -41,8 +39,6 @@ protected:
     btDiscreteDynamicsWorld * m_dynamicsWorld;
     btRigidBody * m_fallRigidBody;
 
-    int m_activeGravity = gravity::down;
+    Gravity m_activeGravity;
 
-    void initializeTestlevel();
-    void changeGravity(int delta);
 };

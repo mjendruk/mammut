@@ -79,10 +79,10 @@ const glm::mat4 Mammut::rotation() const
     return Conversions::toGlmMat4(transform.getRotation());
 }
 
-void Mammut::setGravity(int gravity)
+void Mammut::setGravity(Gravity direction)
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
-    transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * gravity - 3.14));
+    transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * direction - 3.14));
     m_rigidBody->setCenterOfMassTransform(transform);
 }

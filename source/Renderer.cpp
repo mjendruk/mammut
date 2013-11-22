@@ -28,8 +28,8 @@ Renderer::Renderer(GameLogic & gameLogic)
 
     m_camera.setFovy(90.0);
     m_camera.setZFar(500.0);
+    
     m_canvas = new Canvas(format, &m_camera);
-
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
     m_canvas->setWidth(1024);
