@@ -2,12 +2,12 @@
 
 #include <glm/glm.hpp>
 
+class Mammoth;
+
 class GameCamera
 {
 public:
-    GameCamera(const glm::vec3 & eye = glm::vec3(0.0, 0.0, 1.0),
-           const glm::vec3 & center = glm::vec3(0.0, 0.0, 0.0),
-           const glm::vec3 & up = glm::vec3(0.0, 1.0, 0.0));
+    GameCamera(Mammoth & mammoth);
 
     virtual ~GameCamera();
 
@@ -16,6 +16,7 @@ public:
     void modifyPanVector(glm::vec3 panDelta);
 
     void pan();
+    void update();
 
     const glm::vec3 eye() const;
     const glm::vec3 center() const;
@@ -27,4 +28,6 @@ protected:
     glm::vec3 m_up;
 
     glm::vec3 m_panVector;
+
+    Mammoth & m_mammoth;
 };

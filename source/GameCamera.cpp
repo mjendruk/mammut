@@ -1,19 +1,25 @@
 #include "GameCamera.h"
 
+#include <glm/gtx/quaternion.hpp>
 
-GameCamera::GameCamera(const glm::vec3 & eye, const glm::vec3 & center,
-    const glm::vec3 & up)
-:    m_eye(eye)
-,    m_center(center)
-,    m_up(up)
-,    m_panVector(glm::vec3(0.f))
+#include "Mammoth.h"
+
+
+GameCamera::GameCamera(Mammoth & mammoth)
+:   m_mammoth(mammoth)
 {
-
 }
 
 GameCamera::~GameCamera()
 {
     
+}
+
+void GameCamera::update()
+{
+    m_center = m_mammoth.position();
+    m_eye = m_mammoth.position() + glm::vec3((glm::vec4(0.0f, 2.0f, 2.0f, 1.0f) * glm::inverse(m_mammoth.rotation())));
+    m_up = glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) *  glm::inverse(m_mammoth.rotation()));
 }
 
 void GameCamera::pan()

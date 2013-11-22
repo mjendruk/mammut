@@ -35,7 +35,5 @@ protected:
 
     RenderCamera m_camera;
 
-    const QVector<Cuboid *> * m_cuboids;
-    const Mammoth * m_mammoth;
     Drawable m_cuboidDrawable;
 };

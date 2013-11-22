@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <QVector>
 
 #include "GameCamera.h"
@@ -23,15 +25,12 @@ public:
     const GameCamera & camera() const;
 
     const QVector<Cuboid *> & cuboids() const;
-    const Mammoth * mammoth() const;
-
-protected:
-    void initialize();
+    const Mammoth & mammoth() const;
 
 protected:
     QVector<Cuboid *> m_cuboids;
-    Mammoth * m_mammoth;
-    GameCamera m_camera;
+    std::unique_ptr<Mammoth> m_mammoth;
+    std::unique_ptr<GameCamera> m_camera;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;
     btRigidBody * m_fallRigidBody;

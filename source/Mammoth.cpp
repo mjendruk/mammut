@@ -56,6 +56,23 @@ void Mammoth::updatePhysics()
 
     glm::mat4 mat;
     mat *= glm::translate(origin.x(), origin.y(), origin.z());
-    mat *= glm::rotate(quat.getAngle(), quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z());
+    mat *= glm::rotate(glm::degrees(quat.getAngle()), glm::vec3(quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z()));
     this->setModelMatrix(mat);
+}
+
+const glm::vec3 Mammoth::position() const
+{
+    btTransform transform;
+    m_rigidBody->getMotionState()->getWorldTransform(transform);
+    btVector3 origin = transform.getOrigin();
+    return glm::vec3(origin.x(), origin.y(), origin.z());
+}
+
+
+const glm::mat4 Mammoth::rotation() const
+{
+    btTransform transform;
+    m_rigidBody->getMotionState()->getWorldTransform(transform);
+    btQuaternion quaternion = transform.getRotation();
+    return glm::rotate(glm::degrees(quaternion.getAngle()), quaternion.getAxis().x(), quaternion.getAxis().y(), quaternion.getAxis().z());
 }

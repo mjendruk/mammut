@@ -34,9 +34,6 @@ Renderer::Renderer(GameLogic & gameLogic)
     m_canvas->setWidth(1024);
     m_canvas->setHeight(768);
     m_canvas->show();
-
-    m_cuboids = &gameLogic.cuboids();
-    m_mammoth = gameLogic.mammoth();
 }
 
 Renderer::~Renderer()
@@ -60,14 +57,14 @@ void Renderer::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (Cuboid * cuboid : *m_cuboids)
+    for (Cuboid * cuboid : m_gameLogic.cuboids())
     {
         glm::mat4 scaleMatrix = glm::scale(cuboid->size());
         m_painter.paint(m_cuboidDrawable, cuboid->modelMatrix() * scaleMatrix);
     }
 
-    glm::mat4 scaleMatrix = glm::scale(m_mammoth->size());
-    m_painter.paint(m_cuboidDrawable, m_mammoth->modelMatrix() * scaleMatrix);
+    glm::mat4 scaleMatrix = glm::scale(m_gameLogic.mammoth().size());
+    m_painter.paint(m_cuboidDrawable, m_gameLogic.mammoth().modelMatrix() * scaleMatrix);
 
     m_canvas->endPaintGL();
 
