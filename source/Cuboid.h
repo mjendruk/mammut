@@ -5,12 +5,11 @@
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
+
 class Cuboid
 {
 public:
-    //Cuboid(btDiscreteDynamicsWorld dynamicsWorld, const glm::vec3 & size);
-    
-    Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector = glm::vec3());
+    Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector);
          
     ~Cuboid();
 
@@ -18,7 +17,7 @@ public:
     const glm::mat4 & modelMatrix() const;
     void setModelMatrix(const glm::mat4 & modelMatrix);
 
-    void updatePhysics();
+    void update();
 
 protected:
     glm::mat4 m_modelMatrix;

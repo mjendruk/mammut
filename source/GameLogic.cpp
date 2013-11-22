@@ -1,16 +1,13 @@
 #include "GameLogic.h"
 
 #include <glm/gtx/transform.hpp>
-
-#include <QDebug>
-#include <QThread>
-#include <QVector>
-
 #include <btBulletDynamicsCommon.h>
 
+#include <QVector>
+
 #include "Cuboid.h"
-#include "Mammoth.h"
-#include "RenderCamera.h"
+#include "GameCamera.h"
+#include "Mammut.h"
 
 GameLogic::GameLogic()
 :   m_activeGravity(gravity::down)
@@ -22,10 +19,10 @@ GameLogic::GameLogic()
     m_dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
     m_dynamicsWorld->setGravity(btVector3(0, -9.81, 0));
 
-    m_mammoth.reset(new Mammoth(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(0.0f, .7f, 4.5f)));
-    m_mammoth->setGravity(gravity::down);
+    m_mammut.reset(new Mammut(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(0.0f, .7f, 4.5f)));
+    m_mammut->setGravity(gravity::down);
 
-    m_camera.reset(new GameCamera(*m_mammoth));
+    m_camera.reset(new GameCamera(*m_mammut));
 
     initializeTestlevel();
 }  
@@ -40,23 +37,21 @@ const QVector<Cuboid *> & GameLogic::cuboids() const
     return m_cuboids;
 }
 
-const Mammoth & GameLogic::mammoth() const
+const Mammut & GameLogic::mammut() const
 {
-    return *m_mammoth;
+    return *m_mammut;
 }
 
 void GameLogic::update(int ms)
 {
-    QThread::msleep(2);
-
     m_dynamicsWorld->stepSimulation(ms / 1000.0f, 50, 0.01);
 
     for (Cuboid * cuboid : m_cuboids)
     {
-        cuboid->updatePhysics();
+        cuboid->update();
     }
     
-    m_mammoth->updatePhysics();
+    m_mammut->update();
 
     m_camera->update();
 }
@@ -123,5 +118,5 @@ void GameLogic::changeGravity(int delta)
     case gravity::left: m_dynamicsWorld->setGravity(btVector3(-9.81, 0, 0)); break;
     }
 
-    m_mammoth->setGravity(m_activeGravity);
+    m_mammut->setGravity(m_activeGravity);
 }

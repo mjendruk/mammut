@@ -3,8 +3,6 @@
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include <QDebug>
-
 
 Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
 :   m_dynamicsWorld(dynamicsWorld),
@@ -41,7 +39,7 @@ void Cuboid::setModelMatrix(const glm::mat4 & matrix)
     m_modelMatrix = matrix;
 }
 
-void Cuboid::updatePhysics()
+void Cuboid::update()
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);

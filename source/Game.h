@@ -1,14 +1,11 @@
 #pragma once
 
-
 #include "AbstractApplication.h"
 #include "GameLogic.h"
 #include "Renderer.h"
 
 class QMouseEvent;
 
-class GameLogic;
-class Renderer;
 
 class Game : public AbstractApplication
 {
@@ -22,7 +19,7 @@ public slots:
 
 protected:
     void mouseMoveEvent(QMouseEvent * event);
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject * obj, QEvent * event);
 
 protected:
     GameLogic m_gameLogic;

@@ -3,21 +3,16 @@
 #include <GL/glew.h>
 
 #include <QWindow>
-#include <QList>
 #include <QScopedPointer>
 
 class QOpenGLContext;
 class QSurfaceFormat;
-class QKeyEvent;
 
-class AbstractPainter;
-class Navigation;
 class RenderCamera;
 
 namespace glow 
 {
     class AdaptiveGrid;
-    class Timer;
 }
 
 
@@ -73,7 +68,4 @@ protected:
 
     long double m_swapts;
     unsigned int m_swaps;
-
-    bool m_update; // checked in paintGL, if true, update of program gets triggered
-
 };

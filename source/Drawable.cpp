@@ -1,4 +1,3 @@
-
 #include "Drawable.h"
 
 #include <cassert>

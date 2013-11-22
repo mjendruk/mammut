@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include <QCoreApplication>
 #include <QTimer>
 #include <QMouseEvent>
 

@@ -1,6 +1,6 @@
 #include "Canvas.h"
 
-#include <cassert>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <glowutils/AdaptiveGrid.h>
 #include <glowutils/NavigationMath.h>
@@ -11,8 +11,6 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
-#include <glm/gtc/type_ptr.hpp>
-
 #include "RenderCamera.h"
 
 
@@ -22,7 +20,6 @@ Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen, RenderCamera * c
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
-,   m_update(false)
 ,   m_camera(camera)
 {
     setSurfaceType(OpenGLSurface); 

@@ -2,12 +2,12 @@
 
 #include <glm/glm.hpp>
 
-class Mammoth;
+class Mammut;
 
 class GameCamera
 {
 public:
-    GameCamera(Mammoth & mammoth);
+    GameCamera(Mammut & mammut);
 
     virtual ~GameCamera();
 
@@ -25,5 +25,5 @@ protected:
 
     glm::vec3 m_panVector;
 
-    Mammoth & m_mammoth;
+    Mammut & m_mammut;
 };

@@ -1,12 +1,10 @@
-#include "Mammoth.h"
+#include "Mammut.h"
 
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include <QDebug>
 
-
-Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
+Mammut::Mammut(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
 :   m_dynamicsWorld(dynamicsWorld),
     m_size(size)
 {
@@ -22,7 +20,7 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, shape, fallInertia);
     m_rigidBody = new btRigidBody(rigidBodyCI);
-    // add first impulse to mammoth
+    // add first impulse to mammut
     m_rigidBody->setLinearVelocity(btVector3(0, 0, -5));
     m_rigidBody->setDamping(0.4, 0.0);
     m_rigidBody->setFriction(0.9);
@@ -32,26 +30,26 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
     m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
 
-Mammoth::~Mammoth()
+Mammut::~Mammut()
 {
 }
 
-const glm::vec3 & Mammoth::size() const
+const glm::vec3 & Mammut::size() const
 {
     return m_size;
 }
 
-const glm::mat4 & Mammoth::modelMatrix() const
+const glm::mat4 & Mammut::modelMatrix() const
 {
     return m_modelMatrix;
 }
 
-void Mammoth::setModelMatrix(const glm::mat4 & matrix)
+void Mammut::setModelMatrix(const glm::mat4 & matrix)
 {
     m_modelMatrix = matrix;
 }
 
-void Mammoth::updatePhysics()
+void Mammut::update()
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
@@ -67,7 +65,7 @@ void Mammoth::updatePhysics()
     m_rigidBody->setLinearVelocity(btVector3(velocity.x(), velocity.y(), -5));
 }
 
-const glm::vec3 Mammoth::position() const
+const glm::vec3 Mammut::position() const
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
@@ -75,7 +73,7 @@ const glm::vec3 Mammoth::position() const
     return glm::vec3(origin.x(), origin.y(), origin.z());
 }
 
-const glm::mat4 Mammoth::rotation() const
+const glm::mat4 Mammut::rotation() const
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
@@ -83,7 +81,7 @@ const glm::mat4 Mammoth::rotation() const
     return glm::rotate(glm::degrees(quaternion.getAngle()), quaternion.getAxis().x(), quaternion.getAxis().y(), quaternion.getAxis().z());
 }
 
-void Mammoth::setGravity(int gravity)
+void Mammut::setGravity(int gravity)
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);

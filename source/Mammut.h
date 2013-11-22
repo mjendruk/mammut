@@ -6,14 +6,12 @@
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
-class Mammoth
+class Mammut
 {
 public:
-    //Cuboid(btDiscreteDynamicsWorld dynamicsWorld, const glm::vec3 & size);
-    
-    Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector = glm::vec3());
+    Mammut(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector = glm::vec3());
          
-    ~Mammoth();
+    ~Mammut();
 
     const glm::vec3 & size() const;
     const glm::vec3 position() const;
@@ -22,11 +20,11 @@ public:
     void setModelMatrix(const glm::mat4 & modelMatrix);
     void setGravity(int gravity);
 
-    void updatePhysics();
+    void update();
 
 protected:
     glm::mat4 m_modelMatrix;
     glm::vec3 m_size;
     btDiscreteDynamicsWorld * m_dynamicsWorld;
-    btRigidBody* m_rigidBody;
+    btRigidBody * m_rigidBody;
 };

@@ -1,18 +1,13 @@
 #pragma once
 
-#include <QScopedPointer>
-#include <QVector>
+#include <QObject>
 
 #include "Drawable.h"
 #include "Painter.h"
 #include "RenderCamera.h"
 
-class QObject;
-
 class Canvas;
 class GameLogic;
-class Cuboid;
-class Mammoth;
 
 class Renderer
 {

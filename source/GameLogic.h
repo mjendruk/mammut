@@ -4,13 +4,12 @@
 
 #include <QVector>
 
-#include "GameCamera.h"
-
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 
 class Cuboid;
-class Mammoth;
+class GameCamera;
+class Mammut;
 
 class GameLogic
 {
@@ -24,7 +23,7 @@ public:
     const GameCamera & camera() const;
 
     const QVector<Cuboid *> & cuboids() const;
-    const Mammoth & mammoth() const;
+    const Mammut & mammut() const;
 
 protected:
     enum gravity
@@ -36,7 +35,7 @@ protected:
     };
 
     QVector<Cuboid *> m_cuboids;
-    std::unique_ptr<Mammoth> m_mammoth;
+    std::unique_ptr<Mammut> m_mammut;
     std::unique_ptr<GameCamera> m_camera;
 
     btDiscreteDynamicsWorld * m_dynamicsWorld;
