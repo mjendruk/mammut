@@ -25,7 +25,7 @@ public:
 
     virtual bool initialize() = 0;
 
-    virtual void paint(Drawable & drawable, glm::mat4 & modelMatrix) = 0;
+    virtual void paint(Drawable & drawable, const glm::mat4 & modelMatrix) = 0;
 
     virtual void update(const QList<glow::Program *> & programs) = 0;
 };

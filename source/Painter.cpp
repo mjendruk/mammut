@@ -56,7 +56,7 @@ void Painter::update(const QList<glow::Program *> & programs)
     }
 }
 
-void Painter::paint(Drawable & drawable, glm::mat4 & modelMatrix)
+void Painter::paint(Drawable & drawable, const glm::mat4 & modelMatrix)
 {
     if (m_program->isLinked())
     {
