@@ -205,6 +205,8 @@ set(sources
     ${source_path}/AbstractPainter.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
+    ${source_path}/Conversions.cpp
+    ${source_path}/Conversions.h
     ${source_path}/Cuboid.cpp
     ${source_path}/Cuboid.h
     ${source_path}/Drawable.cpp
