@@ -5,7 +5,7 @@
 
 #include "Drawable.h"
 #include "Painter.h"
-#include "RenderCamera.h";
+#include "RenderCamera.h"
 
 class QObject;
 
