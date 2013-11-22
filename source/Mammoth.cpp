@@ -24,9 +24,9 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
     m_rigidBody = new btRigidBody(rigidBodyCI);
     // add first impulse to mammoth
     m_rigidBody->setLinearVelocity(btVector3(0, 0, -5));
-    m_rigidBody->setDamping(0.0, 0.0);
-    m_rigidBody->setFriction(0.0);
-    m_rigidBody->setAngularFactor(btVector3(0,0,1));
+    m_rigidBody->setDamping(0.4, 0.0);
+    m_rigidBody->setFriction(0.9);
+    m_rigidBody->setAngularFactor(btVector3(0,0,0));
     // m_rigidBody->setLinearFactor(btVector3(0,0,1));
 
     m_dynamicsWorld->addRigidBody(m_rigidBody);
@@ -62,6 +62,9 @@ void Mammoth::updatePhysics()
     mat *= glm::translate(origin.x(), origin.y(), origin.z());
     mat *= glm::rotate(glm::degrees(quat.getAngle()), glm::vec3(quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z()));
     this->setModelMatrix(mat);
+
+    btVector3 velocity = m_rigidBody->getLinearVelocity();
+    m_rigidBody->setLinearVelocity(btVector3(velocity.x(), velocity.y(), -5));
 }
 
 const glm::vec3 Mammoth::position() const
@@ -72,11 +75,21 @@ const glm::vec3 Mammoth::position() const
     return glm::vec3(origin.x(), origin.y(), origin.z());
 }
 
-
 const glm::mat4 Mammoth::rotation() const
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
     btQuaternion quaternion = transform.getRotation();
     return glm::rotate(glm::degrees(quaternion.getAngle()), quaternion.getAxis().x(), quaternion.getAxis().y(), quaternion.getAxis().z());
+}
+
+void Mammoth::setGravity(int gravity)
+{
+    btTransform transform;
+    m_rigidBody->getMotionState()->getWorldTransform(transform);
+    transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * gravity - 3.14));
+    //m_rigidBody->getMotionState()->setWorldTransform(transform);
+    //m_rigidBody->setMotionState();
+    m_rigidBody->setCenterOfMassTransform(transform);
+
 }

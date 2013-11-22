@@ -11,11 +11,6 @@ public:
 
     virtual ~GameCamera();
 
-    glm::vec3 panVector();
-    void setPanVector(glm::vec3 pan);
-    void modifyPanVector(glm::vec3 panDelta);
-
-    void pan();
     void update();
 
     const glm::vec3 eye() const;
@@ -23,6 +18,7 @@ public:
     const glm::vec3 up() const;
 
 protected:
+    static const glm::vec3 s_offset;
     glm::vec3 m_eye;
     glm::vec3 m_center;
     glm::vec3 m_up;

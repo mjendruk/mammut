@@ -4,6 +4,8 @@
 
 #include "Mammoth.h"
 
+const glm::vec3 GameCamera::s_offset = glm::vec3(0.0f, 0.1f, 0.4f);
+
 
 GameCamera::GameCamera(Mammoth & mammoth)
 :   m_mammoth(mammoth)
@@ -18,31 +20,9 @@ GameCamera::~GameCamera()
 void GameCamera::update()
 {
     m_center = m_mammoth.position();
-    m_eye = m_mammoth.position() + glm::vec3((glm::vec4(0.0f, 2.0f, 2.0f, 1.0f) * glm::inverse(m_mammoth.rotation())));
+    m_eye = m_mammoth.position() + glm::vec3(glm::vec4(s_offset, 1.0) * glm::inverse(m_mammoth.rotation()));
     m_up = glm::vec3(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) *  glm::inverse(m_mammoth.rotation()));
 }
-
-void GameCamera::pan()
-{
-    m_eye += m_panVector;
-    m_center += m_panVector;
-}
-
-void GameCamera::setPanVector(glm::vec3 pan)
-{
-    m_panVector = pan;
-}
-
-void GameCamera::modifyPanVector(glm::vec3 panDelta)
-{
-    m_panVector += panDelta;
-}
-
-glm::vec3 GameCamera::panVector()
-{
-    return m_panVector;
-}
-
 
 const glm::vec3 GameCamera::eye() const
 {
