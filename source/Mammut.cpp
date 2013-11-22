@@ -3,6 +3,8 @@
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
+#include "Conversions.h"
+
 
 Mammut::Mammut(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
 :   m_dynamicsWorld(dynamicsWorld),
@@ -53,12 +55,10 @@ void Mammut::update()
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
-    btVector3 origin = transform.getOrigin();
-    btQuaternion quat = transform.getRotation();
 
     glm::mat4 mat;
-    mat *= glm::translate(origin.x(), origin.y(), origin.z());
-    mat *= glm::rotate(glm::degrees(quat.getAngle()), glm::vec3(quat.getAxis().x(), quat.getAxis().y(), quat.getAxis().z()));
+    mat *= Conversions::toGlmMat4(transform.getOrigin());
+    mat *= Conversions::toGlmMat4(transform.getRotation());
     this->setModelMatrix(mat);
 
     btVector3 velocity = m_rigidBody->getLinearVelocity();
@@ -69,16 +69,14 @@ const glm::vec3 Mammut::position() const
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
-    btVector3 origin = transform.getOrigin();
-    return glm::vec3(origin.x(), origin.y(), origin.z());
+    return Conversions::toGlmVec3(transform.getOrigin());
 }
 
 const glm::mat4 Mammut::rotation() const
 {
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
-    btQuaternion quaternion = transform.getRotation();
-    return glm::rotate(glm::degrees(quaternion.getAngle()), quaternion.getAxis().x(), quaternion.getAxis().y(), quaternion.getAxis().z());
+    return Conversions::toGlmMat4(transform.getRotation());
 }
 
 void Mammut::setGravity(int gravity)
@@ -86,8 +84,5 @@ void Mammut::setGravity(int gravity)
     btTransform transform;
     m_rigidBody->getMotionState()->getWorldTransform(transform);
     transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * gravity - 3.14));
-    //m_rigidBody->getMotionState()->setWorldTransform(transform);
-    //m_rigidBody->setMotionState();
     m_rigidBody->setCenterOfMassTransform(transform);
-
 }
