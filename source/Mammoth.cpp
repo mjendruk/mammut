@@ -22,10 +22,12 @@ Mammoth::Mammoth(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size
 
     btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, shape, fallInertia);
     m_rigidBody = new btRigidBody(rigidBodyCI);
-    //add first impulse to mammoth
+    // add first impulse to mammoth
     m_rigidBody->setLinearVelocity(btVector3(0, 0, -5));
     m_rigidBody->setDamping(0.0, 0.0);
     m_rigidBody->setFriction(0.0);
+    m_rigidBody->setAngularFactor(btVector3(0,0,1));
+    // m_rigidBody->setLinearFactor(btVector3(0,0,1));
 
     m_dynamicsWorld->addRigidBody(m_rigidBody);
 }
