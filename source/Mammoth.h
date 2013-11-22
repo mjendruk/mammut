@@ -16,8 +16,8 @@ public:
     ~Mammoth();
 
     const glm::vec3 & size() const;
-    const glm::vec3 Mammoth::position() const;
-    const glm::mat4 Mammoth::rotation() const;
+    const glm::vec3 position() const;
+    const glm::mat4 rotation() const;
     const glm::mat4 & modelMatrix() const;
     void setModelMatrix(const glm::mat4 & modelMatrix);
 
