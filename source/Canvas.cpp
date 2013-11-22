@@ -14,9 +14,8 @@
 #include "RenderCamera.h"
 
 
-Canvas::Canvas(const QSurfaceFormat & format, QScreen * screen, RenderCamera * camera)
-:   QWindow(screen)
-,   m_context(new QOpenGLContext)
+Canvas::Canvas(const QSurfaceFormat & format, RenderCamera * camera)
+:   QWindow((QScreen*)nullptr)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
@@ -35,10 +34,7 @@ Canvas::~Canvas()
 
 QSurfaceFormat Canvas::format() const
 {
-    if (!m_context)
-        return QSurfaceFormat();
-
-    return m_context->format();
+    return m_context.format();
 }
 
 const QString Canvas::querys(const GLenum penum) 
@@ -59,14 +55,14 @@ const GLint Canvas::queryi(const GLenum penum)
 
 void Canvas::initializeGL(const QSurfaceFormat & format)
 {
-    m_context->setFormat(format);
-    if (!m_context->create())
+    m_context.setFormat(format);
+    if (!m_context.create())
     {
         qCritical() << "Errors during creation of OpenGL context.";
         return;
     }
 
-    m_context->makeCurrent(this);
+    m_context.makeCurrent(this);
     
     glewExperimental = GL_TRUE;
     if (!(glewInit() == GLEW_OK))
@@ -93,20 +89,20 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
-    m_context->doneCurrent();
+    m_context.doneCurrent();
 }
 
 void Canvas::resizeEvent(QResizeEvent * event)
 {
     m_camera->setViewport(glm::ivec2(event->size().width(), event->size().height()));
 
-    m_context->makeCurrent(this);
+    m_context.makeCurrent(this);
 
     glViewport(0, 0, event->size().width(), event->size().height());
     
     m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
-    m_context->doneCurrent();
+    m_context.doneCurrent();
 }
 
 void Canvas::beginPaintGL()
@@ -114,7 +110,7 @@ void Canvas::beginPaintGL()
     if (!isExposed() || Hidden == visibility())
         return;
 
-    m_context->makeCurrent(this);
+    m_context.makeCurrent(this);
 
     m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
@@ -124,14 +120,14 @@ void Canvas::endPaintGL()
 {
     m_grid->draw();
 
-    m_context->swapBuffers(this);
-    m_context->doneCurrent();
+    m_context.swapBuffers(this);
+    m_context.doneCurrent();
 }
 
 
 void Canvas::setSwapInterval(SwapInterval swapInterval)
 {
-    m_context->makeCurrent(this);
+    m_context.makeCurrent(this);
 
     bool result(false);
     m_swapInterval = swapInterval;
@@ -143,7 +139,7 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
     static SWAPINTERVALEXTPROC wglSwapIntervalEXT = nullptr;
 
     if (!wglSwapIntervalEXT)
-        wglSwapIntervalEXT = reinterpret_cast<SWAPINTERVALEXTPROC>(m_context->getProcAddress("wglSwapIntervalEXT"));
+        wglSwapIntervalEXT = reinterpret_cast<SWAPINTERVALEXTPROC>(m_context.getProcAddress("wglSwapIntervalEXT"));
     if (wglSwapIntervalEXT)
         result = wglSwapIntervalEXT(swapInterval);
 
@@ -157,7 +153,7 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
     static SWAPINTERVALEXTPROC glXSwapIntervalSGI = nullptr;
 
     if (!glXSwapIntervalSGI)
-        glXSwapIntervalSGI = reinterpret_cast<SWAPINTERVALEXTPROC>(m_context->getProcAddress("glXSwapIntervalSGI"));
+        glXSwapIntervalSGI = reinterpret_cast<SWAPINTERVALEXTPROC>(m_context.getProcAddress("glXSwapIntervalSGI"));
     if (glXSwapIntervalSGI)
         result = glXSwapIntervalSGI(swapInterval);
 
@@ -170,7 +166,7 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
         qDebug("Setting swap interval to %s."
             , qPrintable(swapIntervalToString(swapInterval)));
 
-    m_context->doneCurrent();
+    m_context.doneCurrent();
 }
 
 void Canvas::toggleSwapInterval()

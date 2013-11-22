@@ -4,8 +4,8 @@
 
 #include <QWindow>
 #include <QScopedPointer>
+#include <QOpenGLContext>
 
-class QOpenGLContext;
 class QSurfaceFormat;
 
 class RenderCamera;
@@ -29,9 +29,7 @@ public:
     };
 
 public:
-    Canvas(
-        const QSurfaceFormat & format
-    ,   QScreen * screen, RenderCamera * camera);
+    Canvas(const QSurfaceFormat & format, RenderCamera * camera);
     virtual ~Canvas();
 
     // from QWindow
@@ -60,7 +58,7 @@ protected:
     virtual void resizeEvent(QResizeEvent * event);
 
 protected:
-    QScopedPointer<QOpenGLContext> m_context;
+    QOpenGLContext m_context;
 
     SwapInterval m_swapInterval;    ///< required for toggle
 
