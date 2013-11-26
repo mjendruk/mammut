@@ -55,6 +55,7 @@ void Renderer::render()
 
     m_camera.update(m_gameLogic.camera());
     m_painter.setTransformUniform(m_camera.viewProjection());
+    m_painter.setEyeUniform(m_camera.eye());
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -46,6 +46,16 @@ void Painter::setTransformUniform(const glm::mat4 & viewProjection)
     }
 }
 
+void Painter::setEyeUniform(const glm::vec3 & eye)
+{
+    if (m_program->isLinked())
+    {
+        m_program->use();
+        m_program->setUniform("eye", eye);
+        m_program->release();
+    }
+}
+
 void Painter::update(const QList<glow::Program *> & programs)
 {
     if (programs.contains(m_program) && m_program->isLinked())

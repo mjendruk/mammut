@@ -23,6 +23,8 @@ public:
     virtual void paint(Drawable & drawable, const glm::mat4 & modelMatrix);
 
     void setTransformUniform(const glm::mat4 & viewProjection);
+    void setEyeUniform(const glm::vec3 & eye);
+    
     virtual void update(const QList<glow::Program *> & programs);
 
 protected:
