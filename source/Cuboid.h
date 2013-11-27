@@ -1,27 +1,31 @@
 #pragma once
 
+#include <memory>
 #include <glm/glm.hpp>
 
-class btDiscreteDynamicsWorld;
+class btCollisionShape;
 class btRigidBody;
+class btMotionState;
+class btDiscreteDynamicsWorld;
 
 
 class Cuboid
 {
 public:
-    Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector);
+    Cuboid(const glm::vec3 & size,
+           const glm::vec3 & translation,
+           btDiscreteDynamicsWorld & dynamicsWorld);
          
     ~Cuboid();
 
-    const glm::vec3 & size() const;
-    const glm::mat4 & modelMatrix() const;
-    void setModelMatrix(const glm::mat4 & modelMatrix);
-
-    void update();
+    const glm::mat4 & modelTransform() const;
 
 protected:
-    glm::mat4 m_modelMatrix;
-    glm::vec3 m_size;
-    btDiscreteDynamicsWorld * m_dynamicsWorld;
-    btRigidBody* m_rigidBody;
+    glm::mat4 m_modelTransform;
+
+    std::unique_ptr<btRigidBody> m_rigidBody;
+    std::unique_ptr<btMotionState> m_motionState;
+    std::unique_ptr<btCollisionShape> m_collisionShape;
+    
+    btDiscreteDynamicsWorld & m_dynamicsWorld;
 };

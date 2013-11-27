@@ -11,5 +11,7 @@ namespace Conversions
 glm::vec3 toGlmVec3(const btVector3 & vec3);
 glm::mat4 toGlmMat4(const btQuaternion & quat);
 glm::mat4 toGlmMat4(const btVector3 & vec3);
+    
+btVector3 toBtVec3(const glm::vec3 & vec3);
 
 }

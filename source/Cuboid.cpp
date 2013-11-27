@@ -6,48 +6,30 @@
 #include "Conversions.h"
 
 
-Cuboid::Cuboid(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
-:   m_dynamicsWorld(dynamicsWorld),
-    m_size(size)
+Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,
+    btDiscreteDynamicsWorld & dynamicsWorld)
+:    m_dynamicsWorld(dynamicsWorld)
 {
-    m_modelMatrix = glm::translate(translationVector);
+    m_modelTransform = glm::translate(translation) * glm::scale(size);
+    m_collisionShape.reset(new btBoxShape(btVector3(size.x / 2.0f,
+    
+                                                    size.y / 2.0f,
+                                                    size.z / 2.0f)));
+    
+    m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
+                                                             Conversions::toBtVec3(translation))));
 
-    btCollisionShape * shape = new btBoxShape(btVector3(size.x / 2.0, size.y / 2.0, size.z / 2.0));
-    btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
-        btVector3(translationVector.x, translationVector.y, translationVector.z)));
-
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(0, motionState, shape, btVector3(0, 0, 0));
-    m_rigidBody = new btRigidBody(rigidBodyCI);
-
-    m_dynamicsWorld->addRigidBody(m_rigidBody);
+    btRigidBody::btRigidBodyConstructionInfo info(0, m_motionState.get(), m_collisionShape.get());
+    m_rigidBody.reset(new btRigidBody(info));
+    
+    m_dynamicsWorld.addRigidBody(m_rigidBody.get());
 }
 
 Cuboid::~Cuboid()
 {
 }
 
-const glm::vec3 & Cuboid::size() const
+const glm::mat4 & Cuboid::modelTransform() const
 {
-    return m_size;
-}
-
-const glm::mat4 & Cuboid::modelMatrix() const
-{
-    return m_modelMatrix;
-}
-
-void Cuboid::setModelMatrix(const glm::mat4 & matrix)
-{
-    m_modelMatrix = matrix;
-}
-
-void Cuboid::update()
-{
-    btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
-
-    glm::mat4 mat;
-    mat *= Conversions::toGlmMat4(transform.getOrigin());
-    mat *= Conversions::toGlmMat4(transform.getRotation());
-    this->setModelMatrix(mat);
+    return m_modelTransform;
 }

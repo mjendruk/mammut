@@ -19,5 +19,10 @@ glm::mat4 toGlmMat4(const btVector3 & vec3)
 {
     return glm::translate(vec3.x(), vec3.y(), vec3.z());
 }
-
+    
+btVector3 toBtVec3(const glm::vec3 & vec3)
+{
+    return btVector3(vec3.x, vec3.y, vec3.z);
 }
+
+} // namespace Conversions

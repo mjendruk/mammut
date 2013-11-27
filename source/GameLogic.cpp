@@ -40,11 +40,6 @@ const Mammut & GameLogic::mammut() const
 void GameLogic::update(int ms)
 {
     m_dynamicsWorld->stepSimulation(ms / 1000.0f, 50, 0.01);
-
-    for (Cuboid * cuboid : m_cuboids)
-    {
-        cuboid->update();
-    }
     
     m_mammut->update();
     m_camera->update();
@@ -82,20 +77,20 @@ void GameLogic::initializeDynamicsWorld()
 
 void GameLogic::initializeTestlevel()
 {
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.5f, 0.2f, 2.5f) * 15.f, glm::vec3(0.0f, .5f, 3.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(0.5f, 0.0f, 0.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(-1.f, .50f, 0.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -5.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.5f, 0.8f, -5.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(-0.3f, 0.2f, -6.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.4f, -0.3f, -7.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.4f, .5f, 1.5f) * 15.f, glm::vec3(-0.2f, 0.8f, -5.4f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.1, .3f, 2.f) * 15.f, glm::vec3(-0.6f, -0.2f, -4.5f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.7f) * 15.f, glm::vec3(-0.4f, -0.3f, -8.f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.35, .5f, 2.f) * 15.f, glm::vec3(0.f, 0.0f, -10.0f) * 5.f);
-    m_cuboids << new Cuboid(m_dynamicsWorld, glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.f, 0.0f, -6.0f) * 5.f);
+    m_cuboids << new Cuboid(glm::vec3(0.5f, 0.2f, 2.5f) * 15.f, glm::vec3(0.0f, .5f, 3.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(0.5f, 0.0f, 0.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(-1.f, .50f, 0.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -5.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.5f, 0.8f, -5.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(-0.3f, 0.2f, -6.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.4f, -0.3f, -7.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.4f, .5f, 1.5f) * 15.f, glm::vec3(-0.2f, 0.8f, -5.4f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.1, .3f, 2.f) * 15.f, glm::vec3(-0.6f, -0.2f, -4.5f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.7f) * 15.f, glm::vec3(-0.4f, -0.3f, -8.f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.35, .5f, 2.f) * 15.f, glm::vec3(0.f, 0.0f, -10.0f) * 5.f, *m_dynamicsWorld);
+    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.f, 0.0f, -6.0f) * 5.f, *m_dynamicsWorld);
 }
 
 

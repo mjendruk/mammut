@@ -60,10 +60,7 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (Cuboid * cuboid : m_gameLogic.cuboids())
-    {
-        glm::mat4 scaleMatrix = glm::scale(cuboid->size());
-        m_painter.paint(m_cuboidDrawable, cuboid->modelMatrix() * scaleMatrix);
-    }
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
 
     glm::mat4 scaleMatrix = glm::scale(m_gameLogic.mammut().size());
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelMatrix() * scaleMatrix);
