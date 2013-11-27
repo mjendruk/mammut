@@ -220,6 +220,8 @@ set(sources
     ${source_path}/GameCamera.h
     ${source_path}/Mammut.cpp
     ${source_path}/Mammut.h
+    ${source_path}/MammutMotionState.cpp
+    ${source_path}/MammutMotionState.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
     ${source_path}/FileAssociatedAsset.cpp

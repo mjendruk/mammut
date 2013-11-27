@@ -20,6 +20,8 @@ int main(int argc, char* argv[])
 {
     int result = -1;
     
+//    playStartUpSound();
+    
     Game * game = new Game(argc, argv);
     
     result = game->exec();

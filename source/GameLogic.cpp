@@ -16,7 +16,7 @@ GameLogic::GameLogic()
     initializeDynamicsWorld();
     initializeTestlevel();
     
-    m_mammut.reset(new Mammut(m_dynamicsWorld, glm::vec3(0.1), glm::vec3(0.0f, .7f, 4.5f)));
+    m_mammut.reset(new Mammut(glm::vec3(0.0f, .7f, 4.5f), *m_dynamicsWorld));
     m_camera.reset(new GameCamera(*m_mammut));
     
     changeGravity(kDown);
@@ -113,5 +113,5 @@ void GameLogic::changeGravity(Gravity direction)
     case kRight: m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
     }
 
-    m_mammut->setGravity(m_activeGravity);
+    m_mammut->changeGravity(m_activeGravity);
 }

@@ -1,32 +1,45 @@
 #pragma once
 
+#include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 #include "Commons.h"
 
-class btDiscreteDynamicsWorld;
+class btCollisionShape;
 class btRigidBody;
+class btDiscreteDynamicsWorld;
+
+
+class MammutMotionState;
 
 class Mammut
 {
 public:
-    Mammut(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector = glm::vec3());
+    Mammut(const glm::vec3 translation,
+           btDiscreteDynamicsWorld & dynamicsWorld);
          
     ~Mammut();
 
-    const glm::vec3 & size() const;
-    const glm::vec3 position() const;
-    const glm::mat4 rotation() const;
-    const glm::mat4 & modelMatrix() const;
-    void setModelMatrix(const glm::mat4 & modelMatrix);
-    void setGravity(Gravity gravity);
-
     void update();
+    void changeGravity(Gravity gravity);
+    
+    glm::mat4 modelTransform() const;
+    
+    const glm::vec3 & position() const;
+    const glm::mat4 & rotation() const;
+    
+    void setPosition(const glm::vec3 & position);
+    void setRotation(const glm::mat4 & rotation);
 
 protected:
-    glm::mat4 m_modelMatrix;
-    glm::vec3 m_size;
-    btDiscreteDynamicsWorld * m_dynamicsWorld;
-    btRigidBody * m_rigidBody;
+    glm::vec3 m_position;
+    glm::mat4 m_rotation;
+    glm::mat4 m_scaleTransform;
+
+    std::unique_ptr<btRigidBody> m_rigidBody;
+    std::unique_ptr<MammutMotionState> m_motionState;
+    std::unique_ptr<btCollisionShape> m_collisionShape;
+    
+    btDiscreteDynamicsWorld & m_dynamicsWorld;
 };

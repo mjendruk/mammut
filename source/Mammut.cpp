@@ -4,85 +4,73 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Conversions.h"
+#include "MammutMotionState.h"
 
-
-Mammut::Mammut(btDiscreteDynamicsWorld * dynamicsWorld, const glm::vec3 & size, glm::vec3 translationVector)
-:   m_dynamicsWorld(dynamicsWorld),
-    m_size(size)
+Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWorld)
+:   m_dynamicsWorld(dynamicsWorld)
 {
-    m_modelMatrix = glm::translate(translationVector);
+    const glm::vec3 size(0.1f);
 
-    btCollisionShape * shape = new btBoxShape(btVector3(size.x/2.0, size.y/2.0, size.z/2.0));
-    btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), 
-        btVector3(translationVector.x, translationVector.y, translationVector.z)));
+    m_position = translation;
+    m_scaleTransform = glm::scale(size);
 
-    btScalar mass = 1;
+    m_collisionShape.reset(new btBoxShape(Conversions::toBtVec3(size) / 2));
+    m_motionState.reset(new MammutMotionState(translation, *this));
+
+    btScalar mass = 1.0f;
     btVector3 fallInertia(0, 0, 0);
-    shape->calculateLocalInertia(mass, fallInertia);
+    m_collisionShape->calculateLocalInertia(mass, fallInertia);
 
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, shape, fallInertia);
-    m_rigidBody = new btRigidBody(rigidBodyCI);
-    // add first impulse to mammut
-    m_rigidBody->setLinearVelocity(btVector3(0, 0, -5));
-    m_rigidBody->setDamping(0.4, 0.0);
-    m_rigidBody->setFriction(0.9);
+    btRigidBody::btRigidBodyConstructionInfo info(mass, m_motionState.get(), m_collisionShape.get(), fallInertia);
+    m_rigidBody.reset(new btRigidBody(info));
+
+    m_rigidBody->setDamping(0.0, 0.0);
+    m_rigidBody->setFriction(4);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
-    // m_rigidBody->setLinearFactor(btVector3(0,0,1));
+    m_rigidBody->applyCentralForce(btVector3(0,0, -20));
 
-    m_dynamicsWorld->addRigidBody(m_rigidBody);
+    m_dynamicsWorld.addRigidBody(m_rigidBody.get());
 }
 
 Mammut::~Mammut()
 {
+    m_dynamicsWorld.removeRigidBody(m_rigidBody.get());
 }
 
-const glm::vec3 & Mammut::size() const
+glm::mat4 Mammut::modelTransform() const
 {
-    return m_size;
+    return glm::translate(m_position) * m_rotation * m_scaleTransform;
 }
 
-const glm::mat4 & Mammut::modelMatrix() const
+const glm::vec3 & Mammut::position() const
 {
-    return m_modelMatrix;
+    return m_position;
 }
 
-void Mammut::setModelMatrix(const glm::mat4 & matrix)
+const glm::mat4 & Mammut::rotation() const
 {
-    m_modelMatrix = matrix;
+    return m_rotation;
+}
+
+void Mammut::setPosition(const glm::vec3 & position)
+{
+    m_position = position;
+}
+
+void Mammut::setRotation(const glm::mat4 & rotation)
+{
+    m_rotation = rotation;
 }
 
 void Mammut::update()
 {
-    btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
-
-    glm::mat4 mat;
-    mat *= Conversions::toGlmMat4(transform.getOrigin());
-    mat *= Conversions::toGlmMat4(transform.getRotation());
-    this->setModelMatrix(mat);
-
-    btVector3 velocity = m_rigidBody->getLinearVelocity();
-    m_rigidBody->setLinearVelocity(btVector3(velocity.x(), velocity.y(), -5));
+    m_rigidBody->applyCentralForce(btVector3(0,0, -20));
 }
 
-const glm::vec3 Mammut::position() const
+void Mammut::changeGravity(Gravity direction)
 {
     btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
-    return Conversions::toGlmVec3(transform.getOrigin());
-}
-
-const glm::mat4 Mammut::rotation() const
-{
-    btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
-    return Conversions::toGlmMat4(transform.getRotation());
-}
-
-void Mammut::setGravity(Gravity direction)
-{
-    btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
+    m_motionState->getWorldTransform(transform);
     transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * direction - 3.14));
     m_rigidBody->setCenterOfMassTransform(transform);
 }

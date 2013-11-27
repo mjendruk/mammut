@@ -62,8 +62,7 @@ void Renderer::render()
     for (Cuboid * cuboid : m_gameLogic.cuboids())
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
 
-    glm::mat4 scaleMatrix = glm::scale(m_gameLogic.mammut().size());
-    m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelMatrix() * scaleMatrix);
+    m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
 
     m_canvas->endPaintGL();
 

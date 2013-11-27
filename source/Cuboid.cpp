@@ -27,6 +27,7 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,
 
 Cuboid::~Cuboid()
 {
+    m_dynamicsWorld.removeRigidBody(m_rigidBody.get());
 }
 
 const glm::mat4 & Cuboid::modelTransform() const
