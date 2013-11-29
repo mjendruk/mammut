@@ -14,27 +14,20 @@ GameLogic::GameLogic()
 :   m_activeGravity(kDown)
 {
     initializeDynamicsWorld();
-    initializeTestlevel();
     
+    m_chunkGenerator.reset(new ChunkGenerator(1337, *m_dynamicsWorld));
     m_mammut.reset(new Mammut(glm::vec3(0.0f, .7f, 4.5f), *m_dynamicsWorld));
     m_camera.reset(new GameCamera(*m_mammut));
     
     changeGravity(kDown);
-}  
+    
+    for (int i = 0; i < 10 ; i++)
+    m_chunkList << m_chunkGenerator->nextChunk();
+}
 
 GameLogic::~GameLogic()
 {
-    qDeleteAll(m_cuboids);
-}
-
-const QVector<Cuboid *> & GameLogic::cuboids() const
-{
-    return m_cuboids;
-}
-
-const Mammut & GameLogic::mammut() const
-{
-    return *m_mammut;
+    
 }
 
 void GameLogic::update(int ms)
@@ -43,6 +36,12 @@ void GameLogic::update(int ms)
     
     m_mammut->update();
     m_camera->update();
+    
+    if (m_chunkList.first()->boundingBox().urb().z < m_camera->center().z)
+        m_chunkList.removeFirst();
+    
+    if (m_chunkList.last()->boundingBox().llf().z < m_camera->center().z)
+        m_chunkList << m_chunkGenerator->nextChunk();
 }
 
 void GameLogic::keyPressed(int key)
@@ -68,35 +67,14 @@ void GameLogic::keyReleased(int key)
 
 void GameLogic::initializeDynamicsWorld()
 {
-    btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-    btDefaultCollisionConfiguration * collisionConfiguration = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher * dispatcher = new btCollisionDispatcher(collisionConfiguration);
-    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
-    m_dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-}
-
-void GameLogic::initializeTestlevel()
-{
-    m_cuboids << new Cuboid(glm::vec3(0.5f, 0.2f, 2.5f) * 15.f, glm::vec3(0.0f, .5f, 3.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(0.5f, 0.0f, 0.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(-1.f, .50f, 0.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -5.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(0.3f, 0.2f, 1.f) * 15.f, glm::vec3(0.7f, -0.2f, -3.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.5f, 0.8f, -5.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.3, .5f, 2.f) * 15.f, glm::vec3(-0.3f, 0.2f, -6.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.4f, -0.3f, -7.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.4f, .5f, 1.5f) * 15.f, glm::vec3(-0.2f, 0.8f, -5.4f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.1, .3f, 2.f) * 15.f, glm::vec3(-0.6f, -0.2f, -4.5f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.7f) * 15.f, glm::vec3(-0.4f, -0.3f, -8.f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.35, .5f, 2.f) * 15.f, glm::vec3(0.f, 0.0f, -10.0f) * 5.f, *m_dynamicsWorld);
-    m_cuboids << new Cuboid(glm::vec3(.5f, .5f, 1.f) * 15.f, glm::vec3(0.f, 0.0f, -6.0f) * 5.f, *m_dynamicsWorld);
-}
-
-
-const GameCamera & GameLogic::camera() const
-{
-    return *m_camera;
+    m_broadphase.reset(new btDbvtBroadphase());
+    m_collisionConfiguration.reset(new btDefaultCollisionConfiguration());
+    m_dispatcher.reset(new btCollisionDispatcher(m_collisionConfiguration.data()));
+    m_solver.reset(new btSequentialImpulseConstraintSolver());
+    m_dynamicsWorld.reset(new btDiscreteDynamicsWorld(m_dispatcher.data(),
+                                                      m_broadphase.data(),
+                                                      m_solver.data(),
+                                                      m_collisionConfiguration.data()));
 }
 
 void GameLogic::changeGravity(Gravity direction)
@@ -104,14 +82,35 @@ void GameLogic::changeGravity(Gravity direction)
     m_activeGravity = static_cast<Gravity>((m_activeGravity + direction) % 4);
     
     const float gravityAcceleration = 9.81f;
-
+    
     switch (m_activeGravity)
     {
-    case kDown:  m_dynamicsWorld->setGravity(btVector3(0, gravityAcceleration, 0)); break;
-    case kLeft:  m_dynamicsWorld->setGravity(btVector3(gravityAcceleration, 0, 0)); break;
-    case kUp:    m_dynamicsWorld->setGravity(btVector3(0, -gravityAcceleration, 0)); break;
-    case kRight: m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
+        case kDown:  m_dynamicsWorld->setGravity(btVector3(0, gravityAcceleration, 0)); break;
+        case kLeft:  m_dynamicsWorld->setGravity(btVector3(gravityAcceleration, 0, 0)); break;
+        case kUp:    m_dynamicsWorld->setGravity(btVector3(0, -gravityAcceleration, 0)); break;
+        case kRight: m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
     }
-
+    
     m_mammut->changeGravity(m_activeGravity);
 }
+
+const GameCamera & GameLogic::camera() const
+{
+    return *m_camera;
+}
+
+const Mammut & GameLogic::mammut() const
+{
+    return *m_mammut;
+}
+
+void GameLogic::forEachCuboid(const std::function<void (Cuboid &)> & lambda)
+{
+    for (QSharedPointer<CuboidChunk> & chunk : m_chunkList)
+        for (Cuboid * cuboid : chunk->cuboids())
+            lambda(*cuboid);
+}
+
+
+
+

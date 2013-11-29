@@ -1,13 +1,21 @@
 #pragma once
 
-#include <memory>
-#include <QVector>
+#include <functional>
+
+#include <QList>
+#include <QSharedPointer>
+#include <QScopedPointer>
+
 #include "Commons.h"
+#include "Cuboid.h"
+#include "ChunkGenerator.h"
 
 class btDiscreteDynamicsWorld;
-class btRigidBody;
+class btSequentialImpulseConstraintSolver;
+class btCollisionDispatcher;
+class btDefaultCollisionConfiguration;
+class btBroadphaseInterface;
 
-class Cuboid;
 class GameCamera;
 class Mammut;
 
@@ -22,23 +30,27 @@ public:
     void keyReleased(int key);
     
     const GameCamera & camera() const;
-    const QVector<Cuboid *> & cuboids() const;
     const Mammut & mammut() const;
+    
+    void forEachCuboid(const std::function<void(Cuboid &)> & lambda);
 
 protected:
     void initializeDynamicsWorld();
-    void initializeTestlevel();
     
     void changeGravity(Gravity direction);
     
 protected:
-    QVector<Cuboid *> m_cuboids;
-    std::unique_ptr<Mammut> m_mammut;
-    std::unique_ptr<GameCamera> m_camera;
-
-    btDiscreteDynamicsWorld * m_dynamicsWorld;
-    btRigidBody * m_fallRigidBody;
-
     Gravity m_activeGravity;
+    
+    QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    
+    QScopedPointer<ChunkGenerator> m_chunkGenerator;
+    QScopedPointer<Mammut> m_mammut;
+    QScopedPointer<GameCamera> m_camera;
 
+    QScopedPointer<btDiscreteDynamicsWorld> m_dynamicsWorld;
+    QScopedPointer<btSequentialImpulseConstraintSolver> m_solver;
+    QScopedPointer<btCollisionDispatcher> m_dispatcher;
+    QScopedPointer<btDefaultCollisionConfiguration> m_collisionConfiguration;
+    QScopedPointer<btBroadphaseInterface> m_broadphase;
 };

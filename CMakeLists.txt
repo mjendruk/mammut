@@ -205,11 +205,15 @@ set(sources
     ${source_path}/AbstractPainter.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
+    ${source_path}/ChunkGenerator.cpp
+    ${source_path}/ChunkGenerator.h
     ${source_path}/Commons.h
     ${source_path}/Conversions.cpp
     ${source_path}/Conversions.h
     ${source_path}/Cuboid.cpp
     ${source_path}/Cuboid.h
+    ${source_path}/CuboidChunk.cpp
+    ${source_path}/CuboidChunk.h
     ${source_path}/Drawable.cpp
     ${source_path}/Drawable.h
     ${source_path}/Game.cpp
@@ -274,6 +278,8 @@ set_target_properties(${target}
     LINK_FLAGS_DEBUG            "${DEFAULT_LINKER_FLAGS_DEBUG}"
     LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
+
+add_definitions("-DGLM_SWIZZLE")
 
 # Deployment
 install(TARGETS ${target}

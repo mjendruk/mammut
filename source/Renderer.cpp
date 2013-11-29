@@ -59,8 +59,9 @@ void Renderer::render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (Cuboid * cuboid : m_gameLogic.cuboids())
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
+    m_gameLogic.forEachCuboid([this](Cuboid & cuboid) {
+        m_painter.paint(m_cuboidDrawable, cuboid.modelTransform());
+    });
 
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
 

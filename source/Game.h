@@ -10,6 +10,7 @@ class QMouseEvent;
 class Game : public AbstractApplication
 {
     Q_OBJECT
+    
 public:
     Game(int & argc, char ** argv);
     virtual ~Game();
