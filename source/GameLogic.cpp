@@ -37,11 +37,11 @@ void GameLogic::update(int ms)
     m_mammut->update();
     m_camera->update();
     
-    if (m_chunkList.first()->boundingBox().urb().z < m_camera->center().z)
+    if (m_chunkList.first()->boundingBox().llf().z > m_camera->center().z)
+    {
         m_chunkList.removeFirst();
-    
-    if (m_chunkList.last()->boundingBox().llf().z < m_camera->center().z)
         m_chunkList << m_chunkGenerator->nextChunk();
+    }
 }
 
 void GameLogic::keyPressed(int key)
