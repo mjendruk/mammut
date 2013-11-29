@@ -30,7 +30,5 @@ public:
 protected:
     Drawable & m_cuboidDrawable;
     glow::Program * m_program;
-    glow::Shader * m_fragShader;
-    glow::Shader * m_vertShader;
 
 };
