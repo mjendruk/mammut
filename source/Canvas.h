@@ -8,6 +8,7 @@
 
 class QSurfaceFormat;
 
+class Renderer;
 class RenderCamera;
 
 namespace glow 
@@ -29,7 +30,7 @@ public:
     };
 
 public:
-    Canvas(const QSurfaceFormat & format, RenderCamera * camera);
+    Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera * camera);
     virtual ~Canvas();
 
     // from QWindow
@@ -41,7 +42,6 @@ public:
     void beginPaintGL();
     void endPaintGL();
 
-    RenderCamera * m_camera;
 
 public slots:
     void toggleSwapInterval();
@@ -63,6 +63,9 @@ protected:
     SwapInterval m_swapInterval;    ///< required for toggle
 
     QScopedPointer<glow::AdaptiveGrid> m_grid;
+
+    Renderer * m_renderer;
+    RenderCamera * m_camera;
 
     long double m_swapts;
     unsigned int m_swaps;

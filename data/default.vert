@@ -7,6 +7,8 @@ uniform vec3 eye;
 in vec3 a_vertex;
 in vec3 a_normal;
 
+flat out vec3 v_normal;
+
 flat out vec4 v_color;
 smooth out float v_eyeDistance;
 
@@ -39,11 +41,13 @@ void main()
               , 0.0, 1.0);
 
     vec4 worldVertex = model * vec4(a_vertex, 1.0);
+
     if (worldVertex.z > eye.z)
       v_eyeDistance = 0;
     else
       v_eyeDistance = distance(eye, worldVertex.xyz / worldVertex.w);
 
+    v_normal = a_normal;
 
     gl_Position = transform * worldVertex;
 }
