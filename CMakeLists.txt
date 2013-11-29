@@ -232,6 +232,8 @@ set(sources
     ${source_path}/Painter.h
     ${source_path}/RenderCamera.cpp
     ${source_path}/RenderCamera.h
+    ${source_path}/SSAO.cpp
+    ${source_path}/SSAO.h
 )
 
 # Group source files

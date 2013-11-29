@@ -18,6 +18,7 @@ namespace glow
 
 class Canvas;
 class GameLogic;
+class SSAO;
 
 class Renderer
 {
@@ -49,5 +50,7 @@ protected:
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
+    glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glow::ScreenAlignedQuad> m_quad;
+    glow::ref_ptr<SSAO> m_ssao;
 };

@@ -18,6 +18,7 @@
 #include "GameCamera.h"
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
+#include "SSAO.h"
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
@@ -30,7 +31,9 @@ Renderer::Renderer(GameLogic & gameLogic)
 ,   m_gBufferDepth(nullptr)
 ,   m_gBufferNormals(nullptr)
 ,   m_gBufferColor(nullptr)
+,   m_ssaoOutput(nullptr)
 ,   m_quad(nullptr)
+,   m_ssao(nullptr)
 {
     QSurfaceFormat format;
     format.setVersion(4, 1);
@@ -96,15 +99,21 @@ void Renderer::render()
     m_DepthProgram->setUniform("normal", 0);
     m_DepthProgram->setUniform("color", 1);
     m_DepthProgram->setUniform("depth", 2);
+    m_DepthProgram->setUniform("ssaoOutput", 3);
     m_DepthProgram->setUniform("transformi", m_camera.viewProjectionInverted());
 
     m_gBufferNormals->bind(GL_TEXTURE0);
     m_gBufferColor->bind(GL_TEXTURE1);
     m_gBufferDepth->bind(GL_TEXTURE2);
 
+    /*m_ssao->draw(0, 2, *m_ssaoOutput);
 
+
+    m_ssaoOutput->bind(GL_TEXTURE3);
+    
+    m_ssaoOutput->unbind(GL_TEXTURE3);
+    */
     m_quad->draw();
-
     m_gBufferDepth->unbind(GL_TEXTURE2);
     m_gBufferColor->unbind(GL_TEXTURE1);
     m_gBufferNormals->unbind(GL_TEXTURE0);
@@ -120,16 +129,24 @@ void Renderer::render()
 
 void Renderer::initialize()
 {
+    glow::DebugMessageOutput::enable();
     m_painter.initialize();
     m_cuboidDrawable.initialize();
     m_initialized = true;
+    m_ssao = new SSAO();
+
+    m_ssaoOutput = new glow::Texture(GL_TEXTURE_2D);
+    m_ssaoOutput->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    m_ssaoOutput->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     initializeGBuffer();
 }
 
 void Renderer::initializeGBuffer()
 {
-    glow::DebugMessageOutput::enable();
     m_DepthProgram = new glow::Program();
 
     glow::Shader * frag = FileAssociatedShader::getOrCreate(
@@ -179,7 +196,9 @@ void Renderer::resize(int width, int height)
 
     m_gBufferNormals->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    m_ssao->resize(width, height);
 }
 
 void Renderer::registerKeyHandler(QObject & keyHandler)
