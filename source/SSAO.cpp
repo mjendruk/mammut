@@ -1,5 +1,8 @@
 #include "SSAO.h"
 
+#include <QDebug>
+#include <glm/gtx/random.hpp>
+
 #include <glow/Program.h>
 #include <glow/Shader.h>
 #include <glowutils/ScreenAlignedQuad.h>
@@ -49,9 +52,46 @@ void SSAO::initialize()
     m_fbo->attachTexture2D(GL_COLOR_ATTACHMENT0, m_ssaoTexture);
 
     m_fbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
+
+    m_noiseTexture = new glow::Texture(GL_TEXTURE_2D);
+    m_noiseTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    m_noiseTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_R, GL_REPEAT);
+
+
+    glow::Array<glm::vec3> kernel = glow::Array<glm::vec3>();
+    for (int i = 0; i < m_kernelSize; ++i) {
+        kernel << glm::normalize(glm::vec3(
+            glm::linearRand(-1.0f, 1.0f),
+            glm::linearRand(-1.0f, 1.0f),
+            glm::linearRand(0.0f, 1.0f))
+            );
+
+        float scale = glm::linearRand(0.0f, 1.0f);
+        scale = glm::mix(0.1f, 1.0f, scale * scale);
+        kernel[i] *= scale;
+    }
+
+    const int noiseBufferSize = m_noiseSize*m_noiseSize;
+    glow::Array<glm::vec3> noise = glow::Array<glm::vec3>();
+    for (int i = 0; i < noiseBufferSize; ++i) {
+        noise << glm::normalize(glm::vec3(
+            glm::linearRand(-1.0f, 1.0f),
+            glm::linearRand(-1.0f, 1.0f),
+            0.0f)
+            );
+    }
+
+    m_noiseTexture->image2D(0, GL_RGB32F, m_noiseSize, m_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
+    m_ssaoProgram.setUniform("kernel", kernel);
+
+    m_ssaoProgram.setUniform("kernelSize", m_kernelSize); // usefull range: 0-128
+    m_ssaoProgram.setUniform("radius", 25.0f);
 }
 
-void SSAO::draw(int normalTexture, int depthTexture, glow::Texture & outTexture)
+void SSAO::draw(int normalTexture, int depthTexture, const glm::vec3 & cameraPosition, const glm::mat3 & normal, const glm::mat4 & projection, const glm::mat4 & viewProjectionInv, glow::Texture & outTexture)
 {
     m_fbo->bind();
     glDisable(GL_DEPTH_TEST);
@@ -59,10 +99,19 @@ void SSAO::draw(int normalTexture, int depthTexture, glow::Texture & outTexture)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    m_ssaoProgram.setUniform("cameraPosition", cameraPosition);
+    m_ssaoProgram.setUniform("projection", projection);
+    m_ssaoProgram.setUniform("viewProjectionInv", viewProjectionInv);
+    m_ssaoProgram.setUniform("normalMatrix", normal);
     m_ssaoProgram.setUniform("normal", 0);
     m_ssaoProgram.setUniform("depth", 2);
+    m_ssaoProgram.setUniform("noise", 3);
+
+    m_noiseTexture->bind(GL_TEXTURE3);
 
     m_ssaoQuad->draw();
+
+    m_noiseTexture->unbind(GL_TEXTURE3);
 
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);

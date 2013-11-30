@@ -105,15 +105,14 @@ void Renderer::render()
     m_gBufferNormals->bind(GL_TEXTURE0);
     m_gBufferColor->bind(GL_TEXTURE1);
     m_gBufferDepth->bind(GL_TEXTURE2);
-
-    /*m_ssao->draw(0, 2, *m_ssaoOutput);
+    
+    m_ssao->draw(0, 2, m_camera.eye(), m_camera.normal(), m_camera.projection(), m_camera.viewProjectionInverted(), *m_ssaoOutput);
 
 
     m_ssaoOutput->bind(GL_TEXTURE3);
-    
-    m_ssaoOutput->unbind(GL_TEXTURE3);
-    */
     m_quad->draw();
+    m_ssaoOutput->unbind(GL_TEXTURE3);
+    
     m_gBufferDepth->unbind(GL_TEXTURE2);
     m_gBufferColor->unbind(GL_TEXTURE1);
     m_gBufferNormals->unbind(GL_TEXTURE0);
