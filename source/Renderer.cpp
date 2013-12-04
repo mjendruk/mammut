@@ -23,8 +23,7 @@
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
 ,   m_gameLogic(gameLogic)
-,   m_painter(Painter(m_cuboidDrawable))
-,   m_camera(RenderCamera())
+,   m_painter(m_cuboidDrawable)
 ,   m_initialized(false)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
@@ -41,7 +40,8 @@ Renderer::Renderer(GameLogic & gameLogic)
     format.setProfile(QSurfaceFormat::CoreProfile);
 
     m_camera.setFovy(90.0);
-    m_camera.setZFar(500.0);
+    m_camera.setZNear(0.1f);
+    m_camera.setZFar(500.0f);
     
     m_canvas = new Canvas(format, this, &m_camera);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
@@ -53,7 +53,6 @@ Renderer::Renderer(GameLogic & gameLogic)
 
 Renderer::~Renderer()
 {
-    delete m_DepthProgram;
     delete m_canvas;
 }
 
@@ -142,6 +141,8 @@ void Renderer::initialize()
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     initializeGBuffer();
+    
+    m_initialized = true;
 }
 
 void Renderer::initializeGBuffer()
@@ -154,7 +155,7 @@ void Renderer::initializeGBuffer()
         GL_VERTEX_SHADER, "data/quad.vert", *m_DepthProgram);
     m_DepthProgram->link();
 
-    m_quad = new glow::ScreenAlignedQuad(m_DepthProgram);
+    m_quad = new glowutils::ScreenAlignedQuad(m_DepthProgram);
 
     m_gBufferFBO = new glow::FrameBufferObject();
 
@@ -184,7 +185,8 @@ void Renderer::initializeGBuffer()
     m_gBufferFBO->attachTexture2D(GL_DEPTH_ATTACHMENT, m_gBufferDepth);
 
     m_gBufferFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 });
-
+    
+    m_camera.setViewport(m_canvas->width(), m_canvas->height());
     resize(m_camera.viewport().x, m_camera.viewport().y);
 }
 
@@ -192,7 +194,7 @@ void Renderer::resize(int width, int height)
 {
     if (!m_initialized) //we have no context
         return;
-
+    
     m_gBufferNormals->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);

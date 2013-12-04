@@ -11,11 +11,6 @@ class QSurfaceFormat;
 class Renderer;
 class RenderCamera;
 
-namespace glow 
-{
-    class AdaptiveGrid;
-}
-
 
 class Canvas : public QWindow
 {
@@ -61,8 +56,6 @@ protected:
     QOpenGLContext m_context;
 
     SwapInterval m_swapInterval;    ///< required for toggle
-
-    QScopedPointer<glow::AdaptiveGrid> m_grid;
 
     Renderer * m_renderer;
     RenderCamera * m_camera;

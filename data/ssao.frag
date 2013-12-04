@@ -1,11 +1,11 @@
-/*******************************************************************************
-	Copyright (C) 2013 John Chapman
-
-	This software is distributed freely under the terms of the MIT License.
-	See "license.txt" or "http://copyfree.org/licenses/mit/license.txt".
-*******************************************************************************/
-
 #version 410
+
+/*******************************************************************************
+    Copyright (C) 2013 John Chapman
+
+    This software is distributed freely under the terms of the MIT License.
+    See "license.txt" or "http://copyfree.org/licenses/mit/license.txt".
+*******************************************************************************/
 
 uniform sampler2D normal;
 uniform sampler2D depth;

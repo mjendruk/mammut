@@ -9,7 +9,7 @@ in vec2 v_uv;
 
 void main2()
 {
-	fragColor = vec4(texture2D(ssao, v_uv));
+	fragColor = vec4(texture(ssao, v_uv));
 }
 
 void main() {

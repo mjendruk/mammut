@@ -11,6 +11,7 @@
 
 #include "FileAssociatedShader.h"
 
+const int SSAO::m_kernelSize = 16;
 
 SSAO::SSAO()
 :   glow::Referenced()
@@ -38,8 +39,8 @@ void SSAO::initialize()
         GL_VERTEX_SHADER, "data/blur.vert", m_blurProgram);
     m_blurProgram.link();
 
-    m_ssaoQuad = new glow::ScreenAlignedQuad(&m_ssaoProgram);
-    m_blurQuad = new glow::ScreenAlignedQuad(&m_blurProgram);
+    m_ssaoQuad = new glowutils::ScreenAlignedQuad(&m_ssaoProgram);
+    m_blurQuad = new glowutils::ScreenAlignedQuad(&m_blurProgram);
 
     m_ssaoTexture = new glow::Texture(GL_TEXTURE_2D);
     m_ssaoTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -117,7 +118,7 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::vec3 & cameraPos
     glDepthMask(GL_TRUE);
     m_fbo->unbind();
 
-    glow::FrameBufferObject tempFBO = glow::FrameBufferObject();
+    glow::FrameBufferObject tempFBO;
     tempFBO.attachTexture2D(GL_COLOR_ATTACHMENT0, &outTexture);
     tempFBO.setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
 

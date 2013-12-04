@@ -2,7 +2,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include <glowutils/AdaptiveGrid.h>
 #include <glowutils/NavigationMath.h>
 #include <glow/Timer.h>
 
@@ -85,9 +84,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << qPrintable(QString::number(queryi(GL_MINOR_VERSION))) << " "
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
-
-    m_grid.reset(new glow::AdaptiveGrid());
-    m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
     
     glClearColor(1.f, 1.f, 1.f, 0.f);
 
@@ -98,13 +94,11 @@ void Canvas::resizeEvent(QResizeEvent * event)
 {
     int width = event->size().width();
     int height = event->size().height();
-    m_camera->setViewport(glm::ivec2(width, height));
+    m_camera->setViewport(glm::ivec2(width * 2, height * 2));
 
     m_context.makeCurrent(this);
 
     glViewport(0, 0, width, height);
-    
-    m_grid->update(m_camera->eye(), m_camera->viewProjection());
 
     m_renderer->resize(width, height);
 
@@ -117,15 +111,10 @@ void Canvas::beginPaintGL()
         return;
 
     m_context.makeCurrent(this);
-
-    m_grid->update(m_camera->eye(), m_camera->viewProjection());
-
 }
 
 void Canvas::endPaintGL()
 {
-    m_grid->draw();
-
     m_context.swapBuffers(this);
     m_context.doneCurrent();
 }

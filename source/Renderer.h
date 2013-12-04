@@ -13,6 +13,10 @@ namespace glow
     class FrameBufferObject;
     class Texture;
     class Program;
+}
+
+namespace glowutils
+{
     class ScreenAlignedQuad;
 }
 
@@ -51,6 +55,6 @@ protected:
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
-    glow::ref_ptr<glow::ScreenAlignedQuad> m_quad;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
     glow::ref_ptr<SSAO> m_ssao;
 };

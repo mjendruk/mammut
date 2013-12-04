@@ -18,7 +18,7 @@ Drawable::~Drawable()
 
 void Drawable::initialize()
 {
-    m_cube = new glow::UnitCube();
+    m_cube = new glowutils::UnitCube();
 }
 
 void Drawable::draw()

@@ -6,9 +6,13 @@
 
 namespace glow
 {
-    class ScreenAlignedQuad;
     class Texture;
     class FrameBufferObject;
+}
+
+namespace glowutils
+{
+    class ScreenAlignedQuad;
 }
 
 class SSAO : public glow::Referenced
@@ -24,13 +28,13 @@ protected:
 	void initialize();
 
 protected:
-    static const int m_kernelSize = 16;
+    static const int m_kernelSize;
     static const int m_noiseSize = 4;
 
     glow::Program m_ssaoProgram;
     glow::Program m_blurProgram;
-    glow::ref_ptr<glow::ScreenAlignedQuad> m_ssaoQuad;
-    glow::ref_ptr<glow::ScreenAlignedQuad> m_blurQuad;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_ssaoQuad;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_blurQuad;
     glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;
     glow::ref_ptr<glow::FrameBufferObject> m_fbo;

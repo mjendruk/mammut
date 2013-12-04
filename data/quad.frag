@@ -13,5 +13,5 @@ in vec3 v_eye;
 
 void main()
 {
-	fragColor = vec4(texture2D(ssaoOutput, v_uv));
+	fragColor = vec4(texture(color, v_uv));
 }

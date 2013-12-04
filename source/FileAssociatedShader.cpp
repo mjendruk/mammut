@@ -47,7 +47,7 @@ glow::Shader * FileAssociatedShader::getOrCreate(
     {
 		instance()->addResourcePath(filePath);
 
-		shader = glow::createShaderFromFile(type, filePath.toStdString());
+		shader = glowutils::createShaderFromFile(type, filePath.toStdString());
         shader->compile();
 
         /*
@@ -139,7 +139,7 @@ QList<glow::Program *> FileAssociatedShader::process()
 
         // if current version works, use its source code as
         // backup if new changes lead to uncompilable shader.
-        shader->setSource(new glow::File(filePath.toStdString()));
+        shader->setSource(new glowutils::File(filePath.toStdString()));
 
         auto programs(s_programsByShader.values(shader));
         assert(!programs.isEmpty());
