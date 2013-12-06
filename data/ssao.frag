@@ -25,7 +25,7 @@ uniform mat4 viewProjectionInv;
 const int MAX_KERNEL_SIZE = 128;
 uniform int kernelSize;
 uniform vec3 kernel[MAX_KERNEL_SIZE];
-float radius = 0.2;
+float radius = 0.07;
 float uPower = 2.0;
 
 
@@ -71,17 +71,16 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
 	//	get sample depth:
 		float sampleDepth = texture(depth, offset.xy).r;
 		sampleDepth = linearizeDepth(sampleDepth, projection);
-		
 		float rangeCheck = smoothstep(0.0, 1.0, radius / abs(originPos.z - sampleDepth));
 		occlusion += rangeCheck * step(sampleDepth, samplePos.z);
 	}
 	
-	occlusion = 1.0 - (occlusion / float(kernelSize));
+	occlusion = 1.0 - (occlusion / float(kernelSize)) / 1 ;
 	return pow(occlusion, uPower);
 }
 
 /*----------------------------------------------------------------------------*/
-void main3() {
+void main() {
 	if(texture(depth, v_uv).r == 1.0) {
         fragColor = vec4(1.0);
         return;
@@ -93,10 +92,11 @@ void main3() {
 //	get view space origin:
 	float originDepth = texture(depth, v_uv).r;
 	originDepth = linearizeDepth(originDepth, projection);
-	vec3 originPos = v_eyevector * originDepth * 0.5 + 0.5;
+	vec3 originPos = normalize(v_eyevector * vec3(1.0, 1.0, -1.0)) * originDepth;
 
 //	get view space normal:
 	vec3 normal = normalMatrix * texture(normal, v_uv).rgb;
+	normal = normalize(normal);
 	fragColor = normalize(vec4(normal, 1.0));
 		
 //	construct kernel basis matrix:
@@ -105,12 +105,13 @@ void main3() {
 	vec3 bitangent = cross(tangent, normal);
 	mat3 kernelBasis = mat3(tangent, bitangent, normal);
 	
-	//fragColor = vec4(ssao(kernelBasis, originPos, radius));
+	fragColor = vec4(ssao(kernelBasis, originPos, radius));
+	//fragColor = vec4(v_eyevector, 1.0);
 }
 
 
 
-void main()
+void main3()
 {
     float depthValue = texture(depth, v_uv).r;
     

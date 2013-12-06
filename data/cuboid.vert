@@ -47,7 +47,7 @@ void main()
     else
       v_eyeDistance = distance(eye, worldVertex.xyz / worldVertex.w);
 
-    v_normal = a_normal;
+    v_normal = normalToWorldSpace(a_normal);
 
     gl_Position = transform * worldVertex;
 }

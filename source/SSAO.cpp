@@ -92,7 +92,7 @@ void SSAO::initialize()
     m_ssaoProgram.setUniform("radius", 25.0f);
 }
 
-void SSAO::draw(int normalTexture, int depthTexture, const glm::vec3 & cameraPosition, const glm::mat3 & normal, const glm::mat4 & projection, const glm::mat4 & viewProjectionInv, glow::Texture & outTexture)
+void SSAO::draw(int normalTexture, int depthTexture, const glm::mat4 & view, const glm::vec3 & cameraPosition, const glm::mat3 & normal, const glm::mat4 & projection, const glm::mat4 & viewProjectionInv, glow::Texture & outTexture)
 {
     m_fbo->bind();
     glDisable(GL_DEPTH_TEST);
@@ -104,6 +104,7 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::vec3 & cameraPos
     m_ssaoProgram.setUniform("projection", projection);
     m_ssaoProgram.setUniform("viewProjectionInv", viewProjectionInv);
     m_ssaoProgram.setUniform("normalMatrix", normal);
+    m_ssaoProgram.setUniform("view", view);
     m_ssaoProgram.setUniform("normal", 0);
     m_ssaoProgram.setUniform("depth", 2);
     m_ssaoProgram.setUniform("noise", 3);
