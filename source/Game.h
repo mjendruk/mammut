@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glow/Timer.h>
+
 #include "AbstractApplication.h"
 #include "GameLogic.h"
 #include "Renderer.h"
@@ -25,6 +27,7 @@ protected:
 protected:
     GameLogic m_gameLogic;
     Renderer m_renderer;
+    glow::Timer m_timer;
 
     bool m_loop;
 };

@@ -25,7 +25,7 @@ public:
     GameLogic();
     ~GameLogic();
 
-    void update(int ms);
+    void update(float seconds);
     void keyPressed(int key);
     void keyReleased(int key);
     

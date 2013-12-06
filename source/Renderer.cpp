@@ -66,11 +66,6 @@ void Renderer::render()
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
 
     m_canvas->endPaintGL();
-
-    //do stuff with m_gameLogic
-
-    //We promised to make the rendering slow
-    QThread::msleep(10);
 }
 
 void Renderer::initialize()

@@ -1,10 +1,10 @@
 #include "GameLogic.h"
 
-#include <Qt>
+#include <QDebug>
+#include <QVector>
+
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
-
-#include <QVector>
 
 #include "Cuboid.h"
 #include "GameCamera.h"
@@ -30,10 +30,9 @@ GameLogic::~GameLogic()
     
 }
 
-void GameLogic::update(int ms)
+void GameLogic::update(float seconds)
 {
-    m_dynamicsWorld->stepSimulation(ms / 1000.0f, 50, 0.01);
-    
+    m_dynamicsWorld->stepSimulation(seconds, 30, 0.01f);
     m_mammut->update();
     m_camera->update();
     

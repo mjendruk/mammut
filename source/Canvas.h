@@ -10,12 +10,6 @@ class QSurfaceFormat;
 
 class RenderCamera;
 
-namespace glowutils
-{
-    class AdaptiveGrid;
-}
-
-
 class Canvas : public QWindow
 {
     Q_OBJECT
@@ -61,8 +55,6 @@ protected:
     QOpenGLContext m_context;
 
     SwapInterval m_swapInterval;    ///< required for toggle
-
-    QScopedPointer<glowutils::AdaptiveGrid> m_grid;
 
     long double m_swapts;
     unsigned int m_swaps;
