@@ -14,10 +14,10 @@ public:
     void add(Cuboid * cuboid);
     
     const QList<Cuboid *> & cuboids() const;
-    const glow::AxisAlignedBoundingBox boundingBox() const;
+    const glowutils::AxisAlignedBoundingBox boundingBox() const;
 
 protected:
     QList<Cuboid *> m_cuboids;
-    glow::AxisAlignedBoundingBox m_boundingBox;
+    glowutils::AxisAlignedBoundingBox m_boundingBox;
 
 };

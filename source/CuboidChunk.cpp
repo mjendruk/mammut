@@ -22,7 +22,7 @@ const QList<Cuboid *> & CuboidChunk::cuboids() const
     return m_cuboids;
 }
 
-const glow::AxisAlignedBoundingBox CuboidChunk::boundingBox() const
+const glowutils::AxisAlignedBoundingBox CuboidChunk::boundingBox() const
 {
     return m_boundingBox;
 }

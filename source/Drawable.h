@@ -15,6 +15,6 @@ public:
     void draw();
 
 protected:
-    glow::ref_ptr<glow::UnitCube> m_cube;
+    glow::ref_ptr<glowutils::UnitCube> m_cube;
 
 };

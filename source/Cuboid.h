@@ -22,14 +22,14 @@ public:
     ~Cuboid();
 
     const glm::mat4 & modelTransform() const;
-    const glow::AxisAlignedBoundingBox & boundingBox() const;
+    const glowutils::AxisAlignedBoundingBox & boundingBox() const;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
     void initializeBoundingBox(const glm::vec3 & size, const glm::vec3 & translation);
     
     glm::mat4 m_modelTransform;
-    glow::AxisAlignedBoundingBox m_boundingBox;
+    glowutils::AxisAlignedBoundingBox m_boundingBox;
     
     QScopedPointer<btRigidBody> m_rigidBody;
     QScopedPointer<btMotionState> m_motionState;

@@ -5,7 +5,7 @@
 class GameCamera;
 
 
-class RenderCamera : public glow::Camera
+class RenderCamera : public glowutils::Camera
 {
 public:
     RenderCamera();

@@ -10,7 +10,7 @@ class QSurfaceFormat;
 
 class RenderCamera;
 
-namespace glow 
+namespace glowutils
 {
     class AdaptiveGrid;
 }
@@ -62,7 +62,7 @@ protected:
 
     SwapInterval m_swapInterval;    ///< required for toggle
 
-    QScopedPointer<glow::AdaptiveGrid> m_grid;
+    QScopedPointer<glowutils::AdaptiveGrid> m_grid;
 
     long double m_swapts;
     unsigned int m_swaps;

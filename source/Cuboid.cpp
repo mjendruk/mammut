@@ -49,7 +49,7 @@ const glm::mat4 & Cuboid::modelTransform() const
     return m_modelTransform;
 }
 
-const glow::AxisAlignedBoundingBox & Cuboid::boundingBox() const
+const glowutils::AxisAlignedBoundingBox & Cuboid::boundingBox() const
 {
     return m_boundingBox;
 }

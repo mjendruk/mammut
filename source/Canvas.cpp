@@ -84,7 +84,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
 
-    m_grid.reset(new glow::AdaptiveGrid());
+    m_grid.reset(new glowutils::AdaptiveGrid());
     m_grid->setNearFar(m_camera->zNear(), m_camera->zFar());
     
     glClearColor(1.f, 1.f, 1.f, 0.f);
