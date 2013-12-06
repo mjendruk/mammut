@@ -66,11 +66,6 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
             if (!((QKeyEvent*)event)->isAutoRepeat())
                 m_gameLogic.keyReleased(((QKeyEvent*)event)->key());
             break;
-        
-        case QEvent::Close:
-            m_loop = false;
-            quit();
-            break;
             
         default:
             return QObject::eventFilter(obj, event);

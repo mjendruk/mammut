@@ -19,7 +19,7 @@ public:
 
 public slots:
     void run();
-
+    
 protected:
     void mouseMoveEvent(QMouseEvent * event);
     bool eventFilter(QObject * obj, QEvent * event);
