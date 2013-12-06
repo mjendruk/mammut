@@ -18,7 +18,8 @@ public:
     const glm::vec3 & up() const;
 
 protected:
-    static const glm::vec3 s_offset;
+    static const glm::vec3 s_centerOffset;
+    static const glm::vec3 s_eyeOffset;
 
     glm::vec3 m_eye;
     glm::vec3 m_center;
