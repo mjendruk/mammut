@@ -62,6 +62,8 @@ Renderer::~Renderer()
 void Renderer::render()
 {
     m_canvas->beginPaintGL();
+    
+    glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
 
     if (!m_initialized)
         initialize();
@@ -80,6 +82,7 @@ void Renderer::render()
 
     m_gBufferFBO->bind();
 
+    glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -113,7 +116,8 @@ void Renderer::render()
     
     m_ssao->draw(0, 2, m_camera.view(), m_camera.eye(), m_camera.normal(), m_camera.projection(), m_camera.viewProjectionInverted(), *m_ssaoOutput);
 
-
+    
+    glViewport(0, 0, m_camera.viewport().x * m_canvas->devicePixelRatio(), m_camera.viewport().y * m_canvas->devicePixelRatio());
     m_ssaoOutput->bind(GL_TEXTURE3);
     m_quad->draw();
     m_ssaoOutput->unbind(GL_TEXTURE3);
