@@ -67,7 +67,7 @@ void SSAO::initialize()
         kernel << glm::normalize(glm::vec3(
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(-1.0f, 1.0f),
-            glm::linearRand(0.0f, 1.0f))
+            glm::linearRand(0.05f, 1.0f))
             );
 
         float scale = glm::linearRand(0.0f, 1.0f);

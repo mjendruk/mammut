@@ -32,9 +32,19 @@ bool Painter::initialize()
     return true;
 }
 
-void Painter::setTransformUniform(const glm::mat4 & viewProjection)
+void Painter::setNearFarUniform(const glm::vec2 & nearFar)
 {
-    m_program->setUniform("transform", viewProjection);
+    m_program->setUniform("nearFar", nearFar);
+}
+
+void Painter::setViewProjectionUniform(const glm::mat4 & viewProjection)
+{
+    m_program->setUniform("viewProjection", viewProjection);
+}
+
+void Painter::setViewUniform(const glm::mat4 & view)
+{
+    m_program->setUniform("view", view);
 }
 
 void Painter::setEyeUniform(const glm::vec3 & eye)

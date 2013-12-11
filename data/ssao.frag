@@ -7,7 +7,7 @@
     See "license.txt" or "http://copyfree.org/licenses/mit/license.txt".
 *******************************************************************************/
 
-uniform sampler2D normal;
+uniform sampler2D g_normal;
 uniform sampler2D depth;
 uniform sampler2D noise;
 
@@ -25,8 +25,8 @@ uniform mat4 viewProjectionInv;
 const int MAX_KERNEL_SIZE = 128;
 uniform int kernelSize;
 uniform vec3 kernel[MAX_KERNEL_SIZE];
-float radius = 0.07;
-float uPower = 2.0;
+float radius = 0.002;
+float uPower = 1.2;
 
 
 void main2()
@@ -59,7 +59,7 @@ float linearizeDepth(in float depth, in mat4 projMatrix) {
 float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
 	float occlusion = 0.0;
 	for (int i = 0; i < kernelSize; ++i) {
-	//	get sample position:
+	//	get sample position; lets assume that originPos is in ES:
 		vec3 samplePos = kernelBasis * kernel[i];
 		samplePos = samplePos * radius + originPos;
 		
@@ -69,14 +69,17 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
 		offset.xy = offset.xy * 0.5 + 0.5; // scale/bias to texcoords
 		
 	//	get sample depth:
-		float sampleDepth = texture(depth, offset.xy).r;
-		sampleDepth = linearizeDepth(sampleDepth, projection);
-		float rangeCheck = smoothstep(0.0, 1.0, radius / abs(originPos.z - sampleDepth));
+		float sampleDepth = texture(g_normal, vec2(1.0) - offset.xy).a;
+		//sampleDepth = linearizeDepth(sampleDepth, projection);
+
+		//range check is zero if we must not occlude
+		float rangeCheck = smoothstep(0.0, 1.0, radius / (abs(originPos.z - sampleDepth)));
+		//return abs(originPos.z - sampleDepth);
 		occlusion += rangeCheck * step(sampleDepth, samplePos.z);
 	}
-	
-	occlusion = 1.0 - (occlusion / float(kernelSize)) / 1 ;
-	return pow(occlusion, uPower);
+	//return occlusion;
+	occlusion = (occlusion / float(kernelSize));
+	return 1-pow(occlusion, uPower);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -86,49 +89,58 @@ void main() {
         return;
     }
 //	get noise texture coords:
+// todo: get rid of the textureSize lookup; use uniforms
 	vec2 noiseTexCoords = vec2(textureSize(depth, 0)) / vec2(textureSize(noise, 0));
 	noiseTexCoords *= v_uv;
 	
 //	get view space origin:
-	float originDepth = texture(depth, v_uv).r;
-	originDepth = linearizeDepth(originDepth, projection);
-	vec3 originPos = normalize(v_eyevector * vec3(1.0, 1.0, -1.0)) * originDepth;
+	float originDepth = texture(g_normal, v_uv).a;
+	//originDepth = linearizeDepth(originDepth, projection);
+	// Todo: originPos has to be in which coordinate system?; Currently its most wahrscheinlich in (noramlized) sceen coordinate system; I guess it has to be in ES;
+	vec3 originPos = normalize(v_eyevector);
+	originPos /= originPos.z;
+	originPos *= originDepth;
 
 //	get view space normal:
-	vec3 normal = normalMatrix * texture(normal, v_uv).rgb;
+	vec3 normal = normalMatrix * texture(g_normal, v_uv).rgb;
 	normal = normalize(normal);
-	fragColor = normalize(vec4(normal, 1.0));
+	normal.z *= -1;
+	//normal *= 0.5;
+	//normal += 0.5;
+	//fragColor = normalize(vec4(normal, 1.0));
 		
 //	construct kernel basis matrix:
+	//vec3 rvec = vec3(0.0, 1.0, 0.0);
 	vec3 rvec = texture(noise, noiseTexCoords).rgb * 2.0 - 1.0;
 	vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
 	vec3 bitangent = cross(tangent, normal);
 	mat3 kernelBasis = mat3(tangent, bitangent, normal);
 	
-	fragColor = vec4(ssao(kernelBasis, originPos, radius));
-	//fragColor = vec4(v_eyevector, 1.0);
+	fragColor = vec4(vec3(ssao(kernelBasis, originPos, radius)), 1.0);
+	//fragColor = vec4(vec3(texture(g_normal, v_uv).a), 1.0);
+	//fragColor = vec4(vec3(normal.z), 1.0);
 }
 
 
 
 void main3()
 {
-    float depthValue = texture(depth, v_uv).r;
+    float depthValue = texture(g_normal, v_uv).a;
     
     if(depthValue == 1.0) {
         fragColor = vec4(1.0);
         return;
     }
 
-    float radius2 = radius*100 / ((1500)/2.0);
+    float radius2 = radius * 5;
 
     vec3 origin = vec3(v_uv, depthValue);
-    vec3 normal = normalize(normalMatrix * texture(normal, v_uv).xyz * 2.0 - 1.0);
+    vec3 normal = normalize(normalMatrix * texture(g_normal, v_uv).xyz * 2.0 - 1.0);
  
     // create matrix to rotate
     vec2 noiseTexCoords = vec2(textureSize(depth, 0)) / vec2(textureSize(noise, 0));
-	noiseTexCoords *= v_uv;
-	vec3 rvec = texture(noise, noiseTexCoords).rgb * 2.0 - 1.0;
+	noiseTexCoords *= v_uv
+;	vec3 rvec = texture(noise, noiseTexCoords).rgb * 2.0 - 1.0;
 	//fragColor = vec4(texture(noise, noiseTexCoords).rgb, 1.0);
 	//return;
     vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
@@ -148,11 +160,11 @@ void main3()
         //offset.xy = offset.xy * 0.5 + 0.5;
       
         // get sample depth:
-        float sampleDepth = texture(depth, samplePos.xy).r;
+        float sampleDepth = texture(g_normal, samplePos.xy).a;
       
         // range check & accumulate:
         float rangeCheck = abs(origin.z - sampleDepth) < radius2 ? 1.0 : 0.0;
-        occlusion += (sampleDepth <= samplePos.z - 0.005 ? 1.0 : 0.0) * rangeCheck;
+        occlusion += (sampleDepth <= samplePos.z  ? 1.0 : 0.0) * 1.0;
     }
     fragColor = vec4(1.0 - (occlusion / kernelSize));
 }

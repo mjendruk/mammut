@@ -20,6 +20,9 @@
 #include "FileAssociatedShader.h"
 #include "SSAO.h"
 
+const float Renderer::nearPlane = 0.1f;
+const float Renderer::farPlane = 20.0f;
+
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
 ,   m_gameLogic(gameLogic)
@@ -40,8 +43,8 @@ Renderer::Renderer(GameLogic & gameLogic)
     format.setProfile(QSurfaceFormat::CoreProfile);
 
     m_camera.setFovy(90.0);
-    m_camera.setZNear(0.1f);
-    m_camera.setZFar(500.0f);
+    m_camera.setZNear(nearPlane);
+    m_camera.setZFar(farPlane);
     
     m_canvas = new Canvas(format, this, &m_camera);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
@@ -68,7 +71,9 @@ void Renderer::render()
     m_painter.update(programsWithInvalidatedUniforms);
 
     m_camera.update(m_gameLogic.camera());
-    m_painter.setTransformUniform(m_camera.viewProjection());
+    m_painter.setViewProjectionUniform(m_camera.viewProjection());
+    m_painter.setViewUniform(m_camera.view());
+    m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_painter.setEyeUniform(m_camera.eye());
 
 
@@ -76,6 +81,7 @@ void Renderer::render()
     m_gBufferFBO->bind();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
     for (Cuboid * cuboid : m_gameLogic.cuboids())
     {

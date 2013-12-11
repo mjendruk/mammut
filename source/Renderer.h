@@ -40,6 +40,9 @@ protected:
     void initializeGBuffer();
 
 protected:
+    static const float nearPlane;
+    static const float farPlane;
+
     Canvas * m_canvas;
     Painter m_painter;
     GameLogic & m_gameLogic;
