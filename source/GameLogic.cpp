@@ -1,5 +1,7 @@
 #include "GameLogic.h"
 
+#include <cassert>
+
 #include <QDebug>
 #include <QVector>
 
@@ -10,10 +12,23 @@
 #include "GameCamera.h"
 #include "Mammut.h"
 
+namespace
+{
+    
+void tickCallback(btDynamicsWorld * world, btScalar timeStep)
+{
+    GameLogic * gameLogic = static_cast<GameLogic *>(world->getWorldUserInfo());
+    gameLogic->simulationTickCallback(timeStep);
+}
+
+} // namespace
+
 GameLogic::GameLogic()
 :   m_activeGravity(kDown)
 {
     initializeDynamicsWorld();
+    
+    m_dynamicsWorld->setInternalTickCallback(tickCallback, static_cast<void *>(this), true);
     
     m_chunkGenerator.reset(new ChunkGenerator(1337, *m_dynamicsWorld));
     m_mammut.reset(new Mammut(glm::vec3(0.0f, .7f, 4.5f), *m_dynamicsWorld));
@@ -33,7 +48,6 @@ GameLogic::~GameLogic()
 void GameLogic::update(float seconds)
 {
     m_dynamicsWorld->stepSimulation(seconds, 30, 0.01f);
-    m_mammut->update();
     m_camera->update();
     
     if (m_chunkList.first()->boundingBox().llf().z > m_camera->center().z)
@@ -84,13 +98,41 @@ void GameLogic::changeGravity(Gravity direction)
     
     switch (m_activeGravity)
     {
-        case kDown:  m_dynamicsWorld->setGravity(btVector3(0, gravityAcceleration, 0)); break;
-        case kLeft:  m_dynamicsWorld->setGravity(btVector3(gravityAcceleration, 0, 0)); break;
-        case kUp:    m_dynamicsWorld->setGravity(btVector3(0, -gravityAcceleration, 0)); break;
-        case kRight: m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
+        case kDown:  m_dynamicsWorld->setGravity(btVector3(0, -gravityAcceleration, 0)); break;
+        case kLeft:  m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
+        case kUp:    m_dynamicsWorld->setGravity(btVector3(0, gravityAcceleration, 0)); break;
+        case kRight: m_dynamicsWorld->setGravity(btVector3(gravityAcceleration, 0, 0)); break;
     }
     
     m_mammut->changeGravity(m_activeGravity);
+}
+
+void GameLogic::simulationTickCallback(float timeStep)
+{
+    int manifoldsCount = m_dispatcher->getNumManifolds();
+    for (int i = 0; i < manifoldsCount; i++)
+    {
+        btPersistentManifold * manifold = m_dispatcher->getManifoldByIndexInternal(i);
+        const btCollisionObject * body0 = manifold->getBody0();
+        const btCollisionObject * body1 = manifold->getBody1();
+        
+        
+        GameObject * obj1 = static_cast<GameObject *>(body0->getUserPointer());
+        GameObject * obj2 = static_cast<GameObject *>(body1->getUserPointer());
+        
+        Mammut * mammut = dynamic_cast<Mammut *>(obj1);
+        Cuboid * cuboid = dynamic_cast<Cuboid *>(obj2);
+        
+        if (!mammut)
+        {
+            mammut = dynamic_cast<Mammut *>(obj2);
+            cuboid = dynamic_cast<Cuboid *>(obj1);
+        }
+        
+        assert(mammut != nullptr);
+        assert(cuboid != nullptr);
+        mammut->update();
+    }
 }
 
 const GameCamera & GameLogic::camera() const

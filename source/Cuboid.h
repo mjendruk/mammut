@@ -7,12 +7,14 @@
 #include <glm/glm.hpp>
 #include <glowutils/AxisAlignedBoundingBox.h>
 
+#include "GameObject.h"
+
 class btCollisionShape;
 class btRigidBody;
 class btMotionState;
 class btDiscreteDynamicsWorld;
 
-class Cuboid
+class Cuboid : public GameObject
 {
 public:
     Cuboid(const glm::vec3 & size,

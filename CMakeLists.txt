@@ -218,10 +218,12 @@ set(sources
     ${source_path}/Drawable.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/GameLogic.cpp
-    ${source_path}/GameLogic.h
     ${source_path}/GameCamera.cpp
     ${source_path}/GameCamera.h
+    ${source_path}/GameLogic.cpp
+    ${source_path}/GameLogic.h
+    ${source_path}/GameObject.cpp
+    ${source_path}/GameObject.h
     ${source_path}/Mammut.cpp
     ${source_path}/Mammut.h
     ${source_path}/MammutMotionState.cpp

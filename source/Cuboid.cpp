@@ -1,5 +1,6 @@
 #include "Cuboid.h"
 
+#include <QDebug>
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
@@ -32,6 +33,7 @@ void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & trans
     
     btRigidBody::btRigidBodyConstructionInfo info(0, m_motionState.data(), m_collisionShape.data());
     m_rigidBody.reset(new btRigidBody(info));
+    m_rigidBody->setUserPointer(this);
     
     m_dynamicsWorld.addRigidBody(m_rigidBody.data());
 }

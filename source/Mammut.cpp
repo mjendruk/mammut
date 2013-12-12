@@ -23,11 +23,12 @@ Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWo
 
     btRigidBody::btRigidBodyConstructionInfo info(mass, m_motionState.get(), m_collisionShape.get(), fallInertia);
     m_rigidBody.reset(new btRigidBody(info));
+    m_rigidBody->setUserPointer(this);
 
-    m_rigidBody->setDamping(0.3, 0.0);
+    m_rigidBody->setDamping(0.1, 0.0);
     m_rigidBody->setFriction(1.5);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
-    m_rigidBody->applyCentralForce(btVector3(0,0, -13));
+    m_rigidBody->applyCentralForce(btVector3(0,0, -15));
 
     m_dynamicsWorld.addRigidBody(m_rigidBody.get());
 }
@@ -64,13 +65,13 @@ void Mammut::setRotation(const glm::mat4 & rotation)
 
 void Mammut::update()
 {
-    m_rigidBody->applyCentralForce(btVector3(0,0, -13));
+    m_rigidBody->applyCentralForce(btVector3(0,0, -15));
 }
 
 void Mammut::changeGravity(Gravity direction)
 {
     btTransform transform;
     m_motionState->getWorldTransform(transform);
-    transform.setRotation(btQuaternion(0.0f, 0.0f, -3.14 / 2 * direction - 3.14));
+    transform.setRotation(btQuaternion(0.0f, 0.0f, -PI / 2 * direction));
     m_rigidBody->setCenterOfMassTransform(transform);
 }

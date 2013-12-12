@@ -33,7 +33,9 @@ public:
     const Mammut & mammut() const;
     
     void forEachCuboid(const std::function<void(Cuboid &)> & lambda);
-
+    
+    void simulationTickCallback(float timeStep);
+    
 protected:
     void initializeDynamicsWorld();
     

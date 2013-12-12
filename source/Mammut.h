@@ -5,15 +5,15 @@
 #include <glm/gtc/quaternion.hpp>
 
 #include "Commons.h"
+#include "GameObject.h"
 
 class btCollisionShape;
 class btRigidBody;
 class btDiscreteDynamicsWorld;
 
-
 class MammutMotionState;
 
-class Mammut
+class Mammut : public GameObject
 {
 public:
     Mammut(const glm::vec3 translation,
