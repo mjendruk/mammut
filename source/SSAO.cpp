@@ -84,11 +84,12 @@ void SSAO::initialize()
             0.0f)
             );
     }
+    m_ssaoProgram.setUniform("noiseTexSize", m_noiseSize);
 
     m_noiseTexture->image2D(0, GL_RGB32F, m_noiseSize, m_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
     m_ssaoProgram.setUniform("kernel", kernel);
 
-    m_ssaoProgram.setUniform("kernelSize", m_kernelSize); // usefull range: 0-128
+    m_ssaoProgram.setUniform("kernelSize", m_kernelSize);
     m_ssaoProgram.setUniform("radius", 25.0f);
 }
 
@@ -141,5 +142,6 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::mat3 & normal, c
 void SSAO::resize(int width, int height)
 {
     m_ssaoTexture->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_ssaoProgram.setUniform("viewport", glm::vec2(width, height));
 }
 

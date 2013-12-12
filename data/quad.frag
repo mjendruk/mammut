@@ -15,5 +15,5 @@ void main()
 {
 	fragColor = vec4(texture(ssaoOutput, v_uv));
 	float ssao = texture(ssaoOutput, v_uv).r;
-	//fragColor = texture(color, v_uv) * ssao;
+	fragColor = texture(color, v_uv) * ssao;
 }
