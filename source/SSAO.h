@@ -21,7 +21,7 @@ public:
     SSAO();
     ~SSAO();
 
-    void draw(int normalTexture, int depthTexture, const glm::mat4 & view, const glm::vec3 & cameraPosition, const glm::mat3 & normal, const glm::mat4 & projection, const glm::mat4 & viewProjectionInv, glow::Texture & outTexture);
+    void draw(int normalTexture, int depthTexture, const glm::mat3 & normal, const glm::mat4 & projection, glow::Texture & outTexture);
     void resize(int width, int height);
 
 protected:

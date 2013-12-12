@@ -114,7 +114,7 @@ void Renderer::render()
     m_gBufferColor->bind(GL_TEXTURE1);
     m_gBufferDepth->bind(GL_TEXTURE2);
     
-    m_ssao->draw(0, 2, m_camera.view(), m_camera.eye(), m_camera.normal(), m_camera.projection(), m_camera.viewProjectionInverted(), *m_ssaoOutput);
+    m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
 
     
     glViewport(0, 0, m_camera.viewport().x * m_canvas->devicePixelRatio(), m_camera.viewport().y * m_canvas->devicePixelRatio());

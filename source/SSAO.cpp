@@ -67,7 +67,7 @@ void SSAO::initialize()
         kernel << glm::normalize(glm::vec3(
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(-1.0f, 1.0f),
-            glm::linearRand(0.05f, 1.0f))
+            glm::linearRand(0.1f, 1.0f))
             );
 
         float scale = glm::linearRand(0.0f, 1.0f);
@@ -92,7 +92,7 @@ void SSAO::initialize()
     m_ssaoProgram.setUniform("radius", 25.0f);
 }
 
-void SSAO::draw(int normalTexture, int depthTexture, const glm::mat4 & view, const glm::vec3 & cameraPosition, const glm::mat3 & normal, const glm::mat4 & projection, const glm::mat4 & viewProjectionInv, glow::Texture & outTexture)
+void SSAO::draw(int normalTexture, int depthTexture, const glm::mat3 & normal, const glm::mat4 & projection, glow::Texture & outTexture)
 {
     m_fbo->bind();
     glDisable(GL_DEPTH_TEST);
@@ -100,11 +100,8 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::mat4 & view, con
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_ssaoProgram.setUniform("cameraPosition", cameraPosition);
     m_ssaoProgram.setUniform("projection", projection);
-    m_ssaoProgram.setUniform("viewProjectionInv", viewProjectionInv);
     m_ssaoProgram.setUniform("normalMatrix", normal);
-    m_ssaoProgram.setUniform("view", view);
     m_ssaoProgram.setUniform("normal", 0);
     m_ssaoProgram.setUniform("depth", 2);
     m_ssaoProgram.setUniform("noise", 3);
@@ -118,6 +115,8 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::mat4 & view, con
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     m_fbo->unbind();
+
+
 
     glow::FrameBufferObject tempFBO;
     tempFBO.attachTexture2D(GL_COLOR_ATTACHMENT0, &outTexture);
