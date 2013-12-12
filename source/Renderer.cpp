@@ -21,7 +21,7 @@
 #include "SSAO.h"
 
 const float Renderer::nearPlane = 0.1f;
-const float Renderer::farPlane = 20.0f;
+const float Renderer::farPlane = 50.0f;
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
@@ -204,6 +204,8 @@ void Renderer::resize(int width, int height)
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     m_ssao->resize(width, height);
+    
+    render();
 }
 
 void Renderer::registerKeyHandler(QObject & keyHandler)

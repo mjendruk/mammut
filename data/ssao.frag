@@ -27,7 +27,7 @@ smooth in vec2 v_uv;
 smooth in vec3 v_eyevector;
 
 
-float radius = 0.0025;
+float radius = 0.001;
 float uPower = 2.0;
 
 float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {

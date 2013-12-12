@@ -95,9 +95,9 @@ void Canvas::resizeEvent(QResizeEvent * event)
     int width = event->size().width();
     int height = event->size().height();
     m_camera->setViewport(glm::ivec2(width, height));
-
+    
     m_context.makeCurrent(this);
-
+    
     m_renderer->resize(width, height);
 
     m_context.doneCurrent();
