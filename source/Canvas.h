@@ -8,6 +8,7 @@
 
 class QSurfaceFormat;
 
+class Renderer;
 class RenderCamera;
 
 class Canvas : public QWindow
@@ -23,7 +24,7 @@ public:
     };
 
 public:
-    Canvas(const QSurfaceFormat & format, RenderCamera * camera);
+    Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera * camera);
     virtual ~Canvas();
 
     // from QWindow
@@ -35,7 +36,6 @@ public:
     void beginPaintGL();
     void endPaintGL();
 
-    RenderCamera * m_camera;
 
 public slots:
     void toggleSwapInterval();
@@ -55,6 +55,9 @@ protected:
     QOpenGLContext m_context;
 
     SwapInterval m_swapInterval;    ///< required for toggle
+
+    Renderer * m_renderer;
+    RenderCamera * m_camera;
 
     long double m_swapts;
     unsigned int m_swaps;

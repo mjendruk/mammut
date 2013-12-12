@@ -10,14 +10,16 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
+#include "Renderer.h"
 #include "RenderCamera.h"
 
 
-Canvas::Canvas(const QSurfaceFormat & format, RenderCamera * camera)
+Canvas::Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera * camera)
 :   QWindow((QScreen*)nullptr)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
+,   m_renderer(renderer)
 ,   m_camera(camera)
 {
     setSurfaceType(OpenGLSurface); 
@@ -90,11 +92,13 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
 void Canvas::resizeEvent(QResizeEvent * event)
 {
-    m_camera->setViewport(glm::ivec2(event->size().width(), event->size().height()));
+    int width = event->size().width();
+    int height = event->size().height();
+    m_camera->setViewport(glm::ivec2(width, height));
 
     m_context.makeCurrent(this);
 
-    glViewport(0, 0, event->size().width(), event->size().height());
+    m_renderer->resize(width, height);
 
     m_context.doneCurrent();
 }

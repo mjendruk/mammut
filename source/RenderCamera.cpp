@@ -3,6 +3,7 @@
 #include "GameCamera.h"
 
 RenderCamera::RenderCamera()
+:   glowutils::Camera()
 {
 }
 
