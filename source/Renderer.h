@@ -4,7 +4,7 @@
 
 #include <glow/ref_ptr.h>
 
-#include "Drawable.h"
+#include "CuboidDrawable.h"
 #include "Painter.h"
 #include "RenderCamera.h"
 
@@ -50,7 +50,7 @@ protected:
 
     RenderCamera m_camera;
 
-    Drawable m_cuboidDrawable;
+    CuboidDrawable m_cuboidDrawable;
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

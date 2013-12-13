@@ -26,7 +26,7 @@ const float Renderer::farPlane = 200.0f;
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
 ,   m_gameLogic(gameLogic)
-,   m_painter(m_cuboidDrawable)
+,   m_painter()
 ,   m_initialized(false)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)

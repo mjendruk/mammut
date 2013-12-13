@@ -205,6 +205,8 @@ set(sources
     ${source_path}/AbstractPainter.h
     ${source_path}/Canvas.cpp
     ${source_path}/Canvas.h
+    ${source_path}/CaveDrawable.cpp
+    ${source_path}/CaveDrawable.h
     ${source_path}/ChunkGenerator.cpp
     ${source_path}/ChunkGenerator.h
     ${source_path}/Commons.h
@@ -214,8 +216,9 @@ set(sources
     ${source_path}/Cuboid.h
     ${source_path}/CuboidChunk.cpp
     ${source_path}/CuboidChunk.h
-    ${source_path}/Drawable.cpp
-    ${source_path}/Drawable.h
+    ${source_path}/CuboidDrawable.cpp
+    ${source_path}/CuboidDrawable.h
+    ${source_path}/IDrawable.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
     ${source_path}/GameCamera.cpp
