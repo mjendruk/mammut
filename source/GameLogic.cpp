@@ -31,12 +31,12 @@ GameLogic::GameLogic()
     m_dynamicsWorld->setInternalTickCallback(tickCallback, static_cast<void *>(this), true);
     
     m_chunkGenerator.reset(new ChunkGenerator(1337, *m_dynamicsWorld));
-    m_mammut.reset(new Mammut(glm::vec3(0.0f, .7f, 4.5f), *m_dynamicsWorld));
+    m_mammut.reset(new Mammut(glm::vec3(0.0f, 5.2f, 4.5f), *m_dynamicsWorld));
     m_camera.reset(new GameCamera(*m_mammut));
     
     changeGravity(kDown);
     
-    for (int i = 0; i < 6 ; i++)
+    for (int i = 0; i < 4 ; i++)
         m_chunkList << m_chunkGenerator->nextChunk();
 }
 
@@ -94,7 +94,7 @@ void GameLogic::changeGravity(Gravity direction)
 {
     m_activeGravity = static_cast<Gravity>((m_activeGravity + direction) % 4);
     
-    const float gravityAcceleration = 9.81f;
+    const float gravityAcceleration = 9.81f * 2.f;
     
     switch (m_activeGravity)
     {

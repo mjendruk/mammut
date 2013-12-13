@@ -1,5 +1,6 @@
 #include "Mammut.h"
 
+#define _USE_MATH_DEFINES
 #include <cmath>
 
 #include <glm/gtx/transform.hpp>
@@ -66,7 +67,7 @@ void Mammut::setRotation(const glm::mat4 & rotation)
 
 void Mammut::update()
 {
-    m_rigidBody->applyCentralForce(btVector3(0,0, -15));
+    m_rigidBody->applyCentralForce(btVector3(0,0, -20));
 }
 
 void Mammut::changeGravity(Gravity direction)

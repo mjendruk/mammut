@@ -21,7 +21,7 @@
 #include "SSAO.h"
 
 const float Renderer::nearPlane = 0.1f;
-const float Renderer::farPlane = 50.0f;
+const float Renderer::farPlane = 200.0f;
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
