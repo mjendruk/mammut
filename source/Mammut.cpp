@@ -1,5 +1,7 @@
 #include "Mammut.h"
 
+#include <cmath>
+
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
@@ -25,7 +27,6 @@ Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWo
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
 
-    m_rigidBody->setDamping(0.1, 0.0);
     m_rigidBody->setFriction(1.5);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
     m_rigidBody->applyCentralForce(btVector3(0,0, -15));
@@ -72,6 +73,6 @@ void Mammut::changeGravity(Gravity direction)
 {
     btTransform transform;
     m_motionState->getWorldTransform(transform);
-    transform.setRotation(btQuaternion(0.0f, 0.0f, -PI / 2 * direction));
+    transform.setRotation(btQuaternion(0.0f, 0.0f, -M_PI / 2 * direction));
     m_rigidBody->setCenterOfMassTransform(transform);
 }
