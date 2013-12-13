@@ -15,6 +15,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_gameLogic()
 ,   m_renderer(m_gameLogic)
 ,   m_loop(false)
+,   m_paused(false)
 {
     m_renderer.registerKeyHandler(*this);
     QTimer::singleShot(0, this, SLOT(run()));
@@ -46,7 +47,8 @@ void Game::run()
         }
         
         nextTime += delta;
-        m_gameLogic.update(delta / std::nano::den);
+        if (!m_paused)
+            m_gameLogic.update(delta / std::nano::den);
         
         if (m_timer.elapsed() < nextTime)
             m_renderer.render();
@@ -58,13 +60,11 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
     switch (event->type())
     {
         case QEvent::KeyPress:
-            if (!((QKeyEvent*)event)->isAutoRepeat())
-                m_gameLogic.keyPressed(((QKeyEvent*)event)->key());
+            keyPressed((QKeyEvent*)event);
             break;
             
         case QEvent::KeyRelease:
-            if (!((QKeyEvent*)event)->isAutoRepeat())
-                m_gameLogic.keyReleased(((QKeyEvent*)event)->key());
+            keyReleased((QKeyEvent*)event);
             break;
             
         default:
@@ -73,4 +73,24 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
     }
     
     return true;
+}
+
+
+void Game::keyPressed(QKeyEvent *keyEvent)
+{
+    if (keyEvent->isAutoRepeat())
+        return;
+
+    if (keyEvent->key() == Qt::Key_Space)
+        m_paused = !m_paused;
+    
+    m_gameLogic.keyPressed(keyEvent->key());
+}
+
+void Game::keyReleased(QKeyEvent *keyEvent)
+{
+    if (keyEvent->isAutoRepeat())
+        return;
+
+    m_gameLogic.keyReleased(keyEvent->key());
 }

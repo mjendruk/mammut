@@ -23,6 +23,8 @@ public slots:
 protected:
     void mouseMoveEvent(QMouseEvent * event);
     bool eventFilter(QObject * obj, QEvent * event);
+    void keyPressed(QKeyEvent * keyEvent);
+    void keyReleased(QKeyEvent * keyEvent);
 
 protected:
     GameLogic m_gameLogic;
@@ -30,4 +32,5 @@ protected:
     glow::Timer m_timer;
 
     bool m_loop;
+    bool m_paused;
 };
