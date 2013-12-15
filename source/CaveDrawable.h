@@ -29,9 +29,10 @@ protected:
     static const glm::vec3 s_maxShift;
     static const int s_numRings;
 
+    int m_numIndices;
     glow::Array<glm::vec3> m_vertices;
-    glow::Array<int> m_indices;
     glow::Array<glm::vec3> m_normals;
+    glow::Array<unsigned int> m_indices;
     glow::VertexArrayObject * m_vao;
     glow::Buffer * m_vertexBuffer;
     glow::Buffer * m_normalBuffer;

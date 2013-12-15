@@ -91,6 +91,8 @@ void Renderer::render()
 
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
 
+    m_painter.paint(m_caveDrawable, glm::mat4());
+
     m_gBufferFBO->unbind();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -134,6 +136,7 @@ void Renderer::initialize()
     glow::DebugMessageOutput::enable();
     m_painter.initialize();
     m_cuboidDrawable.initialize();
+    m_caveDrawable.initialize();
     m_initialized = true;
     m_ssao = new SSAO();
 

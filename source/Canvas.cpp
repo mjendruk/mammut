@@ -25,6 +25,7 @@ Canvas::Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera 
     setSurfaceType(OpenGLSurface); 
 
     create();
+    this->setPosition(QPoint(50,50));
 
     initializeGL(format);
 }

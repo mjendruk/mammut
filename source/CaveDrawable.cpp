@@ -9,10 +9,12 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
-const int CaveDrawable::s_verticesPerRing = 1;
+#include <QDebug>
+
+const int CaveDrawable::s_verticesPerRing = 4;
 const float CaveDrawable::s_radius = 100.f;
-const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(1.f, 1.f, 1.f);
-const int CaveDrawable::s_numRings = 30;
+const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
+const int CaveDrawable::s_numRings = 4;
 
 CaveDrawable::CaveDrawable()
 :   m_vertexBuffer(nullptr)
@@ -66,6 +68,7 @@ void CaveDrawable::initialize()
 
 void CaveDrawable::initializeData()
 {
+    m_numIndices = 0;
     glow::Array<glm::vec3> ar;
     glow::Array<glm::vec3> arOffset;
 
@@ -78,23 +81,63 @@ void CaveDrawable::initializeData()
     }
 
     for (int i = 0; i < s_numRings / 2; i++) {
-        for (glm::vec3 v : ar)
+        for (glm::vec3 v : ar){
             m_vertices << v + glm::vec3(0.0f, 0.0f, i * 10);
+            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, i * 10);
+            qDebug() << a.x << " " << a.y << " " << a.z;
+            ++m_numIndices;
+        }
 
-        for (glm::vec3 v : arOffset)
+        for (glm::vec3 v : arOffset){
             m_vertices << v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * 10);
+            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * 10);
+            qDebug() << a.x << " " << a.y << " " << a.z;
+            ++m_numIndices;
+        }
+         
     }
 
-    for (int i = 0; i < s_numRings; i++) {
-        for (int j = 0; j < s_verticesPerRing; j++) {
+    int countVertexOnRing = 0;
+    int ring = 0;
+    int offset = 0;
 
+    for (int vertex = 0; vertex < s_numRings * (s_verticesPerRing - 1); ++vertex)
+    {
+        if (ring % 2 == 0)
+            offset = 0;
+        else
+            offset = 1;
+
+        ++countVertexOnRing;
+        m_indices << vertex;
+        m_indices << vertex + s_verticesPerRing + offset;
+
+        qDebug() << vertex << " <-> " << vertex + s_verticesPerRing + offset;
+
+        if (countVertexOnRing == 4)
+        {
+            m_indices << vertex - (s_verticesPerRing - 1);
+            m_indices << vertex + 1 + offset;
+
+            qDebug() << vertex - (s_verticesPerRing - 1) << " <-> " << vertex + 1 + offset;
+
+            m_indices << 50000;
+            qDebug() << "Restart";
+
+            countVertexOnRing = 0;
+
+            ring = (ring + 1) % 2;
         }
     }
 }
 
 void CaveDrawable::draw()
 {
+    if (m_vao == nullptr)
+        return;
     m_vao->bind();
-    //m_vao->drawElements(GL_TRIANGLE_STRIP, m_size, GL_UNSIGNED_SHORT, nullptr);
+    glPrimitiveRestartIndex(50000);
+    int size = s_verticesPerRing * s_numRings * 3;
+    m_vao->drawElements(GL_TRIANGLE_STRIP, m_numIndices, GL_UNSIGNED_INT, nullptr);
     m_vao->unbind();
 }
