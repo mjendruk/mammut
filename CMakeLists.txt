@@ -207,7 +207,6 @@ set(sources
     ${source_path}/Canvas.h
     ${source_path}/ChunkGenerator.cpp
     ${source_path}/ChunkGenerator.h
-    ${source_path}/Commons.h
     ${source_path}/Conversions.cpp
     ${source_path}/Conversions.h
     ${source_path}/Cuboid.cpp
@@ -224,6 +223,8 @@ set(sources
     ${source_path}/GameLogic.h
     ${source_path}/GameObject.cpp
     ${source_path}/GameObject.h
+    ${source_path}/Gravity.cpp
+    ${source_path}/Gravity.h
     ${source_path}/Mammut.cpp
     ${source_path}/Mammut.h
     ${source_path}/MammutMotionState.cpp
@@ -284,6 +285,7 @@ set_target_properties(${target}
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
 add_definitions("-DGLM_SWIZZLE")
+add_definitions("-D_USE_MATH_DEFINES")
 
 # Deployment
 install(TARGETS ${target}

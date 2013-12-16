@@ -10,7 +10,8 @@
 #include "MammutMotionState.h"
 
 Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWorld)
-:   m_dynamicsWorld(dynamicsWorld)
+:   m_isOnCuboid(false)
+,   m_dynamicsWorld(dynamicsWorld)
 {
     const glm::vec3 size(0.1f);
 
@@ -65,15 +66,18 @@ void Mammut::setRotation(const glm::mat4 & rotation)
     m_rotation = rotation;
 }
 
-void Mammut::update()
+void Mammut::update(bool isOnCuboid)
 {
-    m_rigidBody->applyCentralForce(btVector3(0,0, -20));
+    m_isOnCuboid = true;
+    
+    if (m_isOnCuboid)
+        m_rigidBody->applyCentralForce(btVector3(0,0, -15));
 }
 
-void Mammut::changeGravity(Gravity direction)
+void Mammut::rotate(const glm::mat3 & rotation)
 {
     btTransform transform;
     m_motionState->getWorldTransform(transform);
-    transform.setRotation(btQuaternion(0.0f, 0.0f, -M_PI / 2 * direction));
+    transform.setBasis(Conversions::toBtMat3(rotation));
     m_rigidBody->setCenterOfMassTransform(transform);
 }

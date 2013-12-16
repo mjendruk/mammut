@@ -4,7 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "Commons.h"
 #include "GameObject.h"
 
 class btCollisionShape;
@@ -21,8 +20,8 @@ public:
          
     ~Mammut();
 
-    void update();
-    void changeGravity(Gravity gravity);
+    void update(bool isOnCuboid);
+    void rotate(const glm::mat3 & rotation);
     
     glm::mat4 modelTransform() const;
     
@@ -36,6 +35,8 @@ protected:
     glm::vec3 m_position;
     glm::mat4 m_rotation;
     glm::mat4 m_scaleTransform;
+    
+    bool m_isOnCuboid;
 
     std::unique_ptr<btRigidBody> m_rigidBody;
     std::unique_ptr<MammutMotionState> m_motionState;

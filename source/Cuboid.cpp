@@ -11,6 +11,8 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,
     btDiscreteDynamicsWorld & dynamicsWorld)
 :    m_dynamicsWorld(dynamicsWorld)
 {
+    m_position = translation;
+    m_size = size;
     m_modelTransform = glm::translate(translation) * glm::scale(size);
     
     initializeRigidBody(size, translation);
@@ -49,6 +51,16 @@ void Cuboid::initializeBoundingBox(const glm::vec3 & size, const glm::vec3 & tra
 const glm::mat4 & Cuboid::modelTransform() const
 {
     return m_modelTransform;
+}
+
+const glm::vec3 & Cuboid::position() const
+{
+    return m_position;
+}
+
+const glm::vec3 & Cuboid::size() const
+{
+    return m_size;
 }
 
 const glowutils::AxisAlignedBoundingBox & Cuboid::boundingBox() const

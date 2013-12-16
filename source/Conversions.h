@@ -4,6 +4,7 @@
 
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btQuaternion.h>
+#include <LinearMath/btMatrix3x3.h>
 
 namespace Conversions
 {
@@ -13,5 +14,6 @@ glm::mat4 toGlmMat4(const btQuaternion & quat);
 glm::mat4 toGlmMat4(const btVector3 & vec3);
     
 btVector3 toBtVec3(const glm::vec3 & vec3);
+btMatrix3x3 toBtMat3(const glm::mat3 & mat3);
 
 }

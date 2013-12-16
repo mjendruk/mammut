@@ -24,19 +24,20 @@ void tickCallback(btDynamicsWorld * world, btScalar timeStep)
 } // namespace
 
 GameLogic::GameLogic()
-:   m_activeGravity(kDown)
 {
     initializeDynamicsWorld();
     
     m_dynamicsWorld->setInternalTickCallback(tickCallback, static_cast<void *>(this), true);
     
     m_chunkGenerator.reset(new ChunkGenerator(1337, *m_dynamicsWorld));
-    m_mammut.reset(new Mammut(glm::vec3(0.0f, 5.2f, 4.5f), *m_dynamicsWorld));
+
+    m_mammut.reset(new Mammut(glm::vec3(0.0f, .7f, 4.5f), *m_dynamicsWorld));
+    m_gravity.reset(new Gravity(*m_dynamicsWorld));
     m_camera.reset(new GameCamera(*m_mammut));
     
-    changeGravity(kDown);
-    
-    for (int i = 0; i < 4 ; i++)
+    m_gravity->rotate(Gravity::kDown);
+                    
+    for (int i = 0; i < 6 ; i++)
         m_chunkList << m_chunkGenerator->nextChunk();
 }
 
@@ -61,9 +62,18 @@ void GameLogic::keyPressed(int key)
 {
     switch (key)
     {
-    case Qt::Key_W: changeGravity(kUp); break;
-    case Qt::Key_A: changeGravity(kLeft); break;
-    case Qt::Key_D: changeGravity(kRight); break;
+    case Qt::Key_W:
+        m_gravity->rotate(Gravity::kUp);
+        m_mammut->rotate(m_gravity->rotation());
+        break;
+    case Qt::Key_A:
+        m_gravity->rotate(Gravity::kLeft);
+        m_mammut->rotate(m_gravity->rotation());
+        break;
+    case Qt::Key_D:
+        m_gravity->rotate(Gravity::kRight);
+        m_mammut->rotate(m_gravity->rotation());
+        break;
     case Qt::LeftArrow: break;
     case Qt::RightArrow: break;
     }
@@ -90,25 +100,10 @@ void GameLogic::initializeDynamicsWorld()
                                                       m_collisionConfiguration.data()));
 }
 
-void GameLogic::changeGravity(Gravity direction)
-{
-    m_activeGravity = static_cast<Gravity>((m_activeGravity + direction) % 4);
-    
-    const float gravityAcceleration = 9.81f * 2.f;
-    
-    switch (m_activeGravity)
-    {
-        case kDown:  m_dynamicsWorld->setGravity(btVector3(0, -gravityAcceleration, 0)); break;
-        case kLeft:  m_dynamicsWorld->setGravity(btVector3(-gravityAcceleration, 0, 0)); break;
-        case kUp:    m_dynamicsWorld->setGravity(btVector3(0, gravityAcceleration, 0)); break;
-        case kRight: m_dynamicsWorld->setGravity(btVector3(gravityAcceleration, 0, 0)); break;
-    }
-    
-    m_mammut->changeGravity(m_activeGravity);
-}
-
 void GameLogic::simulationTickCallback(float timeStep)
 {
+    bool isOnCuboid = false;
+    
     int manifoldsCount = m_dispatcher->getNumManifolds();
     for (int i = 0; i < manifoldsCount; i++)
     {
@@ -131,8 +126,15 @@ void GameLogic::simulationTickCallback(float timeStep)
         
         assert(mammut != nullptr);
         assert(cuboid != nullptr);
-        mammut->update();
+        
+        float delta;
+        if ((delta = fabsf((mammut->position().y - 0.05f) -
+                           (cuboid->position().y + cuboid->size().y / 2))) < 0.001f) {
+            isOnCuboid = true;
+        }
     }
+    
+    m_mammut->update(isOnCuboid);
 }
 
 const GameCamera & GameLogic::camera() const

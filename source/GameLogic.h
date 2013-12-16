@@ -6,9 +6,9 @@
 #include <QSharedPointer>
 #include <QScopedPointer>
 
-#include "Commons.h"
 #include "Cuboid.h"
 #include "ChunkGenerator.h"
+#include "Gravity.h"
 
 class btDiscreteDynamicsWorld;
 class btSequentialImpulseConstraintSolver;
@@ -39,16 +39,13 @@ public:
 protected:
     void initializeDynamicsWorld();
     
-    void changeGravity(Gravity direction);
-    
 protected:
-    Gravity m_activeGravity;
-    
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
     
     QScopedPointer<ChunkGenerator> m_chunkGenerator;
     QScopedPointer<Mammut> m_mammut;
     QScopedPointer<GameCamera> m_camera;
+    QScopedPointer<Gravity> m_gravity;
 
     QScopedPointer<btDiscreteDynamicsWorld> m_dynamicsWorld;
     QScopedPointer<btSequentialImpulseConstraintSolver> m_solver;

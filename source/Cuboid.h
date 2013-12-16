@@ -24,6 +24,9 @@ public:
     ~Cuboid();
 
     const glm::mat4 & modelTransform() const;
+    const glm::vec3 & position() const;
+    const glm::vec3 & size() const;
+    
     const glowutils::AxisAlignedBoundingBox & boundingBox() const;
 
 protected:
@@ -31,6 +34,9 @@ protected:
     void initializeBoundingBox(const glm::vec3 & size, const glm::vec3 & translation);
     
     glm::mat4 m_modelTransform;
+    glm::vec3 m_position;
+    glm::vec3 m_size;
+    
     glowutils::AxisAlignedBoundingBox m_boundingBox;
     
     QScopedPointer<btRigidBody> m_rigidBody;
