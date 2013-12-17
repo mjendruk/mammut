@@ -4,6 +4,8 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <cassert>
+#include <algorithm>
 
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
@@ -14,14 +16,14 @@
 const int CaveDrawable::s_verticesPerRing = 8;
 const float CaveDrawable::s_radius = 100.f;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
-const int CaveDrawable::s_numRings = 100;
+const int CaveDrawable::s_numRings = 10;
 
 CaveDrawable::CaveDrawable()
 :   m_vertexBuffer(nullptr)
 ,   m_normalBuffer(nullptr)
 ,   m_indexBuffer(nullptr)
 ,   m_vao(nullptr)
-,   m_ringZStride(-50.f)
+,   m_ringZStride(-100.f)
 ,   m_activeRingPosition(0.f)
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
@@ -85,7 +87,7 @@ void CaveDrawable::initializeData()
     int ring = 0;
     int offset = 0;
 
-    for (int vertex = 0; vertex < (s_numRings-1) * (s_verticesPerRing); ++vertex)
+    for (int vertex = 0; vertex < (s_numRings*2-1) * (s_verticesPerRing); ++vertex)
     {
         if (ring % 2 == 0)
             offset = 0;
@@ -121,51 +123,37 @@ void CaveDrawable::initializeData()
         }
     }
 
+    bool invertNormal = false;
+    glm::vec3 a = glm::vec3(0.0);
+    glm::vec3 b = glm::vec3(0.0);
+
 
     for (int i = 0; i < m_indices.size()-2; ++i)
     {
         int index = m_indices.at(i);
         int index1 = m_indices.at(i+1);
         int index2 = m_indices.at(i+2);
+
+        a = m_vertices.at(index) - m_vertices.at(index1);
+
         if (index != 56789 && index1 != 56789 && index2 != 56789)
         {
-            glm::vec3 a = m_vertices.at(index1) - m_vertices.at(index);
-            glm::vec3 b = m_vertices.at(index1) - m_vertices.at(index2);
-
-            m_normals << glm::cross(a, b);
-            glm::vec3 bla = glm::cross(a, b);
-            //qDebug() << bla.x << " " << bla.y << " " << bla.z;
+            b = m_vertices.at(index2) - m_vertices.at(index1);
         }
         else if (index != 56789 && index1 != 56789)
         {
-            glm::vec3 a = m_vertices.at(index1) - m_vertices.at(index);
-            glm::vec3 b = m_vertices.at(index1) - m_vertices.at(m_indices.at(i+2-s_verticesPerRing));
+            b = m_vertices.at(m_indices.at(i + 2 - s_verticesPerRing)) - m_vertices.at(index1);
 
-            m_normals << glm::cross(a, b);
-            //qDebug() << "Kante";
-            glm::vec3 bla = glm::cross(a, b);
-            //qDebug() << bla.x << " " << bla.y << " " << bla.z;
-            i += 3;
+            i += 4;
         }
 
+        glm::vec3 normal = glm::cross(a, b);
+        normal = glm::normalize(normal);
+        if (invertNormal)
+            normal *= glm::vec3(-1.0);
+        m_normals << normal;
 
-    }
-}
-
-void CaveDrawable::writeVertexList(int numRings)
-{
-    for (int i = 0 + m_activeRingPosition; i < numRings / 2.0f + m_activeRingPosition; i++) {
-        for (glm::vec3 v : dummyArray){
-            m_vertices << v + glm::vec3(0.0f, 0.0f, (i) * m_ringZStride);
-            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i) * m_ringZStride);
-            qDebug() << a.x << " " << a.y << " " << a.z;
-        }
-
-        for (glm::vec3 v : dummyArrayOffset){
-            m_vertices << v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
-            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
-            qDebug() << a.x << " " << a.y << " " << a.z;
-        }
+        invertNormal = !invertNormal;
 
     }
 }
@@ -175,18 +163,45 @@ void CaveDrawable::draw()
     if (m_vao == nullptr)
         return;
     m_vao->bind();
-    int size = s_verticesPerRing * s_numRings * 3;
+    int size = s_verticesPerRing * s_numRings*2 * 3;
     m_vao->drawElements(GL_TRIANGLE_STRIP, size, GL_UNSIGNED_INT, nullptr);
     m_vao->unbind();
 }
 
+void CaveDrawable::writeVertexList(int numRings)
+{       
+    int size = m_vertices.size();
+    for (int i = m_activeRingPosition + s_numRings - numRings; i < m_activeRingPosition + s_numRings; i++) {
+        for (glm::vec3 v : dummyArray){
+            m_vertices << v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride);
+            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride);
+            qDebug() /*<< a.x << " " << a.y << " "*/ << a.z;
+        }
+
+        for (glm::vec3 v : dummyArrayOffset){
+            m_vertices << v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
+            glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
+            qDebug() /*<< a.x << " " << a.y << " "*/ << a.z;
+        }
+    }
+}
+
 void CaveDrawable::update(glm::vec3 camPosition)
 {
-    if (camPosition.z < m_activeRingPosition * m_ringZStride)
+    int replaceRings = 2;
+    while (camPosition.z < m_activeRingPosition * m_ringZStride + m_ringZStride)
     {
-        for (int i = 0; i < s_verticesPerRing*2; i++)
-            m_vertices.erase(m_vertices.begin() + 0);
-        m_activeRingPosition += 1;
-        writeVertexList(2);
+        if (replaceRings > 0)
+        {
+            for (int i = 0; i < replaceRings*s_verticesPerRing; i++)
+                m_vertices.erase(m_vertices.begin() + 0);
+
+            m_activeRingPosition += replaceRings/2;
+            writeVertexList(replaceRings/2);
+
+            m_vertexBuffer->setData(m_vertices);
+        }
+        
+        assert(m_vertices.size() == 160);
     }
 }
