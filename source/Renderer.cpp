@@ -21,7 +21,7 @@
 #include "SSAO.h"
 
 const float Renderer::nearPlane = 0.1f;
-const float Renderer::farPlane = 200.0f;
+const float Renderer::farPlane = 400.0f;
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
@@ -78,7 +78,7 @@ void Renderer::render()
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_painter.setEyeUniform(m_camera.eye());
 
-
+    m_caveDrawable.update(m_camera.eye());
 
     m_gBufferFBO->bind();
 
