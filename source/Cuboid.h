@@ -23,15 +23,15 @@ public:
          
     ~Cuboid();
 
-    const glm::mat4 & modelTransform() const;
+    virtual glm::mat4 modelTransform() const;
+    virtual glowutils::AxisAlignedBoundingBox boundingBox() const;
+    
     const glm::vec3 & position() const;
     const glm::vec3 & size() const;
-    
-    const glowutils::AxisAlignedBoundingBox & boundingBox() const;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
-    void initializeBoundingBox(const glm::vec3 & size, const glm::vec3 & translation);
+    void initializeBoundingBox();
     
     glm::mat4 m_modelTransform;
     glm::vec3 m_position;

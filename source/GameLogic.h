@@ -34,7 +34,8 @@ public:
     
     void forEachCuboid(const std::function<void(Cuboid &)> & lambda);
     
-    void simulationTickCallback(float timeStep);
+    void preTickCallback(float timeStep);
+    void postTickCallback(float timeStep);
     
 protected:
     void initializeDynamicsWorld();

@@ -223,6 +223,8 @@ set(sources
     ${source_path}/GameLogic.h
     ${source_path}/GameObject.cpp
     ${source_path}/GameObject.h
+    ${source_path}/GlowExtensions.cpp
+    ${source_path}/GlowExtensions.h
     ${source_path}/Gravity.cpp
     ${source_path}/Gravity.h
     ${source_path}/Mammut.cpp

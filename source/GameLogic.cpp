@@ -12,13 +12,19 @@
 #include "GameCamera.h"
 #include "Mammut.h"
 
-namespace
+namespace Callbacks
 {
     
-void tickCallback(btDynamicsWorld * world, btScalar timeStep)
+void preTickCallback(btDynamicsWorld * world, btScalar timeStep)
 {
     GameLogic * gameLogic = static_cast<GameLogic *>(world->getWorldUserInfo());
-    gameLogic->simulationTickCallback(timeStep);
+    gameLogic->preTickCallback(timeStep);
+}
+    
+void postTickCallback(btDynamicsWorld * world, btScalar timeStep)
+{
+    GameLogic * gameLogic = static_cast<GameLogic *>(world->getWorldUserInfo());
+    gameLogic->postTickCallback(timeStep);
 }
 
 } // namespace
@@ -26,8 +32,6 @@ void tickCallback(btDynamicsWorld * world, btScalar timeStep)
 GameLogic::GameLogic()
 {
     initializeDynamicsWorld();
-    
-    m_dynamicsWorld->setInternalTickCallback(tickCallback, static_cast<void *>(this), true);
     
     m_chunkGenerator.reset(new ChunkGenerator(1337, *m_dynamicsWorld));
 
@@ -98,12 +102,21 @@ void GameLogic::initializeDynamicsWorld()
                                                       m_broadphase.data(),
                                                       m_solver.data(),
                                                       m_collisionConfiguration.data()));
+    
+    m_dynamicsWorld->setInternalTickCallback(Callbacks::preTickCallback,
+                                             static_cast<void *>(this), true);
+    m_dynamicsWorld->setInternalTickCallback(Callbacks::postTickCallback,
+                                             static_cast<void *>(this), false);
 }
 
-void GameLogic::simulationTickCallback(float timeStep)
+void GameLogic::preTickCallback(float timeStep)
 {
-    bool isOnCuboid = false;
-    
+    m_mammut->applyForces();
+    m_mammut->setIsOnObject(false);
+}
+
+void GameLogic::postTickCallback(float timeStep)
+{
     int manifoldsCount = m_dispatcher->getNumManifolds();
     for (int i = 0; i < manifoldsCount; i++)
     {
@@ -127,14 +140,8 @@ void GameLogic::simulationTickCallback(float timeStep)
         assert(mammut != nullptr);
         assert(cuboid != nullptr);
         
-        float delta;
-        if ((delta = fabsf((mammut->position().y - 0.05f) -
-                           (cuboid->position().y + cuboid->size().y / 2))) < 0.001f) {
-            isOnCuboid = true;
-        }
+        mammut->collidesWith(*cuboid, m_gravity->inverseRotation());
     }
-    
-    m_mammut->update(isOnCuboid);
 }
 
 const GameCamera & GameLogic::camera() const

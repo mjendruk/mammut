@@ -19,24 +19,34 @@ public:
            btDiscreteDynamicsWorld & dynamicsWorld);
          
     ~Mammut();
-
-    void update(bool isOnCuboid);
-    void rotate(const glm::mat3 & rotation);
     
-    glm::mat4 modelTransform() const;
+    void rotate(const glm::mat3 & rotation);
+    void collidesWith(const GameObject & object,
+                      const glm::mat3 & gravityTransform);
+    void applyForces();
+    
+    virtual glm::mat4 modelTransform() const;
+    virtual glowutils::AxisAlignedBoundingBox boundingBox() const;
+    
+    bool isOnObject() const;
+    void setIsOnObject(bool b);
     
     const glm::vec3 & position() const;
-    const glm::mat4 & rotation() const;
-    
     void setPosition(const glm::vec3 & position);
+    
+    const glm::mat4 & rotation() const;
     void setRotation(const glm::mat4 & rotation);
 
+protected:
+    bool isOnObject(const GameObject & object,
+                    const glm::mat3 & gravityTransform);
+    
 protected:
     glm::vec3 m_position;
     glm::mat4 m_rotation;
     glm::mat4 m_scaleTransform;
     
-    bool m_isOnCuboid;
+    bool m_isOnObject;
 
     std::unique_ptr<btRigidBody> m_rigidBody;
     std::unique_ptr<MammutMotionState> m_motionState;

@@ -16,7 +16,7 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,
     m_modelTransform = glm::translate(translation) * glm::scale(size);
     
     initializeRigidBody(size, translation);
-    initializeBoundingBox(size, translation);
+    initializeBoundingBox();
 }
 
 Cuboid::~Cuboid()
@@ -40,17 +40,22 @@ void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & trans
     m_dynamicsWorld.addRigidBody(m_rigidBody.data());
 }
 
-void Cuboid::initializeBoundingBox(const glm::vec3 & size, const glm::vec3 & translation)
+void Cuboid::initializeBoundingBox()
 {
-    glm::vec4 urb = m_modelTransform * glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    glm::vec4 llf = m_modelTransform * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f);
-    m_boundingBox.extend(llf.xyz() / llf.w);
-    m_boundingBox.extend(urb.xyz() / urb.w);
+    btVector3 llf, urb;
+    m_rigidBody->getAabb(llf, urb);
+    m_boundingBox.extend(Conversions::toGlmVec3(llf));
+    m_boundingBox.extend(Conversions::toGlmVec3(urb));
 }
 
-const glm::mat4 & Cuboid::modelTransform() const
+glm::mat4 Cuboid::modelTransform() const
 {
     return m_modelTransform;
+}
+
+glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
+{
+    return m_boundingBox;
 }
 
 const glm::vec3 & Cuboid::position() const
@@ -61,9 +66,4 @@ const glm::vec3 & Cuboid::position() const
 const glm::vec3 & Cuboid::size() const
 {
     return m_size;
-}
-
-const glowutils::AxisAlignedBoundingBox & Cuboid::boundingBox() const
-{
-    return m_boundingBox;
 }
