@@ -13,8 +13,8 @@
 
 #include <QDebug>
 
-const int CaveDrawable::s_verticesPerRing = 8;
-const float CaveDrawable::s_radius = 100.f;
+const int CaveDrawable::s_verticesPerRing = 12;
+const float CaveDrawable::s_radius = 150.f;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
 const int CaveDrawable::s_numRings = 10;
 
@@ -84,6 +84,8 @@ void CaveDrawable::initializeData()
     writeVertexList(s_numRings);
 
     int countVertexOnRing = 0;
+    int countVertexPerTriangle = -1;
+    bool invertNormal = false;
     int ring = 0;
     int offset = 0;
 
@@ -95,67 +97,86 @@ void CaveDrawable::initializeData()
             offset = 1;
 
         ++countVertexOnRing;
+        ++countVertexPerTriangle;
         m_indices << vertex;
+        invertNormal = checkAndWriteNormal(countVertexPerTriangle, invertNormal);
 
         if (countVertexOnRing == s_verticesPerRing && (ring % 2) == 1)
         {
+            ++countVertexPerTriangle;
             m_indices << vertex + offset;
             qDebug() << vertex << " <-> " << vertex + offset;
+            invertNormal = checkAndWriteNormal(countVertexPerTriangle, invertNormal);
         }
         else
         {
+            ++countVertexPerTriangle;
             m_indices << vertex + s_verticesPerRing + offset;
             qDebug() << vertex << " <-> " << vertex + s_verticesPerRing + offset;
+            invertNormal = checkAndWriteNormal(countVertexPerTriangle, invertNormal);
         }
 
         if (countVertexOnRing == s_verticesPerRing)
         {
             //close ring
+            ++countVertexPerTriangle;
             m_indices << vertex - (s_verticesPerRing - 1);
+            invertNormal = checkAndWriteNormal(countVertexPerTriangle, invertNormal);
+
+            ++countVertexPerTriangle;
             m_indices << vertex + 1 + offset;
             qDebug() << vertex - (s_verticesPerRing - 1) << " <-> " << vertex + 1 + offset;
+            invertNormal = checkAndWriteNormal(countVertexPerTriangle, invertNormal);
 
             m_indices << 56789;
             qDebug() << "Restart";
 
+            countVertexPerTriangle = -1;
+            invertNormal = false;
             countVertexOnRing = 0;
             ring = (ring + 1) % 2;
         }
     }
 
-    bool invertNormal = false;
-    glm::vec3 a = glm::vec3(0.0);
-    glm::vec3 b = glm::vec3(0.0);
+    int normalsSize = m_normals.size();
 
-
-    for (int i = 0; i < m_indices.size()-2; ++i)
+    while (m_normals.size() > s_verticesPerRing * 2)
     {
-        int index = m_indices.at(i);
-        int index1 = m_indices.at(i+1);
-        int index2 = m_indices.at(i+2);
+        m_normals.pop_back();
+    }
 
-        a = m_vertices.at(index) - m_vertices.at(index1);
+    while (m_normals.size() < normalsSize)
+    {
+        int max = m_normals.size();
+        for (int i = 0; i < max; i++)
+            m_normals << m_normals.at(i);
+    }
+}
 
-        if (index != 56789 && index1 != 56789 && index2 != 56789)
-        {
-            b = m_vertices.at(index2) - m_vertices.at(index1);
-        }
-        else if (index != 56789 && index1 != 56789)
-        {
-            b = m_vertices.at(m_indices.at(i + 2 - s_verticesPerRing)) - m_vertices.at(index1);
+bool CaveDrawable::checkAndWriteNormal(int countVertexOnTriangle, bool invertNormal)
+{
+    if (countVertexOnTriangle >= 2)
+    {   
+        int indexList = m_indices.size()-1;
+        int index = m_indices.at(indexList - 2);
+        int index1 = m_indices.at(indexList - 1);
+        int index2 = m_indices.at(indexList);
 
-            i += 4;
-        }
+        glm::vec3 a = m_vertices.at(index) - m_vertices.at(index1);
+        glm::vec3 b = m_vertices.at(index2) - m_vertices.at(index1);
 
         glm::vec3 normal = glm::cross(a, b);
         normal = glm::normalize(normal);
+
         if (invertNormal)
             normal *= glm::vec3(-1.0);
+
         m_normals << normal;
 
         invertNormal = !invertNormal;
-
     }
+
+    return invertNormal;
 }
 
 void CaveDrawable::draw()
@@ -202,6 +223,5 @@ void CaveDrawable::update(glm::vec3 camPosition)
             m_vertexBuffer->setData(m_vertices);
         }
         
-        assert(m_vertices.size() == 160);
     }
 }
