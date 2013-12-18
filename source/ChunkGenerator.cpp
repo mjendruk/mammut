@@ -54,6 +54,6 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     chunk->add(new Cuboid(glm::vec3(11.0f, 7.0f, 33.0f), glm::vec3(-16.0f, 5.0f, -7.0f) + m_nextTranslation, m_dynamicsWorld));
 
     
-    m_nextTranslation += glm::vec3(0.0f, -2.0f, -75.0f);
+    m_nextTranslation += glm::vec3(0.0f, -1.0f, -75.0f);
     return chunk;
 }

@@ -5,12 +5,11 @@
 #include <glow/Program.h>
 #include <glow/Shader.h>
 
-#include "Drawable.h"
+#include "IDrawable.h"
 #include "FileAssociatedShader.h"
 
-Painter::Painter(Drawable & cuboidDrawable)
-:   m_cuboidDrawable(cuboidDrawable)
-,   m_program(nullptr)
+Painter::Painter()
+:   m_program(nullptr)
 {
 }
 
@@ -57,7 +56,7 @@ void Painter::update(const QList<glow::Program *> & programs)
     //do necessary updates
 }
 
-void Painter::paint(Drawable & drawable, const glm::mat4 & modelMatrix)
+void Painter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix)
 {
     m_program->setUniform("model", modelMatrix);
     drawable.draw();

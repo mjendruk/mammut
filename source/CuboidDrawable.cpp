@@ -1,4 +1,4 @@
-#include "Drawable.h"
+#include "CuboidDrawable.h"
 
 #include <cassert>
 
@@ -6,22 +6,22 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
-Drawable::Drawable()
+CuboidDrawable::CuboidDrawable()
 :   m_cube(nullptr)
 {
 
 }
 
-Drawable::~Drawable()
+CuboidDrawable::~CuboidDrawable()
 {
 }
 
-void Drawable::initialize()
+void CuboidDrawable::initialize()
 {
     m_cube = new glowutils::UnitCube();
 }
 
-void Drawable::draw()
+void CuboidDrawable::draw()
 {
     assert(m_cube);
 

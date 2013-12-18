@@ -21,12 +21,12 @@
 #include "SSAO.h"
 
 const float Renderer::nearPlane = 0.1f;
-const float Renderer::farPlane = 200.0f;
+const float Renderer::farPlane = 700.0f;
 
 Renderer::Renderer(GameLogic & gameLogic)
 :   m_canvas(nullptr)
 ,   m_gameLogic(gameLogic)
-,   m_painter(m_cuboidDrawable)
+,   m_painter()
 ,   m_initialized(false)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
@@ -78,7 +78,7 @@ void Renderer::render()
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_painter.setEyeUniform(m_camera.eye());
 
-
+    m_caveDrawable.update(m_camera.eye());
 
     m_gBufferFBO->bind();
 
@@ -90,6 +90,8 @@ void Renderer::render()
     });
 
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
+
+    m_painter.paint(m_caveDrawable, glm::mat4());
 
     m_gBufferFBO->unbind();
 
@@ -134,6 +136,7 @@ void Renderer::initialize()
     glow::DebugMessageOutput::enable();
     m_painter.initialize();
     m_cuboidDrawable.initialize();
+    m_caveDrawable.initialize();
     m_initialized = true;
     m_ssao = new SSAO();
 

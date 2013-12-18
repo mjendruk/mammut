@@ -4,7 +4,7 @@
 
 #include "AbstractPainter.h"
 
-class Drawable;
+class IDrawable;
 
 namespace glow
 {
@@ -15,12 +15,12 @@ namespace glow
 class Painter : public AbstractPainter
 {
 public:
-    Painter(Drawable & cuboidDrawable);
+    Painter();
     virtual ~Painter();
 
     virtual bool initialize();
     
-    virtual void paint(Drawable & drawable, const glm::mat4 & modelMatrix);
+    virtual void paint(IDrawable & drawable, const glm::mat4 & modelMatrix);
 
     void setNearFarUniform(const glm::vec2 & nearFar);
     void setViewProjectionUniform(const glm::mat4 & viewProjection);
@@ -30,7 +30,6 @@ public:
     virtual void update(const QList<glow::Program *> & programs);
 
 protected:
-    Drawable & m_cuboidDrawable;
     glow::Program * m_program;
 
 };

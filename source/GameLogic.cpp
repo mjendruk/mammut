@@ -41,7 +41,7 @@ GameLogic::GameLogic()
     
     m_gravity->rotate(Gravity::kDown);
                     
-    for (int i = 0; i < 6 ; i++)
+    for (int i = 0; i < 10 ; i++)
         m_chunkList << m_chunkGenerator->nextChunk();
 }
 
