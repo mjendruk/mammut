@@ -13,10 +13,10 @@
 
 #include <QDebug>
 
-const int CaveDrawable::s_verticesPerRing = 12;
-const float CaveDrawable::s_radius = 150.f;
+const int CaveDrawable::s_verticesPerRing = 20;
+const float CaveDrawable::s_radius = 200.f;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
-const int CaveDrawable::s_numRings = 10;
+const int CaveDrawable::s_numRings = 30;
 
 CaveDrawable::CaveDrawable()
 :   m_vertexBuffer(nullptr)
@@ -65,13 +65,13 @@ void CaveDrawable::initialize()
     vertexBinding->setBuffer(m_vertexBuffer, 0, sizeof(glm::vec3));
     vertexBinding->setFormat(3, GL_FLOAT, GL_FALSE);
     m_vao->enable(0);
-
+    
     auto normalBinding = m_vao->binding(1);
     normalBinding->setAttribute(normalAttribLocation);
     normalBinding->setBuffer(m_normalBuffer, 0, sizeof(glm::vec3));
     normalBinding->setFormat(3, GL_FLOAT, GL_TRUE);
     m_vao->enable(1);
-
+    
     m_indexBuffer->bind();
 
     m_vao->unbind();
@@ -89,7 +89,7 @@ void CaveDrawable::initializeData()
     int ring = 0;
     int offset = 0;
 
-    for (int vertex = 0; vertex < (s_numRings*2-1) * (s_verticesPerRing); ++vertex)
+    /*for (int vertex = 0; vertex < (s_numRings*2-1) * (s_verticesPerRing); ++vertex)
     {
         if (ring % 2 == 0)
             offset = 0;
@@ -135,6 +135,35 @@ void CaveDrawable::initializeData()
             invertNormal = false;
             countVertexOnRing = 0;
             ring = (ring + 1) % 2;
+        }
+    }*/
+
+    for (int ring = 0; ring < s_numRings; ring++) {
+        for (int vertex = 0; vertex < s_verticesPerRing; vertex++) {
+            int index = ring * s_verticesPerRing;
+            index += vertex;
+            
+            if (ring % 2 == 0) {
+                m_indices << index;
+                m_indices << index + ((vertex == 0) ? s_verticesPerRing * 2 - 1 : s_verticesPerRing - 1);
+                m_indices << index + s_verticesPerRing;
+
+                m_indices << index;
+                m_indices << index + s_verticesPerRing;
+                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1);
+            }
+            else {
+                m_indices << index;
+                m_indices << index + s_verticesPerRing;
+                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1);
+
+                m_indices << index;
+                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1);
+                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1);
+            }
+
+            checkAndWriteNormal(3, false);
+
         }
     }
 
@@ -185,7 +214,8 @@ void CaveDrawable::draw()
         return;
     m_vao->bind();
     int size = s_verticesPerRing * s_numRings*2 * 3;
-    m_vao->drawElements(GL_TRIANGLE_STRIP, size, GL_UNSIGNED_INT, nullptr);
+    glPointSize(5);
+    m_vao->drawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, nullptr);
     m_vao->unbind();
 }
 

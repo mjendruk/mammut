@@ -36,7 +36,7 @@ GameLogic::GameLogic()
     
     changeGravity(kDown);
     
-    for (int i = 0; i < 4 ; i++)
+    for (int i = 0; i < 10 ; i++)
         m_chunkList << m_chunkGenerator->nextChunk();
 }
 
