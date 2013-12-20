@@ -207,6 +207,8 @@ set(sources
     ${source_path}/rendering/Canvas.h
     ${source_path}/rendering/CaveDrawable.cpp
     ${source_path}/rendering/CaveDrawable.h
+    ${source_path}/rendering/CavePainter.cpp
+    ${source_path}/rendering/CavePainter.h
     ${source_path}/gamelogic/ChunkGenerator.cpp
     ${source_path}/gamelogic/ChunkGenerator.h
     ${source_path}/Conversions.cpp

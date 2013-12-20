@@ -24,7 +24,7 @@ public:
 protected:
     void initializeData();
     void writeVertexList(int numRings);
-    bool checkAndWriteNormal(int countVertexOnTriangle, bool invertNormal);
+    void checkAndWriteNormal();
 
     static const int s_verticesPerRing;
     static const float s_radius;

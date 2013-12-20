@@ -7,6 +7,7 @@
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
+#include "CavePainter.h"
 #include "RenderCamera.h"
 
 namespace glow
@@ -42,6 +43,7 @@ protected:
     static const float nearPlane;
     static const float farPlane;
     
+    CavePainter m_cavePainter;
     GameLogic & m_gameLogic;
     Canvas & m_canvas;
     
