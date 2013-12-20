@@ -2,7 +2,6 @@
 
 #include <cassert>
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <cassert>
 #include <algorithm>
@@ -226,13 +225,11 @@ void CaveDrawable::writeVertexList(int numRings)
         for (glm::vec3 v : dummyArray){
             m_vertices << v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride);
             glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride);
-            qDebug() /*<< a.x << " " << a.y << " "*/ << a.z;
         }
 
         for (glm::vec3 v : dummyArrayOffset){
             m_vertices << v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
             glm::vec3 a = v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride);
-            qDebug() /*<< a.x << " " << a.y << " "*/ << a.z;
         }
     }
 }

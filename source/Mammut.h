@@ -21,15 +21,23 @@ public:
     ~Mammut();
     
     void rotate(const glm::mat3 & rotation);
+    
+    void limitVelocity();
+    void steerRight();
+    void steerLeft();
+    void doNotSteer();
+    
     void collidesWith(const GameObject & object,
                       const glm::mat3 & gravityTransform);
+    void resetCollisionState();
+    
+    void applySteering(const glm::mat3 & gravityTransform);
     void applyForces();
     
     virtual glm::mat4 modelTransform() const;
     virtual glowutils::AxisAlignedBoundingBox boundingBox() const;
     
     bool isOnObject() const;
-    void setIsOnObject(bool b);
     
     const glm::vec3 & position() const;
     void setPosition(const glm::vec3 & position);
@@ -45,6 +53,9 @@ protected:
     glm::vec3 m_position;
     glm::mat4 m_rotation;
     glm::mat4 m_scaleTransform;
+    
+    float m_steering;
+    glm::vec3 m_nonDriftForce;
     
     bool m_isOnObject;
 

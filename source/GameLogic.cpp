@@ -53,6 +53,7 @@ GameLogic::~GameLogic()
 void GameLogic::update(float seconds)
 {
     m_dynamicsWorld->stepSimulation(seconds, 30, 0.01f);
+    
     m_camera->update();
     
     if (m_chunkList.first()->boundingBox().llf().z > m_camera->center().z)
@@ -78,8 +79,12 @@ void GameLogic::keyPressed(int key)
         m_gravity->rotate(Gravity::kRight);
         m_mammut->rotate(m_gravity->rotation());
         break;
-    case Qt::LeftArrow: break;
-    case Qt::RightArrow: break;
+    case Qt::Key_Left:
+        m_mammut->steerLeft();
+        break;
+    case Qt::Key_Right:
+        m_mammut->steerRight();
+        break;
     }
 }
 
@@ -87,8 +92,10 @@ void GameLogic::keyReleased(int key)
 {
     switch (key)
     {
-    case Qt::LeftArrow: break;
-    case Qt::RightArrow: break;
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+        m_mammut->doNotSteer();
+        break;
     }
 }
 
@@ -112,18 +119,19 @@ void GameLogic::initializeDynamicsWorld()
 void GameLogic::preTickCallback(float timeStep)
 {
     m_mammut->applyForces();
-    m_mammut->setIsOnObject(false);
+    m_mammut->resetCollisionState();
 }
 
 void GameLogic::postTickCallback(float timeStep)
 {
+    m_mammut->limitVelocity();
+    
     int manifoldsCount = m_dispatcher->getNumManifolds();
     for (int i = 0; i < manifoldsCount; i++)
     {
         btPersistentManifold * manifold = m_dispatcher->getManifoldByIndexInternal(i);
         const btCollisionObject * body0 = manifold->getBody0();
         const btCollisionObject * body1 = manifold->getBody1();
-        
         
         GameObject * obj1 = static_cast<GameObject *>(body0->getUserPointer());
         GameObject * obj2 = static_cast<GameObject *>(body1->getUserPointer());
@@ -142,6 +150,8 @@ void GameLogic::postTickCallback(float timeStep)
         
         mammut->collidesWith(*cuboid, m_gravity->inverseRotation());
     }
+    
+    m_mammut->applySteering(m_gravity->inverseRotation());
 }
 
 const GameCamera & GameLogic::camera() const

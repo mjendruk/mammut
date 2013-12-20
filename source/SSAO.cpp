@@ -11,7 +11,7 @@
 
 #include "FileAssociatedShader.h"
 
-const int SSAO::m_kernelSize = 16;
+const int SSAO::m_kernelSize = 32;
 const int SSAO::m_noiseSize = 4;
 
 SSAO::SSAO()
