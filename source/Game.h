@@ -3,8 +3,8 @@
 #include <glow/Timer.h>
 
 #include "AbstractApplication.h"
-#include "GameLogic.h"
-#include "Renderer.h"
+#include "gamelogic/GameLogic.h"
+#include "rendering/Renderer.h"
 
 class QMouseEvent;
 

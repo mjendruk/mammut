@@ -9,7 +9,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include "Conversions.h"
+#include "../Conversions.h"
 
 Gravity::Gravity(btDiscreteDynamicsWorld & dynamicsWorld)
 :   m_state(kDown)

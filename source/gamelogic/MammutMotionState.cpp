@@ -1,7 +1,7 @@
 
 #include "MammutMotionState.h"
 
-#include "Conversions.h"
+#include "../Conversions.h"
 #include "Mammut.h"
 
 MammutMotionState::MammutMotionState(const glm::vec3 & translation, Mammut & mammut)

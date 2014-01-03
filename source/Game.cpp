@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include "Renderer.h"
-#include "GameLogic.h"
+#include "rendering/Renderer.h"
+#include "gamelogic/GameLogic.h"
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
