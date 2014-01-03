@@ -54,7 +54,7 @@ void GameLogic::update(float seconds)
 {
     m_dynamicsWorld->stepSimulation(seconds, 30, 0.01f);
     
-    m_camera->update();
+    m_camera->update(seconds);
     
     if (m_chunkList.first()->boundingBox().llf().z > m_camera->center().z)
     {
