@@ -64,8 +64,8 @@ void main() {
     
     //get view space origin:
     float originDepth = texture(g_normal, v_uv).a;
-    vec3 originPos = normalize(v_eyevector);
-    originPos /= originPos.z;
+    vec3 originPos = (v_eyevector);
+    originPos /= originPos.z + 0.08; //there, i fixed it: originPos.z is a little smaller than the far plane...
     originPos *= originDepth;
 
     //get view space normal:
