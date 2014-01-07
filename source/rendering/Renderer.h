@@ -8,6 +8,7 @@
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "RenderCamera.h"
+#include "StringDrawer.h"
 
 namespace glow
 {
@@ -53,6 +54,8 @@ protected:
 
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
+    
+    StringDrawer m_stringDrawer;
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

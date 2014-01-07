@@ -6,7 +6,6 @@
 #include <QDebug>
 
 #include <glm/gtx/transform.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <btBulletDynamicsCommon.h>
 
 #include "../Conversions.h"

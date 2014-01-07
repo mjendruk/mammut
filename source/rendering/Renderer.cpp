@@ -19,6 +19,7 @@
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
 #include "SSAO.h"
+#include "CharacterDrawable.h"
 
 const float Renderer::nearPlane = 0.1f;
 const float Renderer::farPlane = 700.0f;
@@ -126,7 +127,9 @@ void Renderer::render()
 
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
-
+    
+    glDisable(GL_DEPTH_TEST);
+    m_stringDrawer.paint("hallo", glm::mat4());
 
     m_canvas->endPaintGL();
 }
@@ -147,6 +150,8 @@ void Renderer::initialize()
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
+    m_stringDrawer.initialize();
+    
     initializeGBuffer();
     
     m_initialized = true;
