@@ -99,30 +99,43 @@ bool StringDrawer::initializeTexture()
 
 void StringDrawer::paint(const QString & string, const glm::mat4 & modelMatrix)
 {
-    glm::mat4 positionTransform;
-    glm::mat4 textureCoordTransform;
     
-    CharacterSpecifics * charH = m_stringComposer.characterSequence("$").at(0);
-
-    glm::vec2 position(charH->position.x, 512.0f - (charH->position.y + charH->size.y));
-    textureCoordTransform *= glm::translate(glm::vec3(position / glm::vec2(512.0f), 0.0f));
     
-    textureCoordTransform *= glm::scale(glm::vec3(charH->size / glm::vec2(512.0f), 1.0f));
-    
-    m_program->setUniform("positionTransform", positionTransform);
-    m_program->setUniform("textureCoordTransform", textureCoordTransform);
     m_program->setUniform("characterAtlas", 0);
+    
+    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(string);
     
     m_characterAtlas->bind(GL_TEXTURE0);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    m_program->use();
-    
-    m_drawable.draw();
-    
-    m_program->release();
+    glm::mat4 translation;
+    for (int i = 1; i < list.size(); i++) {
+        CharacterSpecifics * currentSpecifics = list[i];
+        CharacterSpecifics * lastSpecifics = list[i - 1];
+        
+        glm::mat4 positionTransform;
+        glm::mat4 textureCoordTransform;
+        
+        glm::vec2 position(currentSpecifics->position.x,
+                           512.0f - (currentSpecifics->position.y + currentSpecifics->size.y));
+        textureCoordTransform *= glm::translate(glm::vec3(position / glm::vec2(512.0f), 0.0f));
+        
+        textureCoordTransform *= glm::scale(glm::vec3(currentSpecifics->size / glm::vec2(512.0f), 1.0f));
+        
+        translation *= glm::translate(lastSpecifics->xAdvance / 512.f, 0.0f, 0.0f);
+        
+        positionTransform *= translation;
+        positionTransform *= glm::scale(glm::vec3(currentSpecifics->size / glm::vec2(512.0f), 1.0f));
+        
+        m_program->setUniform("positionTransform", positionTransform);
+        m_program->setUniform("textureCoordTransform", textureCoordTransform);
+        
+        m_program->use();
+        m_drawable.draw();
+        m_program->release();
+    }
     
     glDisable(GL_BLEND);
 }

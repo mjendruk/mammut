@@ -129,7 +129,7 @@ void Renderer::render()
     glDepthMask(GL_TRUE);
     
     glDisable(GL_DEPTH_TEST);
-    m_stringDrawer.paint("hallo", glm::mat4());
+    m_stringDrawer.paint(" Aileen", glm::mat4());
 
     m_canvas->endPaintGL();
 }
