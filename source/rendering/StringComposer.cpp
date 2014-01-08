@@ -32,7 +32,7 @@ QList<CharacterSpecifics *> StringComposer::characterSequence(const QString & st
     return characterSequence;
 }
 
-bool StringComposer::readSpecificsFromFile(const QString & fileName)
+bool StringComposer::readSpecificsFromFile(const QString & fileName, float textureSize)
 {
     m_characterSpecifics.clear();
     
@@ -55,26 +55,33 @@ bool StringComposer::readSpecificsFromFile(const QString & fileName)
     stream.readLine();
     
     while (!stream.atEnd())
-        parseCharacterLine(stream.readLine());
+        parseCharacterLine(stream.readLine(), textureSize);
     
     file.close();
     
     return true;
 }
 
-void StringComposer::parseCharacterLine(const QString & line)
+void StringComposer::parseCharacterLine(const QString & line, float textureSize)
 {
     QRegularExpression regExp("=(\\S+)");
     QRegularExpressionMatchIterator it = regExp.globalMatch(line);
     
     unsigned int id = it.next().captured(1).toUInt();
     
-    auto specifics = new CharacterSpecifics {
-        glm::vec2(it.next().captured(1).toUInt(), it.next().captured(1).toUInt()),
-        glm::vec2(it.next().captured(1).toUInt(), it.next().captured(1).toUInt()),
-        glm::vec2(it.next().captured(1).toFloat(), it.next().captured(1).toFloat()),
-        it.next().captured(1).toFloat()
-    };
+    float x = it.next().captured(1).toUInt();
+    float y = it.next().captured(1).toUInt();
+    float width = it.next().captured(1).toUInt();
+    float height = it.next().captured(1).toUInt();
+    float xOffset = it.next().captured(1).toFloat();
+    float yOffset = it.next().captured(1).toFloat();
     
+    float xAdvance = it.next().captured(1).toFloat() / textureSize;
+    
+    glm::vec2 position = glm::vec2(x, textureSize - (y + height)) / textureSize;
+    glm::vec2 size = glm::vec2(width, height) / textureSize;
+    glm::vec2 offset = glm::vec2(xOffset, yOffset - height) / textureSize;
+    
+    auto specifics = new CharacterSpecifics { position, size, offset, xAdvance };
     m_characterSpecifics.insert(id, specifics);
 }

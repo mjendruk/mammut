@@ -16,6 +16,8 @@
 #include "RawFile.h"
 #include "CharacterDrawable.h"
 
+const float StringDrawer::s_textureSize = 1024.0f;
+
 StringDrawer::StringDrawer()
 {
 
@@ -34,7 +36,7 @@ bool StringDrawer::initialize()
     if (!initializeTexture())
         return false;
     
-    if (!m_stringComposer.readSpecificsFromFile("data/NeoSans.txt"))
+    if (!m_stringComposer.readSpecificsFromFile("data/P22UndergroundPro-Medium.otf_sdf.txt", s_textureSize))
         return false;
     
     m_drawable.initialize();
@@ -79,7 +81,7 @@ bool StringDrawer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
-    const QString fileName("data/NeoSans.png");
+    const QString fileName("data/P22UndergroundPro-Medium.otf_sdf.png");
     
     if (!QFile::exists(fileName)) {
         qCritical() << "Could not find font source";
@@ -89,7 +91,7 @@ bool StringDrawer::initializeTexture()
     QImage texture(fileName);
     texture = QGLWidget::convertToGLFormat(texture);
     
-    m_characterAtlas->image2D(0, GL_R8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
+    m_characterAtlas->image2D(0, GL_R8, s_textureSize, s_textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
     
     m_characterAtlas->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     m_characterAtlas->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -99,35 +101,28 @@ bool StringDrawer::initializeTexture()
 
 void StringDrawer::paint(const QString & string, const glm::mat4 & modelMatrix)
 {
-    
-    
     m_program->setUniform("characterAtlas", 0);
     
-    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(string);
-    
     m_characterAtlas->bind(GL_TEXTURE0);
+    
+    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(string);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    glm::mat4 translation;
-    for (int i = 1; i < list.size(); i++) {
+    glm::mat4 transform = modelMatrix;
+    for (int i = 0; i < list.size(); i++) {
         CharacterSpecifics * currentSpecifics = list[i];
-        CharacterSpecifics * lastSpecifics = list[i - 1];
         
         glm::mat4 positionTransform;
         glm::mat4 textureCoordTransform;
         
-        glm::vec2 position(currentSpecifics->position.x,
-                           512.0f - (currentSpecifics->position.y + currentSpecifics->size.y));
-        textureCoordTransform *= glm::translate(glm::vec3(position / glm::vec2(512.0f), 0.0f));
+        textureCoordTransform *= glm::translate(glm::vec3(currentSpecifics->position, 0.0f));
+        textureCoordTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
         
-        textureCoordTransform *= glm::scale(glm::vec3(currentSpecifics->size / glm::vec2(512.0f), 1.0f));
-        
-        translation *= glm::translate(lastSpecifics->xAdvance / 512.f, 0.0f, 0.0f);
-        
-        positionTransform *= translation;
-        positionTransform *= glm::scale(glm::vec3(currentSpecifics->size / glm::vec2(512.0f), 1.0f));
+        positionTransform *= transform;
+        positionTransform *= glm::translate(glm::vec3(currentSpecifics->offset, 0.0f));
+        positionTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
         
         m_program->setUniform("positionTransform", positionTransform);
         m_program->setUniform("textureCoordTransform", textureCoordTransform);
@@ -135,6 +130,8 @@ void StringDrawer::paint(const QString & string, const glm::mat4 & modelMatrix)
         m_program->use();
         m_drawable.draw();
         m_program->release();
+        
+        transform *= glm::translate(currentSpecifics->xAdvance, 0.0f, 0.0f);
     }
     
     glDisable(GL_BLEND);

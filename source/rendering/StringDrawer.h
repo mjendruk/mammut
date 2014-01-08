@@ -20,13 +20,15 @@ public:
     ~StringDrawer();
 
     bool initialize();
-    void paint(const QString & string, const glm::mat4 & modelMatrix);
+    void paint(const QString & string, const glm::mat4 & modelMatrix = glm::mat4());
 
 protected:
     bool initializeProgram();
     bool initializeTexture();
 
 protected:
+    static const float s_textureSize;
+    
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glow::Texture> m_characterAtlas;
 

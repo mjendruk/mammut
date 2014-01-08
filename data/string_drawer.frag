@@ -13,6 +13,10 @@ float aastep (float threshold , float value) {
 }
 
 void main() {
-    float alpha = aastep(0.5, texture(characterAtlas, v_textureCoord).r);
-    fragColor = vec4(0.0, 0.0, 0.0, alpha);
+    float value = texture(characterAtlas, v_textureCoord).r;
+
+    float alpha = aastep(0.4, value);
+    float color = 1 - aastep(0.8, value);
+
+    fragColor = vec4(color, color, color, alpha);
 }

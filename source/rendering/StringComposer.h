@@ -20,11 +20,11 @@ public:
     StringComposer();
     ~StringComposer();
 
-    bool readSpecificsFromFile(const QString & fileName);
+    bool readSpecificsFromFile(const QString & fileName, float textureSize);
     QList<CharacterSpecifics *> characterSequence(const QString & string) const;
 
 protected:
-    void parseCharacterLine(const QString & line);
+    void parseCharacterLine(const QString & line, float textureSize);
 
     QHash<unsigned int, CharacterSpecifics *> m_characterSpecifics;
 };
