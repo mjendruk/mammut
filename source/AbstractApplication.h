@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QGuiApplication>
+#include <QApplication>
 
 // Application initializes Application strings from CMake generated Meta.
 // It furhter installs a Message Handler for extended logging capabilities.
 
-class AbstractApplication : public QGuiApplication
+class AbstractApplication : public QApplication
 {
 public:
     AbstractApplication(

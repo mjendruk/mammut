@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QScopedPointer>
+#include <QMainWindow>
 
 #include <glow/Timer.h>
 
@@ -29,8 +30,10 @@ protected:
 
 protected:
     GameLogic m_gameLogic;
-    QScopedPointer<Canvas> m_canvas;
     glow::Timer m_timer;
+    
+    QMainWindow m_window;
+    Canvas * m_canvas;
 
     bool m_loop;
     bool m_paused;

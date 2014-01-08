@@ -20,14 +20,13 @@ Game::Game(int & argc, char ** argv)
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
-    m_canvas.reset(new Canvas(format, m_gameLogic));
-    
+    m_canvas = new Canvas(format, m_gameLogic);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-    m_canvas->setWidth(1024);
-    m_canvas->setHeight(768);
     
-    m_canvas->show();
+    m_window.setCentralWidget(QWidget::createWindowContainer(m_canvas));
+    m_window.setMinimumSize(800, 600);
+    m_window.show();
     
     QTimer::singleShot(0, this, SLOT(run()));
 }
@@ -62,11 +61,14 @@ void Game::run()
             m_gameLogic.update(delta / std::nano::den);
         
         if (m_timer.elapsed() < nextTime)
-            m_canvas->render();
+        {
+            if(!m_window.isMinimized())
+                m_canvas->render();
+        }
     }
 }
 
-bool Game::eventFilter(QObject *obj, QEvent *event)
+bool Game::eventFilter(QObject * obj, QEvent * event)
 {
     switch (event->type())
     {
@@ -91,10 +93,20 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
 }
 
 
-void Game::keyPressed(QKeyEvent *keyEvent)
+void Game::keyPressed(QKeyEvent * keyEvent)
 {
     if (keyEvent->isAutoRepeat())
         return;
+    
+    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier)
+    {
+        if (m_window.isFullScreen())
+            m_window.showNormal();
+        else
+            m_window.showFullScreen();
+        
+        return;
+    }
 
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
@@ -102,7 +114,7 @@ void Game::keyPressed(QKeyEvent *keyEvent)
     m_gameLogic.keyPressed(keyEvent->key());
 }
 
-void Game::keyReleased(QKeyEvent *keyEvent)
+void Game::keyReleased(QKeyEvent * keyEvent)
 {
     if (keyEvent->isAutoRepeat())
         return;

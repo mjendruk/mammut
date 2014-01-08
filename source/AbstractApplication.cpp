@@ -10,17 +10,17 @@ AbstractApplication::AbstractApplication(
     int & argc
 ,   char ** argv)
 
-:   QGuiApplication(argc, argv)
+:   QApplication(argc, argv)
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    QGuiApplication::setApplicationDisplayName(fi.baseName());
+    QApplication::setApplicationDisplayName(fi.baseName());
 
-    QGuiApplication::setApplicationName(MAMMUT_PROJECT_NAME);
-    QGuiApplication::setApplicationVersion(MAMMUT_VERSION);
+    QApplication::setApplicationName(MAMMUT_PROJECT_NAME);
+    QApplication::setApplicationVersion(MAMMUT_VERSION);
 
-    QGuiApplication::setOrganizationName(MAMMUT_AUTHOR_ORGANIZATION);
-    QGuiApplication::setOrganizationDomain(MAMMUT_AUTHOR_DOMAIN);
+    QApplication::setOrganizationName(MAMMUT_AUTHOR_ORGANIZATION);
+    QApplication::setOrganizationDomain(MAMMUT_AUTHOR_DOMAIN);
 
     qInstallMessageHandler(globalMessageHandler);
 
@@ -35,7 +35,7 @@ AbstractApplication::~AbstractApplication()
 const QString AbstractApplication::title() const
 {
     return QString("%1 - %2 %3")
-        .arg(QGuiApplication::applicationDisplayName())
-        .arg(QGuiApplication::applicationName())
-        .arg(QGuiApplication::applicationVersion());
+        .arg(QApplication::applicationDisplayName())
+        .arg(QApplication::applicationName())
+        .arg(QApplication::applicationVersion());
 }
