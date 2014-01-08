@@ -181,3 +181,8 @@ bool Mammut::isOnObject(const GameObject & object, const glm::mat3 & gravityTran
     
     return fabs(objectTop - mammutBottom) < epsilon;
 }
+
+float Mammut::velocity() const
+{
+    return -m_rigidBody->getLinearVelocity().z();
+}

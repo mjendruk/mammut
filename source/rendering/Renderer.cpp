@@ -129,7 +129,9 @@ void Renderer::render()
     glDepthMask(GL_TRUE);
     
     glDisable(GL_DEPTH_TEST);
-    m_stringDrawer.paint("Fränzchen jagt wütend auf Straßen.", m_camera.projection() * glm::translate(0.0f, 0.0f, -1.0f));
+    float aspectRatio = m_camera.aspectRatio();
+    QString velocityString = QString("Velocity: %1").arg(m_gameLogic.mammut().velocity(), 0, 'g', 2);
+    m_stringDrawer.paint(velocityString, glm::translate(-0.95f, -0.9f, 0.0f) * glm::scale(1 / aspectRatio, 1.0f, 0.0f));
     glEnable(GL_DEPTH_TEST);
 
     m_canvas->endPaintGL();

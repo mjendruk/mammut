@@ -44,6 +44,8 @@ public:
     
     const glm::mat4 & rotation() const;
     void setRotation(const glm::mat4 & rotation);
+    
+    float velocity() const;
 
 protected:
     bool isOnObject(const GameObject & object,
