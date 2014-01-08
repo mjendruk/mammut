@@ -12,12 +12,23 @@
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
-,   m_gameLogic()
-,   m_renderer(m_gameLogic)
 ,   m_loop(false)
 ,   m_paused(false)
 {
-    m_renderer.registerKeyHandler(*this);
+    QSurfaceFormat format;
+    format.setVersion(4, 1);
+    format.setDepthBufferSize(24);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+
+    m_canvas.reset(new Canvas(format, m_gameLogic));
+    
+    m_canvas->installEventFilter(this);
+    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
+    m_canvas->setWidth(1024);
+    m_canvas->setHeight(768);
+    
+    m_canvas->show();
+    
     QTimer::singleShot(0, this, SLOT(run()));
 }
 
@@ -51,7 +62,7 @@ void Game::run()
             m_gameLogic.update(delta / std::nano::den);
         
         if (m_timer.elapsed() < nextTime)
-            m_renderer.render();
+            m_canvas->render();
     }
 }
 

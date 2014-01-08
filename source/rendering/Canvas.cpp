@@ -1,33 +1,25 @@
 #include "Canvas.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
-#include <glowutils/NavigationMath.h>
-#include <glow/Timer.h>
-
 #include <QDebug>
 #include <QApplication>
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
-#include "Renderer.h"
-#include "RenderCamera.h"
-
-
-Canvas::Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera * camera)
+Canvas::Canvas(const QSurfaceFormat & format, GameLogic & gameLogic)
 :   QWindow((QScreen*)nullptr)
+,   m_renderer(gameLogic, *this)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
-,   m_renderer(renderer)
-,   m_camera(camera)
 {
     setSurfaceType(OpenGLSurface); 
-
     create();
-    this->setPosition(QPoint(50,50));
 
     initializeGL(format);
+    
+    m_context.makeCurrent(this);
+    m_renderer.initialize();
+    m_context.doneCurrent();
 }
 
 Canvas::~Canvas()
@@ -93,31 +85,31 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
 void Canvas::resizeEvent(QResizeEvent * event)
 {
-    int width = event->size().width();
-    int height = event->size().height();
-    m_camera->setViewport(glm::ivec2(width, height));
+    const int width = event->size().width();
+    const int height = event->size().height();
     
     m_context.makeCurrent(this);
     
-    m_renderer->resize(width, height);
-
+    m_renderer.resize(width, height);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_context.swapBuffers(this);
+    
     m_context.doneCurrent();
 }
 
-void Canvas::beginPaintGL()
+void Canvas::render()
 {
     if (!isExposed() || Hidden == visibility())
         return;
-
+    
     m_context.makeCurrent(this);
-}
-
-void Canvas::endPaintGL()
-{
+    
+    m_renderer.paint();
+    
     m_context.swapBuffers(this);
     m_context.doneCurrent();
 }
-
 
 void Canvas::setSwapInterval(SwapInterval swapInterval)
 {

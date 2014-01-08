@@ -1,13 +1,14 @@
 #pragma once
 
+#include <QScopedPointer>
+
 #include <glow/Timer.h>
 
 #include "AbstractApplication.h"
 #include "gamelogic/GameLogic.h"
-#include "rendering/Renderer.h"
+#include "rendering/Canvas.h"
 
 class QMouseEvent;
-
 
 class Game : public AbstractApplication
 {
@@ -28,7 +29,7 @@ protected:
 
 protected:
     GameLogic m_gameLogic;
-    Renderer m_renderer;
+    QScopedPointer<Canvas> m_canvas;
     glow::Timer m_timer;
 
     bool m_loop;

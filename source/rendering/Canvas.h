@@ -1,15 +1,16 @@
 #pragma once
 
+#include <functional>
+
 #include <GL/glew.h>
 
 #include <QWindow>
 #include <QScopedPointer>
 #include <QOpenGLContext>
 
-class QSurfaceFormat;
+#include "Renderer.h"
 
-class Renderer;
-class RenderCamera;
+class GameLogic;
 
 class Canvas : public QWindow
 {
@@ -24,18 +25,15 @@ public:
     };
 
 public:
-    Canvas(const QSurfaceFormat & format, Renderer * renderer, RenderCamera * camera);
+    Canvas(const QSurfaceFormat & format, GameLogic & gameLogic);
     virtual ~Canvas();
 
-    // from QWindow
-    virtual QSurfaceFormat format() const;
+    QSurfaceFormat format() const override;
 
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
-
-    void beginPaintGL();
-    void endPaintGL();
-
+    
+    void render();
 
 public slots:
     void toggleSwapInterval();
@@ -53,12 +51,9 @@ protected:
 
 protected:
     QOpenGLContext m_context;
+    Renderer m_renderer;
 
     SwapInterval m_swapInterval;    ///< required for toggle
-
-    Renderer * m_renderer;
-    RenderCamera * m_camera;
-
     long double m_swapts;
     unsigned int m_swaps;
 };
