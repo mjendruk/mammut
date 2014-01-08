@@ -78,6 +78,10 @@ bool Game::eventFilter(QObject *obj, QEvent *event)
             keyReleased((QKeyEvent*)event);
             break;
             
+        case QEvent::Hide:
+            m_loop = false;
+            break;
+            
         default:
             return QObject::eventFilter(obj, event);
             break;

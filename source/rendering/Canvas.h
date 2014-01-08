@@ -44,10 +44,7 @@ protected:
 
     virtual void initializeGL(const QSurfaceFormat & format);
 
-    //virtual void showEvent(QShowEvent * event);
-    //virtual void hideEvent(QHideEvent * event);
-
-    virtual void resizeEvent(QResizeEvent * event);
+    void resizeEvent(QResizeEvent * event) override;
 
 protected:
     QOpenGLContext m_context;
