@@ -129,7 +129,7 @@ void Renderer::render()
     glDepthMask(GL_TRUE);
     
     glDisable(GL_DEPTH_TEST);
-    m_stringDrawer.paint("Franz jagt im komplett verwarlosten Taxi schwer durch Bayern.", m_camera.projection() * glm::translate(0.0f, 0.0f, -1.0f));
+    m_stringDrawer.paint("Fränzchen jagt wütend auf Straßen.", m_camera.projection() * glm::translate(0.0f, 0.0f, -1.0f));
     glEnable(GL_DEPTH_TEST);
 
     m_canvas->endPaintGL();

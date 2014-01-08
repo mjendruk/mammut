@@ -21,7 +21,7 @@ QList<CharacterSpecifics *> StringComposer::characterSequence(const QString & st
     QList<CharacterSpecifics *> characterSequence;
     
     for (int i = 0; i < latin1String.size(); i++) {
-        unsigned int id = latin1String[i];
+        unsigned char id = latin1String[i];
         
         if (!m_characterSpecifics.contains(id))
             continue;
