@@ -16,10 +16,6 @@ Canvas::Canvas(const QSurfaceFormat & format, GameLogic & gameLogic)
     create();
 
     initializeGL(format);
-    
-    m_context.makeCurrent(this);
-    m_renderer.initialize();
-    m_context.doneCurrent();
 }
 
 Canvas::~Canvas()
@@ -79,6 +75,8 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     qDebug();
     
     glClearColor(1.f, 1.f, 1.f, 0.f);
+    
+    m_renderer.initialize();
 
     m_context.doneCurrent();
 }
@@ -92,15 +90,18 @@ void Canvas::resizeEvent(QResizeEvent * event)
     
     m_renderer.resize(width, height);
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m_context.swapBuffers(this);
+    if (isExposed())
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        m_context.swapBuffers(this);
+    }
     
     m_context.doneCurrent();
 }
 
 void Canvas::render()
 {
-    if (!isExposed() || Hidden == visibility())
+    if (!isExposed() || Hidden == visibility() || Minimized == visibility())
         return;
     
     m_context.makeCurrent(this);
