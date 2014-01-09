@@ -22,7 +22,8 @@ const float Renderer::nearPlane = 0.1f;
 const float Renderer::farPlane = 700.0f;
 
 Renderer::Renderer(GameLogic & gameLogic, Canvas & canvas)
-:   m_gameLogic(gameLogic)
+:   m_hud(gameLogic.mammut(), m_camera)
+,   m_gameLogic(gameLogic)
 ,   m_canvas(canvas)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
@@ -103,12 +104,7 @@ void Renderer::paint()
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
-    glDisable(GL_DEPTH_TEST);
-    float aspectRatio = m_camera.aspectRatio();
-    QString velocityString = QString("Velocity: %1").arg(m_gameLogic.mammut().velocity(), 0, 'g', 2);
-    m_stringDrawer.paint(velocityString, glm::translate(-0.95f, -0.9f, 0.0f) *
-                                         glm::scale(1 / aspectRatio, 1.0f, 0.0f));
-    glEnable(GL_DEPTH_TEST);
+    m_hud.paint();
 }
 
 void Renderer::initialize()
@@ -117,6 +113,7 @@ void Renderer::initialize()
     m_painter.initialize();
     m_cuboidDrawable.initialize();
     m_caveDrawable.initialize();
+    m_hud.initialize();
     
     m_ssao = new SSAO();
 
@@ -126,8 +123,6 @@ void Renderer::initialize()
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_stringDrawer.initialize();
     
     m_camera.setFovy(90.0);
     m_camera.setZNear(nearPlane);

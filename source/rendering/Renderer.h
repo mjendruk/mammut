@@ -8,7 +8,7 @@
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "RenderCamera.h"
-#include "StringDrawer.h"
+#include "HUD.h"
 
 namespace glow
 {
@@ -43,16 +43,15 @@ protected:
     static const float nearPlane;
     static const float farPlane;
     
-    GameLogic & m_gameLogic;
-    Canvas & m_canvas;
-    
     Painter m_painter;
     RenderCamera m_camera;
+    HUD m_hud;
 
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
-    
-    StringDrawer m_stringDrawer;
+
+    GameLogic & m_gameLogic;
+    Canvas & m_canvas;
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

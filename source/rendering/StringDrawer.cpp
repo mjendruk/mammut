@@ -1,5 +1,7 @@
 #include "StringDrawer.h"
 
+#include <numeric>
+
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
@@ -96,18 +98,20 @@ bool StringDrawer::initializeTexture()
     return true;
 }
 
-void StringDrawer::paint(const QString & string, const glm::mat4 & modelMatrix)
+void StringDrawer::paint(const QString & text,
+    const glm::mat4 & modelMatrix, Alignment alignment)
 {
     m_program->setUniform("characterAtlas", 0);
     
     m_characterAtlas->bind(GL_TEXTURE0);
     
-    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(string);
+    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(text);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    glm::mat4 transform = modelMatrix;
+    glm::mat4 transform = alignmentTransform(list, alignment) * modelMatrix;
+    
     for (int i = 0; i < list.size(); i++) {
         CharacterSpecifics * currentSpecifics = list[i];
         
@@ -132,4 +136,30 @@ void StringDrawer::paint(const QString & string, const glm::mat4 & modelMatrix)
     }
     
     glDisable(GL_BLEND);
+}
+
+glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & list, Alignment alignment) const
+{
+    float offset;
+    
+    const float length = std::accumulate(list.begin(), list.end(), 0.0f,
+        [] (float sum, CharacterSpecifics * specifics) {
+            return sum + specifics->xAdvance;
+        });
+    
+    switch (alignment) {
+        case kAlignLeft:
+            offset = list.first()->offset.x;
+            break;
+            
+        case kAlignCenter:
+            offset = - length / 2.0f;
+            break;
+            
+        case kAlignRight:
+            offset = - length + list.last()->offset.x + list.last()->size.x;
+            break;
+    }
+    
+    return glm::translate(offset, 0.0f, 0.0f);
 }

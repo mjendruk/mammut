@@ -16,15 +16,22 @@ namespace glow
 class StringDrawer
 {
 public:
+    enum Alignment { kAlignLeft, kAlignCenter, kAlignRight };
+    
     StringDrawer();
     ~StringDrawer();
 
     bool initialize();
-    void paint(const QString & string, const glm::mat4 & modelMatrix = glm::mat4());
+    void paint(const QString & text,
+               const glm::mat4 & modelMatrix = glm::mat4(),
+               Alignment alignment = kAlignLeft);
 
 protected:
     bool initializeProgram();
     bool initializeTexture();
+    
+    glm::mat4 alignmentTransform(const QList<CharacterSpecifics *> & list,
+                                 Alignment alignment) const;
 
 protected:
     static const float s_textureSize;

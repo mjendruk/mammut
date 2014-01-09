@@ -24,8 +24,12 @@ Game::Game(int & argc, char ** argv)
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
-    m_window.setCentralWidget(QWidget::createWindowContainer(m_canvas));
+    QWidget * canvasWidget = QWidget::createWindowContainer(m_canvas);
+    
+    m_window.setCentralWidget(canvasWidget);
     m_window.setMinimumSize(800, 600);
+    m_window.setFocusProxy(canvasWidget);
+    m_window.setFocus();
     m_window.show();
     
     QTimer::singleShot(0, this, SLOT(run()));

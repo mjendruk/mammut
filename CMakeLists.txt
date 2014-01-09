@@ -188,9 +188,6 @@ include_directories(
     ${FMOD_INCLUDE_DIR}
 )
 
-message(STATUS ${BULLET_INCLUDE_DIRS})
-message(STATUS ${BULLET_LIBRARIES})
-
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 # Generate meta-header
@@ -231,6 +228,8 @@ set(sources
     ${source_path}/rendering/FileAssociatedAsset.h
     ${source_path}/rendering/FileAssociatedShader.cpp
     ${source_path}/rendering/FileAssociatedShader.h
+    ${source_path}/rendering/HUD.cpp
+    ${source_path}/rendering/HUD.h
     ${source_path}/rendering/IDrawable.h
     ${source_path}/rendering/Painter.cpp
     ${source_path}/rendering/Painter.h
