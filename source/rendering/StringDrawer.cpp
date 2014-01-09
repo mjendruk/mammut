@@ -36,7 +36,7 @@ bool StringDrawer::initialize()
     if (!initializeTexture())
         return false;
     
-    if (!m_stringComposer.readSpecificsFromFile("data/P22UndergroundPro-Medium.otf_sdf.txt", s_textureSize))
+    if (!m_stringComposer.readSpecificsFromFile("data/P22UndergroundPro-Medium.txt", s_textureSize))
         return false;
     
     m_drawable.initialize();
@@ -81,17 +81,14 @@ bool StringDrawer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
-    const QString fileName("data/P22UndergroundPro-Medium.otf_sdf.png");
+    const QString fileName("data/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
     
-    if (!QFile::exists(fileName)) {
-        qCritical() << "Could not find font source";
+    RawFile file(fileName.toStdString());
+    
+    if (!file.isValid())
         return false;
-    }
     
-    QImage texture(fileName);
-    texture = QGLWidget::convertToGLFormat(texture);
-    
-    m_characterAtlas->image2D(0, GL_R8, s_textureSize, s_textureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
+    m_characterAtlas->image2D(0, GL_R8, s_textureSize, s_textureSize, 0, GL_RED, GL_UNSIGNED_BYTE, file.data());
     
     m_characterAtlas->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     m_characterAtlas->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
