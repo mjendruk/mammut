@@ -29,27 +29,24 @@ class SSAO;
 class Renderer
 {
 public:
-    Renderer(GameLogic & gameLogic);
+    Renderer(GameLogic & gameLogic, Canvas & canvas);
     ~Renderer();
 
-    void render();
+    void initialize();
+    void paint();
     void resize(int width, int height);
 
-    void registerKeyHandler(QObject & keyHandler);
-
 protected:
-    void initialize();
     void initializeGBuffer();
 
 protected:
     static const float nearPlane;
     static const float farPlane;
-
-    Canvas * m_canvas;
-    Painter m_painter;
+    
     GameLogic & m_gameLogic;
-    bool m_initialized;
-
+    Canvas & m_canvas;
+    
+    Painter m_painter;
     RenderCamera m_camera;
 
     CuboidDrawable m_cuboidDrawable;
