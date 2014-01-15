@@ -46,10 +46,7 @@ void main()
 
     vec4 worldVertex = model * vec4(a_vertex, 1.0);
 
-    if (worldVertex.z > eye.z)
-      v_eyeDistance = 0;
-    else
-      v_eyeDistance = distance(eye, worldVertex.xyz / worldVertex.w);
+    v_eyeDistance = clamp(distance(eye, worldVertex.xyz / worldVertex.w) / 800, 0.0, 1.0);
 
     v_normal = normalToWorldSpace(a_normal);
 

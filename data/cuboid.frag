@@ -14,6 +14,6 @@ void main()
 	vec3 normal = normalize(v_normal);
 	normalOut = vec4(normal, depthInES);
 
-    colorOut =  clamp(v_color - v_eyeDistance * 0.001, 0.0, 1.0);
+    colorOut =  clamp(v_color - v_eyeDistance, 0.0, 1.0);
 
 }
