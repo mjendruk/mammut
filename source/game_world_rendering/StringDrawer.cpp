@@ -5,8 +5,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
-#include <QImage>
-#include <QGLWidget>
 
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -98,10 +96,14 @@ bool StringDrawer::initializeTexture()
     return true;
 }
 
-void StringDrawer::paint(const QString & text,
-    const glm::mat4 & modelMatrix, Alignment alignment)
+void StringDrawer::paint(
+    const QString & text,
+    const glm::mat4 & modelMatrix, 
+    Alignment alignment, 
+    const glm::vec3 color)
 {
     m_program->setUniform("characterAtlas", 0);
+    m_program->setUniform("color", color);
     
     m_characterAtlas->bind(GL_TEXTURE0);
     

@@ -7,6 +7,8 @@
 
 #include <game_mechanics/GameMechanics.h>
 #include <game_world_rendering/Canvas.h>
+#include <menu/MenuMechanics.h>
+
 #include "AbstractApplication.h"
 
 class QMouseEvent;
@@ -21,6 +23,8 @@ public:
 
 public slots:
     void run();
+    void start();
+    void quit();
     
 protected:
     void mouseMoveEvent(QMouseEvent * event);
@@ -30,6 +34,10 @@ protected:
 
 protected:
     GameMechanics m_gameMechanics;
+    MenuMechanics m_menuMechanics;
+    
+    Mechanics * m_activeMechanics;
+    
     glow::Timer m_timer;
     
     QMainWindow m_window;

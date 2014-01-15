@@ -21,7 +21,7 @@ class GameMechanics : public Mechanics
 {
 public:
     GameMechanics();
-    ~GameMechanics();
+    virtual ~GameMechanics();
 
     void update(float seconds) override;
     Renderer * renderer() override;

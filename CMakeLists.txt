@@ -217,6 +217,7 @@ set(sources
     ${source_path}/game_mechanics/Mammut.h
     ${source_path}/game_mechanics/MammutMotionState.cpp
     ${source_path}/game_mechanics/MammutMotionState.h
+
     ${source_path}/game_world_rendering/AbstractPainter.cpp
     ${source_path}/game_world_rendering/AbstractPainter.h
     ${source_path}/game_world_rendering/Canvas.cpp
@@ -248,6 +249,14 @@ set(sources
     ${source_path}/game_world_rendering/StringComposer.h
     ${source_path}/game_world_rendering/StringDrawer.cpp
     ${source_path}/game_world_rendering/StringDrawer.h
+    
+    ${source_path}/menu/MenuItem.cpp
+    ${source_path}/menu/MenuItem.h
+    ${source_path}/menu/MenuMechanics.cpp
+    ${source_path}/menu/MenuMechanics.h
+    ${source_path}/menu/MenuRenderer.cpp
+    ${source_path}/menu/MenuRenderer.h
+
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
     ${source_path}/Conversions.cpp

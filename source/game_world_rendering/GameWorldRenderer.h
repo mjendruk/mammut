@@ -32,7 +32,7 @@ class GameWorldRenderer : public Renderer
 {
 public:
     GameWorldRenderer(GameMechanics & gameMechanics);
-    ~GameWorldRenderer();
+    virtual ~GameWorldRenderer();
 
     void initialize() override;
     void resize(int width, int height) override;

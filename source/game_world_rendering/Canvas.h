@@ -32,6 +32,7 @@ public:
     static const QString swapIntervalToString(SwapInterval swapInterval);
     
     void render();
+    void changeRenderer(Renderer * renderer);
 
 public slots:
     void toggleSwapInterval();

@@ -114,6 +114,18 @@ void Canvas::render()
     m_context.doneCurrent();
 }
 
+void Canvas::changeRenderer(Renderer * renderer)
+{
+    if (!renderer->initialized()) {
+        m_context.makeCurrent(this);
+        renderer->initialize();
+        renderer->resize(width(), height());
+        m_context.doneCurrent();
+    }
+    
+    m_renderer = renderer;
+}
+
 void Canvas::setSwapInterval(SwapInterval swapInterval)
 {
     m_context.makeCurrent(this);
