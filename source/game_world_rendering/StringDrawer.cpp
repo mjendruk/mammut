@@ -112,7 +112,7 @@ void StringDrawer::paint(
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    glm::mat4 transform = alignmentTransform(list, alignment) * modelMatrix;
+    glm::mat4 transform = modelMatrix * alignmentTransform(list, alignment);
     
     for (int i = 0; i < list.size(); i++) {
         CharacterSpecifics * currentSpecifics = list[i];
@@ -151,7 +151,7 @@ glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & l
     
     switch (alignment) {
         case kAlignLeft:
-            offset = list.first()->offset.x;
+            offset = - list.first()->offset.x;
             break;
             
         case kAlignCenter:
@@ -159,7 +159,7 @@ glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & l
             break;
             
         case kAlignRight:
-            offset = - length + list.last()->offset.x + list.last()->size.x;
+            offset = - length;
             break;
     }
     
