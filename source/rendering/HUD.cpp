@@ -1,10 +1,9 @@
 #include "HUD.h"
 
 #include <algorithm>
-
 #include <glm/gtx/transform.hpp>
 
-#include "../gamelogic/Mammut.h"
+#include <gamelogic/Mammut.h>
 #include "RenderCamera.h"
 
 HUD::HUD(const Mammut & mammut, const RenderCamera & camera)

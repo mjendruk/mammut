@@ -1,4 +1,3 @@
-
 #include "Gravity.h"
 
 #include <cmath>
@@ -8,7 +7,7 @@
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include "../Conversions.h"
+#include <Conversions.h>
 
 Gravity::Gravity(btDiscreteDynamicsWorld & dynamicsWorld)
 :   m_state(kDown)

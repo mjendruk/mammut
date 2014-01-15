@@ -3,14 +3,15 @@
 #include <glm/gtx/transform.hpp>
 
 #include "glow/Program.h"
-#include "glowutils/File.h"
 #include "glow/FrameBufferobject.h"
+#include "glowutils/File.h"
 #include "glowutils/ScreenAlignedQuad.h"
 
-#include "../gamelogic/Cuboid.h"
-#include "../gamelogic/Mammut.h"
-#include "../gamelogic/GameLogic.h"
-#include "../gamelogic/GameCamera.h"
+#include <gamelogic/Cuboid.h>
+#include <gamelogic/Mammut.h>
+#include <gamelogic/GameLogic.h>
+#include <gamelogic/GameCamera.h>
+
 #include "Painter.h"
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"

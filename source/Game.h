@@ -5,9 +5,9 @@
 
 #include <glow/Timer.h>
 
+#include <gamelogic/GameLogic.h>
+#include <rendering/Canvas.h>
 #include "AbstractApplication.h"
-#include "gamelogic/GameLogic.h"
-#include "rendering/Canvas.h"
 
 class QMouseEvent;
 

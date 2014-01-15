@@ -1,16 +1,15 @@
 #include "CaveDrawable.h"
 
 #include <cassert>
-
 #include <cmath>
 #include <cassert>
 #include <algorithm>
 
+#include <QDebug>
+
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
-
-#include <QDebug>
 
 const int CaveDrawable::s_verticesPerRing = 20;
 const float CaveDrawable::s_radius = 200.f;

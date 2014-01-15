@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include "../Conversions.h"
+#include <Conversions.h>
 
 
 Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,

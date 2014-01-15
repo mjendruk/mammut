@@ -1,4 +1,3 @@
-
 #include "ChunkGenerator.h"
 
 #include <glm/glm.hpp>

@@ -1,4 +1,3 @@
-
 #include "FileAssociatedAsset.h"
 
 #include <QFileSystemWatcher>

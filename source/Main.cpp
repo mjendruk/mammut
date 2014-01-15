@@ -1,7 +1,5 @@
-
-#include "fmod.hpp"
-
-#include "Game.h"
+#include <fmod.hpp>
+#include <Game.h>
 
 void playStartUpSound()
 {

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <GL/glew.h>
@@ -6,7 +5,6 @@
 #include <QMap>
 #include <QList>
 #include <QQueue>
-
 
 #include "FileAssociatedAsset.h"
 

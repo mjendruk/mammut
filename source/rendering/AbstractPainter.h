@@ -16,7 +16,6 @@ namespace glow
 class RenderCamera;
 class IDrawable;
 
-
 class AbstractPainter
 {
 public:

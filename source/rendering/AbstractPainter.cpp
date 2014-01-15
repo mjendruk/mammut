@@ -1,6 +1,5 @@
 #include "AbstractPainter.h"
 
-
 AbstractPainter::AbstractPainter()
 {
 }

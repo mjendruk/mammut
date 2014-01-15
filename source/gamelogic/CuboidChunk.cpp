@@ -1,4 +1,3 @@
-
 #include "CuboidChunk.h"
 
 CuboidChunk::CuboidChunk()

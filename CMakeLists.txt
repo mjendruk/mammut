@@ -173,6 +173,7 @@ find_package(Qt5Gui     REQUIRED)
 find_package(Qt5Widgets REQUIRED) # this is important in order to get uic working 
 find_package(Qt5OpenGL  REQUIRED)
 
+set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 # Include directories
 include_directories(
@@ -186,9 +187,11 @@ include_directories(
 
     ${BULLET_INCLUDE_DIRS}
     ${FMOD_INCLUDE_DIR}
+
+    ${source_path}
 )
 
-set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
+
 
 # Generate meta-header
 configure_file(${source_path}/mammut-version.h.in mammut-version.h)

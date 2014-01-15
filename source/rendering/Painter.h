@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QList>
-
 #include "AbstractPainter.h"
 
 class IDrawable;

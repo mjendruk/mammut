@@ -1,4 +1,3 @@
-
 #include "MessageHandler.h"
 
 #include <cassert>

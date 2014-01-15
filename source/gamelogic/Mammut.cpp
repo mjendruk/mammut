@@ -11,8 +11,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "../Conversions.h"
-#include "../GlowExtensions.h"
+#include <Conversions.h>
+#include <GlowExtensions.h>
 #include "MammutMotionState.h"
 
 Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWorld)

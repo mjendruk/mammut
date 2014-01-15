@@ -1,4 +1,3 @@
-
 #include "CharacterDrawable.h"
 
 #include <glow/VertexArrayObject.h>

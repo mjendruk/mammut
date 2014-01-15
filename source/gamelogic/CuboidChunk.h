@@ -1,8 +1,6 @@
-
 #pragma once
 
 #include <glowutils/AxisAlignedBoundingBox.h>
-
 #include "Cuboid.h"
 
 class CuboidChunk
