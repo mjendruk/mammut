@@ -74,7 +74,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
     
-    glClearColor(1.f, 1.f, 1.f, 0.f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.f);
     
     m_renderer.initialize();
 

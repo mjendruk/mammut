@@ -6,7 +6,6 @@
 #include <QDebug>
 
 #include <glm/gtx/transform.hpp>
-#include <glm/gtx/string_cast.hpp>
 #include <btBulletDynamicsCommon.h>
 
 #include "../Conversions.h"
@@ -31,7 +30,7 @@ void Gravity::rotate(Direction direction)
     m_rotation = glm::mat3(glm::rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f)));
     m_inverseRotation = glm::mat3(glm::rotate(-angle, glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    const glm::vec3 gravityAcceleration(0.0f, -9.81f, 0.0f);
+    const glm::vec3 gravityAcceleration(0.0f, -15.81f, 0.0f);
     m_dynamicsWorld.setGravity(Conversions::toBtVec3(m_rotation * gravityAcceleration));
 }
 

@@ -188,9 +188,6 @@ include_directories(
     ${FMOD_INCLUDE_DIR}
 )
 
-message(STATUS ${BULLET_INCLUDE_DIRS})
-message(STATUS ${BULLET_LIBRARIES})
-
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 # Generate meta-header
@@ -199,55 +196,65 @@ configure_file(${source_path}/mammut-version.h.in mammut-version.h)
 set(sources
     ${source_path}/main.cpp
 
-    ${source_path}/AbstractApplication.cpp
-    ${source_path}/AbstractApplication.h
-    ${source_path}/rendering/AbstractPainter.cpp
-    ${source_path}/rendering/AbstractPainter.h
-    ${source_path}/rendering/Canvas.cpp
-    ${source_path}/rendering/Canvas.h
-    ${source_path}/rendering/CaveDrawable.cpp
-    ${source_path}/rendering/CaveDrawable.h
     ${source_path}/gamelogic/ChunkGenerator.cpp
     ${source_path}/gamelogic/ChunkGenerator.h
-    ${source_path}/Conversions.cpp
-    ${source_path}/Conversions.h
     ${source_path}/gamelogic/Cuboid.cpp
     ${source_path}/gamelogic/Cuboid.h
     ${source_path}/gamelogic/CuboidChunk.cpp
     ${source_path}/gamelogic/CuboidChunk.h
-    ${source_path}/rendering/CuboidDrawable.cpp
-    ${source_path}/rendering/CuboidDrawable.h
-    ${source_path}/rendering/IDrawable.h
-    ${source_path}/Game.cpp
-    ${source_path}/Game.h
     ${source_path}/gamelogic/GameCamera.cpp
     ${source_path}/gamelogic/GameCamera.h
     ${source_path}/gamelogic/GameLogic.cpp
     ${source_path}/gamelogic/GameLogic.h
     ${source_path}/gamelogic/GameObject.cpp
     ${source_path}/gamelogic/GameObject.h
-    ${source_path}/GlowExtensions.cpp
-    ${source_path}/GlowExtensions.h
     ${source_path}/gamelogic/Gravity.cpp
     ${source_path}/gamelogic/Gravity.h
     ${source_path}/gamelogic/Mammut.cpp
     ${source_path}/gamelogic/Mammut.h
     ${source_path}/gamelogic/MammutMotionState.cpp
     ${source_path}/gamelogic/MammutMotionState.h
-    ${source_path}/rendering/Renderer.cpp
-    ${source_path}/rendering/Renderer.h
+    ${source_path}/rendering/AbstractPainter.cpp
+    ${source_path}/rendering/AbstractPainter.h
+    ${source_path}/rendering/Canvas.cpp
+    ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/CaveDrawable.cpp
+    ${source_path}/rendering/CaveDrawable.h
+    ${source_path}/rendering/CharacterDrawable.cpp
+    ${source_path}/rendering/CharacterDrawable.h
+    ${source_path}/rendering/CuboidDrawable.cpp
+    ${source_path}/rendering/CuboidDrawable.h
     ${source_path}/rendering/FileAssociatedAsset.cpp
     ${source_path}/rendering/FileAssociatedAsset.h
     ${source_path}/rendering/FileAssociatedShader.cpp
     ${source_path}/rendering/FileAssociatedShader.h
-    ${source_path}/MessageHandler.cpp
-    ${source_path}/MessageHandler.h
+    ${source_path}/rendering/HUD.cpp
+    ${source_path}/rendering/HUD.h
+    ${source_path}/rendering/IDrawable.h
     ${source_path}/rendering/Painter.cpp
     ${source_path}/rendering/Painter.h
+    ${source_path}/rendering/RawFile.cpp
+    ${source_path}/rendering/RawFile.h
     ${source_path}/rendering/RenderCamera.cpp
     ${source_path}/rendering/RenderCamera.h
+    ${source_path}/rendering/Renderer.cpp
+    ${source_path}/rendering/Renderer.h
     ${source_path}/rendering/SSAO.cpp
     ${source_path}/rendering/SSAO.h
+    ${source_path}/rendering/StringComposer.cpp
+    ${source_path}/rendering/StringComposer.h
+    ${source_path}/rendering/StringDrawer.cpp
+    ${source_path}/rendering/StringDrawer.h
+    ${source_path}/AbstractApplication.cpp
+    ${source_path}/AbstractApplication.h
+    ${source_path}/Conversions.cpp
+    ${source_path}/Conversions.h
+    ${source_path}/Game.cpp
+    ${source_path}/Game.h
+    ${source_path}/GlowExtensions.cpp
+    ${source_path}/GlowExtensions.h
+    ${source_path}/MessageHandler.cpp
+    ${source_path}/MessageHandler.h
 )
 
 # Group source files

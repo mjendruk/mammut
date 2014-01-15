@@ -28,7 +28,7 @@ Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWo
     m_collisionShape.reset(new btBoxShape(Conversions::toBtVec3(size) / 2));
     m_motionState.reset(new MammutMotionState(translation, *this));
 
-    btScalar mass = 1.0f;
+    btScalar mass = 0.9f;
     btVector3 fallInertia(0, 0, 0);
     m_collisionShape->calculateLocalInertia(mass, fallInertia);
 
@@ -36,10 +36,11 @@ Mammut::Mammut(const glm::vec3 translation, btDiscreteDynamicsWorld & dynamicsWo
                                                   m_motionState.get(),
                                                   m_collisionShape.get(),
                                                   fallInertia);
+    info.m_friction = 0.5f;
+    info.m_linearDamping = 0.05f;
+    
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
-
-//    m_rigidBody->setDamping(0.05f, 0.5f);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
 
     m_dynamicsWorld.addRigidBody(m_rigidBody.get());
@@ -54,6 +55,8 @@ void Mammut::rotate(const glm::mat3 & rotation)
 {
     btTransform transform;
     m_motionState->getWorldTransform(transform);
+    glm::vec3 impulse = rotation * glm::vec3(0.0f, -3.0f, 0.0f);
+    m_rigidBody->applyCentralImpulse(Conversions::toBtVec3(impulse));
     transform.setBasis(Conversions::toBtMat3(rotation));
     m_rigidBody->setCenterOfMassTransform(transform);
 }
@@ -65,16 +68,16 @@ void Mammut::applyForces()
     
     m_rigidBody->clearForces();
     
-    const glm::vec3 forwardForce(0.0f, 0.0f, -20.0f);
+    const glm::vec3 forwardForce(0.0f, 0.0f, -27.0f);
     
-    m_rigidBody->applyCentralForce(Conversions::toBtVec3(forwardForce + m_nonDriftForce));
+    m_rigidBody->applyCentralForce(Conversions::toBtVec3(forwardForce));
 }
 
 void Mammut::limitVelocity()
 {
     btVector3 velocity = m_rigidBody->getLinearVelocity();
 
-    static const float maxVelocity = -40.0f;
+    static const float maxVelocity = -70.0f;
     if (velocity.z() < maxVelocity)
     {
         velocity.setZ(maxVelocity);
@@ -116,7 +119,7 @@ void Mammut::collidesWith(const GameObject & object, const glm::mat3 & gravityTr
     if (isOnObject(object, gravityTransform))
     {
         glm::vec3 force = Conversions::toGlmVec3(m_rigidBody->getTotalForce());
-        m_nonDriftForce = glm::vec3(-(gravityTransform * force).x, 0.0f, 0.0f);
+//        m_nonDriftForce = glm::vec3(-(gravityTransform * force).x, 0.0f, 0.0f);
         
         m_isOnObject = true;
     }
@@ -180,4 +183,9 @@ bool Mammut::isOnObject(const GameObject & object, const glm::mat3 & gravityTran
                                                               glm::mat4(gravityTransform)).llf().y;
     
     return fabs(objectTop - mammutBottom) < epsilon;
+}
+
+float Mammut::velocity() const
+{
+    return -m_rigidBody->getLinearVelocity().z();
 }
