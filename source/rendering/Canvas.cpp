@@ -5,9 +5,11 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
-Canvas::Canvas(const QSurfaceFormat & format, GameLogic & gameLogic)
+#include <Renderer.h>
+
+Canvas::Canvas(const QSurfaceFormat & format, Renderer * renderer)
 :   QWindow((QScreen*)nullptr)
-,   m_renderer(gameLogic, *this)
+,   m_renderer(renderer)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
@@ -76,7 +78,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.f);
     
-    m_renderer.initialize();
+    m_renderer->initialize();
 
     m_context.doneCurrent();
 }
@@ -88,7 +90,7 @@ void Canvas::resizeEvent(QResizeEvent * event)
     
     m_context.makeCurrent(this);
     
-    m_renderer.resize(width, height);
+    m_renderer->resize(width, height);
     
     if (isExposed())
     {
@@ -106,7 +108,7 @@ void Canvas::render()
     
     m_context.makeCurrent(this);
     
-    m_renderer.paint();
+    m_renderer->render(devicePixelRatio());
     
     m_context.swapBuffers(this);
     m_context.doneCurrent();

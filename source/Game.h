@@ -5,7 +5,7 @@
 
 #include <glow/Timer.h>
 
-#include <gamelogic/GameLogic.h>
+#include <gamelogic/GameMechanics.h>
 #include <rendering/Canvas.h>
 #include "AbstractApplication.h"
 
@@ -29,7 +29,7 @@ protected:
     void keyReleased(QKeyEvent * keyEvent);
 
 protected:
-    GameLogic m_gameLogic;
+    GameMechanics m_gameMechanics;
     glow::Timer m_timer;
     
     QMainWindow m_window;

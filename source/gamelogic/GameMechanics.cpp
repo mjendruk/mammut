@@ -1,12 +1,15 @@
-#include "GameLogic.h"
+#include "GameMechanics.h"
 
 #include <cassert>
 
 #include <QDebug>
+#include <QKeyEvent>
 #include <QVector>
 
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
+
+#include <rendering/GameWorldRenderer.h>
 
 #include "Cuboid.h"
 #include "GameCamera.h"
@@ -17,19 +20,19 @@ namespace Callbacks
     
 void preTickCallback(btDynamicsWorld * world, btScalar timeStep)
 {
-    GameLogic * gameLogic = static_cast<GameLogic *>(world->getWorldUserInfo());
-    gameLogic->preTickCallback(timeStep);
+    GameMechanics * gameMechanics = static_cast<GameMechanics *>(world->getWorldUserInfo());
+    gameMechanics->preTickCallback(timeStep);
 }
     
 void postTickCallback(btDynamicsWorld * world, btScalar timeStep)
 {
-    GameLogic * gameLogic = static_cast<GameLogic *>(world->getWorldUserInfo());
-    gameLogic->postTickCallback(timeStep);
+    GameMechanics * gameMechanics = static_cast<GameMechanics *>(world->getWorldUserInfo());
+    gameMechanics->postTickCallback(timeStep);
 }
 
 } // namespace
 
-GameLogic::GameLogic()
+GameMechanics::GameMechanics()
 {
     initializeDynamicsWorld();
     
@@ -39,18 +42,20 @@ GameLogic::GameLogic()
     m_gravity.reset(new Gravity(*m_dynamicsWorld));
     m_camera.reset(new GameCamera(*m_mammut));
     
+    m_renderer.reset(new GameWorldRenderer(*this));
+    
     m_gravity->rotate(Gravity::kDown);
                     
     for (int i = 0; i < 10 ; i++)
         m_chunkList << m_chunkGenerator->nextChunk();
 }
 
-GameLogic::~GameLogic()
+GameMechanics::~GameMechanics()
 {
     
 }
 
-void GameLogic::update(float seconds)
+void GameMechanics::update(float seconds)
 {
     m_dynamicsWorld->stepSimulation(seconds, 10, 0.005f);
     
@@ -63,9 +68,14 @@ void GameLogic::update(float seconds)
     }
 }
 
-void GameLogic::keyPressed(int key)
+Renderer * GameMechanics::renderer()
 {
-    switch (key)
+    return m_renderer.data();
+}
+
+void GameMechanics::keyPressed(QKeyEvent * event)
+{
+    switch (event->key())
     {
     case Qt::Key_W:
         m_gravity->rotate(Gravity::kUp);
@@ -88,9 +98,9 @@ void GameLogic::keyPressed(int key)
     }
 }
 
-void GameLogic::keyReleased(int key)
+void GameMechanics::keyReleased(QKeyEvent * event)
 {
-    switch (key)
+    switch (event->key())
     {
     case Qt::Key_Left:
     case Qt::Key_Right:
@@ -99,7 +109,7 @@ void GameLogic::keyReleased(int key)
     }
 }
 
-void GameLogic::initializeDynamicsWorld()
+void GameMechanics::initializeDynamicsWorld()
 {
     m_broadphase.reset(new btDbvtBroadphase());
     m_collisionConfiguration.reset(new btDefaultCollisionConfiguration());
@@ -116,13 +126,13 @@ void GameLogic::initializeDynamicsWorld()
                                              static_cast<void *>(this), false);
 }
 
-void GameLogic::preTickCallback(float timeStep)
+void GameMechanics::preTickCallback(float timeStep)
 {
     m_mammut->applyForces();
     m_mammut->resetCollisionState();
 }
 
-void GameLogic::postTickCallback(float timeStep)
+void GameMechanics::postTickCallback(float timeStep)
 {
     m_mammut->limitVelocity();
     
@@ -154,17 +164,17 @@ void GameLogic::postTickCallback(float timeStep)
     m_mammut->applySteering(m_gravity->inverseRotation());
 }
 
-const GameCamera & GameLogic::camera() const
+const GameCamera & GameMechanics::camera() const
 {
     return *m_camera;
 }
 
-const Mammut & GameLogic::mammut() const
+const Mammut & GameMechanics::mammut() const
 {
     return *m_mammut;
 }
 
-void GameLogic::forEachCuboid(const std::function<void (Cuboid &)> & lambda)
+void GameMechanics::forEachCuboid(const std::function<void (Cuboid &)> & lambda)
 {
     for (QSharedPointer<CuboidChunk> & chunk : m_chunkList)
         for (Cuboid * cuboid : chunk->cuboids())

@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "GameWorldRenderer.h"
 
 #include <glm/gtx/transform.hpp>
 
@@ -9,7 +9,7 @@
 
 #include <gamelogic/Cuboid.h>
 #include <gamelogic/Mammut.h>
-#include <gamelogic/GameLogic.h>
+#include <gamelogic/GameMechanics.h>
 #include <gamelogic/GameCamera.h>
 
 #include "Painter.h"
@@ -19,13 +19,12 @@
 #include "CharacterDrawable.h"
 #include "Canvas.h"
 
-const float Renderer::nearPlane = 0.1f;
-const float Renderer::farPlane = 700.0f;
+const float GameWorldRenderer::nearPlane = 0.1f;
+const float GameWorldRenderer::farPlane = 700.0f;
 
-Renderer::Renderer(GameLogic & gameLogic, Canvas & canvas)
-:   m_hud(gameLogic.mammut(), m_camera)
-,   m_gameLogic(gameLogic)
-,   m_canvas(canvas)
+GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
+:   m_hud(gameMechanics.mammut(), m_camera)
+,   m_gameMechanics(gameMechanics)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
 ,   m_gBufferDepth(nullptr)
@@ -37,11 +36,11 @@ Renderer::Renderer(GameLogic & gameLogic, Canvas & canvas)
 {
 }
 
-Renderer::~Renderer()
+GameWorldRenderer::~GameWorldRenderer()
 {
 }
 
-void Renderer::paint()
+void GameWorldRenderer::render(float devicePixelRatio)
 {
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     
@@ -49,7 +48,7 @@ void Renderer::paint()
     auto programsWithInvalidatedUniforms(FileAssociatedShader::process());
     m_painter.update(programsWithInvalidatedUniforms);
     
-    m_camera.update(m_gameLogic.camera());
+    m_camera.update(m_gameMechanics.camera());
     m_painter.setViewProjectionUniform(m_camera.viewProjection());
     m_painter.setViewUniform(m_camera.view());
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
@@ -62,11 +61,11 @@ void Renderer::paint()
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    m_gameLogic.forEachCuboid([this](Cuboid & cuboid) {
+    m_gameMechanics.forEachCuboid([this](Cuboid & cuboid) {
         m_painter.paint(m_cuboidDrawable, cuboid.modelTransform());
     });
     
-    m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
+    m_painter.paint(m_cuboidDrawable, m_gameMechanics.mammut().modelTransform());
     
     m_painter.paint(m_caveDrawable, glm::mat4());
     
@@ -92,8 +91,8 @@ void Renderer::paint()
     m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
     
     glViewport(0, 0,
-               m_camera.viewport().x * m_canvas.devicePixelRatio(),
-               m_camera.viewport().y * m_canvas.devicePixelRatio());
+               m_camera.viewport().x * devicePixelRatio,
+               m_camera.viewport().y * devicePixelRatio);
     m_ssaoOutput->bind(GL_TEXTURE3);
     m_quad->draw();
     m_ssaoOutput->unbind(GL_TEXTURE3);
@@ -108,8 +107,10 @@ void Renderer::paint()
     m_hud.paint();
 }
 
-void Renderer::initialize()
+void GameWorldRenderer::initialize()
 {
+    Renderer::initialize();
+
     glow::DebugMessageOutput::enable();
     m_painter.initialize();
     m_cuboidDrawable.initialize();
@@ -132,7 +133,7 @@ void Renderer::initialize()
     initializeGBuffer();
 }
 
-void Renderer::initializeGBuffer()
+void GameWorldRenderer::initializeGBuffer()
 {
     m_DepthProgram = new glow::Program();
 
@@ -174,7 +175,7 @@ void Renderer::initializeGBuffer()
     m_gBufferFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 });
 }
 
-void Renderer::resize(int width, int height)
+void GameWorldRenderer::resize(int width, int height)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     

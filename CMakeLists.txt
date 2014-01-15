@@ -207,8 +207,8 @@ set(sources
     ${source_path}/gamelogic/CuboidChunk.h
     ${source_path}/gamelogic/GameCamera.cpp
     ${source_path}/gamelogic/GameCamera.h
-    ${source_path}/gamelogic/GameLogic.cpp
-    ${source_path}/gamelogic/GameLogic.h
+    ${source_path}/gamelogic/GameMechanics.cpp
+    ${source_path}/gamelogic/GameMechanics.h
     ${source_path}/gamelogic/GameObject.cpp
     ${source_path}/gamelogic/GameObject.h
     ${source_path}/gamelogic/Gravity.cpp
@@ -240,8 +240,8 @@ set(sources
     ${source_path}/rendering/RawFile.h
     ${source_path}/rendering/RenderCamera.cpp
     ${source_path}/rendering/RenderCamera.h
-    ${source_path}/rendering/Renderer.cpp
-    ${source_path}/rendering/Renderer.h
+    ${source_path}/rendering/GameWorldRenderer.cpp
+    ${source_path}/rendering/GameWorldRenderer.h
     ${source_path}/rendering/SSAO.cpp
     ${source_path}/rendering/SSAO.h
     ${source_path}/rendering/StringComposer.cpp
@@ -254,10 +254,14 @@ set(sources
     ${source_path}/Conversions.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
+    ${source_path}/Mechanics.cpp
+    ${source_path}/Mechanics.h
     ${source_path}/GlowExtensions.cpp
     ${source_path}/GlowExtensions.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
+    ${source_path}/Renderer.cpp
+    ${source_path}/Renderer.h
 )
 
 # Group source files

@@ -8,9 +8,7 @@
 #include <QScopedPointer>
 #include <QOpenGLContext>
 
-#include "Renderer.h"
-
-class GameLogic;
+class Renderer;
 
 class Canvas : public QWindow
 {
@@ -25,7 +23,7 @@ public:
     };
 
 public:
-    Canvas(const QSurfaceFormat & format, GameLogic & gameLogic);
+    Canvas(const QSurfaceFormat & format, Renderer * renderer);
     virtual ~Canvas();
 
     QSurfaceFormat format() const override;
@@ -48,7 +46,7 @@ protected:
 
 protected:
     QOpenGLContext m_context;
-    Renderer m_renderer;
+    Renderer * m_renderer;
 
     SwapInterval m_swapInterval;    ///< required for toggle
     long double m_swapts;

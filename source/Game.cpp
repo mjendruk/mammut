@@ -7,8 +7,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include <rendering/Renderer.h>
-#include <gamelogic/GameLogic.h>
+#include <gamelogic/GameMechanics.h>
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
@@ -20,7 +19,7 @@ Game::Game(int & argc, char ** argv)
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
-    m_canvas = new Canvas(format, m_gameLogic);
+    m_canvas = new Canvas(format, m_gameMechanics.renderer());
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
@@ -62,7 +61,7 @@ void Game::run()
         
         nextTime += delta;
         if (!m_paused)
-            m_gameLogic.update(delta / std::nano::den);
+            m_gameMechanics.update(delta / std::nano::den);
         
         if (m_timer.elapsed() < nextTime)
         {
@@ -77,11 +76,11 @@ bool Game::eventFilter(QObject * obj, QEvent * event)
     switch (event->type())
     {
         case QEvent::KeyPress:
-            keyPressed((QKeyEvent*)event);
+            keyPressed((QKeyEvent *)event);
             break;
             
         case QEvent::KeyRelease:
-            keyReleased((QKeyEvent*)event);
+            keyReleased((QKeyEvent *)event);
             break;
             
         case QEvent::Hide:
@@ -115,7 +114,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
     
-    m_gameLogic.keyPressed(keyEvent->key());
+    m_gameMechanics.keyPressed(keyEvent);
 }
 
 void Game::keyReleased(QKeyEvent * keyEvent)
@@ -123,5 +122,5 @@ void Game::keyReleased(QKeyEvent * keyEvent)
     if (keyEvent->isAutoRepeat())
         return;
 
-    m_gameLogic.keyReleased(keyEvent->key());
+    m_gameMechanics.keyReleased(keyEvent);
 }

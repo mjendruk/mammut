@@ -4,6 +4,8 @@
 
 #include <glow/ref_ptr.h>
 
+#include <Renderer.h>
+
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
@@ -23,18 +25,18 @@ namespace glowutils
 }
 
 class Canvas;
-class GameLogic;
+class GameMechanics;
 class SSAO;
 
-class Renderer
+class GameWorldRenderer : public Renderer
 {
 public:
-    Renderer(GameLogic & gameLogic, Canvas & canvas);
-    ~Renderer();
+    GameWorldRenderer(GameMechanics & gameMechanics);
+    ~GameWorldRenderer();
 
-    void initialize();
-    void paint();
-    void resize(int width, int height);
+    void initialize() override;
+    void resize(int width, int height) override;
+    void render(float devicePixelRatio) override;
 
 protected:
     void initializeGBuffer();
@@ -50,8 +52,7 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
 
-    GameLogic & m_gameLogic;
-    Canvas & m_canvas;
+    GameMechanics & m_gameMechanics;
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
