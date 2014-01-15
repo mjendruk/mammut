@@ -8,7 +8,7 @@
 
 #include <glm/gtx/transform.hpp>
 
-#include <rendering/GameWorldRenderer.h>
+#include <game_world_rendering/GameWorldRenderer.h>
 
 #include "Cuboid.h"
 

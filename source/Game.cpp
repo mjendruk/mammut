@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include <gamelogic/GameMechanics.h>
+#include <game_mechanics/GameMechanics.h>
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)

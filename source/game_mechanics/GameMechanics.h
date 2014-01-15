@@ -8,7 +8,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include <Mechanics.h>
-#include <rendering/GameWorldRenderer.h>
+#include <game_world_rendering/GameWorldRenderer.h>
 
 #include "ChunkGenerator.h"
 #include "Mammut.h"

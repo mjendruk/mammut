@@ -7,10 +7,10 @@
 #include "glowutils/File.h"
 #include "glowutils/ScreenAlignedQuad.h"
 
-#include <gamelogic/Cuboid.h>
-#include <gamelogic/Mammut.h>
-#include <gamelogic/GameMechanics.h>
-#include <gamelogic/GameCamera.h>
+#include <game_mechanics/Cuboid.h>
+#include <game_mechanics/Mammut.h>
+#include <game_mechanics/GameMechanics.h>
+#include <game_mechanics/GameCamera.h>
 
 #include "Painter.h"
 #include "RenderCamera.h"

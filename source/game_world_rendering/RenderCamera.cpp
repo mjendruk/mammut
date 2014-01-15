@@ -1,6 +1,6 @@
 #include "RenderCamera.h"
 
-#include <gamelogic/GameCamera.h>
+#include <game_mechanics/GameCamera.h>
 
 RenderCamera::RenderCamera()
 :   glowutils::Camera()
