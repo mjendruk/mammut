@@ -4,23 +4,18 @@
 
 #include <QList>
 #include <QSharedPointer>
-#include <QScopedPointer>
+
+#include <btBulletDynamicsCommon.h>
 
 #include <Mechanics.h>
+#include <rendering/GameWorldRenderer.h>
 
-#include "Cuboid.h"
 #include "ChunkGenerator.h"
+#include "Mammut.h"
+#include "Gravity.h"
+#include "GameCamera.h"
 #include "Gravity.h"
 
-class btDiscreteDynamicsWorld;
-class btSequentialImpulseConstraintSolver;
-class btCollisionDispatcher;
-class btDefaultCollisionConfiguration;
-class btBroadphaseInterface;
-
-class GameCamera;
-class Mammut;
-class GameWorldRenderer;
 
 class GameMechanics : public Mechanics
 {
@@ -43,22 +38,21 @@ public:
     void postTickCallback(float timeStep);
     
 protected:
-    void initializeDynamicsWorld();
+    void registerTickCallbacks();
     
 protected:
-    QList<QSharedPointer<CuboidChunk>> m_chunkList;
-
-    QScopedPointer<ChunkGenerator> m_chunkGenerator;
-    QScopedPointer<Mammut> m_mammut;
-    QScopedPointer<GameCamera> m_camera;
-    QScopedPointer<Gravity> m_gravity;
+    btDbvtBroadphase m_broadphase;
+    btDefaultCollisionConfiguration m_collisionConfiguration;
+    btCollisionDispatcher m_dispatcher;
+    btSequentialImpulseConstraintSolver m_solver;
+    btDiscreteDynamicsWorld m_dynamicsWorld;
     
-    QScopedPointer<GameWorldRenderer> m_renderer;
-
-    QScopedPointer<btDiscreteDynamicsWorld> m_dynamicsWorld;
-    QScopedPointer<btSequentialImpulseConstraintSolver> m_solver;
-    QScopedPointer<btCollisionDispatcher> m_dispatcher;
-    QScopedPointer<btDefaultCollisionConfiguration> m_collisionConfiguration;
-    QScopedPointer<btBroadphaseInterface> m_broadphase;
+    ChunkGenerator m_chunkGenerator;
+    Mammut m_mammut;
+    GameCamera m_camera;
+    Gravity m_gravity;
+    QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    
+    GameWorldRenderer m_renderer;
 
 };
