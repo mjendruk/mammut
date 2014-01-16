@@ -9,10 +9,11 @@ uniform vec2 nearFar;
 in vec3 a_vertex;
 in vec3 a_normal;
 
-out vec4 v_color;
+flat out vec4 v_color;
 out float v_depthInES;
 out float v_eyeDistance;
 out vec3 v_worldVertex;
+flat out vec3 v_normal;
 
 
 vec3 normalToWorldSpace(vec3 normal)
@@ -55,5 +56,6 @@ void main()
     vec4 vertexInES = view * worldVertex;
     v_depthInES = - (vertexInES.z - nearFar.x)/(nearFar.y-nearFar.x);
 
+    v_normal = a_normal;
     gl_Position = viewProjection * worldVertex;
 }

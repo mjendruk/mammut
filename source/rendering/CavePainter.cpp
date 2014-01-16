@@ -24,8 +24,6 @@ bool CavePainter::initialize()
 
     glow::Shader * m_fragShader = FileAssociatedShader::getOrCreate(
         GL_FRAGMENT_SHADER, "data/cave.frag", *m_program);
-    glow::Shader * m_geomShader = FileAssociatedShader::getOrCreate(
-        GL_GEOMETRY_SHADER, "data/cave.geom", *m_program);
     glow::Shader * m_vertShader = FileAssociatedShader::getOrCreate(
         GL_VERTEX_SHADER, "data/cave.vert", *m_program);
     m_program->link();
