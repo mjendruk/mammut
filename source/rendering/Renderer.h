@@ -7,6 +7,7 @@
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
+#include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
 
@@ -43,15 +44,16 @@ protected:
     static const float nearPlane;
     static const float farPlane;
     
+    CavePainter m_cavePainter;
+    GameLogic & m_gameLogic;
+    Canvas & m_canvas;
+    
     Painter m_painter;
     RenderCamera m_camera;
     HUD m_hud;
 
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
-
-    GameLogic & m_gameLogic;
-    Canvas & m_canvas;
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

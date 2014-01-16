@@ -221,6 +221,8 @@ set(sources
     ${source_path}/rendering/AbstractPainter.h
     ${source_path}/rendering/Canvas.cpp
     ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/CavePainter.cpp
+    ${source_path}/rendering/CavePainter.h
     ${source_path}/rendering/CaveDrawable.cpp
     ${source_path}/rendering/CaveDrawable.h
     ${source_path}/rendering/CharacterDrawable.cpp

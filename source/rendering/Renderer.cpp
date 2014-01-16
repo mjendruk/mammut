@@ -48,6 +48,7 @@ void Renderer::paint()
     // recompile file associated shaders if required
     auto programsWithInvalidatedUniforms(FileAssociatedShader::process());
     m_painter.update(programsWithInvalidatedUniforms);
+    m_cavePainter.update(programsWithInvalidatedUniforms);
     
     m_camera.update(m_gameLogic.camera());
     m_painter.setViewProjectionUniform(m_camera.viewProjection());
@@ -55,6 +56,11 @@ void Renderer::paint()
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_painter.setEyeUniform(m_camera.eye());
     
+    m_cavePainter.setViewProjectionUniform(m_camera.viewProjection());
+    m_cavePainter.setViewUniform(m_camera.view());
+    m_cavePainter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
+    m_cavePainter.setEyeUniform(m_camera.eye());
+
     m_caveDrawable.update(m_camera.eye());
     
     m_gBufferFBO->bind();
@@ -68,7 +74,7 @@ void Renderer::paint()
     
     m_painter.paint(m_cuboidDrawable, m_gameLogic.mammut().modelTransform());
     
-    m_painter.paint(m_caveDrawable, glm::mat4());
+    m_cavePainter.paint(m_caveDrawable, glm::mat4());
     
     m_gBufferFBO->unbind();
     
@@ -112,6 +118,7 @@ void Renderer::initialize()
 {
     glow::DebugMessageOutput::enable();
     m_painter.initialize();
+    m_cavePainter.initialize();
     m_cuboidDrawable.initialize();
     m_caveDrawable.initialize();
     m_hud.initialize();
