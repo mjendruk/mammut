@@ -260,8 +260,10 @@ set(sources
     ${source_path}/menu/MenuItem.h
     ${source_path}/menu/MenuRenderer.cpp
     ${source_path}/menu/MenuRenderer.h
-    ${source_path}/menu/StartMenu.cpp
-    ${source_path}/menu/StartMenu.h
+    ${source_path}/menu/MainMenu.cpp
+    ${source_path}/menu/MainMenu.h
+    ${source_path}/menu/PauseMenu.cpp
+    ${source_path}/menu/PauseMenu.h
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h

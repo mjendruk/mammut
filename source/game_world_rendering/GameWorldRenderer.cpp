@@ -24,7 +24,6 @@ const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
 :   m_hud(gameMechanics.mammut(), m_camera, *this)
-,   m_gameMechanics(gameMechanics)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
 ,   m_gBufferDepth(nullptr)
@@ -34,6 +33,7 @@ GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
 ,   m_quad(nullptr)
 ,   m_ssao(nullptr)
 ,   m_lastFrame(QTime::currentTime())
+,   m_gameMechanics(gameMechanics)
 {
 }
 

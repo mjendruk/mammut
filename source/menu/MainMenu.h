@@ -4,13 +4,13 @@
 
 class MenuButton;
 
-class StartMenu : public Menu
+class MainMenu : public Menu
 {
     Q_OBJECT
 
 public:
-    StartMenu();
-    virtual ~StartMenu();
+    MainMenu();
+    virtual ~MainMenu();
 
 signals:
     void startPressed();

@@ -8,12 +8,11 @@
 #include <QMouseEvent>
 
 #include <game_mechanics/GameMechanics.h>
-#include <menu/MenuItem.h>
+#include <game_world_rendering/GameWorldRenderer.h>
 
 Game::Game(int & argc, char ** argv)
-: AbstractApplication(argc, argv)
-,   m_gameWorldRenderer(m_gameMechanics)
-,   m_menuRenderer(&m_startMenu)
+:   AbstractApplication(argc, argv)
+,   m_menuRenderer(&m_mainMenu)
 ,   m_loop(false)
 ,   m_paused(false)
 {
@@ -22,10 +21,13 @@ Game::Game(int & argc, char ** argv)
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
     
-    m_activeMechanics = &m_startMenu;
+    m_activeMechanics = &m_mainMenu;
     
-    connect(&m_startMenu, &StartMenu::startPressed, this, &Game::start);
-    connect(&m_startMenu, &StartMenu::quitPressed, this, &Game::quit);
+    connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::start);
+    connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
+    
+    connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resume);
+    connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::toMainMenu);
 
     m_canvas = new Canvas(format, &m_menuRenderer);
     m_canvas->installEventFilter(this);
@@ -81,8 +83,35 @@ void Game::run()
 
 void Game::start()
 {
-    m_activeMechanics = &m_gameMechanics;
-    m_canvas->changeRenderer(&m_gameWorldRenderer);
+    auto gameMechanics = new GameMechanics();
+    auto gameWorldRenderer = new GameWorldRenderer(*gameMechanics);
+    
+    m_gameMechanics.reset(gameMechanics);
+    m_gameWorldRenderer.reset(gameWorldRenderer);
+    
+    connect(m_gameMechanics.data(), &GameMechanics::pausePressed, this, &Game::pause);
+    
+    m_activeMechanics = m_gameMechanics.data();
+    m_canvas->changeRenderer(m_gameWorldRenderer.data());
+}
+
+void Game::pause()
+{
+    m_activeMechanics = &m_pauseMenu;
+    m_menuRenderer.setMenu(&m_pauseMenu);
+    m_canvas->changeRenderer(&m_menuRenderer);
+}
+
+void Game::resume()
+{
+    m_activeMechanics = m_gameMechanics.data();
+    m_canvas->changeRenderer(m_gameWorldRenderer.data());
+}
+
+void Game::toMainMenu()
+{
+//    m_activeMechanics = &m_mainMenu;
+//    m_menuRenderer.setMenu(&m_mainMenu);
 }
 
 void Game::quit()

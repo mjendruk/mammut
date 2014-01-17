@@ -19,6 +19,8 @@
 
 class GameMechanics : public Mechanics
 {
+    Q_OBJECT
+
 public:
     GameMechanics();
     virtual ~GameMechanics();
@@ -35,6 +37,9 @@ public:
     
     void preTickCallback(float timeStep);
     void postTickCallback(float timeStep);
+
+signals:
+    void pausePressed();
     
 protected:
     void registerTickCallbacks();

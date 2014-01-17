@@ -68,6 +68,9 @@ void GameMechanics::keyPressed(QKeyEvent * event)
 {
     switch (event->key())
     {
+    case Qt::Key_Escape:
+        emit pausePressed();
+        break;
     case Qt::Key_W:
         m_gravity.rotate(Gravity::kUp);
         m_mammut.rotate(m_gravity.rotation());

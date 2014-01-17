@@ -16,8 +16,8 @@ const int SSAO::m_noiseSize = 4;
 
 SSAO::SSAO()
 :   glow::Referenced()
-, m_ssaoQuad(nullptr)
-, m_blurQuad(nullptr)
+,   m_ssaoQuad(nullptr)
+,   m_blurQuad(nullptr)
 {
     initialize();
 }

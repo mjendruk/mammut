@@ -5,15 +5,16 @@
 
 #include <glow/Timer.h>
 
-#include <game_mechanics/GameMechanics.h>
 #include <game_world_rendering/Canvas.h>
-#include <menu/StartMenu.h>
-#include <game_world_rendering/GameWorldRenderer.h>
+#include <menu/MainMenu.h>
+#include <menu/PauseMenu.h>
 #include <menu/MenuRenderer.h>
 
 #include "AbstractApplication.h"
 
 class QMouseEvent;
+class GameMechanics;
+class GameWorldRenderer;
 
 class Game : public AbstractApplication
 {
@@ -26,6 +27,9 @@ public:
 public slots:
     void run();
     void start();
+    void pause();
+    void resume();
+    void toMainMenu();
     void quit();
     
 protected:
@@ -35,11 +39,12 @@ protected:
     void keyReleased(QKeyEvent * keyEvent);
 
 protected:
-    GameMechanics m_gameMechanics;
-    StartMenu m_startMenu;
-
-    GameWorldRenderer m_gameWorldRenderer;
+    MainMenu m_mainMenu;
+    PauseMenu m_pauseMenu;
     MenuRenderer m_menuRenderer;
+    
+    QScopedPointer<GameMechanics> m_gameMechanics;
+    QScopedPointer<GameWorldRenderer> m_gameWorldRenderer;
     
     Mechanics * m_activeMechanics;
     
