@@ -1,32 +1,27 @@
 #pragma once
 
-#include <QList>
-#include <QMutableListIterator>
 #include <Mechanics.h>
 #include "MenuRenderer.h"
 
 class QKeyEvent;
-class MenuItem;
+class Menu;
 
 class MenuMechanics : public Mechanics
 {
 public:
-    MenuMechanics();
+    MenuMechanics(Menu * menu);
     virtual ~MenuMechanics();
 
-    virtual void update(float seconds);
-    virtual Renderer * renderer();
+    void update(float seconds) override;
+    Renderer * renderer() override;
 
     void keyPressed(QKeyEvent * event) override;
     void keyReleased(QKeyEvent * event) override;
 
-    const QList<MenuItem *> menuItems() const;
-    bool isSelectedMenuItem(MenuItem * menuItem) const;
+    const Menu & menu() const;
 
 protected:
-    QList<MenuItem *> m_menuItems;
-    QMutableListIterator<MenuItem *> m_itemIt;
-
+    Menu * m_menu;
     MenuRenderer m_renderer;
     
 };

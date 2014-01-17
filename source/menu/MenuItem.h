@@ -1,24 +1,16 @@
 #pragma once
 
 #include <QObject>
-#include <QString>
+
+class QKeyEvent;
+class MenuRenderer;
 
 class MenuItem : public QObject
 {
-    Q_OBJECT
-
 public:
-    MenuItem(const QString & label);
-    ~MenuItem();
+    virtual ~MenuItem();
 
-    void click();
-
-    const QString & label() const;
-
-signals:
-    void clicked();
-
-protected:
-    QString m_label;
+    virtual void accept(MenuRenderer * renderer) = 0;
+    virtual void keyPressed(QKeyEvent * event) = 0;
 
 };

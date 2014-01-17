@@ -252,12 +252,18 @@ set(sources
     ${source_path}/game_world_rendering/StringDrawer.cpp
     ${source_path}/game_world_rendering/StringDrawer.h
     
+    ${source_path}/menu/Menu.cpp
+    ${source_path}/menu/Menu.h
+    ${source_path}/menu/MenuButton.cpp
+    ${source_path}/menu/MenuButton.h
     ${source_path}/menu/MenuItem.cpp
     ${source_path}/menu/MenuItem.h
     ${source_path}/menu/MenuMechanics.cpp
     ${source_path}/menu/MenuMechanics.h
     ${source_path}/menu/MenuRenderer.cpp
     ${source_path}/menu/MenuRenderer.h
+    ${source_path}/menu/StartMenu.cpp
+    ${source_path}/menu/StartMenu.h
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h

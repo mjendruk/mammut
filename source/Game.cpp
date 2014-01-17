@@ -12,6 +12,7 @@
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
+,   m_menuMechanics(&m_startMenu)
 ,   m_loop(false)
 ,   m_paused(false)
 {
@@ -22,8 +23,8 @@ Game::Game(int & argc, char ** argv)
     
     m_activeMechanics = &m_menuMechanics;
     
-    connect(m_menuMechanics.menuItems().first(), &MenuItem::clicked, this, &Game::start);
-    connect(m_menuMechanics.menuItems().last(), &MenuItem::clicked, this, &Game::quit);
+    connect(&m_startMenu, &StartMenu::startPressed, this, &Game::start);
+    connect(&m_startMenu, &StartMenu::quitPressed, this, &Game::quit);
 
     m_canvas = new Canvas(format, m_activeMechanics->renderer());
     m_canvas->installEventFilter(this);

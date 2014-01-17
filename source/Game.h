@@ -8,6 +8,7 @@
 #include <game_mechanics/GameMechanics.h>
 #include <game_world_rendering/Canvas.h>
 #include <menu/MenuMechanics.h>
+#include <menu/StartMenu.h>
 
 #include "AbstractApplication.h"
 
@@ -27,14 +28,15 @@ public slots:
     void quit();
     
 protected:
-    void mouseMoveEvent(QMouseEvent * event);
     bool eventFilter(QObject * obj, QEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
     void keyPressed(QKeyEvent * keyEvent);
     void keyReleased(QKeyEvent * keyEvent);
 
 protected:
     GameMechanics m_gameMechanics;
     MenuMechanics m_menuMechanics;
+    StartMenu m_startMenu;
     
     Mechanics * m_activeMechanics;
     
