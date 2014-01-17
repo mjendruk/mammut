@@ -23,7 +23,7 @@ const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
-:   m_hud(gameMechanics.mammut(), m_camera)
+:   m_hud(gameMechanics.mammut(), m_camera, *this)
 ,   m_gameMechanics(gameMechanics)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
@@ -33,6 +33,7 @@ GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
 ,   m_ssaoOutput(nullptr)
 ,   m_quad(nullptr)
 ,   m_ssao(nullptr)
+,   m_lastFrame(QTime::currentTime())
 {
 }
 
@@ -42,6 +43,8 @@ GameWorldRenderer::~GameWorldRenderer()
 
 void GameWorldRenderer::render(float devicePixelRatio)
 {
+    updateFPS();
+
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     
     // recompile file associated shaders if required
@@ -191,4 +194,16 @@ void GameWorldRenderer::resize(int width, int height)
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     m_ssao->resize(width, height);
+}
+
+void GameWorldRenderer::updateFPS()
+{
+    float weightRatio = 0.9;
+    m_avgTimeSinceLastFrame = weightRatio * m_avgTimeSinceLastFrame + (1.0 - weightRatio) * m_lastFrame.elapsed();
+    m_lastFrame = QTime::currentTime();
+}
+
+int GameWorldRenderer::fps() const
+{
+    return (int) (1000.0 / m_avgTimeSinceLastFrame + 0.5);
 }

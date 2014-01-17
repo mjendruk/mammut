@@ -46,6 +46,7 @@ void MenuRenderer::render(float devicePixelRatio)
 
         m_stringDrawer.paint(menuItem->label(), 
                              aspectRatioTransform * translation,
+                             1.0f,
                              StringDrawer::kAlignCenter,
                              color);
     }

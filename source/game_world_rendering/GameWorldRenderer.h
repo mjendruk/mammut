@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTime>
 
 #include <glow/ref_ptr.h>
 
@@ -39,10 +40,14 @@ public:
     void resize(int width, int height) override;
     void render(float devicePixelRatio) override;
 
+    int fps() const;
+
 protected:
     void initializeGBuffer();
 
 protected:
+    void updateFPS();
+
     static const float nearPlane;
     static const float farPlane;
     
@@ -64,4 +69,7 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
     glow::ref_ptr<SSAO> m_ssao;
+
+    QTime m_lastFrame;
+    float m_avgTimeSinceLastFrame;
 };

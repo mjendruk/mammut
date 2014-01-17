@@ -6,9 +6,12 @@
 #include <game_mechanics/Mammut.h>
 #include "RenderCamera.h"
 
-HUD::HUD(const Mammut & mammut, const RenderCamera & camera)
+#include "GameWorldRenderer.h"
+
+HUD::HUD(const Mammut & mammut, const RenderCamera & camera, const GameWorldRenderer & renderer)
 :   m_mammut(mammut)
 ,   m_camera(camera)
+,   m_gameWorldRenderer(renderer)
 {
 }
 
@@ -23,20 +26,27 @@ void HUD::initialize()
 
 void HUD::paint()
 {
-    glm::mat4 aspectRatioTransform = glm::scale(1.0f / m_camera.aspectRatio(), 1.0f, 1.0f) * glm::scale(1.1f, 1.1f, 1.0f);
-    
     QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(m_mammut.velocity())));
     QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-m_mammut.position().z)));
+    QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
     
     glDisable(GL_DEPTH_TEST);
     
     m_stringDrawer.paint(velocityString,
-                         aspectRatioTransform * glm::translate(-0.95f, -0.86f, 0.0f));
+                         glm::translate(-0.95f, -0.86f, 0.0f),
+                         m_camera.aspectRatio());
     
     m_stringDrawer.paint(scoreString,
-                         aspectRatioTransform * glm::translate(0.95f, -0.86f, 0.0f),
+                         glm::translate(0.95f, -0.86f, 0.0f),
+                         m_camera.aspectRatio(),
                          StringDrawer::kAlignRight);
+
+    m_stringDrawer.paint(fpsString,
+                         glm::translate(-0.99f, 0.88f, 0.0f),
+                         m_camera.aspectRatio(),
+                         StringDrawer::kAlignLeft);
+
     
     glEnable(GL_DEPTH_TEST);
 }
