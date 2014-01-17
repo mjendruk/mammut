@@ -2,17 +2,21 @@
 
 #include <QObject>
 #include <QList>
+#include <Mechanics.h>
 
 class QKeyEvent;
 class MenuItem;
 
-class Menu : public QObject
+class Menu : public QObject, public Mechanics
 {
 public:
     Menu(QList<MenuItem *> menuItems);
     virtual ~Menu();
 
-    void keyPressed(QKeyEvent * event);
+    void update(float seconds) override;
+    
+    void keyPressed(QKeyEvent * event) override;
+    void keyReleased(QKeyEvent * event) override;
 
     bool isFocusedItem(const MenuItem * menuItem) const;
     

@@ -12,7 +12,8 @@
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
-,   m_menuMechanics(&m_startMenu)
+,   m_gameWorldRenderer(m_gameMechanics)
+,   m_menuRenderer(&m_startMenu)
 ,   m_loop(false)
 ,   m_paused(false)
 {
@@ -21,12 +22,12 @@ Game::Game(int & argc, char ** argv)
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
     
-    m_activeMechanics = &m_menuMechanics;
+    m_activeMechanics = &m_startMenu;
     
     connect(&m_startMenu, &StartMenu::startPressed, this, &Game::start);
     connect(&m_startMenu, &StartMenu::quitPressed, this, &Game::quit);
 
-    m_canvas = new Canvas(format, m_activeMechanics->renderer());
+    m_canvas = new Canvas(format, &m_menuRenderer);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
@@ -81,7 +82,7 @@ void Game::run()
 void Game::start()
 {
     m_activeMechanics = &m_gameMechanics;
-    m_canvas->changeRenderer(m_gameMechanics.renderer());
+    m_canvas->changeRenderer(&m_gameWorldRenderer);
 }
 
 void Game::quit()

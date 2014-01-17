@@ -16,6 +16,10 @@ Menu::~Menu()
     qDeleteAll(m_menuItems);
 }
 
+void Menu::update(float seconds)
+{
+}
+
 void Menu::keyPressed(QKeyEvent * event)
 {
     switch (event->key())
@@ -32,6 +36,10 @@ void Menu::keyPressed(QKeyEvent * event)
             focusedItem()->keyPressed(event);
         break;
     }
+}
+
+void Menu::keyReleased(QKeyEvent * event)
+{
 }
 
 QList<MenuItem *> Menu::menuItems() const

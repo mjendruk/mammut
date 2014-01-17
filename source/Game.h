@@ -7,8 +7,9 @@
 
 #include <game_mechanics/GameMechanics.h>
 #include <game_world_rendering/Canvas.h>
-#include <menu/MenuMechanics.h>
 #include <menu/StartMenu.h>
+#include <game_world_rendering/GameWorldRenderer.h>
+#include <menu/MenuRenderer.h>
 
 #include "AbstractApplication.h"
 
@@ -35,8 +36,10 @@ protected:
 
 protected:
     GameMechanics m_gameMechanics;
-    MenuMechanics m_menuMechanics;
     StartMenu m_startMenu;
+
+    GameWorldRenderer m_gameWorldRenderer;
+    MenuRenderer m_menuRenderer;
     
     Mechanics * m_activeMechanics;
     

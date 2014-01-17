@@ -258,8 +258,6 @@ set(sources
     ${source_path}/menu/MenuButton.h
     ${source_path}/menu/MenuItem.cpp
     ${source_path}/menu/MenuItem.h
-    ${source_path}/menu/MenuMechanics.cpp
-    ${source_path}/menu/MenuMechanics.h
     ${source_path}/menu/MenuRenderer.cpp
     ${source_path}/menu/MenuRenderer.h
     ${source_path}/menu/StartMenu.cpp

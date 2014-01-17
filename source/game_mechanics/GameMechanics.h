@@ -24,7 +24,6 @@ public:
     virtual ~GameMechanics();
 
     void update(float seconds) override;
-    Renderer * renderer() override;
 
     void keyPressed(QKeyEvent * event) override;
     void keyReleased(QKeyEvent * event) override;
@@ -52,7 +51,5 @@ protected:
     GameCamera m_camera;
     Gravity m_gravity;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
-    
-    GameWorldRenderer m_renderer;
 
 };

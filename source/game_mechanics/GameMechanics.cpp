@@ -39,7 +39,6 @@ GameMechanics::GameMechanics()
 ,   m_mammut(glm::vec3(0.0f, 0.7f, 4.5f), m_dynamicsWorld)
 ,   m_camera(m_mammut)
 ,   m_gravity(m_dynamicsWorld)
-,   m_renderer(*this)
 {
     registerTickCallbacks();
                     
@@ -63,11 +62,6 @@ void GameMechanics::update(float seconds)
         m_chunkList.removeFirst();
         m_chunkList << m_chunkGenerator.nextChunk();
     }
-}
-
-Renderer * GameMechanics::renderer()
-{
-    return &m_renderer;
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
