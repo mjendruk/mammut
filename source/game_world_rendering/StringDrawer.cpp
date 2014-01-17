@@ -99,7 +99,6 @@ bool StringDrawer::initializeTexture()
 void StringDrawer::paint(
     const QString & text,
     const glm::mat4 & modelMatrix,
-    float aspectRatio,
     Alignment alignment, 
     const glm::vec3 color)
 {
@@ -120,12 +119,11 @@ void StringDrawer::paint(
         
         glm::mat4 positionTransform;
         glm::mat4 textureCoordTransform;
-        
+
         textureCoordTransform *= glm::translate(glm::vec3(currentSpecifics->position, 0.0f));
         textureCoordTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
         
         positionTransform *= transform;
-        positionTransform *= glm::scale(1.0f, aspectRatio, 1.0f);
         positionTransform *= glm::translate(glm::vec3(currentSpecifics->offset, 0.0f));
         positionTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
         

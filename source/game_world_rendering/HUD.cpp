@@ -34,17 +34,14 @@ void HUD::paint()
     glDisable(GL_DEPTH_TEST);
     
     m_stringDrawer.paint(velocityString,
-                         glm::translate(-0.95f, -0.86f, 0.0f),
-                         m_camera.aspectRatio());
+                         glm::translate(-0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f));
     
     m_stringDrawer.paint(scoreString,
-                         glm::translate(0.95f, -0.86f, 0.0f),
-                         m_camera.aspectRatio(),
+                         glm::translate(0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
                          StringDrawer::kAlignRight);
 
     m_stringDrawer.paint(fpsString,
-                         glm::translate(-0.99f, 0.88f, 0.0f),
-                         m_camera.aspectRatio(),
+                         glm::translate(-0.99f, 0.88f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
                          StringDrawer::kAlignLeft);
 
     
