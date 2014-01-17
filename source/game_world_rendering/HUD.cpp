@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <glm/gtx/transform.hpp>
 
-#include <gamelogic/Mammut.h>
+#include <game_mechanics/Mammut.h>
 #include "RenderCamera.h"
 
 HUD::HUD(const Mammut & mammut, const RenderCamera & camera)

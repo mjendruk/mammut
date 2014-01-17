@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include <rendering/Renderer.h>
-#include <gamelogic/GameLogic.h>
+#include <game_mechanics/GameMechanics.h>
+#include <menu/MenuItem.h>
 
 Game::Game(int & argc, char ** argv)
 : AbstractApplication(argc, argv)
@@ -19,8 +19,13 @@ Game::Game(int & argc, char ** argv)
     format.setVersion(4, 1);
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
+    
+    m_activeMechanics = &m_menuMechanics;
+    
+    connect(m_menuMechanics.menuItems().first(), &MenuItem::clicked, this, &Game::start);
+    connect(m_menuMechanics.menuItems().last(), &MenuItem::clicked, this, &Game::quit);
 
-    m_canvas = new Canvas(format, m_gameLogic);
+    m_canvas = new Canvas(format, m_activeMechanics->renderer());
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
@@ -62,7 +67,7 @@ void Game::run()
         
         nextTime += delta;
         if (!m_paused)
-            m_gameLogic.update(delta / std::nano::den);
+            m_activeMechanics->update(delta / std::nano::den);
         
         if (m_timer.elapsed() < nextTime)
         {
@@ -72,16 +77,28 @@ void Game::run()
     }
 }
 
+void Game::start()
+{
+    m_activeMechanics = &m_gameMechanics;
+    m_canvas->changeRenderer(m_gameMechanics.renderer());
+}
+
+void Game::quit()
+{
+    m_loop = false;
+    QApplication::quit();
+}
+
 bool Game::eventFilter(QObject * obj, QEvent * event)
 {
     switch (event->type())
     {
         case QEvent::KeyPress:
-            keyPressed((QKeyEvent*)event);
+            keyPressed((QKeyEvent *)event);
             break;
             
         case QEvent::KeyRelease:
-            keyReleased((QKeyEvent*)event);
+            keyReleased((QKeyEvent *)event);
             break;
             
         case QEvent::Hide:
@@ -115,7 +132,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
     
-    m_gameLogic.keyPressed(keyEvent->key());
+    m_activeMechanics->keyPressed(keyEvent);
 }
 
 void Game::keyReleased(QKeyEvent * keyEvent)
@@ -123,5 +140,5 @@ void Game::keyReleased(QKeyEvent * keyEvent)
     if (keyEvent->isAutoRepeat())
         return;
 
-    m_gameLogic.keyReleased(keyEvent->key());
+    m_activeMechanics->keyReleased(keyEvent);
 }

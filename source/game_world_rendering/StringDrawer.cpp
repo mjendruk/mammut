@@ -5,8 +5,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
-#include <QImage>
-#include <QGLWidget>
 
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -98,10 +96,14 @@ bool StringDrawer::initializeTexture()
     return true;
 }
 
-void StringDrawer::paint(const QString & text,
-    const glm::mat4 & modelMatrix, Alignment alignment)
+void StringDrawer::paint(
+    const QString & text,
+    const glm::mat4 & modelMatrix, 
+    Alignment alignment, 
+    const glm::vec3 color)
 {
     m_program->setUniform("characterAtlas", 0);
+    m_program->setUniform("color", color);
     
     m_characterAtlas->bind(GL_TEXTURE0);
     
@@ -110,7 +112,7 @@ void StringDrawer::paint(const QString & text,
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    glm::mat4 transform = alignmentTransform(list, alignment) * modelMatrix;
+    glm::mat4 transform = modelMatrix * alignmentTransform(list, alignment);
     
     for (int i = 0; i < list.size(); i++) {
         CharacterSpecifics * currentSpecifics = list[i];
@@ -149,7 +151,7 @@ glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & l
     
     switch (alignment) {
         case kAlignLeft:
-            offset = list.first()->offset.x;
+            offset = - list.first()->offset.x;
             break;
             
         case kAlignCenter:
@@ -157,7 +159,7 @@ glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & l
             break;
             
         case kAlignRight:
-            offset = - length + list.last()->offset.x + list.last()->size.x;
+            offset = - length;
             break;
     }
     

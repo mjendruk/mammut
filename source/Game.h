@@ -5,8 +5,10 @@
 
 #include <glow/Timer.h>
 
-#include <gamelogic/GameLogic.h>
-#include <rendering/Canvas.h>
+#include <game_mechanics/GameMechanics.h>
+#include <game_world_rendering/Canvas.h>
+#include <menu/MenuMechanics.h>
+
 #include "AbstractApplication.h"
 
 class QMouseEvent;
@@ -21,6 +23,8 @@ public:
 
 public slots:
     void run();
+    void start();
+    void quit();
     
 protected:
     void mouseMoveEvent(QMouseEvent * event);
@@ -29,7 +33,11 @@ protected:
     void keyReleased(QKeyEvent * keyEvent);
 
 protected:
-    GameLogic m_gameLogic;
+    GameMechanics m_gameMechanics;
+    MenuMechanics m_menuMechanics;
+    
+    Mechanics * m_activeMechanics;
+    
     glow::Timer m_timer;
     
     QMainWindow m_window;
