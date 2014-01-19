@@ -10,10 +10,8 @@ in vec3 a_vertex;
 in vec3 a_normal;
 
 flat out vec3 v_normal;
-
 flat out vec4 v_color;
-
-smooth out float depthInES;
+smooth out float v_depthInES;
 smooth out float v_eyeDistance;
 
 vec3 normalToWorldSpace(vec3 normal)
@@ -50,9 +48,8 @@ void main()
 
     v_normal = normalToWorldSpace(a_normal);
 
-    //Todo: Uniforms nachziehen
     vec4 vertexInES = view * worldVertex;
-    depthInES = - (vertexInES.z - nearFar.x)/(nearFar.y-nearFar.x);
+    v_depthInES = - (vertexInES.z - nearFar.x)/(nearFar.y-nearFar.x);
 
     gl_Position = viewProjection * worldVertex;
 }
