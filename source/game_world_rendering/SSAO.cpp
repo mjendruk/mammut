@@ -103,6 +103,7 @@ void SSAO::draw(int normalTexture, int depthTexture, const glm::mat3 & normal, c
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_ssaoProgram.setUniform("projection", projection);
+    m_ssaoProgram.setUniform("invProjection", glm::inverse(projection));
     m_ssaoProgram.setUniform("normalMatrix", normal);
     m_ssaoProgram.setUniform("normal", 0);
     m_ssaoProgram.setUniform("depth", 2);

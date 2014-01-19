@@ -10,8 +10,8 @@ in vec3 a_vertex;
 in vec3 a_normal;
 
 flat out vec4 v_color;
-out float v_depthInES;
-out float v_eyeDistance;
+smooth out float v_depthInES;
+smooth out float v_eyeDistance;
 out vec3 v_worldVertex;
 flat out vec3 v_normal;
 

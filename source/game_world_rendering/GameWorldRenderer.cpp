@@ -198,7 +198,7 @@ void GameWorldRenderer::resize(int width, int height)
 
 void GameWorldRenderer::updateFPS()
 {
-    float weightRatio = 0.9;
+    float weightRatio = 0.9f;
     m_avgTimeSinceLastFrame = weightRatio * m_avgTimeSinceLastFrame + (1.0 - weightRatio) * m_lastFrame.elapsed();
     m_lastFrame = QTime::currentTime();
 }
