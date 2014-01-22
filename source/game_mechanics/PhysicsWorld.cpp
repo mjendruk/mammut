@@ -30,10 +30,14 @@ PhysicsWorld::PhysicsWorld()
                     &m_collisionConfiguration)
 ,   m_gravity(kGravityDown)
 {
+    btContactSolverInfo& info = m_dynamicsWorld.getSolverInfo();
+    info.m_splitImpulse = 1;
+    info.m_splitImpulsePenetrationThreshold = -0.02;
+    
     m_dynamicsWorld.setInternalTickCallback(forwardPreTickCallback, this, true);
     m_dynamicsWorld.setInternalTickCallback(forwardPostTickCallback, this, false);
     
-    changeGravity(kGravityRight);
+    changeGravity(kGravityDown);
 }
 
 PhysicsWorld::~PhysicsWorld()
@@ -47,7 +51,7 @@ void PhysicsWorld::stepSimulation(float seconds)
 
 void PhysicsWorld::changeGravity(GravityDirection direction)
 {
-    static const glm::vec3 gravityAcceleration(0.0f, -30.0f, 0.0f);
+    const glm::vec3 gravityAcceleration(0.0f, -30.0f, 0.0f);
     
     m_gravity = static_cast<GravityDirection>((m_gravity + direction) % 4);
     

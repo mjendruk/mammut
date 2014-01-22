@@ -93,9 +93,10 @@ void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
                                                   m_collisionShape.get(),
                                                   fallInertia);
     info.m_linearDamping = 0.05f;
+    info.m_restitution = 0.0f;
+    info.m_friction = 0.1f;
     
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
-    m_rigidBody->setFriction(0.0f);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
 }

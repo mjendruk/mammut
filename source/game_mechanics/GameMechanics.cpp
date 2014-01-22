@@ -4,9 +4,11 @@
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(0)
-,   m_mammut(glm::vec3(0.0f, 0.7f, 4.5f))
+,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
 ,   m_camera(m_mammut)
 {
+    connectSignals();
+    
     for (int i = 0; i < 10 ; i++)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
@@ -16,8 +18,6 @@ GameMechanics::GameMechanics()
     
     m_physicsWorld.addObject(m_mammut.physics());
     m_physicsWorld.changeGravity(PhysicsWorld::kGravityDown);
-
-    connectSignals();
 }
 
 GameMechanics::~GameMechanics()
@@ -32,7 +32,6 @@ GameMechanics::~GameMechanics()
 void GameMechanics::update(float seconds)
 {
     m_physicsWorld.stepSimulation(seconds);
-    
     m_camera.update(seconds);
     
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z)
