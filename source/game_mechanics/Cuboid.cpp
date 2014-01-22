@@ -52,7 +52,8 @@ void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & trans
                                                              Conversions::toBtVec3(translation))));
     
     btRigidBody::btRigidBodyConstructionInfo info(0, m_motionState.get(), m_collisionShape.get());
-    info.m_friction = 0.3;
+    
     m_rigidBody.reset(new btRigidBody(info));
+//    m_rigidBody->setFriction(0.3f);
     m_rigidBody->setUserPointer(this);
 }

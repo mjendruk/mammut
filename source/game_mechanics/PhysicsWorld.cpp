@@ -47,7 +47,7 @@ void PhysicsWorld::stepSimulation(float seconds)
 
 void PhysicsWorld::changeGravity(GravityDirection direction)
 {
-    static const glm::vec3 gravityAcceleration(0.0f, -15.81f, 0.0f);
+    static const glm::vec3 gravityAcceleration(0.0f, -30.0f, 0.0f);
     
     m_gravity = static_cast<GravityDirection>((m_gravity + direction) % 4);
     

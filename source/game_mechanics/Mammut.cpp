@@ -46,9 +46,11 @@ void Mammut::update()
         return;
     }
     
-    const float forwardForce = 27.0f;
     m_physics.clearForcesAndApplyGravity();
-    m_physics.applyForwardForce(forwardForce);
+    slowDownDrifting();
+    
+    const glm::vec3 forwardForce = glm::vec3(0.0f, 0.0f, -27.0f);
+    m_physics.applyForce(forwardForce);
 }
 
 void Mammut::gravityChangeEvent(const glm::mat3 & rotation)
@@ -98,6 +100,13 @@ float Mammut::velocity() const
 MammutPhysics * Mammut::physics()
 {
     return &m_physics;
+}
+
+void Mammut::slowDownDrifting()
+{
+    glm::vec3 rotatedVelocity = m_gravityTransform * m_physics.velocity();
+    rotatedVelocity = glm::vec3(rotatedVelocity.x * 0.95f, rotatedVelocity.yz());
+    m_physics.setVelocity(glm::inverse(m_gravityTransform) * rotatedVelocity);
 }
 
 bool Mammut::isStillOnObject() const

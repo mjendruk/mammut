@@ -32,6 +32,7 @@ signals:
     void crashed();
 
 protected:
+    void slowDownDrifting();
     bool isStillOnObject() const;
     
 protected:

@@ -37,10 +37,9 @@ void MammutPhysics::clearForcesAndApplyGravity()
     m_rigidBody->applyGravity();
 }
 
-void MammutPhysics::applyForwardForce(float force)
+void MammutPhysics::applyForce(const glm::vec3 & force)
 {
-    btVector3 forceVec(0.0f, 0.0f, -force);
-    m_rigidBody->applyCentralForce(forceVec);
+    m_rigidBody->applyCentralForce(Conversions::toBtVec3(force));
 }
 
 void MammutPhysics::rotate(const glm::mat3 & rotation)
@@ -50,6 +49,11 @@ void MammutPhysics::rotate(const glm::mat3 & rotation)
 
     transform.setBasis(Conversions::toBtMat3(rotation));
     m_rigidBody->setCenterOfMassTransform(transform);
+}
+
+void MammutPhysics::setVelocity(const glm::vec3 & velocity)
+{
+    m_rigidBody->setLinearVelocity(Conversions::toBtVec3(velocity));
 }
 
 glm::vec3 MammutPhysics::position() const
@@ -80,7 +84,7 @@ void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
     m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
                                                              Conversions::toBtVec3(translation))));
 
-    const btScalar mass = 0.9f;
+    const btScalar mass = 2.0f;
     btVector3 fallInertia;
     m_collisionShape->calculateLocalInertia(mass, fallInertia);
 
@@ -88,10 +92,10 @@ void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
                                                   m_motionState.get(),
                                                   m_collisionShape.get(),
                                                   fallInertia);
-    info.m_friction = 0.8f;
     info.m_linearDamping = 0.05f;
     
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
+    m_rigidBody->setFriction(0.0f);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
 }

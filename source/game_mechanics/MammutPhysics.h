@@ -25,8 +25,10 @@ public:
     btRigidBody * rigidBody() const override;
     
     void clearForcesAndApplyGravity();
-    void applyForwardForce(float force);
+    void applyForce(const glm::vec3 & force);
     void rotate(const glm::mat3 & rotation);
+    
+    void setVelocity(const glm::vec3 & velocity);
     
     glm::vec3 position() const;
     glm::mat4 rotation() const;
