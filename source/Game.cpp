@@ -89,7 +89,8 @@ void Game::start()
     m_gameMechanics.reset(gameMechanics);
     m_gameWorldRenderer.reset(gameWorldRenderer);
     
-    connect(m_gameMechanics.data(), &GameMechanics::pausePressed, this, &Game::pause);
+    connect(m_gameMechanics.data(), &GameMechanics::pause, this, &Game::pause);
+    connect(m_gameMechanics.data(), &GameMechanics::gameOver, this, &Game::quit);
     
     m_activeMechanics = m_gameMechanics.data();
     m_canvas->changeRenderer(m_gameWorldRenderer.data());

@@ -1,69 +1,45 @@
 #pragma once
 
-#include <memory>
+#include <QObject>
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
-#include "GameObject.h"
+#include "MammutPhysics.h"
 
-class btCollisionShape;
-class btRigidBody;
-class btDiscreteDynamicsWorld;
-
-class MammutMotionState;
-
-class Mammut : public GameObject
+class Mammut : public QObject
 {
+    Q_OBJECT
+    
 public:
-    Mammut(const glm::vec3 translation,
-           btDiscreteDynamicsWorld & dynamicsWorld);
-         
+    Mammut(const glm::vec3 & translation);
     ~Mammut();
     
-    void rotate(const glm::mat3 & rotation);
+    void update();
     
-    void limitVelocity();
-    void steerRight();
-    void steerLeft();
-    void doNotSteer();
+    void gravityChangeEvent(const glm::mat3 & rotation);
+    void collisionEvent(const PhysicsObject & object,
+                        const glm::vec3 & collisionNormal);
     
-    void collidesWith(const GameObject & object,
-                      const glm::mat3 & gravityTransform);
-    void resetCollisionState();
+    glm::mat4 modelTransform() const;
     
-    void applySteering(const glm::mat3 & gravityTransform);
-    void applyForces();
-    
-    virtual glm::mat4 modelTransform() const;
-    virtual glowutils::AxisAlignedBoundingBox boundingBox() const;
-    
-    bool isOnObject() const;
-    
-    const glm::vec3 & position() const;
-    void setPosition(const glm::vec3 & position);
-    
-    const glm::mat4 & rotation() const;
-    void setRotation(const glm::mat4 & rotation);
+    glm::vec3 position() const;
+    glm::mat4 rotation() const;
     
     float velocity() const;
+    
+    MammutPhysics * physics();
+    
+signals:
+    void crashed();
 
 protected:
-    bool isOnObject(const GameObject & object,
-                    const glm::mat3 & gravityTransform);
+    bool isStillOnObject() const;
     
 protected:
-    glm::vec3 m_position;
-    glm::mat4 m_rotation;
-    glm::mat4 m_scaleTransform;
+    static const glm::vec3 s_size;
     
-    float m_steering;
-    glm::vec3 m_nonDriftForce;
+    MammutPhysics m_physics;
     
+    glm::mat3 m_gravityTransform;
     bool m_isOnObject;
-
-    std::unique_ptr<btRigidBody> m_rigidBody;
-    std::unique_ptr<MammutMotionState> m_motionState;
-    std::unique_ptr<btCollisionShape> m_collisionShape;
     
-    btDiscreteDynamicsWorld & m_dynamicsWorld;
 };

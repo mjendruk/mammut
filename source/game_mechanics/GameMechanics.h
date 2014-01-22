@@ -5,16 +5,12 @@
 #include <QList>
 #include <QSharedPointer>
 
-#include <btBulletDynamicsCommon.h>
-
 #include <Mechanics.h>
-#include <game_world_rendering/GameWorldRenderer.h>
 
+#include "PhysicsWorld.h"
 #include "ChunkGenerator.h"
 #include "Mammut.h"
-#include "Gravity.h"
 #include "GameCamera.h"
-#include "Gravity.h"
 
 
 class GameMechanics : public Mechanics
@@ -33,28 +29,21 @@ public:
     const GameCamera & camera() const;
     const Mammut & mammut() const;
     
-    void forEachCuboid(const std::function<void(Cuboid &)> & lambda);
-    
-    void preTickCallback(float timeStep);
-    void postTickCallback(float timeStep);
+    void forEachCuboid(const std::function<void(Cuboid *)> & lambda);
 
 signals:
-    void pausePressed();
+    void pause();
+    void gameOver();
     
 protected:
-    void registerTickCallbacks();
+    void connectSignals();
     
 protected:
-    btDbvtBroadphase m_broadphase;
-    btDefaultCollisionConfiguration m_collisionConfiguration;
-    btCollisionDispatcher m_dispatcher;
-    btSequentialImpulseConstraintSolver m_solver;
-    btDiscreteDynamicsWorld m_dynamicsWorld;
+    PhysicsWorld m_physicsWorld;
     
     ChunkGenerator m_chunkGenerator;
     Mammut m_mammut;
     GameCamera m_camera;
-    Gravity m_gravity;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
 
 };

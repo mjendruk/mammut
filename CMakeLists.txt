@@ -209,14 +209,14 @@ set(sources
     ${source_path}/game_mechanics/GameCamera.h
     ${source_path}/game_mechanics/GameMechanics.cpp
     ${source_path}/game_mechanics/GameMechanics.h
-    ${source_path}/game_mechanics/GameObject.cpp
-    ${source_path}/game_mechanics/GameObject.h
-    ${source_path}/game_mechanics/Gravity.cpp
-    ${source_path}/game_mechanics/Gravity.h
     ${source_path}/game_mechanics/Mammut.cpp
     ${source_path}/game_mechanics/Mammut.h
-    ${source_path}/game_mechanics/MammutMotionState.cpp
-    ${source_path}/game_mechanics/MammutMotionState.h
+    ${source_path}/game_mechanics/MammutPhysics.cpp
+    ${source_path}/game_mechanics/MammutPhysics.h
+    ${source_path}/game_mechanics/PhysicsObject.cpp
+    ${source_path}/game_mechanics/PhysicsObject.h
+    ${source_path}/game_mechanics/PhysicsWorld.cpp
+    ${source_path}/game_mechanics/PhysicsWorld.h
 
     ${source_path}/game_world_rendering/AbstractPainter.cpp
     ${source_path}/game_world_rendering/AbstractPainter.h

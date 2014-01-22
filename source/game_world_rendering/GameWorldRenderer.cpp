@@ -70,8 +70,8 @@ void GameWorldRenderer::render(float devicePixelRatio)
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    m_gameMechanics.forEachCuboid([this](Cuboid & cuboid) {
-        m_painter.paint(m_cuboidDrawable, cuboid.modelTransform());
+    m_gameMechanics.forEachCuboid([this](Cuboid * cuboid) {
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
     });
     
     m_painter.paint(m_cuboidDrawable, m_gameMechanics.mammut().modelTransform());
