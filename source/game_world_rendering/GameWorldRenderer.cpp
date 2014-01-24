@@ -22,8 +22,8 @@
 const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
 
-GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
-:   m_hud(gameMechanics.mammut(), m_camera, *this)
+GameWorldRenderer::GameWorldRenderer(const GameMechanics * gameMechanics)
+:   m_hud(m_camera, *this)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
 ,   m_gBufferDepth(nullptr)
@@ -52,7 +52,7 @@ void GameWorldRenderer::render(float devicePixelRatio)
     m_painter.update(programsWithInvalidatedUniforms);
     m_cavePainter.update(programsWithInvalidatedUniforms);
     
-    m_camera.update(m_gameMechanics.camera());
+    m_camera.update(m_gameMechanics->camera());
     m_painter.setViewProjectionUniform(m_camera.viewProjection());
     m_painter.setViewUniform(m_camera.view());
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
@@ -70,11 +70,11 @@ void GameWorldRenderer::render(float devicePixelRatio)
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    m_gameMechanics.forEachCuboid([this](Cuboid * cuboid) {
+    m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
     });
     
-    m_painter.paint(m_cuboidDrawable, m_gameMechanics.mammut().modelTransform());
+    m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform());
     
     m_cavePainter.paint(m_caveDrawable, glm::mat4());
     
@@ -113,7 +113,7 @@ void GameWorldRenderer::render(float devicePixelRatio)
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
-    m_hud.paint();
+    m_hud.paint(m_gameMechanics->mammut());
 }
 
 void GameWorldRenderer::initialize()
@@ -206,4 +206,9 @@ void GameWorldRenderer::updateFPS()
 int GameWorldRenderer::fps() const
 {
     return (int) (1000.0 / m_avgTimeSinceLastFrame + 0.5);
+}
+
+void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
+{
+    m_gameMechanics = mechanics;
 }

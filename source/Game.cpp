@@ -84,7 +84,7 @@ void Game::run()
 void Game::start()
 {
     auto gameMechanics = new GameMechanics();
-    auto gameWorldRenderer = new GameWorldRenderer(*gameMechanics);
+    auto gameWorldRenderer = new GameWorldRenderer(gameMechanics);
     
     m_gameMechanics.reset(gameMechanics);
     m_gameWorldRenderer.reset(gameWorldRenderer);

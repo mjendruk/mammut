@@ -30,6 +30,7 @@ public:
     const Mammut & mammut() const;
     
     void forEachCuboid(const std::function<void(Cuboid *)> & lambda);
+    void forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const;
 
 signals:
     void pause();

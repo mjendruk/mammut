@@ -8,9 +8,8 @@
 
 #include "GameWorldRenderer.h"
 
-HUD::HUD(const Mammut & mammut, const RenderCamera & camera, const GameWorldRenderer & renderer)
-:   m_mammut(mammut)
-,   m_camera(camera)
+HUD::HUD(const RenderCamera & camera, const GameWorldRenderer & renderer)
+:   m_camera(camera)
 ,   m_gameWorldRenderer(renderer)
 {
 }
@@ -24,10 +23,10 @@ void HUD::initialize()
     m_stringDrawer.initialize();
 }
 
-void HUD::paint()
+void HUD::paint(const Mammut & mammut)
 {
-    QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(m_mammut.velocity())));
-    QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-m_mammut.position().z)));
+    QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(mammut.velocity())));
+    QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-mammut.position().z)));
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
     

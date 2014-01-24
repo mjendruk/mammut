@@ -95,7 +95,14 @@ const Mammut & GameMechanics::mammut() const
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)
 {
-    for (QSharedPointer<CuboidChunk> & chunk : m_chunkList)
+    for (auto chunk : m_chunkList)
+        for (Cuboid * cuboid : chunk->cuboids())
+            lambda(cuboid);
+}
+
+void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const
+{
+    for (auto chunk : m_chunkList)
         for (Cuboid * cuboid : chunk->cuboids())
             lambda(cuboid);
 }

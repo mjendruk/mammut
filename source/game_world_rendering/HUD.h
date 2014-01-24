@@ -9,18 +9,16 @@ class GameWorldRenderer;
 class HUD
 {
 public:
-    HUD(const Mammut & mammut,
-        const RenderCamera & camera,
+    HUD(const RenderCamera & camera,
         const GameWorldRenderer & renderer);
     ~HUD();
 
     void initialize();
-    void paint();
+    void paint(const Mammut & mammut);
 
 protected:
     StringDrawer m_stringDrawer;
 
-    const Mammut & m_mammut;
     const RenderCamera & m_camera;
     const GameWorldRenderer & m_gameWorldRenderer;
 };
