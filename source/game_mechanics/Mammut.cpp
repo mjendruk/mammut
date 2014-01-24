@@ -106,6 +106,3 @@ bool Mammut::isStillOnObject() const
     glm::vec3 velocity = m_gravityTransform * m_physics.velocity();
     return fabs(velocity.y) < epsilon;
 }
-
-
-
