@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
-#include <Conversions.h>
+#include <Util.h>
 #include "Mammut.h"
 
 MammutPhysics::MammutPhysics(const glm::vec3 & size,
@@ -23,7 +23,7 @@ MammutPhysics::~MammutPhysics()
 void MammutPhysics::collisionEvent(const PhysicsObject & object,
     const btVector3 & collisionNormal)
 {
-    m_mammut->collisionEvent(object, Conversions::toGlmVec3(collisionNormal));
+    m_mammut->collisionEvent(object, Util::toGlmVec3(collisionNormal));
 }
 
 btRigidBody * MammutPhysics::rigidBody() const
@@ -39,7 +39,7 @@ void MammutPhysics::clearForcesAndApplyGravity()
 
 void MammutPhysics::applyForce(const glm::vec3 & force)
 {
-    m_rigidBody->applyCentralForce(Conversions::toBtVec3(force));
+    m_rigidBody->applyCentralForce(Util::toBtVec3(force));
 }
 
 void MammutPhysics::rotate(const glm::mat3 & rotation)
@@ -47,13 +47,13 @@ void MammutPhysics::rotate(const glm::mat3 & rotation)
     btTransform transform;
     m_motionState->getWorldTransform(transform);
 
-    transform.setBasis(Conversions::toBtMat3(rotation));
+    transform.setBasis(Util::toBtMat3(rotation));
     m_rigidBody->setCenterOfMassTransform(transform);
 }
 
 void MammutPhysics::setVelocity(const glm::vec3 & velocity)
 {
-    m_rigidBody->setLinearVelocity(Conversions::toBtVec3(velocity));
+    m_rigidBody->setLinearVelocity(Util::toBtVec3(velocity));
 }
 
 glm::vec3 MammutPhysics::position() const
@@ -61,7 +61,7 @@ glm::vec3 MammutPhysics::position() const
     btTransform transform;
     m_motionState->getWorldTransform(transform);
     
-    return Conversions::toGlmVec3(transform.getOrigin());
+    return Util::toGlmVec3(transform.getOrigin());
 }
 
 glm::mat4 MammutPhysics::rotation() const
@@ -69,20 +69,20 @@ glm::mat4 MammutPhysics::rotation() const
     btTransform transform;
     m_motionState->getWorldTransform(transform);
     
-    return Conversions::toGlmMat4(transform.getRotation());
+    return Util::toGlmMat4(transform.getRotation());
 }
 
 glm::vec3 MammutPhysics::velocity() const
 {
-    return Conversions::toGlmVec3(m_rigidBody->getLinearVelocity());
+    return Util::toGlmVec3(m_rigidBody->getLinearVelocity());
 }
 
 void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
     const glm::vec3 & translation)
 {
-    m_collisionShape.reset(new btBoxShape(Conversions::toBtVec3(size / 2.0f)));
+    m_collisionShape.reset(new btBoxShape(Util::toBtVec3(size / 2.0f)));
     m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-                                                             Conversions::toBtVec3(translation))));
+                                                             Util::toBtVec3(translation))));
 
     const btScalar mass = 2.0f;
     btVector3 fallInertia;

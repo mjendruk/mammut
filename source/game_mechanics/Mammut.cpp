@@ -11,17 +11,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include <Conversions.h>
-
-namespace
-{
-    
-int maxAxis(const glm::vec3 & vec)
-{
-    return vec.x < vec.y ? (vec.y < vec.z ? 2 : 1) : (vec.x < vec.z ? 2 : 0);
-}
-    
-} // namespace
+#include <Util.h>
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 
@@ -62,16 +52,16 @@ void Mammut::gravityChangeEvent(const glm::mat3 & rotation)
 void Mammut::collisionEvent(const PhysicsObject & object,
     const glm::vec3 & collisionNormal)
 {
-    enum Axes { kXAxis, kYAxis, kZAxis };
-    
     glm::vec3 rotatedAbsoluteNormal = glm::abs(m_gravityTransform * collisionNormal);
     
-    switch (maxAxis(rotatedAbsoluteNormal))
+    switch (Util::maxAxis(rotatedAbsoluteNormal))
     {
-        case kYAxis:
+        case Util::kXAxis:
+            break;
+        case Util::kYAxis:
             m_isOnObject = true;
             break;
-        case kZAxis:
+        case Util::kZAxis:
             emit crashed();
             break;
     }

@@ -2,7 +2,7 @@
 
 #include <QDebug>
 #include <glm/gtx/transform.hpp>
-#include <Conversions.h>
+#include <Util.h>
 #include "PhysicsObject.h"
 
 namespace
@@ -58,7 +58,7 @@ void PhysicsWorld::changeGravity(GravityDirection direction)
     const float angle = 90.0f * m_gravity;
     const glm::mat3 rotation = glm::mat3(glm::rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    m_dynamicsWorld.setGravity(Conversions::toBtVec3(rotation * gravityAcceleration));
+    m_dynamicsWorld.setGravity(Util::toBtVec3(rotation * gravityAcceleration));
     
     emit gravityChanged(rotation);
 }

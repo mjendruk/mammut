@@ -267,8 +267,6 @@ set(sources
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
-    ${source_path}/Conversions.cpp
-    ${source_path}/Conversions.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
     ${source_path}/Mechanics.cpp
@@ -279,6 +277,8 @@ set(sources
     ${source_path}/MessageHandler.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
+    ${source_path}/Util.cpp
+    ${source_path}/Util.h
 )
 
 # Group source files
