@@ -6,6 +6,8 @@ class QKeyEvent;
 
 class Mechanics : public QObject
 {
+    Q_OBJECT
+    
 public:
     virtual ~Mechanics();
 
