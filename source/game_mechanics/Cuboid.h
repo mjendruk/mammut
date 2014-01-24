@@ -1,47 +1,37 @@
 #pragma once
 
-#include <QScopedPointer>
-#include <QSharedPointer>
-#include <QList>
-
+#include <memory>
 #include <glm/glm.hpp>
-#include <glowutils/AxisAlignedBoundingBox.h>
 
-#include "GameObject.h"
+#include "PhysicsObject.h"
 
-class btCollisionShape;
-class btRigidBody;
+namespace glowutils
+{
+    class AxisAlignedBoundingBox;
+}
+
 class btMotionState;
-class btDiscreteDynamicsWorld;
+class btCollisionShape;
 
-class Cuboid : public GameObject
+class Cuboid : public PhysicsObject
 {
 public:
     Cuboid(const glm::vec3 & size,
-           const glm::vec3 & translation,
-           btDiscreteDynamicsWorld & dynamicsWorld);
+           const glm::vec3 & translation);
          
-    ~Cuboid();
+    virtual ~Cuboid();
 
-    virtual glm::mat4 modelTransform() const;
-    virtual glowutils::AxisAlignedBoundingBox boundingBox() const;
+    glm::mat4 modelTransform() const;
+    glowutils::AxisAlignedBoundingBox boundingBox() const;
     
-    const glm::vec3 & position() const;
-    const glm::vec3 & size() const;
+    btRigidBody * rigidBody() const override;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
-    void initializeBoundingBox();
     
-    glm::mat4 m_modelTransform;
-    glm::vec3 m_position;
+    std::unique_ptr<btCollisionShape> m_collisionShape;
+    std::unique_ptr<btMotionState> m_motionState;
+    std::unique_ptr<btRigidBody> m_rigidBody;
+    
     glm::vec3 m_size;
-    
-    glowutils::AxisAlignedBoundingBox m_boundingBox;
-    
-    QScopedPointer<btRigidBody> m_rigidBody;
-    QScopedPointer<btMotionState> m_motionState;
-    QScopedPointer<btCollisionShape> m_collisionShape;
-    
-    btDiscreteDynamicsWorld & m_dynamicsWorld;
 };

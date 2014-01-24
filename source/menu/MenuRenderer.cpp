@@ -1,12 +1,13 @@
 #include "MenuRenderer.h"
 
+#include <cassert>
 #include <algorithm>
 #include <glm/gtx/transform.hpp>
-#include "MenuMechanics.h"
-#include "MenuItem.h"
+#include "MenuButton.h"
+#include "Menu.h"
 
-MenuRenderer::MenuRenderer(const MenuMechanics & mechanics)
-:   m_mechanics(mechanics)
+MenuRenderer::MenuRenderer(const Menu * menu)
+:   m_menu(menu)
 {
 }
 
@@ -37,19 +38,29 @@ void MenuRenderer::render(float devicePixelRatio)
     const float aspectRatio = m_viewport.x / std::max(static_cast<float>(m_viewport.y), 1.f);
     const glm::mat4 aspectRatioTransform = glm::scale(1.0f / aspectRatio, 1.0f, 1.0f);
 
-    glm::mat4 translation = glm::scale(1.5f, 1.5f, 0.0f) * glm::translate(0.0f, 0.0f, 0.0f);
-    for (auto menuItem : m_mechanics.menuItems())
-    {
-        glm::vec3 color = m_mechanics.isSelectedMenuItem(menuItem) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
-        
-        translation *= glm::translate(0.0f, -0.13f, 0.0f);
-
-        m_stringDrawer.paint(menuItem->label(), 
-                             aspectRatioTransform * translation,
-                             StringDrawer::kAlignCenter,
-                             color);
-    }
+    m_translation = aspectRatioTransform * glm::scale(1.5f, 1.5f, 0.0f) * glm::translate(0.0f, 0.0f, 0.0f);
+    
+    for (auto menuItem : m_menu->menuItems())
+        menuItem->accept(this);
     
     glEnable(GL_DEPTH_TEST);
+}
+
+void MenuRenderer::renderButton(const MenuButton * button)
+{
+    glm::vec3 color = m_menu->isFocusedItem(button) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
+
+    m_stringDrawer.paint(button->label(), 
+                         m_translation,
+                         StringDrawer::kAlignCenter,
+                         color);
+
+    m_translation *= glm::translate(0.0f, -0.13f, 0.0f);
+}
+
+void MenuRenderer::setMenu(const Menu * menu)
+{
+    assert(menu != nullptr);
+    m_menu = menu;
 }
 

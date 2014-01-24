@@ -10,7 +10,7 @@ class btDiscreteDynamicsWorld;
 class ChunkGenerator
 {
 public:
-    ChunkGenerator(int seed, btDiscreteDynamicsWorld & dynamicsWorld);
+    ChunkGenerator(int seed);
     ~ChunkGenerator();
 
     QSharedPointer<CuboidChunk> nextChunk();
@@ -18,6 +18,5 @@ public:
 protected:
     int m_seed;
     glm::vec3 m_nextTranslation;
-    
-    btDiscreteDynamicsWorld & m_dynamicsWorld;
+
 };

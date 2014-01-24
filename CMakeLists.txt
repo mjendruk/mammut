@@ -209,14 +209,14 @@ set(sources
     ${source_path}/game_mechanics/GameCamera.h
     ${source_path}/game_mechanics/GameMechanics.cpp
     ${source_path}/game_mechanics/GameMechanics.h
-    ${source_path}/game_mechanics/GameObject.cpp
-    ${source_path}/game_mechanics/GameObject.h
-    ${source_path}/game_mechanics/Gravity.cpp
-    ${source_path}/game_mechanics/Gravity.h
     ${source_path}/game_mechanics/Mammut.cpp
     ${source_path}/game_mechanics/Mammut.h
-    ${source_path}/game_mechanics/MammutMotionState.cpp
-    ${source_path}/game_mechanics/MammutMotionState.h
+    ${source_path}/game_mechanics/MammutPhysics.cpp
+    ${source_path}/game_mechanics/MammutPhysics.h
+    ${source_path}/game_mechanics/PhysicsObject.cpp
+    ${source_path}/game_mechanics/PhysicsObject.h
+    ${source_path}/game_mechanics/PhysicsWorld.cpp
+    ${source_path}/game_mechanics/PhysicsWorld.h
 
     ${source_path}/game_world_rendering/AbstractPainter.cpp
     ${source_path}/game_world_rendering/AbstractPainter.h
@@ -252,17 +252,21 @@ set(sources
     ${source_path}/game_world_rendering/StringDrawer.cpp
     ${source_path}/game_world_rendering/StringDrawer.h
     
+    ${source_path}/menu/Menu.cpp
+    ${source_path}/menu/Menu.h
+    ${source_path}/menu/MenuButton.cpp
+    ${source_path}/menu/MenuButton.h
     ${source_path}/menu/MenuItem.cpp
     ${source_path}/menu/MenuItem.h
-    ${source_path}/menu/MenuMechanics.cpp
-    ${source_path}/menu/MenuMechanics.h
     ${source_path}/menu/MenuRenderer.cpp
     ${source_path}/menu/MenuRenderer.h
+    ${source_path}/menu/MainMenu.cpp
+    ${source_path}/menu/MainMenu.h
+    ${source_path}/menu/PauseMenu.cpp
+    ${source_path}/menu/PauseMenu.h
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
-    ${source_path}/Conversions.cpp
-    ${source_path}/Conversions.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
     ${source_path}/Mechanics.cpp
@@ -273,6 +277,8 @@ set(sources
     ${source_path}/MessageHandler.h
     ${source_path}/Renderer.cpp
     ${source_path}/Renderer.h
+    ${source_path}/Util.cpp
+    ${source_path}/Util.h
 )
 
 # Group source files

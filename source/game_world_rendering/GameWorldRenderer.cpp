@@ -24,7 +24,6 @@ const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
 :   m_hud(gameMechanics.mammut(), m_camera, *this)
-,   m_gameMechanics(gameMechanics)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
 ,   m_gBufferDepth(nullptr)
@@ -34,6 +33,7 @@ GameWorldRenderer::GameWorldRenderer(GameMechanics & gameMechanics)
 ,   m_quad(nullptr)
 ,   m_ssao(nullptr)
 ,   m_lastFrame(QTime::currentTime())
+,   m_gameMechanics(gameMechanics)
 {
 }
 
@@ -70,8 +70,8 @@ void GameWorldRenderer::render(float devicePixelRatio)
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    m_gameMechanics.forEachCuboid([this](Cuboid & cuboid) {
-        m_painter.paint(m_cuboidDrawable, cuboid.modelTransform());
+    m_gameMechanics.forEachCuboid([this](Cuboid * cuboid) {
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
     });
     
     m_painter.paint(m_cuboidDrawable, m_gameMechanics.mammut().modelTransform());

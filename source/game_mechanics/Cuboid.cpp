@@ -1,69 +1,60 @@
 #include "Cuboid.h"
 
-#include <QDebug>
 #include <glm/gtx/transform.hpp>
+#include <glowutils/AxisAlignedBoundingBox.h>
 #include <btBulletDynamicsCommon.h>
 
-#include <Conversions.h>
+#include <Util.h>
 
 
-Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation,
-    btDiscreteDynamicsWorld & dynamicsWorld)
-:    m_dynamicsWorld(dynamicsWorld)
-{
-    m_position = translation;
-    m_size = size;
-    m_modelTransform = glm::translate(translation) * glm::scale(size);
-    
+Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
+:   m_size(size)
+{    
     initializeRigidBody(size, translation);
-    initializeBoundingBox();
 }
 
 Cuboid::~Cuboid()
 {
-    m_dynamicsWorld.removeRigidBody(m_rigidBody.data());
-}
-
-void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)
-{
-    m_collisionShape.reset(new btBoxShape(btVector3(size.x / 2.0f,
-                                                    size.y / 2.0f,
-                                                    size.z / 2.0f)));
-    
-    m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-                                                             Conversions::toBtVec3(translation))));
-    
-    btRigidBody::btRigidBodyConstructionInfo info(0, m_motionState.data(), m_collisionShape.data());
-    m_rigidBody.reset(new btRigidBody(info));
-    m_rigidBody->setUserPointer(this);
-    
-    m_dynamicsWorld.addRigidBody(m_rigidBody.data());
-}
-
-void Cuboid::initializeBoundingBox()
-{
-    btVector3 llf, urb;
-    m_rigidBody->getAabb(llf, urb);
-    m_boundingBox.extend(Conversions::toGlmVec3(llf));
-    m_boundingBox.extend(Conversions::toGlmVec3(urb));
 }
 
 glm::mat4 Cuboid::modelTransform() const
 {
-    return m_modelTransform;
+    btTransform transform;
+    m_rigidBody->getMotionState()->getWorldTransform(transform);
+    
+    glm::vec3 translation = Util::toGlmVec3(transform.getOrigin());
+    
+    return glm::translate(translation) * glm::scale(m_size);
 }
 
 glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
 {
-    return m_boundingBox;
+    glowutils::AxisAlignedBoundingBox boundingBox;
+    btVector3 llf, urb;
+    
+    m_rigidBody->getAabb(llf, urb);
+    boundingBox.extend(Util::toGlmVec3(llf));
+    boundingBox.extend(Util::toGlmVec3(urb));
+    
+    return boundingBox;
 }
 
-const glm::vec3 & Cuboid::position() const
+btRigidBody * Cuboid::rigidBody() const
 {
-    return m_position;
+    return m_rigidBody.get();
 }
 
-const glm::vec3 & Cuboid::size() const
+void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)
 {
-    return m_size;
+    m_collisionShape.reset(new btBoxShape(Util::toBtVec3(size / 2.0f)));
+    
+    m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
+                                                             Util::toBtVec3(translation))));
+    
+    btRigidBody::btRigidBodyConstructionInfo info(0, m_motionState.get(), m_collisionShape.get());
+    
+    info.m_restitution = 0.0f;
+    
+    m_rigidBody.reset(new btRigidBody(info));
+    m_rigidBody->setUserPointer(this);
 }

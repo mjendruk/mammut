@@ -1,15 +1,17 @@
 #pragma once
 
-class QKeyEvent;
-class Renderer;
+#include <QObject>
 
-class Mechanics
+class QKeyEvent;
+
+class Mechanics : public QObject
 {
+    Q_OBJECT
+    
 public:
     virtual ~Mechanics();
 
     virtual void update(float seconds) = 0;
-    virtual Renderer * renderer() = 0;
 
     virtual void keyPressed(QKeyEvent * event) = 0;
     virtual void keyReleased(QKeyEvent * event) = 0;

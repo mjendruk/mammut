@@ -59,8 +59,6 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
 
-    GameMechanics & m_gameMechanics;
-
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
@@ -72,4 +70,6 @@ protected:
 
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;
+    
+    GameMechanics & m_gameMechanics;
 };
