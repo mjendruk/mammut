@@ -17,7 +17,8 @@ QList<MenuItem *> MainMenu::initializeMenuItems()
     m_startButton = new MenuButton("Start");
     m_quitButton = new MenuButton("Quit");
 
-    return { m_startButton, m_quitButton };
+    QList<MenuItem *> returnValue;
+    return (returnValue << m_startButton << m_quitButton);
 }
 
 void MainMenu::connectSignals()
