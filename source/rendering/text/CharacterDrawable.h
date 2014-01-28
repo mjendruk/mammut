@@ -5,7 +5,7 @@
 #include <glow/Array.h>
 #include <glow/ref_ptr.h>
 
-#include "IDrawable.h"
+#include <rendering/world/IDrawable.h>
 
 namespace glow
 {

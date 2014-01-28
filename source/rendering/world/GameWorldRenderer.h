@@ -5,7 +5,7 @@
 
 #include <glow/ref_ptr.h>
 
-#include <Renderer.h>
+#include <rendering/Renderer.h>
 
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"

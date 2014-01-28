@@ -1,7 +1,7 @@
 #include "MenuButton.h"
 
 #include <QKeyEvent>
-#include "MenuRenderer.h"
+#include <rendering/menu/MenuRenderer.h>
 
 MenuButton::MenuButton(const QString & label)
 :   m_label(label)

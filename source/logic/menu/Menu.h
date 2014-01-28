@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QList>
-#include <Mechanics.h>
+#include <logic/Mechanics.h>
 
 class QKeyEvent;
 class MenuItem;

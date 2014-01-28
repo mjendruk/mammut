@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include <Renderer.h>
-#include <game_world_rendering/StringDrawer.h>
+#include <rendering/Renderer.h>
+#include <rendering/text/StringDrawer.h>
 
 class Menu;
 class MenuButton;

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <glm/gtx/transform.hpp>
 
-#include <game_mechanics/Mammut.h>
+#include <logic/world/Mammut.h>
 #include "RenderCamera.h"
 
 #include "GameWorldRenderer.h"

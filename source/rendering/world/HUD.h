@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StringDrawer.h"
+#include <rendering/text/StringDrawer.h>
 
 class Mammut;
 class RenderCamera;
