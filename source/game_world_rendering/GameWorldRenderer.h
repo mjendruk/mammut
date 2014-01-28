@@ -33,7 +33,7 @@ class SSAO;
 class GameWorldRenderer : public Renderer
 {
 public:
-    GameWorldRenderer(const GameMechanics * gameMechanics);
+    GameWorldRenderer();
     virtual ~GameWorldRenderer();
 
     void initialize() override;

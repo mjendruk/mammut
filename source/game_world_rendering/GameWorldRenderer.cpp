@@ -1,5 +1,7 @@
 #include "GameWorldRenderer.h"
 
+#include <cassert>
+
 #include <glm/gtx/transform.hpp>
 
 #include "glow/Program.h"
@@ -22,7 +24,7 @@
 const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
 
-GameWorldRenderer::GameWorldRenderer(const GameMechanics * gameMechanics)
+GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
 ,   m_DepthProgram(nullptr)
 ,   m_gBufferFBO(nullptr)
@@ -33,7 +35,7 @@ GameWorldRenderer::GameWorldRenderer(const GameMechanics * gameMechanics)
 ,   m_quad(nullptr)
 ,   m_ssao(nullptr)
 ,   m_lastFrame(QTime::currentTime())
-,   m_gameMechanics(gameMechanics)
+,   m_gameMechanics(nullptr)
 {
 }
 
@@ -43,6 +45,8 @@ GameWorldRenderer::~GameWorldRenderer()
 
 void GameWorldRenderer::render(float devicePixelRatio)
 {
+    assert(m_gameMechanics != nullptr);
+    
     updateFPS();
 
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
@@ -210,5 +214,6 @@ int GameWorldRenderer::fps() const
 
 void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
+    assert(m_gameMechanics != nullptr);
     m_gameMechanics = mechanics;
 }

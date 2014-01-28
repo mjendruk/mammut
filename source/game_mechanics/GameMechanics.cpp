@@ -63,24 +63,11 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     case Qt::Key_D:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityRight);
         break;
-    case Qt::Key_Left:
-//        m_mammut.steerLeft();
-        break;
-    case Qt::Key_Right:
-//        m_mammut.steerRight();
-        break;
     }
 }
 
 void GameMechanics::keyReleased(QKeyEvent * event)
 {
-    switch (event->key())
-    {
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-//        m_mammut.doNotSteer();
-        break;
-    }
 }
 
 const GameCamera & GameMechanics::camera() const

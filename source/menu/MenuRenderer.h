@@ -11,7 +11,7 @@ class MenuButton;
 class MenuRenderer : public Renderer
 {
 public:
-    MenuRenderer(const Menu * menu);
+    MenuRenderer();
     virtual ~MenuRenderer();
 
     void initialize() override;
