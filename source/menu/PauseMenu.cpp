@@ -17,8 +17,7 @@ QList<MenuItem *> PauseMenu::initializeMenuItems()
     m_resumeButton = new MenuButton("Resume");
     m_toMainMenuButton = new MenuButton("Back to Main Menu");
 
-    QList<MenuItem *> returnValue;
-    return (returnValue << m_resumeButton << m_toMainMenuButton);
+    return { m_resumeButton, m_toMainMenuButton };
 }
 
 void PauseMenu::connectSignals()
