@@ -63,24 +63,11 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     case Qt::Key_D:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityRight);
         break;
-    case Qt::Key_Left:
-//        m_mammut.steerLeft();
-        break;
-    case Qt::Key_Right:
-//        m_mammut.steerRight();
-        break;
     }
 }
 
 void GameMechanics::keyReleased(QKeyEvent * event)
 {
-    switch (event->key())
-    {
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-//        m_mammut.doNotSteer();
-        break;
-    }
 }
 
 const GameCamera & GameMechanics::camera() const
@@ -95,7 +82,14 @@ const Mammut & GameMechanics::mammut() const
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)
 {
-    for (QSharedPointer<CuboidChunk> & chunk : m_chunkList)
+    for (auto chunk : m_chunkList)
+        for (Cuboid * cuboid : chunk->cuboids())
+            lambda(cuboid);
+}
+
+void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const
+{
+    for (auto chunk : m_chunkList)
         for (Cuboid * cuboid : chunk->cuboids())
             lambda(cuboid);
 }

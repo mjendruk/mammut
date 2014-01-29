@@ -33,7 +33,7 @@ class SSAO;
 class GameWorldRenderer : public Renderer
 {
 public:
-    GameWorldRenderer(GameMechanics & gameMechanics);
+    GameWorldRenderer();
     virtual ~GameWorldRenderer();
 
     void initialize() override;
@@ -41,6 +41,8 @@ public:
     void render(float devicePixelRatio) override;
 
     int fps() const;
+
+    void setGameMechanics(const GameMechanics * mechanics);
 
 protected:
     void initializeGBuffer();
@@ -71,5 +73,5 @@ protected:
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;
     
-    GameMechanics & m_gameMechanics;
+    const GameMechanics * m_gameMechanics;
 };

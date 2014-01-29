@@ -23,7 +23,7 @@ public:
     };
 
 public:
-    Canvas(const QSurfaceFormat & format, Renderer * renderer);
+    Canvas(const QSurfaceFormat & format);
     virtual ~Canvas();
 
     QSurfaceFormat format() const override;
@@ -32,7 +32,7 @@ public:
     static const QString swapIntervalToString(SwapInterval swapInterval);
     
     void render();
-    void changeRenderer(Renderer * renderer);
+    void setRenderer(Renderer * renderer);
 
 public slots:
     void toggleSwapInterval();

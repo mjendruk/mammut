@@ -1,5 +1,7 @@
 #include "Canvas.h"
 
+#include <cassert>
+
 #include <QDebug>
 #include <QApplication>
 #include <QResizeEvent>
@@ -7,9 +9,9 @@
 
 #include <Renderer.h>
 
-Canvas::Canvas(const QSurfaceFormat & format, Renderer * renderer)
+Canvas::Canvas(const QSurfaceFormat & format)
 :   QWindow((QScreen*)nullptr)
-,   m_renderer(renderer)
+,   m_renderer(nullptr)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
@@ -77,8 +79,6 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     qDebug();
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.f);
-    
-    m_renderer->initialize();
 
     m_context.doneCurrent();
 }
@@ -90,7 +90,8 @@ void Canvas::resizeEvent(QResizeEvent * event)
     
     m_context.makeCurrent(this);
     
-    m_renderer->resize(width, height);
+    if(m_renderer != nullptr)
+        m_renderer->resize(width, height);
     
     if (isExposed())
     {
@@ -103,7 +104,7 @@ void Canvas::resizeEvent(QResizeEvent * event)
 
 void Canvas::render()
 {
-    if (!isExposed() || Hidden == visibility() || Minimized == visibility())
+    if (!isExposed() || Hidden == visibility() || Minimized == visibility() || m_renderer == nullptr)
         return;
     
     m_context.makeCurrent(this);
@@ -114,14 +115,18 @@ void Canvas::render()
     m_context.doneCurrent();
 }
 
-void Canvas::changeRenderer(Renderer * renderer)
+void Canvas::setRenderer(Renderer * renderer)
 {
-    if (!renderer->initialized()) {
-        m_context.makeCurrent(this);
+    assert(m_renderer != nullptr);
+
+    m_context.makeCurrent(this);
+
+    if (!renderer->initialized())
         renderer->initialize();
-        renderer->resize(width(), height());
-        m_context.doneCurrent();
-    }
+    
+    renderer->resize(width(), height());
+
+    m_context.doneCurrent();
     
     m_renderer = renderer;
 }

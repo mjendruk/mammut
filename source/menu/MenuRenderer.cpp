@@ -6,8 +6,8 @@
 #include "MenuButton.h"
 #include "Menu.h"
 
-MenuRenderer::MenuRenderer(const Menu * menu)
-:   m_menu(menu)
+MenuRenderer::MenuRenderer()
+:   m_menu(nullptr)
 {
 }
 
@@ -29,6 +29,8 @@ void MenuRenderer::resize(int width, int height)
 
 void MenuRenderer::render(float devicePixelRatio)
 {
+    assert(m_menu != nullptr);
+    
     glViewport(0.0f, 0.0f, 
                m_viewport.x * devicePixelRatio, 
                m_viewport.y * devicePixelRatio);

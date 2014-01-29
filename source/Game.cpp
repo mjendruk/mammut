@@ -12,34 +12,13 @@
 
 Game::Game(int & argc, char ** argv)
 :   AbstractApplication(argc, argv)
-,   m_menuRenderer(&m_mainMenu)
 ,   m_loop(false)
 ,   m_paused(false)
 {
-    QSurfaceFormat format;
-    format.setVersion(4, 1);
-    format.setDepthBufferSize(24);
-    format.setProfile(QSurfaceFormat::CoreProfile);
+    initializeWindow();
+    connectSignals();
     
-    m_activeMechanics = &m_mainMenu;
-    
-    connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::start);
-    connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
-    
-    connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resume);
-    connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::toMainMenu);
-
-    m_canvas = new Canvas(format, &m_menuRenderer);
-    m_canvas->installEventFilter(this);
-    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-    
-    QWidget * canvasWidget = QWidget::createWindowContainer(m_canvas);
-    
-    m_window.setCentralWidget(canvasWidget);
-    m_window.setMinimumSize(800, 600);
-    m_window.setFocusProxy(canvasWidget);
-    m_window.setFocus();
-    m_window.show();
+    showMainMenu();
     
     QTimer::singleShot(0, this, SLOT(run()));
 }
@@ -57,8 +36,6 @@ void Game::run()
     
     while(m_loop) 
     {
-        QCoreApplication::processEvents();
-        
         if (m_timer.elapsed() < nextTime)
         {
             unsigned long sleepTime =
@@ -68,6 +45,8 @@ void Game::run()
             if (sleepTime > 0)
                 QThread::msleep(sleepTime);
         }
+        
+        QCoreApplication::processEvents();
         
         nextTime += delta;
         if (!m_paused)
@@ -81,44 +60,71 @@ void Game::run()
     }
 }
 
-void Game::start()
+void Game::startGame()
 {
-    auto gameMechanics = new GameMechanics();
-    auto gameWorldRenderer = new GameWorldRenderer(*gameMechanics);
+    m_gameMechanics.reset(new GameMechanics());
+    m_gameWorldRenderer.setGameMechanics(m_gameMechanics.get());
     
-    m_gameMechanics.reset(gameMechanics);
-    m_gameWorldRenderer.reset(gameWorldRenderer);
+    connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::showPauseMenu);
+    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::showMainMenu);
     
-    connect(m_gameMechanics.data(), &GameMechanics::pause, this, &Game::pause);
-//    connect(m_gameMechanics.data(), &GameMechanics::gameOver, this, &Game::quit);
-    
-    m_activeMechanics = m_gameMechanics.data();
-    m_canvas->changeRenderer(m_gameWorldRenderer.data());
+    m_activeMechanics = m_gameMechanics.get();
+    m_canvas->setRenderer(&m_gameWorldRenderer);
 }
 
-void Game::pause()
+void Game::resumeGame()
+{
+    m_activeMechanics = m_gameMechanics.get();
+    m_canvas->setRenderer(&m_gameWorldRenderer);
+}
+
+void Game::showPauseMenu()
 {
     m_activeMechanics = &m_pauseMenu;
     m_menuRenderer.setMenu(&m_pauseMenu);
-    m_canvas->changeRenderer(&m_menuRenderer);
+    m_canvas->setRenderer(&m_menuRenderer);
 }
 
-void Game::resume()
+void Game::showMainMenu()
 {
-    m_activeMechanics = m_gameMechanics.data();
-    m_canvas->changeRenderer(m_gameWorldRenderer.data());
-}
-
-void Game::toMainMenu()
-{
-//    m_activeMechanics = &m_mainMenu;
-//    m_menuRenderer.setMenu(&m_mainMenu);
+    m_activeMechanics = &m_mainMenu;
+    m_menuRenderer.setMenu(&m_mainMenu);
+    m_canvas->setRenderer(&m_menuRenderer);
 }
 
 void Game::quit()
 {
     m_loop = false;
     QApplication::quit();
+}
+
+void Game::initializeWindow()
+{
+    QSurfaceFormat format;
+    format.setVersion(4, 1);
+    format.setDepthBufferSize(24);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+
+    m_canvas = new Canvas(format);
+    m_canvas->installEventFilter(this);
+    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
+    
+    QWidget * canvasWidget = QWidget::createWindowContainer(m_canvas);
+    
+    m_window.setCentralWidget(canvasWidget);
+    m_window.setMinimumSize(800, 600);
+    m_window.setFocusProxy(canvasWidget);
+    m_window.setFocus();
+    m_window.show();
+}
+
+void Game::connectSignals()
+{   
+    connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::startGame);
+    connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
+    
+    connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resumeGame);
+    connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
 }
 
 bool Game::eventFilter(QObject * obj, QEvent * event)
