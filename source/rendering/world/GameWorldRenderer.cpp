@@ -41,7 +41,7 @@ GameWorldRenderer::~GameWorldRenderer()
 {
 }
 
-void GameWorldRenderer::render(float devicePixelRatio)
+void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     assert(m_gameMechanics != nullptr);
     
@@ -85,6 +85,8 @@ void GameWorldRenderer::render(float devicePixelRatio)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     //post
+    
+    fbo->bind();
     
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);

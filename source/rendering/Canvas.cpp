@@ -7,6 +7,13 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
+// TODO: Remove this after updating to new glow version
+#include <glow/Buffer.h>
+
+#include <glow/Texture.h>
+#include <glow/FrameBufferObject.h>
+
+
 #include "Renderer.h"
 
 Canvas::Canvas(const QSurfaceFormat & format)
@@ -34,7 +41,6 @@ QSurfaceFormat Canvas::format() const
 const QString Canvas::querys(const GLenum penum) 
 {
     const QString result = reinterpret_cast<const char*>(glGetString(penum));
-    //glError();
 
     return result;
 }
@@ -77,10 +83,20 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << qPrintable(QString::number(queryi(GL_MINOR_VERSION))) << " "
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
+
+    initializeScreenshotFbo();
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.f);
 
     m_context.doneCurrent();
+}
+
+void Canvas::initializeScreenshotFbo()
+{
+    m_screenshotFbo = new glow::FrameBufferObject();
+    m_screenshotDepthAttachment = new glow::Texture(GL_TEXTURE_2D);
+    
+    m_screenshotFbo->attachTexture(GL_DEPTH_ATTACHMENT, m_screenshotDepthAttachment);
 }
 
 void Canvas::resizeEvent(QResizeEvent * event)
@@ -92,6 +108,9 @@ void Canvas::resizeEvent(QResizeEvent * event)
     
     if(m_renderer != nullptr)
         m_renderer->resize(width, height);
+
+    m_screenshotDepthAttachment->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0,
+                                         GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     
     if (isExposed())
     {
@@ -104,15 +123,32 @@ void Canvas::resizeEvent(QResizeEvent * event)
 
 void Canvas::render()
 {
-    if (!isExposed() || Hidden == visibility() || Minimized == visibility() || m_renderer == nullptr)
+    assert(m_renderer != nullptr);
+    
+    if (!isExposed() || Hidden == visibility() || Minimized == visibility())
         return;
     
     m_context.makeCurrent(this);
     
-    m_renderer->render(devicePixelRatio());
+    m_renderer->render(glow::FrameBufferObject::defaultFBO(), devicePixelRatio());
     
     m_context.swapBuffers(this);
     m_context.doneCurrent();
+}
+
+glow::ref_ptr<glow::Texture> Canvas::screenshot()
+{
+    assert(m_renderer != nullptr);
+    
+    glow::ref_ptr<glow::Texture> texture = new glow::Texture(GL_TEXTURE_2D);
+    texture->image2D(0, GL_RGBA32F, width(), height(), 0,
+                               GL_RGBA, GL_FLOAT, nullptr);
+    
+    m_screenshotFbo->attachTexture(GL_COLOR_ATTACHMENT0, texture);
+    
+    m_renderer->render(m_screenshotFbo, devicePixelRatio());
+    
+    return texture;
 }
 
 void Canvas::setRenderer(Renderer * renderer)

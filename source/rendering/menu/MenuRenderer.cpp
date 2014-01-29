@@ -2,7 +2,11 @@
 
 #include <cassert>
 #include <algorithm>
+
 #include <glm/gtx/transform.hpp>
+
+#include <glow/FrameBufferObject.h>
+
 #include <logic/menu/MenuButton.h>
 #include <logic/menu/Menu.h>
 
@@ -27,9 +31,11 @@ void MenuRenderer::resize(int width, int height)
     m_viewport = glm::ivec2(width, height);
 }
 
-void MenuRenderer::render(float devicePixelRatio)
+void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     assert(m_menu != nullptr);
+    
+    fbo->bind();
     
     glViewport(0.0f, 0.0f, 
                m_viewport.x * devicePixelRatio, 

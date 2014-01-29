@@ -16,7 +16,7 @@ public:
 
     void initialize() override;
     void resize(int width, int height) override;
-    void render(float devicePixelRatio) override;
+    void render(glow::FrameBufferObject * fbo, float devicePixelRatio) override;
 
     void renderButton(const MenuButton * button);
 
