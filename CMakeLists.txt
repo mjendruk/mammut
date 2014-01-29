@@ -297,9 +297,26 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(shaders
+    ${shader_path}/blur.vert
+    ${shader_path}/blur.frag
+    ${shader_path}/cuboid.vert
+    ${shader_path}/cuboid.frag
+    ${shader_path}/quad.vert
+    ${shader_path}/quad.frag
+    ${shader_path}/ssao.vert
+    ${shader_path}/ssao.frag
+    ${shader_path}/string_drawer.vert
+    ${shader_path}/string_drawer.frag
+)
+
+set(MAMMUT_SHADER_GROUP "Shader Files")
+source_group_by_path(${shader_path} "\\\\.vert$|\\\\.frag$" 
+    ${MAMMUT_SHADER_GROUP} ${shaders})
 
 # Build library
-add_executable(${target} ${sources} ${uihs})
+add_executable(${target} ${sources} ${shaders} ${uihs})
 
 qt5_use_modules(${target} OpenGL Gui Widgets)
 
