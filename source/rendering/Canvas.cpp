@@ -117,7 +117,7 @@ void Canvas::render()
 
 void Canvas::setRenderer(Renderer * renderer)
 {
-    assert(m_renderer != nullptr);
+    assert(renderer != nullptr);
 
     m_context.makeCurrent(this);
 

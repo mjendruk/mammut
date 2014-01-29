@@ -212,6 +212,6 @@ int GameWorldRenderer::fps() const
 
 void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
-    assert(m_gameMechanics != nullptr);
+    assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
 }
