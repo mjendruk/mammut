@@ -29,15 +29,15 @@ SSAO::~SSAO()
 void SSAO::initialize()
 {
     glow::Shader * ssaoFrag = FileAssociatedShader::getOrCreate(
-        GL_FRAGMENT_SHADER, "data/ssao.frag", m_ssaoProgram);
+        GL_FRAGMENT_SHADER, "data/shaders/ssao.frag", m_ssaoProgram);
     glow::Shader * ssaoVert = FileAssociatedShader::getOrCreate(
-        GL_VERTEX_SHADER, "data/ssao.vert", m_ssaoProgram);
+        GL_VERTEX_SHADER, "data/shaders/ssao.vert", m_ssaoProgram);
     m_ssaoProgram.link();
 
     glow::Shader * blurFrag = FileAssociatedShader::getOrCreate(
-        GL_FRAGMENT_SHADER, "data/blur.frag", m_blurProgram);
+        GL_FRAGMENT_SHADER, "data/shaders/blur.frag", m_blurProgram);
     glow::Shader * blurVert = FileAssociatedShader::getOrCreate(
-        GL_VERTEX_SHADER, "data/blur.vert", m_blurProgram);
+        GL_VERTEX_SHADER, "data/shaders/blur.vert", m_blurProgram);
     m_blurProgram.link();
 
     m_ssaoQuad = new glowutils::ScreenAlignedQuad(&m_ssaoProgram);

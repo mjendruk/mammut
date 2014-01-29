@@ -297,7 +297,7 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
-set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
     ${shader_path}/blur.vert
     ${shader_path}/blur.frag
