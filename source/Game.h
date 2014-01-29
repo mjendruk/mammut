@@ -6,11 +6,11 @@
 
 #include <glow/Timer.h>
 
-#include <game_world_rendering/Canvas.h>
-#include <menu/MainMenu.h>
-#include <menu/PauseMenu.h>
-#include <menu/MenuRenderer.h>
-#include <game_world_rendering/GameWorldRenderer.h>
+#include <logic/menu/MainMenu.h>
+#include <logic/menu/PauseMenu.h>
+#include <rendering/Canvas.h>
+#include <rendering/menu/MenuRenderer.h>
+#include <rendering/world/GameWorldRenderer.h>
 
 #include "AbstractApplication.h"
 

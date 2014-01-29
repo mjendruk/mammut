@@ -3,8 +3,8 @@
 #include <cassert>
 #include <algorithm>
 #include <glm/gtx/transform.hpp>
-#include "MenuButton.h"
-#include "Menu.h"
+#include <logic/menu/MenuButton.h>
+#include <logic/menu/Menu.h>
 
 MenuRenderer::MenuRenderer()
 :   m_menu(nullptr)

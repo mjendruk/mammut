@@ -5,7 +5,7 @@
 #include <QList>
 #include <QSharedPointer>
 
-#include <Mechanics.h>
+#include <logic/Mechanics.h>
 
 #include "PhysicsWorld.h"
 #include "ChunkGenerator.h"

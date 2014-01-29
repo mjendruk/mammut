@@ -7,7 +7,7 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
-#include <Renderer.h>
+#include "Renderer.h"
 
 Canvas::Canvas(const QSurfaceFormat & format)
 :   QWindow((QScreen*)nullptr)
@@ -117,7 +117,7 @@ void Canvas::render()
 
 void Canvas::setRenderer(Renderer * renderer)
 {
-    assert(m_renderer != nullptr);
+    assert(renderer != nullptr);
 
     m_context.makeCurrent(this);
 

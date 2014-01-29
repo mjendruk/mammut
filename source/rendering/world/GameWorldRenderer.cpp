@@ -9,17 +9,15 @@
 #include "glowutils/File.h"
 #include "glowutils/ScreenAlignedQuad.h"
 
-#include <game_mechanics/Cuboid.h>
-#include <game_mechanics/Mammut.h>
-#include <game_mechanics/GameMechanics.h>
-#include <game_mechanics/GameCamera.h>
+#include <logic/world/Cuboid.h>
+#include <logic/world/Mammut.h>
+#include <logic/world/GameMechanics.h>
+#include <logic/world/GameCamera.h>
 
 #include "Painter.h"
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
 #include "SSAO.h"
-#include "CharacterDrawable.h"
-#include "Canvas.h"
 
 const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
@@ -214,6 +212,6 @@ int GameWorldRenderer::fps() const
 
 void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
-    assert(m_gameMechanics != nullptr);
+    assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
 }

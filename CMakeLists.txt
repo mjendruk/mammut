@@ -199,86 +199,90 @@ configure_file(${source_path}/mammut-version.h.in mammut-version.h)
 set(sources
     ${source_path}/main.cpp
 
-    ${source_path}/game_mechanics/ChunkGenerator.cpp
-    ${source_path}/game_mechanics/ChunkGenerator.h
-    ${source_path}/game_mechanics/Cuboid.cpp
-    ${source_path}/game_mechanics/Cuboid.h
-    ${source_path}/game_mechanics/CuboidChunk.cpp
-    ${source_path}/game_mechanics/CuboidChunk.h
-    ${source_path}/game_mechanics/GameCamera.cpp
-    ${source_path}/game_mechanics/GameCamera.h
-    ${source_path}/game_mechanics/GameMechanics.cpp
-    ${source_path}/game_mechanics/GameMechanics.h
-    ${source_path}/game_mechanics/Mammut.cpp
-    ${source_path}/game_mechanics/Mammut.h
-    ${source_path}/game_mechanics/MammutPhysics.cpp
-    ${source_path}/game_mechanics/MammutPhysics.h
-    ${source_path}/game_mechanics/PhysicsObject.cpp
-    ${source_path}/game_mechanics/PhysicsObject.h
-    ${source_path}/game_mechanics/PhysicsWorld.cpp
-    ${source_path}/game_mechanics/PhysicsWorld.h
-
-    ${source_path}/game_world_rendering/AbstractPainter.cpp
-    ${source_path}/game_world_rendering/AbstractPainter.h
-    ${source_path}/game_world_rendering/Canvas.cpp
-    ${source_path}/game_world_rendering/Canvas.h
-    ${source_path}/game_world_rendering/CaveDrawable.cpp
-    ${source_path}/game_world_rendering/CaveDrawable.h
-    ${source_path}/game_world_rendering/CavePainter.cpp
-    ${source_path}/game_world_rendering/CavePainter.h
-    ${source_path}/game_world_rendering/CharacterDrawable.cpp
-    ${source_path}/game_world_rendering/CharacterDrawable.h
-    ${source_path}/game_world_rendering/CuboidDrawable.cpp
-    ${source_path}/game_world_rendering/CuboidDrawable.h
-    ${source_path}/game_world_rendering/FileAssociatedAsset.cpp
-    ${source_path}/game_world_rendering/FileAssociatedAsset.h
-    ${source_path}/game_world_rendering/FileAssociatedShader.cpp
-    ${source_path}/game_world_rendering/FileAssociatedShader.h
-    ${source_path}/game_world_rendering/HUD.cpp
-    ${source_path}/game_world_rendering/HUD.h
-    ${source_path}/game_world_rendering/IDrawable.h
-    ${source_path}/game_world_rendering/Painter.cpp
-    ${source_path}/game_world_rendering/Painter.h
-    ${source_path}/game_world_rendering/RawFile.cpp
-    ${source_path}/game_world_rendering/RawFile.h
-    ${source_path}/game_world_rendering/RenderCamera.cpp
-    ${source_path}/game_world_rendering/RenderCamera.h
-    ${source_path}/game_world_rendering/GameWorldRenderer.cpp
-    ${source_path}/game_world_rendering/GameWorldRenderer.h
-    ${source_path}/game_world_rendering/SSAO.cpp
-    ${source_path}/game_world_rendering/SSAO.h
-    ${source_path}/game_world_rendering/StringComposer.cpp
-    ${source_path}/game_world_rendering/StringComposer.h
-    ${source_path}/game_world_rendering/StringDrawer.cpp
-    ${source_path}/game_world_rendering/StringDrawer.h
-    
-    ${source_path}/menu/Menu.cpp
-    ${source_path}/menu/Menu.h
-    ${source_path}/menu/MenuButton.cpp
-    ${source_path}/menu/MenuButton.h
-    ${source_path}/menu/MenuItem.cpp
-    ${source_path}/menu/MenuItem.h
-    ${source_path}/menu/MenuRenderer.cpp
-    ${source_path}/menu/MenuRenderer.h
-    ${source_path}/menu/MainMenu.cpp
-    ${source_path}/menu/MainMenu.h
-    ${source_path}/menu/PauseMenu.cpp
-    ${source_path}/menu/PauseMenu.h
-
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/Mechanics.cpp
-    ${source_path}/Mechanics.h
     ${source_path}/GlowExtensions.cpp
     ${source_path}/GlowExtensions.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
-    ${source_path}/Renderer.cpp
-    ${source_path}/Renderer.h
     ${source_path}/Util.cpp
     ${source_path}/Util.h
+
+    ${source_path}/logic/Mechanics.cpp
+    ${source_path}/logic/Mechanics.h
+
+    ${source_path}/logic/menu/MainMenu.cpp
+    ${source_path}/logic/menu/MainMenu.h
+    ${source_path}/logic/menu/Menu.cpp
+    ${source_path}/logic/menu/Menu.h
+    ${source_path}/logic/menu/MenuButton.cpp
+    ${source_path}/logic/menu/MenuButton.h
+    ${source_path}/logic/menu/MenuItem.cpp
+    ${source_path}/logic/menu/MenuItem.h
+    ${source_path}/logic/menu/PauseMenu.cpp
+    ${source_path}/logic/menu/PauseMenu.h
+
+    ${source_path}/logic/world/ChunkGenerator.cpp
+    ${source_path}/logic/world/ChunkGenerator.h
+    ${source_path}/logic/world/Cuboid.cpp
+    ${source_path}/logic/world/Cuboid.h
+    ${source_path}/logic/world/CuboidChunk.cpp
+    ${source_path}/logic/world/CuboidChunk.h
+    ${source_path}/logic/world/GameCamera.cpp
+    ${source_path}/logic/world/GameCamera.h
+    ${source_path}/logic/world/GameMechanics.cpp
+    ${source_path}/logic/world/GameMechanics.h
+    ${source_path}/logic/world/Mammut.cpp
+    ${source_path}/logic/world/Mammut.h
+    ${source_path}/logic/world/MammutPhysics.cpp
+    ${source_path}/logic/world/MammutPhysics.h
+    ${source_path}/logic/world/PhysicsObject.cpp
+    ${source_path}/logic/world/PhysicsObject.h
+    ${source_path}/logic/world/PhysicsWorld.cpp
+    ${source_path}/logic/world/PhysicsWorld.h
+
+    ${source_path}/rendering/Canvas.cpp
+    ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/Renderer.cpp
+    ${source_path}/rendering/Renderer.h
+
+    ${source_path}/rendering/menu/MenuRenderer.cpp
+    ${source_path}/rendering/menu/MenuRenderer.h
+
+    ${source_path}/rendering/text/CharacterDrawable.cpp
+    ${source_path}/rendering/text/CharacterDrawable.h
+    ${source_path}/rendering/text/RawFile.cpp
+    ${source_path}/rendering/text/RawFile.h
+    ${source_path}/rendering/text/StringComposer.cpp
+    ${source_path}/rendering/text/StringComposer.h
+    ${source_path}/rendering/text/StringDrawer.cpp
+    ${source_path}/rendering/text/StringDrawer.h
+    
+    ${source_path}/rendering/world/AbstractPainter.cpp
+    ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/CaveDrawable.cpp
+    ${source_path}/rendering/world/CaveDrawable.h
+    ${source_path}/rendering/world/CavePainter.cpp
+    ${source_path}/rendering/world/CavePainter.h
+    ${source_path}/rendering/world/CuboidDrawable.cpp
+    ${source_path}/rendering/world/CuboidDrawable.h
+    ${source_path}/rendering/world/FileAssociatedAsset.cpp
+    ${source_path}/rendering/world/FileAssociatedAsset.h
+    ${source_path}/rendering/world/FileAssociatedShader.cpp
+    ${source_path}/rendering/world/FileAssociatedShader.h
+    ${source_path}/rendering/world/GameWorldRenderer.cpp
+    ${source_path}/rendering/world/GameWorldRenderer.h
+    ${source_path}/rendering/world/HUD.cpp
+    ${source_path}/rendering/world/HUD.h
+    ${source_path}/rendering/world/IDrawable.h
+    ${source_path}/rendering/world/Painter.cpp
+    ${source_path}/rendering/world/Painter.h
+    ${source_path}/rendering/world/RenderCamera.cpp
+    ${source_path}/rendering/world/RenderCamera.h
+    ${source_path}/rendering/world/SSAO.cpp
+    ${source_path}/rendering/world/SSAO.h
 )
 
 # Group source files
@@ -293,9 +297,26 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(shaders
+    ${shader_path}/blur.vert
+    ${shader_path}/blur.frag
+    ${shader_path}/cuboid.vert
+    ${shader_path}/cuboid.frag
+    ${shader_path}/quad.vert
+    ${shader_path}/quad.frag
+    ${shader_path}/ssao.vert
+    ${shader_path}/ssao.frag
+    ${shader_path}/string_drawer.vert
+    ${shader_path}/string_drawer.frag
+)
+
+set(MAMMUT_SHADER_GROUP "Shader Files")
+source_group_by_path(${shader_path} "\\\\.vert$|\\\\.frag$" 
+    ${MAMMUT_SHADER_GROUP} ${shaders})
 
 # Build library
-add_executable(${target} ${sources} ${uihs})
+add_executable(${target} ${sources} ${shaders} ${uihs})
 
 qt5_use_modules(${target} OpenGL Gui Widgets)
 
