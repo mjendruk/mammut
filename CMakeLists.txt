@@ -248,8 +248,14 @@ set(sources
     ${source_path}/rendering/Renderer.cpp
     ${source_path}/rendering/Renderer.h
 
+    ${source_path}/rendering/menu/AbstractBackground.cpp
+    ${source_path}/rendering/menu/AbstractBackground.h
+    ${source_path}/rendering/menu/BlankBackground.cpp
+    ${source_path}/rendering/menu/BlankBackground.h
     ${source_path}/rendering/menu/MenuRenderer.cpp
     ${source_path}/rendering/menu/MenuRenderer.h
+    ${source_path}/rendering/menu/ScreenshotBackground.cpp
+    ${source_path}/rendering/menu/ScreenshotBackground.h
 
     ${source_path}/rendering/text/CharacterDrawable.cpp
     ${source_path}/rendering/text/CharacterDrawable.h

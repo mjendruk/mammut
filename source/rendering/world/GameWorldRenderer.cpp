@@ -24,17 +24,10 @@ const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
-,   m_DepthProgram(nullptr)
-,   m_gBufferFBO(nullptr)
-,   m_gBufferDepth(nullptr)
-,   m_gBufferNormals(nullptr)
-,   m_gBufferColor(nullptr)
-,   m_ssaoOutput(nullptr)
-,   m_quad(nullptr)
-,   m_ssao(nullptr)
 ,   m_lastFrame(QTime::currentTime())
 ,   m_gameMechanics(nullptr)
 {
+    initialize();
 }
 
 GameWorldRenderer::~GameWorldRenderer()
@@ -82,14 +75,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     
     m_gBufferFBO->unbind();
     
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
     //post
-    
-    fbo->bind();
-    
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_FALSE);
     
     m_DepthProgram->setUniform("normal", 0);
     m_DepthProgram->setUniform("color", 1);
@@ -102,6 +88,13 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferDepth->bind(GL_TEXTURE2);
     
     m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
+    
+    fbo->bind();
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
     
     glViewport(0, 0,
                m_camera.viewport().x * devicePixelRatio,
@@ -118,13 +111,12 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     glDepthMask(GL_TRUE);
     
     m_hud.paint(m_gameMechanics->mammut());
+    
+    fbo->unbind();
 }
 
 void GameWorldRenderer::initialize()
-{
-    Renderer::initialize();
-
-    glow::DebugMessageOutput::enable();
+{    
     m_painter.initialize();
     m_cavePainter.initialize();
     m_cuboidDrawable.initialize();
@@ -189,7 +181,7 @@ void GameWorldRenderer::initializeGBuffer()
     m_gBufferFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 });
 }
 
-void GameWorldRenderer::resize(int width, int height)
+void GameWorldRenderer::resize(int width, int height, float devicePixelRatio)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     

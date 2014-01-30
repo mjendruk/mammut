@@ -40,7 +40,7 @@ public:
     static const QString swapIntervalToString(SwapInterval swapInterval);
     
     void render();
-    glow::ref_ptr<glow::Texture> screenshot();
+    glow::Texture * screenshot();
 
     void setRenderer(Renderer * renderer);
 

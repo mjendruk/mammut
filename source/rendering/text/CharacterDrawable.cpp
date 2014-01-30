@@ -6,6 +6,7 @@
 
 CharacterDrawable::CharacterDrawable()
 {
+    initialize();
 }
 
 CharacterDrawable::~CharacterDrawable()

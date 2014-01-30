@@ -20,7 +20,6 @@ HUD::~HUD()
 
 void HUD::initialize()
 {
-    m_stringDrawer.initialize();
 }
 
 void HUD::paint(const Mammut & mammut)

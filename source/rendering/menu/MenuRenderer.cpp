@@ -10,8 +10,11 @@
 #include <logic/menu/MenuButton.h>
 #include <logic/menu/Menu.h>
 
+#include "AbstractBackground.h"
+
 MenuRenderer::MenuRenderer()
-:   m_menu(nullptr)
+:   m_background(nullptr)
+,   m_menu(nullptr)
 {
 }
 
@@ -19,28 +22,29 @@ MenuRenderer::~MenuRenderer()
 {
 }
 
-void MenuRenderer::initialize()
-{
-    Renderer::initialize();
-
-    m_stringDrawer.initialize();
-}
-
-void MenuRenderer::resize(int width, int height)
+void MenuRenderer::resize(int width, int height, float devicePixelRatio)
 {
     m_viewport = glm::ivec2(width, height);
+    
+    if (m_background != nullptr)
+        m_background->resize(width, height, devicePixelRatio);
 }
 
 void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     assert(m_menu != nullptr);
+    assert(m_background != nullptr);
     
     fbo->bind();
     
     glViewport(0.0f, 0.0f, 
                m_viewport.x * devicePixelRatio, 
                m_viewport.y * devicePixelRatio);
-    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    m_background->render(devicePixelRatio);
+    
     glDisable(GL_DEPTH_TEST);
     
     const float aspectRatio = m_viewport.x / std::max(static_cast<float>(m_viewport.y), 1.f);
@@ -52,6 +56,8 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
         menuItem->accept(this);
     
     glEnable(GL_DEPTH_TEST);
+    
+    fbo->unbind();
 }
 
 void MenuRenderer::renderButton(const MenuButton * button)
@@ -64,6 +70,12 @@ void MenuRenderer::renderButton(const MenuButton * button)
                          color);
 
     m_translation *= glm::translate(0.0f, -0.13f, 0.0f);
+}
+
+void MenuRenderer::setBackground(AbstractBackground * background)
+{
+    assert(background != nullptr);
+    m_background = background;
 }
 
 void MenuRenderer::setMenu(const Menu * menu)
