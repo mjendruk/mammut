@@ -311,6 +311,8 @@ set(shaders
     ${shader_path}/cuboid.frag
     ${shader_path}/quad.vert
     ${shader_path}/quad.frag
+    ${shader_path}/screenshot_background.vert
+    ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert
     ${shader_path}/ssao.frag
     ${shader_path}/string_drawer.vert
