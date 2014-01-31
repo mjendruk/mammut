@@ -283,6 +283,11 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.h
     ${source_path}/rendering/world/SSAO.cpp
     ${source_path}/rendering/world/SSAO.h
+
+    ${source_path}/sound/SoundManager.cpp
+    ${source_path}/sound/SoundManager.h
+    ${source_path}/sound/Sound.cpp
+    ${source_path}/sound/Sound.h
 )
 
 # Group source files

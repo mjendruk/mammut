@@ -22,6 +22,7 @@ public:
     virtual ~GameMechanics();
 
     void update(float seconds) override;
+    void updateSound();
 
     void keyPressed(QKeyEvent * event) override;
     void keyReleased(QKeyEvent * event) override;
