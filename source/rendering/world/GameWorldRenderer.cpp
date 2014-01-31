@@ -122,15 +122,10 @@ void GameWorldRenderer::initialize()
     m_cuboidDrawable.initialize();
     m_caveDrawable.initialize();
     m_hud.initialize();
-    
+
     m_ssao = new SSAO();
 
-    m_ssaoOutput = new glow::Texture(GL_TEXTURE_2D);
-    m_ssaoOutput->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_ssaoOutput->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    m_ssaoOutput = create2DTexture();
     
     m_camera.setFovy(90.0);
     m_camera.setZNear(nearPlane);
@@ -153,26 +148,9 @@ void GameWorldRenderer::initializeGBuffer()
 
     m_gBufferFBO = new glow::FrameBufferObject();
 
-    m_gBufferColor = new glow::Texture(GL_TEXTURE_2D);
-    m_gBufferColor->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_gBufferColor->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_gBufferColor->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_gBufferColor->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_gBufferColor->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_gBufferNormals = new glow::Texture(GL_TEXTURE_2D);
-    m_gBufferNormals->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_gBufferNormals->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_gBufferNormals->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_gBufferNormals->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_gBufferNormals->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_gBufferDepth = new glow::Texture(GL_TEXTURE_2D);
-    m_gBufferDepth->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_gBufferDepth->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_gBufferDepth->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_gBufferDepth->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_gBufferDepth->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    m_gBufferColor = create2DTexture();
+    m_gBufferNormals = create2DTexture();
+    m_gBufferDepth = create2DTexture();
 
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormals);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT1, m_gBufferColor);
@@ -208,4 +186,16 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
+}
+
+glow::ref_ptr<glow::Texture> GameWorldRenderer::create2DTexture()
+{
+    glow::ref_ptr<glow::Texture> texture =  new glow::Texture(GL_TEXTURE_2D);
+    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    return texture;
 }

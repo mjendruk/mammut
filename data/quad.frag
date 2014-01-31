@@ -1,8 +1,6 @@
 #version 410
 
-uniform sampler2D normal;
 uniform sampler2D color;
-uniform sampler2D depth;
 uniform sampler2D ssaoOutput;
 
 

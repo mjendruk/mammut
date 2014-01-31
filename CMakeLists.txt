@@ -285,6 +285,8 @@ set(sources
     ${source_path}/rendering/world/IDrawable.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
+    ${source_path}/rendering/world/PostprocessingPass.cpp
+    ${source_path}/rendering/world/PostprocessingPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
     ${source_path}/rendering/world/SSAO.cpp

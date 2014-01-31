@@ -29,6 +29,7 @@ namespace glowutils
 class Canvas;
 class GameMechanics;
 class SSAO;
+class PostprocessingPass;
 
 class GameWorldRenderer : public Renderer
 {
@@ -49,6 +50,7 @@ protected:
 
 protected:
     void updateFPS();
+    glow::ref_ptr<glow::Texture> create2DTexture();
 
     static const float nearPlane;
     static const float farPlane;
