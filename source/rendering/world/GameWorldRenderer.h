@@ -36,7 +36,7 @@ public:
     GameWorldRenderer();
     virtual ~GameWorldRenderer();
 
-    void resize(int width, int height, float devicePixelRatio) override;
+    void resize(int width, int height) override;
     void render(glow::FrameBufferObject * fbo, float devicePixelRatio) override;
 
     int fps() const;

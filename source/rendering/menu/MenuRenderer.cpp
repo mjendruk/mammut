@@ -22,12 +22,12 @@ MenuRenderer::~MenuRenderer()
 {
 }
 
-void MenuRenderer::resize(int width, int height, float devicePixelRatio)
+void MenuRenderer::resize(int width, int height)
 {
-    m_viewport = glm::ivec2(width, height);
+    assert(m_background != nullptr);
     
-    if (m_background != nullptr)
-        m_background->resize(width, height, devicePixelRatio);
+    m_viewport = glm::ivec2(width, height);
+    m_background->resize(width, height);
 }
 
 void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)

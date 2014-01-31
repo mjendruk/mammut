@@ -110,7 +110,7 @@ void Canvas::resizeEvent(QResizeEvent * event)
     const int height = event->size().height();
     
     if(m_renderer != nullptr)
-        m_renderer->resize(width, height, devicePixelRatio());
+        m_renderer->resize(width, height);
 
     m_screenshotDepthAttachment->image2D(0, GL_DEPTH_COMPONENT24, width * devicePixelRatio(), height * devicePixelRatio(), 0,
                                          GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
@@ -141,7 +141,11 @@ glow::Texture * Canvas::screenshot()
     assert(m_renderer != nullptr);
     
     glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);
-    texture->image2D(0, GL_RGBA32F, width() * devicePixelRatio(), height() * devicePixelRatio(), 0, GL_RGBA, GL_FLOAT, nullptr);
+    texture->image2D(0, GL_RGBA32F,
+                     width() * devicePixelRatio(),
+                     height() * devicePixelRatio(),
+                     0, GL_RGBA, GL_FLOAT, nullptr);
+    
     texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -160,7 +164,7 @@ void Canvas::setRenderer(Renderer * renderer)
 {
     assert(renderer != nullptr);
     
-    renderer->resize(width(), height(), devicePixelRatio());
+    renderer->resize(width(), height());
     
     m_renderer = renderer;
 }

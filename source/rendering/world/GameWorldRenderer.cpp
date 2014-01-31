@@ -181,7 +181,7 @@ void GameWorldRenderer::initializeGBuffer()
     m_gBufferFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 });
 }
 
-void GameWorldRenderer::resize(int width, int height, float devicePixelRatio)
+void GameWorldRenderer::resize(int width, int height)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     

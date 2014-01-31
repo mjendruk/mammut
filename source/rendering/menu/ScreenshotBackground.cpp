@@ -27,7 +27,7 @@ void ScreenshotBackground::initialize()
     m_quad = new glowutils::ScreenAlignedQuad(m_program);
 }
 
-void ScreenshotBackground::resize(int width, int height, float devicePixelRatio)
+void ScreenshotBackground::resize(int width, int height)
 {
 }
 

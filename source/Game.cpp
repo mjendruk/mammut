@@ -1,4 +1,3 @@
-
 #include "Game.h"
 
 #include <ratio>
@@ -7,8 +6,6 @@
 #include <QThread>
 #include <QDebug>
 #include <QMouseEvent>
-
-#include <glow/Texture.h>
 
 #include <logic/world/GameMechanics.h>
 #include <rendering/menu/MenuRenderer.h>
