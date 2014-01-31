@@ -5,24 +5,22 @@
 #include <glow/Array.h>
 #include <glow/ref_ptr.h>
 
-#include <rendering/world/IDrawable.h>
-
 namespace glow
 {
     class VertexArrayObject;
     class Buffer;
 }
 
-class CharacterDrawable : public IDrawable
+class CharacterDrawable
 {
 public:
     CharacterDrawable();
     virtual ~CharacterDrawable();
 
-    void initialize() override;
-    void draw() override;
+    void draw();
 
 protected:
+    void initialize();
     static const glow::Vec2Array triangleStrip();
     
 protected:

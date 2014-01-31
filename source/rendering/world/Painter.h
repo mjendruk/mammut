@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <glow/ref_ptr.h>
 #include "AbstractPainter.h"
 
 class IDrawable;
@@ -29,6 +30,6 @@ public:
     virtual void update(const QList<glow::Program *> & programs);
 
 protected:
-    glow::Program * m_program;
+    glow::ref_ptr<glow::Program> m_program;
 
 };

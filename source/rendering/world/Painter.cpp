@@ -15,7 +15,6 @@ Painter::Painter()
 
 Painter::~Painter()
 {
-    delete m_program;
 }
 
 bool Painter::initialize()
