@@ -12,13 +12,12 @@ public:
     Sound(SoundFile file, const glm::vec3 & pos, const glm::vec3 & velocity, bool paused = false);
     ~Sound();
 
-    void setPaused(bool spaused);
+    void setPaused(bool paused);
     void setPosition(const glm::vec3 & pos);
     void setVelocity(const glm::vec3 & velocity);
     void setVolume(float volume);
     void setMute(bool mute);
 
-private:
+protected:
     FMOD::Channel * m_channel;
-    bool m_is3D;
 };

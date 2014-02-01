@@ -39,7 +39,7 @@ public:
     void setListenerAttributes(const glm::vec3 & pos, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity);
     void updateSoundSystem();
 
-private:
+protected:
 
     typedef struct SoundInfo {
         std::string fileName;
@@ -59,13 +59,8 @@ private:
     void createAllSounds();
     FMOD::Sound * createSound(std::string filename, bool is3D, bool isLoop);
 
+protected:
+    float m_distanceFactor = 10.0f;
     std::vector<FMOD::Sound*> m_sounds;
-
-    unsigned int        _version;
-    unsigned int        _numdrivers;
-    FMOD_SPEAKERMODE    _speakermode;
-    FMOD_CAPS           _caps;
-    char                _name[256];
-    float               _distanceFactor = 5.f; // units per meter (centimeters = 100)
-    FMOD::System        *_system;
+    FMOD::System * m_system;
 };

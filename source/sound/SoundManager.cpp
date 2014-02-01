@@ -21,9 +21,9 @@ SoundManager::~SoundManager()
 {
     for (FMOD::Sound * sound : m_sounds)
         sound->release();
-    FMOD_RESULT _result = _system->close();
+    FMOD_RESULT _result = m_system->close();
     ERRCHECK(_result);
-    _result = _system->release();
+    _result = m_system->release();
     ERRCHECK(_result);
 }
 
@@ -42,7 +42,7 @@ FMOD::Channel * SoundManager::createNewChannel2D(int soundID, bool paused)
 {
     FMOD::Channel *_channel = nullptr;
 
-    FMOD_RESULT _result = _system->playSound(FMOD_CHANNEL_FREE, m_sounds[soundID], paused, &_channel);
+    FMOD_RESULT _result = m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[soundID], paused, &_channel);
     ERRCHECK(_result);
 
     return _channel;
@@ -100,73 +100,79 @@ void SoundManager::setVolume(FMOD::Channel * channel, float vol)
 
 void SoundManager::setListenerAttributes(const glm::vec3 & pos, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity)
 {
-    FMOD_RESULT _result = _system->set3DListenerAttributes(0, &toFmodVec(pos), &toFmodVec(velocity), &toFmodVec(forward), &toFmodVec(up));
+    FMOD_RESULT _result = m_system->set3DListenerAttributes(0, &toFmodVec(pos), &toFmodVec(velocity), &toFmodVec(forward), &toFmodVec(up));
     ERRCHECK(_result);
 }
 
 void SoundManager::updateSoundSystem()
 {
-    getInstance()._system->update();
+    m_system->update();
 }
 
 void SoundManager::init()
 {
-    FMOD_RESULT _result = FMOD::System_Create(&_system);
+    FMOD_RESULT _result = FMOD::System_Create(&m_system);
     ERRCHECK(_result);
 
-    _result = _system->getVersion(&_version);
+    unsigned int version = 0;
+    _result = m_system->getVersion(&version);
     ERRCHECK(_result);
 
-    if (_version < FMOD_VERSION) {
-        std::cout << "You are using an unsupported version of FMOD" << std::endl;
+    if (version < FMOD_VERSION) {
+        std::cout << "Error: You are using an unsupported version of FMOD" << std::endl;
         exit(-1);
     }
 
-    _result = _system->getNumDrivers(reinterpret_cast<int*>(&_numdrivers));
+    int numdrivers = -1;
+    _result = m_system->getNumDrivers(&numdrivers);
     ERRCHECK(_result);
 
-    if (_numdrivers == 0) {
-        _result = _system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+    if (numdrivers == 0) {
+        _result = m_system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
         ERRCHECK(_result);
     }
     else {
-        _result = _system->getDriverCaps(0, &_caps, 0, &_speakermode); std::cout << _speakermode << std::endl;
+        FMOD_CAPS caps;
+        FMOD_SPEAKERMODE speakermode;
+        _result = m_system->getDriverCaps(0, &caps, 0, &speakermode);
         ERRCHECK(_result);
 
         // set the user selected speaker mode.
-        _result = _system->setSpeakerMode(_speakermode);
+        _result = m_system->setSpeakerMode(speakermode);
         ERRCHECK(_result);
 
         // if the user has the 'Acceleration' slider set to off!  (bad for latency)
-        if (_caps & FMOD_CAPS_HARDWARE_EMULATED) {
-            // maybe print pout a warning?
-            _result = _system->setDSPBufferSize(1024, 10);
+        if (caps & FMOD_CAPS_HARDWARE_EMULATED) {
+            std::cout << "Warning: Sound is not hardware accelerated, it might lag behind" << std::endl;
+            _result = m_system->setDSPBufferSize(1024, 10);
             ERRCHECK(_result);
         }
 
-        _result = _system->getDriverInfo(0, _name, 256, 0);
+        char name[256];
+        _result = m_system->getDriverInfo(0, name, 256, 0);
         ERRCHECK(_result);
 
         // Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it.
-        if (strstr(_name, "SigmaTel")) {
-            _result = _system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
+        if (strstr(name, "SigmaTel")) {
+            _result = m_system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
             ERRCHECK(_result);
         }
     }
 
     // init _system with maximum of 100 channels
-    _result = _system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
+    _result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
     // if the speaker mode selected isn't supported by this soundcard, switch it back to stereo
     if (_result == FMOD_ERR_OUTPUT_CREATEBUFFER) {
-        _result = _system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+        _result = m_system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
         ERRCHECK(_result);
 
-        _result = _system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
+        _result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
         ERRCHECK(_result);
     }
 
-    _result = _system->set3DSettings(1.0, _distanceFactor, 1.0f);
+    _result = m_system->set3DSettings(1.0, m_distanceFactor, 1.0f);
     ERRCHECK(_result);
+
 }
 
 void SoundManager::createAllSounds()
@@ -177,28 +183,26 @@ void SoundManager::createAllSounds()
 
 FMOD::Sound * SoundManager::createSound(std::string filename, bool is3D, bool isLoop)
 {
-    std::string soundFilePath = filename;
-    FMOD::Sound *_sound;
-    FMOD::Channel *_channel = 0;
-    FMOD_MODE _mode;
+    FMOD::Sound * sound;
+    FMOD_MODE mode;
 
     if (is3D)
-        _mode = FMOD_3D;
+        mode = FMOD_3D;
     else
-        _mode = FMOD_SOFTWARE | FMOD_2D;
+        mode = FMOD_SOFTWARE | FMOD_2D;
 
-    FMOD_RESULT _result = _system->createSound(soundFilePath.c_str(), _mode, 0, &_sound);
+    FMOD_RESULT _result = m_system->createSound(filename.c_str(), mode, 0, &sound);
     ERRCHECK(_result);
 
     if (is3D) {
-        _result = _sound->set3DMinMaxDistance(0.5f * _distanceFactor, 5000.0f * _distanceFactor);
+        _result = sound->set3DMinMaxDistance(0.5f * m_distanceFactor, 5000.0f * m_distanceFactor);
         ERRCHECK(_result);
     }
 
     if (isLoop) {
-        _result = _sound->setMode(FMOD_LOOP_NORMAL);
+        _result = sound->setMode(FMOD_LOOP_NORMAL);
         ERRCHECK(_result);
     }
 
-    return _sound;
+    return sound;
 }
