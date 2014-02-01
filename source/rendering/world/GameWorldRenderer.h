@@ -31,6 +31,16 @@ class GameMechanics;
 class SSAO;
 class PostprocessingPass;
 
+
+    enum TextureImageUnits {
+        TIU_Normal = 0,
+        TIU_Color,
+        TIU_Depth,
+        TIU_SSAO,
+        TIU_MotionBlur,
+        TIU_BufferCount // should always be last member and not be used as a name
+    };
+
 class GameWorldRenderer : public Renderer
 {
 public:
@@ -71,6 +81,7 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
     glow::ref_ptr<SSAO> m_ssao;
+    glow::ref_ptr<PostprocessingPass> m_quadPass;
 
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;

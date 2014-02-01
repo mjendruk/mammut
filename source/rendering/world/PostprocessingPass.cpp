@@ -1,17 +1,21 @@
 #include "PostprocessingPass.h"
 
+#include <QDebug>
+
 #include <glow/Program.h>
+#include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 #include <glowutils/ScreenAlignedQuad.h>
 
 #include "FileAssociatedShader.h"
+#include "GameWorldRenderer.h"
 
 PostprocessingPass::PostprocessingPass(const QString name)
 :   glow::Referenced()
 ,   m_name(name)
 ,   m_program(nullptr)
 ,   m_output()
-,   m_inputMapping()
+,   m_inputTextures()
 ,   m_fragmentShader("")
 ,   m_vertexShader("data/screenquad.vert")
 {
@@ -26,38 +30,40 @@ const QString PostprocessingPass::name() const
     return m_name;
 }
 
-void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo) {
-    fbo.setDrawBuffers( m_output.toStdVector() );
-    int i = 0;
-    for (QString key : m_inputMapping.keys()) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        m_program->setUniform(key.toStdString(), i);
-        fbo.bind(GL_TEXTURE0 + m_inputMapping.value(key));
-        i++;
+void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo) 
+{
+    if (!m_output.isEmpty())
+        fbo.setDrawBuffers(m_output.toStdVector());
+
+    //set input Textures as uniforms
+    for (QString uniformName : m_inputTextures.keys()) {
+        int textureImageUnit = m_inputTextures.value(uniformName);
+        m_program->setUniform(uniformName.toStdString(), textureImageUnit);
     }
+
     glDisable(GL_DEPTH_TEST);
-    fbo.bind();
 }
 
 
-void PostprocessingPass::apply(glow::FrameBufferObject & fbo) {
+void PostprocessingPass::apply(glow::FrameBufferObject & fbo) 
+{
     if (!m_program) {
         initializeProgram();
     }
 
     initBeforeDraw(fbo);
 
-    m_program->use();
+    fbo.bind();
     m_quad->draw();
-    m_program->release();
+    fbo.unbind();
 }
 
-void PostprocessingPass::setInputMapping(const QMap<QString, int> & inputMapping) 
+void PostprocessingPass::setInputTextures(const QMap<QString, int> & input) 
 {
-    m_inputMapping = inputMapping;
+    m_inputTextures = input;
 }
 
-void PostprocessingPass::setOutput(const QVector<GLenum>& output) 
+void PostprocessingPass::setOutput(const QVector<GLenum> & output)
 {
     m_output = output;
 }
@@ -80,7 +86,7 @@ void PostprocessingPass::initializeProgram()
     // glowutils::createShaderFromFile(GL_VERTEX_SHADER, m_vertexShader); // glowutils/global.h
     // m_program->attach(vertShader, fragShader);
 
-    glow::Shader* vertShader = FileAssociatedShader::getOrCreate(GL_FRAGMENT_SHADER, m_vertexShader, *m_program);
+    glow::Shader* vertShader = FileAssociatedShader::getOrCreate(GL_VERTEX_SHADER, m_vertexShader, *m_program);
     glow::Shader* fragShader = FileAssociatedShader::getOrCreate(GL_FRAGMENT_SHADER, m_fragmentShader, *m_program);
 
     m_program->link();
@@ -93,6 +99,7 @@ void PostprocessingPass::initializeProgram()
 
 void PostprocessingPass::resizeTextures(int width, int height)
 {
-    m_program->setUniform("viewport", glm::vec2(width, height));
     //resize local Textures
+    //set Viewport Uniforms
+    // m_program->setUniform("viewport", glm::vec2(width, height));
 }

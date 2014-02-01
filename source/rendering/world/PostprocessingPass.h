@@ -14,6 +14,7 @@ namespace glow
 {
     class Program;
     class FrameBufferObject;
+    class Texture;
 }
 
 namespace glowutils
@@ -33,7 +34,9 @@ public:
 public:
     const QString name() const;
 
-    void setInputMapping(const QMap<QString, int> & inputMapping);
+    void apply(glow::FrameBufferObject & frameBuffer);
+
+    void setInputTextures(const QMap<QString, int> & input);
     void setOutput(const QVector<GLenum> & output);
     void setVertexShader(const QString output);
     void setFragmentShader(const QString output);
@@ -43,25 +46,22 @@ public:
 protected:
     void initializeProgram();
 
-    void apply(glow::FrameBufferObject & frameBuffer);
     void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
 
 protected:
     QString const m_name;
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    QMap<QString, int> m_inputMapping;
+    QMap<QString, int> m_inputTextures;
     QVector<GLenum> m_output;
     QString m_fragmentShader;
     QString m_vertexShader;
-
-
 };
 
 template<typename T>
 void PostprocessingPass::setUniform(const QString name, const T& value) {
     if (!m_program) {
-        initialize();
+        initializeProgram();
     }
     m_program->setUniform(name.toStdString(), value);
 }

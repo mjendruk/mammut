@@ -4,6 +4,8 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include <QMap>
+
 #include "glow/Program.h"
 #include "glow/FrameBufferobject.h"
 #include "glowutils/File.h"
@@ -18,6 +20,7 @@
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
 #include "SSAO.h"
+#include "PostprocessingPass.h"
 
 const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
@@ -76,42 +79,40 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferFBO->unbind();
     
     //post
-    
-    m_DepthProgram->setUniform("normal", 0);
-    m_DepthProgram->setUniform("color", 1);
-    m_DepthProgram->setUniform("depth", 2);
-    m_DepthProgram->setUniform("ssaoOutput", 3);
-    m_DepthProgram->setUniform("transformi", m_camera.viewProjectionInverted());
-    
-    m_gBufferNormals->bind(GL_TEXTURE0);
-    m_gBufferColor->bind(GL_TEXTURE1);
-    m_gBufferDepth->bind(GL_TEXTURE2);
-    
-    m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
-    
-    fbo->bind();
-    
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
+
     
+    
+    m_gBufferNormals->bind(GL_TEXTURE0 + 0);
+    m_gBufferColor->bind(GL_TEXTURE0 + 1);
+    m_gBufferDepth->bind(GL_TEXTURE0 + 2);
+
+    m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
+
     glViewport(0, 0,
                m_camera.viewport().x * devicePixelRatio,
                m_camera.viewport().y * devicePixelRatio);
-    m_ssaoOutput->bind(GL_TEXTURE3);
-    m_quad->draw();
-    m_ssaoOutput->unbind(GL_TEXTURE3);
-    
-    m_gBufferDepth->unbind(GL_TEXTURE2);
-    m_gBufferColor->unbind(GL_TEXTURE1);
-    m_gBufferNormals->unbind(GL_TEXTURE0);
-    
+
+    //draw 
+    m_ssaoOutput->bind(GL_TEXTURE0 + 3);
+    m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
+    m_quadPass->setOutput({});
+    m_quadPass->apply(*fbo);
+    m_ssaoOutput->unbind(GL_TEXTURE0 + 3);
+
+    m_gBufferDepth->unbind(GL_TEXTURE0 + 2);
+    m_gBufferColor->unbind(GL_TEXTURE0 + 1);
+    m_gBufferNormals->unbind(GL_TEXTURE0 + 0);
+
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
+    fbo->bind();
     m_hud.paint(m_gameMechanics->mammut());
-    
     fbo->unbind();
 }
 
@@ -132,20 +133,21 @@ void GameWorldRenderer::initialize()
     m_camera.setZFar(farPlane);
     
     initializeGBuffer();
+    
+    m_quadPass = new PostprocessingPass("quad");
+    m_quadPass->setVertexShader("data/quad.vert");
+    m_quadPass->setFragmentShader("data/quad.frag");
+
+    QMap<QString, int> map;
+    map["color"] = TIU_Color;
+    map["ssaoOutput"] = TIU_SSAO;
+
+    m_quadPass->setInputTextures(map);
+    m_quadPass->setOutput({ GL_COLOR_ATTACHMENT0 });
 }
 
 void GameWorldRenderer::initializeGBuffer()
 {
-    m_DepthProgram = new glow::Program();
-
-    glow::Shader * frag = FileAssociatedShader::getOrCreate(
-        GL_FRAGMENT_SHADER, "data/quad.frag", *m_DepthProgram);
-    glow::Shader * vert = FileAssociatedShader::getOrCreate(
-        GL_VERTEX_SHADER, "data/quad.vert", *m_DepthProgram);
-    m_DepthProgram->link();
-
-    m_quad = new glowutils::ScreenAlignedQuad(m_DepthProgram);
-
     m_gBufferFBO = new glow::FrameBufferObject();
 
     m_gBufferColor = create2DTexture();
@@ -168,6 +170,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     m_ssao->resize(width, height);
+    m_quadPass->resizeTextures(width, height);
 }
 
 void GameWorldRenderer::updateFPS()
@@ -196,6 +199,5 @@ glow::ref_ptr<glow::Texture> GameWorldRenderer::create2DTexture()
     texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
     return texture;
 }
