@@ -143,11 +143,12 @@ void GameWorldRenderer::initializeGBuffer()
 {
     m_DepthProgram = new glow::Program();
 
-    glow::Shader * frag = FileAssociatedShader::getOrCreate(
-        GL_FRAGMENT_SHADER, "data/quad.frag", *m_DepthProgram);
-    glow::Shader * vert = FileAssociatedShader::getOrCreate(
-        GL_VERTEX_SHADER, "data/quad.vert", *m_DepthProgram);
-    m_DepthProgram->link();
+    glow::Shader * frag = glowutils::createShaderFromFile(
+        GL_FRAGMENT_SHADER, "data/quad.frag");
+
+    glow::Shader * vert = glowutils::createShaderFromFile(
+        GL_VERTEX_SHADER, "data/quad.vert");
+    m_DepthProgram->attach(vert, frag);
 
     m_quad = new glowutils::ScreenAlignedQuad(m_DepthProgram);
 
