@@ -8,6 +8,14 @@
 #include <QScopedPointer>
 #include <QOpenGLContext>
 
+#include <glow/ref_ptr.h>
+
+namespace glow
+{
+    class FrameBufferObject;
+    class Texture;
+}
+
 class Renderer;
 
 class Canvas : public QWindow
@@ -32,6 +40,8 @@ public:
     static const QString swapIntervalToString(SwapInterval swapInterval);
     
     void render();
+    glow::Texture * screenshot();
+
     void setRenderer(Renderer * renderer);
 
 public slots:
@@ -41,13 +51,17 @@ protected:
     const QString querys(const GLenum penum);
     const GLint queryi(const GLenum penum);
 
-    virtual void initializeGL(const QSurfaceFormat & format);
+    void initializeGL(const QSurfaceFormat & format);
+    void initializeScreenshotFbo();
 
     void resizeEvent(QResizeEvent * event) override;
 
 protected:
     QOpenGLContext m_context;
     Renderer * m_renderer;
+
+    glow::ref_ptr<glow::FrameBufferObject> m_screenshotFbo;
+    glow::ref_ptr<glow::Texture> m_screenshotDepthAttachment;
 
     SwapInterval m_swapInterval;    ///< required for toggle
     long double m_swapts;

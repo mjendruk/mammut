@@ -8,6 +8,10 @@
 #include <QMouseEvent>
 
 #include <logic/world/GameMechanics.h>
+#include <rendering/menu/MenuRenderer.h>
+#include <rendering/world/GameWorldRenderer.h>
+#include <rendering/menu/BlankBackground.h>
+#include <rendering/menu/ScreenshotBackground.h>
 
 Game::Game(int & argc, char ** argv)
 :   AbstractApplication(argc, argv)
@@ -15,6 +19,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_paused(false)
 {
     initializeWindow();
+    initializeRenderers();
     connectSignals();
     
     showMainMenu();
@@ -62,33 +67,37 @@ void Game::run()
 void Game::startGame()
 {
     m_gameMechanics.reset(new GameMechanics());
-    m_gameWorldRenderer.setGameMechanics(m_gameMechanics.get());
+    m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
     
     connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::showPauseMenu);
     connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::showMainMenu);
     
     m_activeMechanics = m_gameMechanics.get();
-    m_canvas->setRenderer(&m_gameWorldRenderer);
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
 }
 
 void Game::resumeGame()
 {
     m_activeMechanics = m_gameMechanics.get();
-    m_canvas->setRenderer(&m_gameWorldRenderer);
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
 }
 
 void Game::showPauseMenu()
 {
     m_activeMechanics = &m_pauseMenu;
-    m_menuRenderer.setMenu(&m_pauseMenu);
-    m_canvas->setRenderer(&m_menuRenderer);
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
+    m_menuRenderer->setMenu(&m_pauseMenu);
+    m_menuRenderer->setBackground(m_screenshotBackground.get());
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::showMainMenu()
 {
     m_activeMechanics = &m_mainMenu;
-    m_menuRenderer.setMenu(&m_mainMenu);
-    m_canvas->setRenderer(&m_menuRenderer);
+    m_menuRenderer->setMenu(&m_mainMenu);
+    m_menuRenderer->setBackground(m_blankBackground.get());
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::quit()
@@ -115,6 +124,14 @@ void Game::initializeWindow()
     m_window.setFocusProxy(canvasWidget);
     m_window.setFocus();
     m_window.show();
+}
+
+void Game::initializeRenderers()
+{
+    m_menuRenderer.reset(new MenuRenderer());
+    m_gameWorldRenderer.reset(new GameWorldRenderer());
+    m_blankBackground.reset(new BlankBackground());
+    m_screenshotBackground.reset(new ScreenshotBackground());
 }
 
 void Game::connectSignals()

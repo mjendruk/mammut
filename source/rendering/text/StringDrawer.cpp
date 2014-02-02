@@ -20,7 +20,7 @@ const float StringDrawer::s_textureSize = 1024.0f;
 
 StringDrawer::StringDrawer()
 {
-
+    initialize();
 }
 
 StringDrawer::~StringDrawer()
@@ -38,8 +38,6 @@ bool StringDrawer::initialize()
     
     if (!m_stringComposer.readSpecificsFromFile("data/fonts/P22UndergroundPro-Medium.txt", s_textureSize))
         return false;
-    
-    m_drawable.initialize();
 
     return true;
 }

@@ -7,6 +7,14 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
+// TODO: Remove this after updating to new glow version
+#include <glow/Buffer.h>
+
+#include <glow/Texture.h>
+#include <glow/FrameBufferObject.h>
+#include <glow/DebugMessageOutput.h>
+
+
 #include "Renderer.h"
 
 Canvas::Canvas(const QSurfaceFormat & format)
@@ -34,7 +42,6 @@ QSurfaceFormat Canvas::format() const
 const QString Canvas::querys(const GLenum penum) 
 {
     const QString result = reinterpret_cast<const char*>(glGetString(penum));
-    //glError();
 
     return result;
 }
@@ -77,10 +84,24 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
         << qPrintable(QString::number(queryi(GL_MINOR_VERSION))) << " "
         << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
     qDebug();
+
+    initializeScreenshotFbo();
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.f);
+}
 
-    m_context.doneCurrent();
+void Canvas::initializeScreenshotFbo()
+{
+    m_screenshotFbo = new glow::FrameBufferObject();
+    
+    m_screenshotDepthAttachment = new glow::Texture(GL_TEXTURE_2D);
+    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    
+    m_screenshotFbo->attachTexture2D(GL_DEPTH_ATTACHMENT, m_screenshotDepthAttachment);
 }
 
 void Canvas::resizeEvent(QResizeEvent * event)
@@ -88,53 +109,68 @@ void Canvas::resizeEvent(QResizeEvent * event)
     const int width = event->size().width();
     const int height = event->size().height();
     
-    m_context.makeCurrent(this);
-    
     if(m_renderer != nullptr)
         m_renderer->resize(width, height);
+
+    m_screenshotDepthAttachment->image2D(0, GL_DEPTH_COMPONENT24, width * devicePixelRatio(), height * devicePixelRatio(), 0,
+                                         GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     
     if (isExposed())
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_context.swapBuffers(this);
     }
-    
-    m_context.doneCurrent();
 }
 
 void Canvas::render()
 {
-    if (!isExposed() || Hidden == visibility() || Minimized == visibility() || m_renderer == nullptr)
+    assert(m_renderer != nullptr);
+    
+    if (!isExposed() || Hidden == visibility() || Minimized == visibility())
         return;
     
     m_context.makeCurrent(this);
     
-    m_renderer->render(devicePixelRatio());
+    m_renderer->render(glow::FrameBufferObject::defaultFBO(), devicePixelRatio());
     
     m_context.swapBuffers(this);
-    m_context.doneCurrent();
+}
+
+glow::Texture * Canvas::screenshot()
+{
+    assert(m_renderer != nullptr);
+    
+    glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);
+    texture->image2D(0, GL_RGBA32F,
+                     width() * devicePixelRatio(),
+                     height() * devicePixelRatio(),
+                     0, GL_RGBA, GL_FLOAT, nullptr);
+    
+    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    
+    m_screenshotFbo->attachTexture2D(GL_COLOR_ATTACHMENT0, texture);
+    m_screenshotFbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
+    
+    m_renderer->render(m_screenshotFbo, devicePixelRatio());
+    
+    return texture;
 }
 
 void Canvas::setRenderer(Renderer * renderer)
 {
     assert(renderer != nullptr);
-
-    m_context.makeCurrent(this);
-
-    if (!renderer->initialized())
-        renderer->initialize();
     
     renderer->resize(width(), height());
-
-    m_context.doneCurrent();
     
     m_renderer = renderer;
 }
 
 void Canvas::setSwapInterval(SwapInterval swapInterval)
 {
-    m_context.makeCurrent(this);
-
     bool result(false);
     m_swapInterval = swapInterval;
 
@@ -171,8 +207,6 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
     else
         qDebug("Setting swap interval to %s."
             , qPrintable(swapIntervalToString(swapInterval)));
-
-    m_context.doneCurrent();
 }
 
 void Canvas::toggleSwapInterval()

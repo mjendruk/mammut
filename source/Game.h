@@ -9,13 +9,16 @@
 #include <logic/menu/MainMenu.h>
 #include <logic/menu/PauseMenu.h>
 #include <rendering/Canvas.h>
-#include <rendering/menu/MenuRenderer.h>
-#include <rendering/world/GameWorldRenderer.h>
 
 #include "AbstractApplication.h"
 
 class QMouseEvent;
 class GameMechanics;
+
+class MenuRenderer;
+class GameWorldRenderer;
+class BlankBackground;
+class ScreenshotBackground;
 
 class Game : public AbstractApplication
 {
@@ -35,6 +38,7 @@ public slots:
     
 protected:
     void initializeWindow();
+    void initializeRenderers();
     void connectSignals();
 
     bool eventFilter(QObject * obj, QEvent * event);
@@ -47,11 +51,13 @@ protected:
     PauseMenu m_pauseMenu;
 
     std::unique_ptr<GameMechanics> m_gameMechanics;
-    
+
     Mechanics * m_activeMechanics;
     
-    MenuRenderer m_menuRenderer;
-    GameWorldRenderer m_gameWorldRenderer;
+    std::unique_ptr<MenuRenderer> m_menuRenderer;
+    std::unique_ptr<GameWorldRenderer> m_gameWorldRenderer;
+    std::unique_ptr<BlankBackground> m_blankBackground;
+    std::unique_ptr<ScreenshotBackground> m_screenshotBackground;
     
     QMainWindow m_window;
     Canvas * m_canvas;

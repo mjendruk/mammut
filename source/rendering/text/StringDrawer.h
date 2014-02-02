@@ -21,13 +21,13 @@ public:
     StringDrawer();
     ~StringDrawer();
 
-    bool initialize();
     void paint(const QString & text,
                const glm::mat4 & modelMatrix,
                Alignment alignment = kAlignLeft,
                const glm::vec3 color = glm::vec3(1.0f));
 
 protected:
+    bool initialize();
     bool initializeProgram();
     bool initializeTexture();
     

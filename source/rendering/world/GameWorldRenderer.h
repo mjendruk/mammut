@@ -36,15 +36,15 @@ public:
     GameWorldRenderer();
     virtual ~GameWorldRenderer();
 
-    void initialize() override;
     void resize(int width, int height) override;
-    void render(float devicePixelRatio) override;
+    void render(glow::FrameBufferObject * fbo, float devicePixelRatio) override;
 
     int fps() const;
 
     void setGameMechanics(const GameMechanics * mechanics);
 
 protected:
+    void initialize();
     void initializeGBuffer();
 
 protected:
