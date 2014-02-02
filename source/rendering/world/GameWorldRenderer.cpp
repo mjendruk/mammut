@@ -79,11 +79,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     
     //post processing 
 
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //glDisable(GL_DEPTH_TEST);
-    //glDepthMask(GL_FALSE);
-
     m_gBufferNormals->bind(GL_TEXTURE0 + 0);
     m_gBufferColor->bind(GL_TEXTURE0 + 1);
     m_gBufferDepth->bind(GL_TEXTURE0 + 2);
@@ -139,7 +134,7 @@ void GameWorldRenderer::initialize()
     m_quadPass->setInputTextures({ { "color", TIU_Color }, 
                                    { "ssaoOutput", TIU_SSAO } 
                                  });
-    m_quadPass->set2DTextureOutput({}); //is last postproc.step -> render on screen
+    m_quadPass->set2DTextureOutput({}); //render on screen
 
     m_ssaoOutput = create2DTexture();
     m_ssaoPass = new SSAOPass("ssaoPass");

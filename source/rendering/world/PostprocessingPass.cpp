@@ -106,6 +106,6 @@ void PostprocessingPass::initializeProgram()
 void PostprocessingPass::resize(int width, int height)
 {
     // resize local Textures
-    // set Viewport Uniforms
+    // set Viewport Uniforms:
     // m_program->setUniform("viewport", glm::vec2(width, height));
 }
