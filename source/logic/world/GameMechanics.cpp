@@ -22,7 +22,7 @@ GameMechanics::GameMechanics()
     m_physicsWorld.addObject(m_mammut.physics());
     m_physicsWorld.changeGravity(PhysicsWorld::kGravityDown);
 
-    Sound sound(Sound::diesel, glm::vec3(20.0f, +10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 0.0f), true);
+    Sound sound(Sound::kDiesel, glm::vec3(20.0f, +10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 0.0f), true);
     sound.setPaused(false);
 }
 
@@ -60,8 +60,8 @@ void GameMechanics::updateSound()
 {
     glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
     glm::vec3 velocity = glm::vec3(0.0, 0.0, -m_mammut.velocity());
-    SoundManager::getInstance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
-    SoundManager::getInstance().updateSoundSystem();
+    SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
+    SoundManager::instance().updateSoundSystem();
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)

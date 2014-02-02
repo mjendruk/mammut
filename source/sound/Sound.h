@@ -6,7 +6,7 @@
 class Sound
 {
 public:
-    enum SoundFile {diesel, alerts};
+    enum SoundFile {kDiesel, kAlerts};
 
     Sound(SoundFile file, bool paused = false);
     Sound(SoundFile file, const glm::vec3 & pos, const glm::vec3 & velocity, bool paused = false);

@@ -1,12 +1,11 @@
 #include "SoundManager.h"
 
-#include <iostream>
+#include <QDebug>
 
 #include "fmod_errors.h"
 
 
-
-const std::vector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
+const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
     { "data/sounds/diesel.mp3", true, false },
     { "data/sounds/alerts.ogg" /*example*/, true, false } };
 
@@ -21,87 +20,55 @@ SoundManager::~SoundManager()
 {
     for (FMOD::Sound * sound : m_sounds)
         sound->release();
-    FMOD_RESULT _result = m_system->close();
-    ERRCHECK(_result);
-    _result = m_system->release();
-    ERRCHECK(_result);
+    FMOD_RESULT result = m_system->close();
+    checkError(result);
+    result = m_system->release();
+    checkError(result);
 }
 
-void SoundManager::ERRCHECK(FMOD_RESULT _result)
+SoundManager & SoundManager::instance()
 {
-    if (_result != FMOD_OK)
-        std::cout << "FMOD error! "<< FMOD_ErrorString(_result) << " (" << _result << ")" << std::endl;
+    static SoundManager instance;
+    return instance;
 }
 
-FMOD_VECTOR SoundManager::toFmodVec(glm::vec3 glmvec)
+void SoundManager::checkError(FMOD_RESULT result)
+{
+    if (result != FMOD_OK)
+        qDebug() << "FMOD error! "<< FMOD_ErrorString(result) << " (" << result << ")";
+}
+
+FMOD_VECTOR SoundManager::toFmodVec(const glm::vec3 & glmvec)
 {
     return { glmvec.x, glmvec.y, glmvec.z };
 }
 
 FMOD::Channel * SoundManager::createNewChannel2D(int soundID, bool paused)
 {
-    FMOD::Channel *_channel = nullptr;
+    FMOD::Channel *channel = nullptr;
 
-    FMOD_RESULT _result = m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[soundID], paused, &_channel);
-    ERRCHECK(_result);
+    FMOD_RESULT result = m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[soundID], paused, &channel);
+    checkError(result);
 
-    return _channel;
+    return channel;
 }
 
 FMOD::Channel * SoundManager::createNewChannel3D(int soundID, bool paused, FMOD_VECTOR pos, FMOD_VECTOR vel)
 {
-    FMOD::Channel *_channel = createNewChannel2D(soundID, paused);
+    FMOD::Channel *channel = createNewChannel2D(soundID, paused);
 
-    FMOD_RESULT _result = _channel->set3DAttributes(&pos, &vel);
-    ERRCHECK(_result);
+    FMOD_RESULT result = channel->set3DAttributes(&pos, &vel);
+    checkError(result);
 
-    return _channel;
-}
-
-void SoundManager::setPaused(FMOD::Channel * channel, bool paused)
-{
-    FMOD_RESULT _result = channel->setPaused(paused);
-    ERRCHECK(_result);
-}
-
-void SoundManager::setSoundPos(FMOD::Channel * channel, FMOD_VECTOR pos)
-{
-    FMOD_VECTOR _vel;
-    FMOD_VECTOR _pos;
-    channel->get3DAttributes(&_pos, &_vel);
-
-    FMOD_RESULT _result = channel->set3DAttributes(&pos, &_vel);
-
-    ERRCHECK(_result);
-}
-
-void SoundManager::setSoundVel(FMOD::Channel * channel, FMOD_VECTOR vel)
-{
-    FMOD_VECTOR _vel;
-    FMOD_VECTOR _pos;
-    channel->get3DAttributes(&_pos, &_vel);
-
-    FMOD_RESULT _result = channel->set3DAttributes(&_pos, &vel);
-    ERRCHECK(_result);
-}
-
-void SoundManager::setMute(FMOD::Channel * channel, bool mute)
-{
-    FMOD_RESULT _result = channel->setMute(mute);
-    ERRCHECK(_result);
+    return channel;
 }
 
 
-void SoundManager::setVolume(FMOD::Channel * channel, float vol)
-{
-    FMOD_RESULT _result = channel->setVolume(vol);
-    ERRCHECK(_result);
-}
 
 void SoundManager::setListenerAttributes(const glm::vec3 & pos, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity)
 {
-    FMOD_RESULT _result = m_system->set3DListenerAttributes(0, &toFmodVec(pos), &toFmodVec(velocity), &toFmodVec(forward), &toFmodVec(up));
-    ERRCHECK(_result);
+    FMOD_RESULT result = m_system->set3DListenerAttributes(0, &toFmodVec(pos), &toFmodVec(velocity), &toFmodVec(forward), &toFmodVec(up));
+    checkError(result);
 }
 
 void SoundManager::updateSoundSystem()
@@ -111,67 +78,67 @@ void SoundManager::updateSoundSystem()
 
 void SoundManager::init()
 {
-    FMOD_RESULT _result = FMOD::System_Create(&m_system);
-    ERRCHECK(_result);
+    FMOD_RESULT result = FMOD::System_Create(&m_system);
+    checkError(result);
 
     unsigned int version = 0;
-    _result = m_system->getVersion(&version);
-    ERRCHECK(_result);
+    result = m_system->getVersion(&version);
+    checkError(result);
 
     if (version < FMOD_VERSION) {
-        std::cout << "Error: You are using an unsupported version of FMOD" << std::endl;
+       qDebug() << "Error: You are using an unsupported version of FMOD";
         exit(-1);
     }
 
     int numdrivers = -1;
-    _result = m_system->getNumDrivers(&numdrivers);
-    ERRCHECK(_result);
+    result = m_system->getNumDrivers(&numdrivers);
+    checkError(result);
 
     if (numdrivers == 0) {
-        _result = m_system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-        ERRCHECK(_result);
+        result = m_system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+        checkError(result);
     }
     else {
         FMOD_CAPS caps;
         FMOD_SPEAKERMODE speakermode;
-        _result = m_system->getDriverCaps(0, &caps, 0, &speakermode);
-        ERRCHECK(_result);
+        result = m_system->getDriverCaps(0, &caps, 0, &speakermode);
+        checkError(result);
 
         // set the user selected speaker mode.
-        _result = m_system->setSpeakerMode(speakermode);
-        ERRCHECK(_result);
+        result = m_system->setSpeakerMode(speakermode);
+        checkError(result);
 
         // if the user has the 'Acceleration' slider set to off!  (bad for latency)
         if (caps & FMOD_CAPS_HARDWARE_EMULATED) {
-            std::cout << "Warning: Sound is not hardware accelerated, it might lag behind" << std::endl;
-            _result = m_system->setDSPBufferSize(1024, 10);
-            ERRCHECK(_result);
+            qDebug() << "Warning: Sound is not hardware accelerated, it might lag behind";
+            result = m_system->setDSPBufferSize(1024, 10);
+            checkError(result);
         }
 
         char name[256];
-        _result = m_system->getDriverInfo(0, name, 256, 0);
-        ERRCHECK(_result);
+        result = m_system->getDriverInfo(0, name, 256, 0);
+        checkError(result);
 
         // Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it.
         if (strstr(name, "SigmaTel")) {
-            _result = m_system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
-            ERRCHECK(_result);
+            result = m_system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
+            checkError(result);
         }
     }
 
     // init _system with maximum of 100 channels
-    _result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
+    result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);
     // if the speaker mode selected isn't supported by this soundcard, switch it back to stereo
-    if (_result == FMOD_ERR_OUTPUT_CREATEBUFFER) {
-        _result = m_system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-        ERRCHECK(_result);
+    if (result == FMOD_ERR_OUTPUT_CREATEBUFFER) {
+        result = m_system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+        checkError(result);
 
-        _result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
-        ERRCHECK(_result);
+        result = m_system->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
+        checkError(result);
     }
 
-    _result = m_system->set3DSettings(1.0, m_distanceFactor, 1.0f);
-    ERRCHECK(_result);
+    result = m_system->set3DSettings(1.0, m_distanceFactor, 1.0f);
+    checkError(result);
 
 }
 
@@ -181,7 +148,7 @@ void SoundManager::createAllSounds()
         m_sounds.push_back(createSound(soundInfo.fileName, soundInfo.is3D, soundInfo.isLoop));
 }
 
-FMOD::Sound * SoundManager::createSound(std::string filename, bool is3D, bool isLoop)
+FMOD::Sound * SoundManager::createSound(QString filename, bool is3D, bool isLoop)
 {
     FMOD::Sound * sound;
     FMOD_MODE mode;
@@ -191,17 +158,17 @@ FMOD::Sound * SoundManager::createSound(std::string filename, bool is3D, bool is
     else
         mode = FMOD_SOFTWARE | FMOD_2D;
 
-    FMOD_RESULT _result = m_system->createSound(filename.c_str(), mode, 0, &sound);
-    ERRCHECK(_result);
+    FMOD_RESULT result = m_system->createSound(filename.toLatin1().data(), mode, 0, &sound);
+    checkError(result);
 
     if (is3D) {
-        _result = sound->set3DMinMaxDistance(0.5f * m_distanceFactor, 5000.0f * m_distanceFactor);
-        ERRCHECK(_result);
+        result = sound->set3DMinMaxDistance(0.5f * m_distanceFactor, 5000.0f * m_distanceFactor);
+        checkError(result);
     }
 
     if (isLoop) {
-        _result = sound->setMode(FMOD_LOOP_NORMAL);
-        ERRCHECK(_result);
+        result = sound->setMode(FMOD_LOOP_NORMAL);
+        checkError(result);
     }
 
     return sound;
