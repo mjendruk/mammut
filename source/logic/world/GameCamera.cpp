@@ -35,7 +35,7 @@ void GameCamera::update(float seconds)
 
 	m_center = m_mammut.position() + s_centerOffset;
 	m_eye = m_mammut.position() + glm::vec3(glm::vec4(s_eyeOffset, 1.0) * m_currentRotation);
-	m_up = glm::vec3((m_eye - m_center).xy, 0.0);
+	m_up = glm::normalize(glm::vec3((m_eye - m_center).xy, 0.0));
 }
 
 const glm::mat4 GameCamera::calculateRotation(const glm::mat4 & oldRotation, const glm::mat4 & targetRotation, float rotationProgress)
