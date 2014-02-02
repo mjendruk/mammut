@@ -8,9 +8,9 @@ Sound::Sound(SoundFile file, bool paused)
     m_channel = SoundManager::instance().createNewChannel2D(file, paused);
 }
 
-Sound::Sound(SoundFile file, const glm::vec3 & pos, const glm::vec3 & velocity, bool paused)
+Sound::Sound(SoundFile file, const glm::vec3 & position, const glm::vec3 & velocity, bool paused)
 {
-    m_channel = SoundManager::instance().createNewChannel3D(file, paused, SoundManager::toFmodVec(pos), SoundManager::toFmodVec(velocity));
+    m_channel = SoundManager::instance().createNewChannel3D(file, paused, SoundManager::toFmodVec(position), SoundManager::toFmodVec(velocity));
 }
 
 Sound::~Sound()

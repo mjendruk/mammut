@@ -1,8 +1,7 @@
 #include "SoundManager.h"
 
 #include <QDebug>
-
-#include "fmod_errors.h"
+#include <fmod_errors.h>
 
 
 const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
@@ -53,11 +52,11 @@ FMOD::Channel * SoundManager::createNewChannel2D(int soundID, bool paused)
     return channel;
 }
 
-FMOD::Channel * SoundManager::createNewChannel3D(int soundID, bool paused, FMOD_VECTOR pos, FMOD_VECTOR vel)
+FMOD::Channel * SoundManager::createNewChannel3D(int soundID, bool paused, FMOD_VECTOR position, FMOD_VECTOR velocity)
 {
     FMOD::Channel *channel = createNewChannel2D(soundID, paused);
 
-    FMOD_RESULT result = channel->set3DAttributes(&pos, &vel);
+    FMOD_RESULT result = channel->set3DAttributes(&position, &velocity);
     checkError(result);
 
     return channel;
@@ -153,7 +152,7 @@ void SoundManager::createAllSounds()
         m_sounds.push_back(createSound(soundInfo.fileName, soundInfo.is3D, soundInfo.isLoop));
 }
 
-FMOD::Sound * SoundManager::createSound(QString filename, bool is3D, bool isLoop)
+FMOD::Sound * SoundManager::createSound(const QString & fileName, bool is3D, bool isLoop)
 {
     FMOD::Sound * sound;
     FMOD_MODE mode;
@@ -163,7 +162,7 @@ FMOD::Sound * SoundManager::createSound(QString filename, bool is3D, bool isLoop
     else
         mode = FMOD_SOFTWARE | FMOD_2D;
 
-    FMOD_RESULT result = m_system->createSound(filename.toLatin1().data(), mode, 0, &sound);
+    FMOD_RESULT result = m_system->createSound(fileName.toLatin1().data(), mode, 0, &sound);
     checkError(result);
 
     if (is3D) {
