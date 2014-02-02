@@ -32,15 +32,6 @@ class SSAO;
 class PostprocessingPass;
 
 
-    enum TextureImageUnits {
-        TIU_Normal = 0,
-        TIU_Color,
-        TIU_Depth,
-        TIU_SSAO,
-        TIU_MotionBlur,
-        TIU_BufferCount // should always be last member and not be used as a name
-    };
-
 class GameWorldRenderer : public Renderer
 {
 public:

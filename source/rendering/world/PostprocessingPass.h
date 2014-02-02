@@ -1,15 +1,12 @@
 #pragma once
 
 #include <QString>
-#include <QVector>
 #include <QMap>
 
 #include <GL/glew.h>
 
 #include <glow/ref_ptr.h>
 #include <glow/Referenced.h>
-
-#include "GameWorldRenderer.h"  
 
 
 namespace glow
@@ -24,30 +21,37 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
+enum TextureImageUnits {
+    TIU_Normal = 0,
+    TIU_Color,
+    TIU_Depth,
+    TIU_SSAO,
+    TIU_MotionBlur,
+    TIU_BufferCount // should always be last member and not be used as a name
+};
+
 class PostprocessingPass : public glow::Referenced
 {
 public:
     PostprocessingPass(const QString name);
     virtual ~PostprocessingPass();
 
-    template<typename T>
-    void setUniform(const QString name, const T& value);
-
-public:
     const QString name() const;
 
     virtual void apply(glow::FrameBufferObject & frameBuffer);
-
-    void setInputTextures(const QMap<QString, int> & input);
-    void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
-    void setVertexShader(const QString output);
-    void setFragmentShader(const QString output);
-
     virtual void resize(int width, int height);
 
+    virtual void setInputTextures(const QMap<QString, int> & input);
+    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
+    virtual void setVertexShader(const QString output);
+    virtual void setFragmentShader(const QString output);
+
+    template<typename T>
+    void setUniform(const QString name, const T& value);
+
 protected:
-    void initializeProgram();
-    void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
+    virtual void initializeProgram();
+    virtual void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
 
 protected:
     QString const m_name;

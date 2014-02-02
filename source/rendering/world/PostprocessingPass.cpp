@@ -8,15 +8,10 @@
 #include <glowutils/ScreenAlignedQuad.h>
 
 #include "FileAssociatedShader.h"
-#include "GameWorldRenderer.h"
 
 PostprocessingPass::PostprocessingPass(const QString name)
 :   glow::Referenced()
 ,   m_name(name)
-,   m_program(nullptr)
-,   m_output2D()
-,   m_inputTextures()
-,   m_fragmentShader("")
 ,   m_vertexShader("data/screenquad.vert")
 {
 }
@@ -36,17 +31,18 @@ void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo)
         fbo.setDrawBuffers(m_output2D.keys().toVector().toStdVector());
 
     for (GLenum attachment : m_output2D.keys())
-        fbo.attachTexture2D(attachment, m_output2D.value(attachment));
+    {
+        if (attachment > TIU_Depth)
+            fbo.attachTexture2D(attachment, m_output2D[attachment]);
+    }
+    
 
     //set input Textures as uniforms
     for (QString uniformName : m_inputTextures.keys()) {
-        int textureImageUnit = m_inputTextures.value(uniformName);
+        int textureImageUnit = m_inputTextures[uniformName];
         m_program->setUniform(uniformName.toStdString(), textureImageUnit);
     }
-
-    glDisable(GL_DEPTH_TEST);
 }
-
 
 void PostprocessingPass::apply(glow::FrameBufferObject & fbo) 
 {
@@ -54,11 +50,18 @@ void PostprocessingPass::apply(glow::FrameBufferObject & fbo)
         initializeProgram();
     }
 
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     initBeforeDraw(fbo);
 
     fbo.bind();
     m_quad->draw();
     fbo.unbind();
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
 }
 
 void PostprocessingPass::setInputTextures(const QMap<QString, int> & input) 
@@ -102,7 +105,7 @@ void PostprocessingPass::initializeProgram()
 
 void PostprocessingPass::resize(int width, int height)
 {
-    //resize local Textures
-    //set Viewport Uniforms
+    // resize local Textures
+    // set Viewport Uniforms
     // m_program->setUniform("viewport", glm::vec2(width, height));
 }
