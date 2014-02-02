@@ -289,8 +289,8 @@ set(sources
     ${source_path}/rendering/world/PostprocessingPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
-    ${source_path}/rendering/world/SSAO.cpp
-    ${source_path}/rendering/world/SSAO.h
+    ${source_path}/rendering/world/SSAOPass.cpp
+    ${source_path}/rendering/world/SSAOPass.h
 )
 
 # Group source files

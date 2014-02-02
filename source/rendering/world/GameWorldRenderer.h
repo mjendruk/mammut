@@ -28,7 +28,7 @@ namespace glowutils
 
 class Canvas;
 class GameMechanics;
-class SSAO;
+class SSAOPass;
 class PostprocessingPass;
 
 
@@ -66,12 +66,13 @@ protected:
 
     glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
+    glow::ref_ptr<glow::FrameBufferObject> m_ssaoFBO;
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    glow::ref_ptr<SSAO> m_ssao;
+    glow::ref_ptr<SSAOPass> m_ssaoPass;
     glow::ref_ptr<PostprocessingPass> m_quadPass;
 
     QTime m_lastFrame;

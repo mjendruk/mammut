@@ -19,7 +19,7 @@
 #include "Painter.h"
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
-#include "SSAO.h"
+#include "SSAOPass.h"
 #include "PostprocessingPass.h"
 
 const float GameWorldRenderer::nearPlane = 0.1f;
@@ -63,6 +63,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
     m_caveDrawable.update(m_camera.eye());
     
+    // geometry pass
     m_gBufferFBO->bind();
     
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
@@ -71,33 +72,34 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
     });
-    
     m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform());
-    
     m_cavePainter.paint(m_caveDrawable, glm::mat4());
     
     m_gBufferFBO->unbind();
     
-    //post
+    //post processing 
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_FALSE);
+    //glDisable(GL_DEPTH_TEST);
+    //glDepthMask(GL_FALSE);
 
-    
-    
     m_gBufferNormals->bind(GL_TEXTURE0 + 0);
     m_gBufferColor->bind(GL_TEXTURE0 + 1);
     m_gBufferDepth->bind(GL_TEXTURE0 + 2);
 
-    m_ssao->draw(0, 2, m_camera.normal(), m_camera.projection(), *m_ssaoOutput);
+    //SSAO pass
+    m_ssaoPass->setUniform("projection", m_camera.projection());
+    m_ssaoPass->setUniform("invProjection", glm::inverse(m_camera.projection()));
+    m_ssaoPass->setUniform("normalMatrix", m_camera.normal());
+
+    m_ssaoPass->apply(*m_ssaoFBO);
 
     glViewport(0, 0,
                m_camera.viewport().x * devicePixelRatio,
                m_camera.viewport().y * devicePixelRatio);
 
-    //draw 
+    //last pass
     m_ssaoOutput->bind(GL_TEXTURE0 + 3);
     m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
     m_quadPass->apply(*fbo);
@@ -110,39 +112,43 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
+    //paint HUD
     fbo->bind();
     m_hud.paint(m_gameMechanics->mammut());
     fbo->unbind();
 }
 
 void GameWorldRenderer::initialize()
-{    
+{
     m_painter.initialize();
     m_cavePainter.initialize();
     m_cuboidDrawable.initialize();
     m_caveDrawable.initialize();
     m_hud.initialize();
 
-    m_ssao = new SSAO();
-
-    m_ssaoOutput = create2DTexture();
-    
     m_camera.setFovy(90.0);
     m_camera.setZNear(nearPlane);
     m_camera.setZFar(farPlane);
-    
+
     initializeGBuffer();
-    
+
+    //initialize postprocessing passes
     m_quadPass = new PostprocessingPass("quad");
     m_quadPass->setVertexShader("data/quad.vert");
     m_quadPass->setFragmentShader("data/quad.frag");
+    m_quadPass->setInputTextures({ { "color", TIU_Color }, 
+                                   { "ssaoOutput", TIU_SSAO } 
+                                 });
+    m_quadPass->set2DTextureOutput({}); //is last postproc.step -> render on screen
 
-    QMap<QString, int> map;
-    map["color"] = TIU_Color;
-    map["ssaoOutput"] = TIU_SSAO;
+    m_ssaoOutput = create2DTexture();
+    m_ssaoPass = new SSAOPass("ssaoPass");
+    m_ssaoPass->setInputTextures({ { "normal", TIU_Normal },
+                                   { "depth", TIU_Depth }
+                                 });
+    m_ssaoPass->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
-    m_quadPass->setInputTextures(map);
-    m_quadPass->set2DTextureOutput({});
+    m_ssaoFBO = new glow::FrameBufferObject();
 }
 
 void GameWorldRenderer::initializeGBuffer()
@@ -168,7 +174,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-    m_ssao->resize(width, height);
+    m_ssaoPass->resize(width, height);
     m_quadPass->resize(width, height);
 }
 
