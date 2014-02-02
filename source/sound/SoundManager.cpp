@@ -65,9 +65,14 @@ FMOD::Channel * SoundManager::createNewChannel3D(int soundID, bool paused, FMOD_
 
 
 
-void SoundManager::setListenerAttributes(const glm::vec3 & pos, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity)
+void SoundManager::setListenerAttributes(const glm::vec3 & position, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity)
 {
-    FMOD_RESULT result = m_system->set3DListenerAttributes(0, &toFmodVec(pos), &toFmodVec(velocity), &toFmodVec(forward), &toFmodVec(up));
+    FMOD_VECTOR fmodPosition = toFmodVec(position);
+    FMOD_VECTOR fmodForward = toFmodVec(forward);
+    FMOD_VECTOR fmodUp = toFmodVec(up);
+    FMOD_VECTOR fmodVelocity = toFmodVec(velocity);
+    
+    FMOD_RESULT result = m_system->set3DListenerAttributes(0, &fmodPosition, &fmodVelocity, &fmodForward, &fmodUp);
     checkError(result);
 }
 

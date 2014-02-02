@@ -22,7 +22,7 @@ public:
     FMOD::Channel * createNewChannel2D(int soundID, bool paused);
     FMOD::Channel * createNewChannel3D(int soundID, bool paused, FMOD_VECTOR pos, FMOD_VECTOR vel);
 
-    void setListenerAttributes(const glm::vec3 & pos, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity);
+    void setListenerAttributes(const glm::vec3 & position, const glm::vec3 & forward, const glm::vec3 & up, const glm::vec3 & velocity);
     void updateSoundSystem();
 
 protected:
