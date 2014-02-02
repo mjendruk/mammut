@@ -9,6 +9,8 @@
 #include <glow/ref_ptr.h>
 #include <glow/Referenced.h>
 
+#include "GameWorldRenderer.h"  
+
 
 namespace glow
 {
@@ -26,7 +28,7 @@ class PostprocessingPass : public glow::Referenced
 {
 public:
     PostprocessingPass(const QString name);
-    ~PostprocessingPass();
+    virtual ~PostprocessingPass();
 
     template<typename T>
     void setUniform(const QString name, const T& value);
@@ -34,18 +36,17 @@ public:
 public:
     const QString name() const;
 
-    void apply(glow::FrameBufferObject & frameBuffer);
+    virtual void apply(glow::FrameBufferObject & frameBuffer);
 
     void setInputTextures(const QMap<QString, int> & input);
-    void setOutput(const QVector<GLenum> & output);
+    void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
     void setVertexShader(const QString output);
     void setFragmentShader(const QString output);
 
-    void resizeTextures(int width, int height);
+    virtual void resize(int width, int height);
 
 protected:
     void initializeProgram();
-
     void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
 
 protected:
@@ -53,7 +54,7 @@ protected:
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
     QMap<QString, int> m_inputTextures;
-    QVector<GLenum> m_output;
+    QMap<GLenum, glow::Texture*> m_output2D;
     QString m_fragmentShader;
     QString m_vertexShader;
 };

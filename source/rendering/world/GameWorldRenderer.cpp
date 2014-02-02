@@ -100,7 +100,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     //draw 
     m_ssaoOutput->bind(GL_TEXTURE0 + 3);
     m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
-    m_quadPass->setOutput({});
     m_quadPass->apply(*fbo);
     m_ssaoOutput->unbind(GL_TEXTURE0 + 3);
 
@@ -143,7 +142,7 @@ void GameWorldRenderer::initialize()
     map["ssaoOutput"] = TIU_SSAO;
 
     m_quadPass->setInputTextures(map);
-    m_quadPass->setOutput({ GL_COLOR_ATTACHMENT0 });
+    m_quadPass->set2DTextureOutput({});
 }
 
 void GameWorldRenderer::initializeGBuffer()
@@ -170,7 +169,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     m_ssao->resize(width, height);
-    m_quadPass->resizeTextures(width, height);
+    m_quadPass->resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()

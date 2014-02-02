@@ -14,7 +14,7 @@ PostprocessingPass::PostprocessingPass(const QString name)
 :   glow::Referenced()
 ,   m_name(name)
 ,   m_program(nullptr)
-,   m_output()
+,   m_output2D()
 ,   m_inputTextures()
 ,   m_fragmentShader("")
 ,   m_vertexShader("data/screenquad.vert")
@@ -32,8 +32,11 @@ const QString PostprocessingPass::name() const
 
 void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo) 
 {
-    if (!m_output.isEmpty())
-        fbo.setDrawBuffers(m_output.toStdVector());
+    if (!m_output2D.isEmpty())
+        fbo.setDrawBuffers(m_output2D.keys().toVector().toStdVector());
+
+    for (GLenum attachment : m_output2D.keys())
+        fbo.attachTexture2D(attachment, m_output2D.value(attachment));
 
     //set input Textures as uniforms
     for (QString uniformName : m_inputTextures.keys()) {
@@ -63,9 +66,9 @@ void PostprocessingPass::setInputTextures(const QMap<QString, int> & input)
     m_inputTextures = input;
 }
 
-void PostprocessingPass::setOutput(const QVector<GLenum> & output)
+void PostprocessingPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output)
 {
-    m_output = output;
+    m_output2D = output;
 }
 
 void PostprocessingPass::setVertexShader(QString vertexShader) 
@@ -97,7 +100,7 @@ void PostprocessingPass::initializeProgram()
 }
 
 
-void PostprocessingPass::resizeTextures(int width, int height)
+void PostprocessingPass::resize(int width, int height)
 {
     //resize local Textures
     //set Viewport Uniforms
