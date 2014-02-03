@@ -22,6 +22,9 @@ public:
     virtual ~Cuboid();
 
     glm::mat4 modelTransform() const;
+    virtual glm::mat4 previousModelTransform() const;
+    virtual void shiftPreviousModelTransform();
+
     glowutils::AxisAlignedBoundingBox boundingBox() const;
     
     btRigidBody * rigidBody() const override;
@@ -32,6 +35,7 @@ protected:
     std::unique_ptr<btCollisionShape> m_collisionShape;
     std::unique_ptr<btMotionState> m_motionState;
     std::unique_ptr<btRigidBody> m_rigidBody;
+    glm::mat4 m_previousModelTransform;
     
     glm::vec3 m_size;
 };

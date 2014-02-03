@@ -55,6 +55,8 @@ protected:
 
     static const float nearPlane;
     static const float farPlane;
+    static const float motionBlurRadius;
+    static const float motionBlurS;
     
     Painter m_painter;
     CavePainter m_cavePainter;
@@ -64,17 +66,29 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
 
-    glow::ref_ptr<glow::Program> m_DepthProgram;
+
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
     glow::ref_ptr<glow::FrameBufferObject> m_ssaoFBO;
+    glow::ref_ptr<glow::FrameBufferObject> m_motionBlurFBO;
+
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
+    glow::ref_ptr<glow::Texture> m_gBufferVelocity;
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
+    glow::ref_ptr<glow::Texture> m_motionBlurTM;
+    glow::ref_ptr<glow::Texture> m_motionBlurTMTemp;
+    glow::ref_ptr<glow::Texture> m_motionBlurNM;
+    glow::ref_ptr<glow::Texture> m_motionBlurNoise;
+    glow::ref_ptr<glow::Texture> m_motionBlurOutput;
+    
     glow::ref_ptr<SSAOPass> m_ssaoPass;
     glow::ref_ptr<PostprocessingPass> m_quadPass;
 
+
+    glm::mat4 m_previousViewProjection;
+    glm::mat4 m_previousMammutModel;
+    
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;
     

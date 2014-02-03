@@ -51,12 +51,12 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_cavePainter.update(programsWithInvalidatedUniforms);
     
     m_camera.update(m_gameMechanics->camera());
-    m_painter.setViewProjectionUniform(m_camera.viewProjection());
+    m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_painter.setEyeUniform(m_camera.eye());
     
-    m_cavePainter.setViewProjectionUniform(m_camera.viewProjection());
+    m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
     m_cavePainter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
     m_cavePainter.setEyeUniform(m_camera.eye());
@@ -70,18 +70,18 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->previousModelTransform());
     });
-    m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform());
-    m_cavePainter.paint(m_caveDrawable, glm::mat4());
+    m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform(), m_previousMammutModel);
+    m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     
     m_gBufferFBO->unbind();
     
     //post processing 
 
-    m_gBufferNormals->bind(GL_TEXTURE0 + 0);
-    m_gBufferColor->bind(GL_TEXTURE0 + 1);
-    m_gBufferDepth->bind(GL_TEXTURE0 + 2);
+    m_gBufferNormals->bind(GL_TEXTURE0 + TIU_Normal);
+    m_gBufferColor->bind(GL_TEXTURE0 + TIU_Color);
+    m_gBufferDepth->bind(GL_TEXTURE0 + TIU_Depth);
 
     //SSAO pass
     m_ssaoPass->setUniform("projection", m_camera.projection());
@@ -95,14 +95,14 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
                m_camera.viewport().y * devicePixelRatio);
 
     //last pass
-    m_ssaoOutput->bind(GL_TEXTURE0 + 3);
+    m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
     m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
     m_quadPass->apply(*fbo);
-    m_ssaoOutput->unbind(GL_TEXTURE0 + 3);
+    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
 
-    m_gBufferDepth->unbind(GL_TEXTURE0 + 2);
-    m_gBufferColor->unbind(GL_TEXTURE0 + 1);
-    m_gBufferNormals->unbind(GL_TEXTURE0 + 0);
+    m_gBufferDepth->unbind(GL_TEXTURE0 + TIU_Depth);
+    m_gBufferColor->unbind(GL_TEXTURE0 + TIU_Color);
+    m_gBufferNormals->unbind(GL_TEXTURE0 + TIU_Normal);
 
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
@@ -138,7 +138,8 @@ void GameWorldRenderer::initialize()
 
     m_ssaoOutput = create2DTexture();
     m_ssaoPass = new SSAOPass("ssaoPass");
-    m_ssaoPass->setInputTextures({ { "normal", TIU_Normal },
+    m_ssaoPass->setInputTextures({ { "color", TIU_Color },
+                                   { "normal", TIU_Normal },
                                    { "depth", TIU_Depth }
                                  });
     m_ssaoPass->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });

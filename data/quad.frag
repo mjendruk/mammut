@@ -3,6 +3,8 @@
 uniform sampler2D color;
 uniform sampler2D ssaoOutput;
 
+//uniform sampler2D motionBlurOutput;
+
 
 layout (location = 0) out vec4 fragColor;
 
@@ -13,4 +15,6 @@ void main()
 {
 	float ssao = texture(ssaoOutput, v_uv).r;
 	fragColor = texture(color, v_uv) * ssao;
+    //fragColor = texture(motionBlurOutput, v_uv);
+
 }

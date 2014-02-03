@@ -17,7 +17,7 @@ const float SSAOPass::m_radius = 25.0f;
 SSAOPass::SSAOPass(QString name)
 :   PostprocessingPass(name)
 ,   m_blurProgram(new glow::Program)
-,   m_ssaoProgram(new glow::Program)
+, m_ssaoProgram(new glow::Program)
 {
     initialize();
 }
@@ -35,8 +35,9 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
     // first SSAO Pass
     m_program = m_ssaoProgram;
 
+    m_inputTextures = m_ssaoInputTextures;
     auto save2DOutput = m_output2D;
-    set2DTextureOutput({ { } });
+    m_output2D = { { } };
 
     initBeforeDraw(*m_fbo);
 
@@ -50,8 +51,8 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
     //second SSAO Pass (blur)
     m_program = m_blurProgram;
     
-    setInputTextures({ { "ssao", TIU_BufferCount } });
-    set2DTextureOutput(save2DOutput);
+    m_inputTextures = m_blurInputTextures;
+    m_output2D = save2DOutput;
 
     initBeforeDraw(fbo);
 
@@ -69,7 +70,15 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
 
 void SSAOPass::setInputTextures(const QMap<QString, int> & input)
 {
-    m_inputTextures = input;
+    //split into 2 Maps for each pass (ssao, blur)
+    m_ssaoInputTextures["normal"] = input.value("normal");
+    m_ssaoInputTextures["depth"] = input.value("depth");
+    m_ssaoInputTextures["noise"] = TIU_BufferCount;
+
+    m_blurInputTextures["color"] = input.value("color");
+    m_blurInputTextures["ssao"] = TIU_BufferCount;
+
+    m_inputTextures = m_ssaoInputTextures;
 }
 
 
@@ -117,7 +126,6 @@ void SSAOPass::initialize()
 
     m_noiseTexture->image2D(0, GL_RGB32F, m_noiseSize, m_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
 
-    m_ssaoProgram->setUniform("noise", int(TIU_BufferCount));
     m_ssaoProgram->setUniform("noiseTexSize", m_noiseSize);
     m_ssaoProgram->setUniform("kernelSize", m_kernelSize);
     m_ssaoProgram->setUniform("kernel", kernel);

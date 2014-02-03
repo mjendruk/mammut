@@ -37,9 +37,10 @@ void CavePainter::setNearFarUniform(const glm::vec2 & nearFar)
     m_program->setUniform("nearFar", nearFar);
 }
 
-void CavePainter::setViewProjectionUniform(const glm::mat4 & viewProjection)
+void CavePainter::setViewProjectionUniforms(const glm::mat4 & viewProjection, const glm::mat4 & prevViewProjection)
 {
     m_program->setUniform("viewProjection", viewProjection);
+    m_program->setUniform("prevViewProjection", prevViewProjection);
 }
 
 void CavePainter::setViewUniform(const glm::mat4 & view)
@@ -57,8 +58,9 @@ void CavePainter::update(const QList<glow::Program *> & programs)
     //do necessary updates
 }
 
-void CavePainter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix)
+void CavePainter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
 {
     m_program->setUniform("model", modelMatrix);
+    m_program->setUniform("prevModel", prevModelMatrix);
     drawable.draw();
 }

@@ -283,6 +283,8 @@ set(sources
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
     ${source_path}/rendering/world/IDrawable.h
+    ${source_path}/rendering/world/MotionBlurPass.cpp
+    ${source_path}/rendering/world/MotionBlurPass.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
     ${source_path}/rendering/world/PostprocessingPass.cpp

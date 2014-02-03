@@ -36,9 +36,10 @@ void Painter::setNearFarUniform(const glm::vec2 & nearFar)
     m_program->setUniform("nearFar", nearFar);
 }
 
-void Painter::setViewProjectionUniform(const glm::mat4 & viewProjection)
+void Painter::setViewProjectionUniforms(const glm::mat4 & viewProjection, const glm::mat4 & prevViewProjection)
 {
     m_program->setUniform("viewProjection", viewProjection);
+    m_program->setUniform("prevViewProjection", prevViewProjection);
 }
 
 void Painter::setViewUniform(const glm::mat4 & view)
@@ -56,8 +57,9 @@ void Painter::update(const QList<glow::Program *> & programs)
     //do necessary updates
 }
 
-void Painter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix)
+void Painter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
 {
     m_program->setUniform("model", modelMatrix);
+    m_program->setUniform("prevModel", prevModelMatrix);
     drawable.draw();
 }

@@ -25,6 +25,9 @@ protected:
 
     glow::ref_ptr<glow::Program> m_blurProgram;
     glow::ref_ptr<glow::Program> m_ssaoProgram;
+    QMap<QString, int> m_ssaoInputTextures;
+    QMap<QString, int> m_blurInputTextures;
+
     glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;
     glow::ref_ptr<glow::FrameBufferObject> m_fbo;
