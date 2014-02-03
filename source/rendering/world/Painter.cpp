@@ -4,9 +4,9 @@
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
+#include <glowutils/File.h>
 
 #include "IDrawable.h"
-#include "FileAssociatedShader.h"
 
 Painter::Painter()
 :   m_program(nullptr)
@@ -21,10 +21,11 @@ bool Painter::initialize()
 {
     m_program = new glow::Program();
 
-    glow::Shader * m_fragShader = FileAssociatedShader::getOrCreate(
-        GL_FRAGMENT_SHADER, "data/cuboid.frag", *m_program);
-    glow::Shader * m_vertShader = FileAssociatedShader::getOrCreate(
-        GL_VERTEX_SHADER, "data/cuboid.vert", *m_program);
+    glow::Shader * m_fragShader = glowutils::createShaderFromFile(
+        GL_FRAGMENT_SHADER, "data/cuboid.frag");
+    glow::Shader * m_vertShader = glowutils::createShaderFromFile(
+        GL_VERTEX_SHADER, "data/cuboid.vert");
+    m_program->attach(m_vertShader, m_fragShader);
     m_program->link();
 
     return true;

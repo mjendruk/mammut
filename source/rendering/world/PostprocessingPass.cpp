@@ -6,8 +6,8 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 #include <glowutils/ScreenAlignedQuad.h>
+#include <glowutils/File.h>
 
-#include "FileAssociatedShader.h"
 
 PostprocessingPass::PostprocessingPass(const QString name)
 :   glow::Referenced()
@@ -88,12 +88,9 @@ void PostprocessingPass::initializeProgram()
 {
     m_program = new glow::Program();
 
-    // update glow -> use:
-    // glowutils::createShaderFromFile(GL_VERTEX_SHADER, m_vertexShader); // glowutils/global.h
-    // m_program->attach(vertShader, fragShader);
-
-    glow::Shader* vertShader = FileAssociatedShader::getOrCreate(GL_VERTEX_SHADER, m_vertexShader, *m_program);
-    glow::Shader* fragShader = FileAssociatedShader::getOrCreate(GL_FRAGMENT_SHADER, m_fragmentShader, *m_program);
+    glow::Shader* vertShader = glowutils::createShaderFromFile(GL_VERTEX_SHADER, m_vertexShader.toStdString());
+    glow::Shader* fragShader = glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, m_fragmentShader.toStdString());
+    m_program->attach(vertShader, fragShader);
 
     m_program->link();
 
