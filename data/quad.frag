@@ -13,8 +13,7 @@ in vec3 v_eye;
 
 void main()
 {
-	float ssao = texture(ssaoOutput, v_uv).r;
-	fragColor = texture(color, v_uv) * ssao;
+	fragColor = texture(ssaoOutput, v_uv);
     //fragColor = texture(motionBlurOutput, v_uv);
 
 }

@@ -24,5 +24,5 @@ void main() {
 	}
 	
 	vec4 ssaoFactor = fragColor / (blurSize * blurSize);
-        fragColor = texture(color, v_uv) * ssaoFactor.r;
+    fragColor = vec4(vec3(texture(color, v_uv) * ssaoFactor.r), 1.0);
 }
