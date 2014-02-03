@@ -16,8 +16,8 @@ const float SSAOPass::m_radius = 25.0f;
 
 SSAOPass::SSAOPass(QString name)
 :   PostprocessingPass(name)
-,   m_blurProgram(new glow::Program)
-, m_ssaoProgram(new glow::Program)
+,   m_ssaoInputTextures(new QMap<QString, int>)
+,   m_blurInputTextures(new QMap<QString, int>)
 {
     initialize();
 }
@@ -34,31 +34,28 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
 
     // first SSAO Pass
     m_program = m_ssaoProgram;
-
     m_inputTextures = m_ssaoInputTextures;
-    auto save2DOutput = m_output2D;
-    m_output2D = { { } };
+    auto save2DOutput = *m_output2D;
+    set2DTextureOutput({});
 
     initBeforeDraw(*m_fbo);
 
     m_noiseTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_fbo->bind();
-    m_quad->draw();
+    m_ssaoQuad->draw();
     m_fbo->unbind();
     m_noiseTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
-
     
     //second SSAO Pass (blur)
     m_program = m_blurProgram;
-    
     m_inputTextures = m_blurInputTextures;
-    m_output2D = save2DOutput;
+    set2DTextureOutput(save2DOutput);
 
     initBeforeDraw(fbo);
 
     m_ssaoTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     fbo.bind();
-    m_quad->draw();
+    m_blurQuad->draw();
     fbo.unbind();
     m_ssaoTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 
@@ -71,16 +68,17 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
 void SSAOPass::setInputTextures(const QMap<QString, int> & input)
 {
     //split into 2 Maps for each pass (ssao, blur)
-    m_ssaoInputTextures["normal"] = input.value("normal");
-    m_ssaoInputTextures["depth"] = input.value("depth");
-    m_ssaoInputTextures["noise"] = TIU_BufferCount;
+    m_ssaoInputTextures->clear();
+    m_ssaoInputTextures->insert("normal", input.value("normal"));
+    m_ssaoInputTextures->insert("depth",input.value("depth"));
+    m_ssaoInputTextures->insert("noise",TIU_BufferCount);
 
-    m_blurInputTextures["color"] = input.value("color");
-    m_blurInputTextures["ssao"] = TIU_BufferCount;
+    m_blurInputTextures->clear();
+    m_blurInputTextures->insert("color", input.value("color"));
+    m_blurInputTextures->insert("ssao", TIU_BufferCount);
 
     m_inputTextures = m_ssaoInputTextures;
 }
-
 
 void SSAOPass::initialize()
 {
@@ -140,13 +138,13 @@ void SSAOPass::initializeSSAOPrograms()
 {
     setVertexShader("data/blur.vert");
     setFragmentShader("data/blur.frag");
-    initializeProgram();
-    m_blurProgram = m_program;
+    m_blurProgram = initializeProgram(); 
+    m_blurQuad = new glowutils::ScreenAlignedQuad(m_blurProgram);
 
     setVertexShader("data/ssao.vert");
     setFragmentShader("data/ssao.frag");
-    initializeProgram();
-    m_ssaoProgram = m_program;
+    m_ssaoProgram = initializeProgram();
+    m_ssaoQuad = new glowutils::ScreenAlignedQuad(m_ssaoProgram);
 }
 
 void SSAOPass::resize(int width, int height)

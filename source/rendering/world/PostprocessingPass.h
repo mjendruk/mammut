@@ -50,23 +50,26 @@ public:
     void setUniform(const QString name, const T& value);
 
 protected:
-    virtual void initializeProgram();
+    virtual glow::ref_ptr<glow::Program> initializeProgram();
     virtual void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
 
 protected:
     QString const m_name;
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    QMap<QString, int> m_inputTextures;
-    QMap<GLenum, glow::Texture*> m_output2D;
+    QMap<QString, int> * m_inputTextures;
+    QMap<GLenum, glow::Texture*> * m_output2D;
     QString m_fragmentShader;
     QString m_vertexShader;
+
+    bool m_output2DInvalidated;
 };
 
 template<typename T>
 void PostprocessingPass::setUniform(const QString name, const T& value) {
     if (!m_program) {
-        initializeProgram();
+        m_program = initializeProgram();
+        m_quad = new glowutils::ScreenAlignedQuad(m_program);
     }
     m_program->setUniform(name.toStdString(), value);
 }

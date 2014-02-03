@@ -25,8 +25,10 @@ protected:
 
     glow::ref_ptr<glow::Program> m_blurProgram;
     glow::ref_ptr<glow::Program> m_ssaoProgram;
-    QMap<QString, int> m_ssaoInputTextures;
-    QMap<QString, int> m_blurInputTextures;
+    QMap<QString, int> * m_ssaoInputTextures;
+    QMap<QString, int> * m_blurInputTextures;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_ssaoQuad;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_blurQuad;
 
     glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;

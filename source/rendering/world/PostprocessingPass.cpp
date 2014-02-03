@@ -13,6 +13,9 @@ PostprocessingPass::PostprocessingPass(const QString name)
 :   glow::Referenced()
 ,   m_name(name)
 ,   m_vertexShader("data/screenquad.vert")
+,   m_output2DInvalidated(true)
+,   m_inputTextures(new QMap<QString, int>)
+,   m_output2D(new QMap<GLenum, glow::Texture*>)
 {
 }
 
@@ -27,27 +30,30 @@ const QString PostprocessingPass::name() const
 
 void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo) 
 {
-    if (!m_output2D.isEmpty())
-        fbo.setDrawBuffers(m_output2D.keys().toVector().toStdVector());
-
-    for (GLenum attachment : m_output2D.keys())
-    {
-        if (attachment > TIU_Depth)
-            fbo.attachTexture2D(attachment, m_output2D[attachment]);
-    }
-    
-
     //set input Textures as uniforms
-    for (QString uniformName : m_inputTextures.keys()) {
-        int textureImageUnit = m_inputTextures[uniformName];
+    for (QString uniformName : m_inputTextures->keys()) {
+        int textureImageUnit = (*m_inputTextures)[uniformName];
         m_program->setUniform(uniformName.toStdString(), textureImageUnit);
+    }
+
+    if (m_output2DInvalidated){
+        if (!m_output2D->isEmpty())
+            fbo.setDrawBuffers(m_output2D->keys().toVector().toStdVector());
+
+        for (GLenum attachment : m_output2D->keys()){
+            if (attachment > TIU_Depth)
+                fbo.attachTexture2D(attachment, (*m_output2D)[attachment]);
+        }
+
+        m_output2DInvalidated = false;
     }
 }
 
 void PostprocessingPass::apply(glow::FrameBufferObject & fbo) 
 {
     if (!m_program) {
-        initializeProgram();
+        m_program = initializeProgram();
+        m_quad = new glowutils::ScreenAlignedQuad(m_program);
     }
 
     glDisable(GL_DEPTH_TEST);
@@ -66,12 +72,18 @@ void PostprocessingPass::apply(glow::FrameBufferObject & fbo)
 
 void PostprocessingPass::setInputTextures(const QMap<QString, int> & input) 
 {
-    m_inputTextures = input;
+    m_inputTextures->clear();
+    for (QString key : input.keys())
+        m_inputTextures->insert(key, input.value(key));
 }
 
 void PostprocessingPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output)
 {
-    m_output2D = output;
+    m_output2D->clear();
+    for (GLenum key : output.keys())
+        m_output2D->insert(key, output.value(key));
+
+    m_output2DInvalidated = true;
 }
 
 void PostprocessingPass::setVertexShader(QString vertexShader) 
@@ -84,19 +96,19 @@ void PostprocessingPass::setFragmentShader(QString fragmentShader)
     m_fragmentShader = fragmentShader;
 }
 
-void PostprocessingPass::initializeProgram() 
+glow::ref_ptr<glow::Program> PostprocessingPass::initializeProgram()
 {
-    m_program = new glow::Program();
+    glow::ref_ptr<glow::Program> program = new glow::Program();
 
     glow::Shader* vertShader = glowutils::createShaderFromFile(GL_VERTEX_SHADER, m_vertexShader.toStdString());
     glow::Shader* fragShader = glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, m_fragmentShader.toStdString());
-    m_program->attach(vertShader, fragShader);
+    program->attach(vertShader, fragShader);
 
-    m_program->link();
-
-    m_quad = new glowutils::ScreenAlignedQuad(m_program);
+    program->link();
 
     CheckGLError();
+
+    return program;
 }
 
 
