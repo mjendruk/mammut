@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QMouseEvent>
 
+#include "glowutils/FileRegistry.h"
+
 #include <logic/world/GameMechanics.h>
 #include <rendering/menu/MenuRenderer.h>
 #include <rendering/world/GameWorldRenderer.h>
@@ -185,6 +187,9 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
+
+    if (keyEvent->key() == Qt::Key_R)
+        glowutils::FileRegistry::instance().reloadAll();
     
     m_activeMechanics->keyPressed(keyEvent);
 }
