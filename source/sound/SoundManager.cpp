@@ -3,10 +3,11 @@
 #include <QDebug>
 #include <fmod_errors.h>
 
-
 const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
     { "data/sounds/diesel.mp3", true, false },
-    { "data/sounds/alerts.ogg" /*example*/, true, false } };
+    { "data/sounds/alerts.ogg" /*example*/, true, false },
+    { "data/sounds/button_click.mp3", false, false },
+    { "data/sounds/button_switch.mp3", false, false } };
 
 
 SoundManager::SoundManager()

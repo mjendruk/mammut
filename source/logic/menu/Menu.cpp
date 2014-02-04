@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <QKeyEvent>
+#include <sound/Sound.h>
 #include "MenuItem.h"
 
 Menu::Menu(QList<MenuItem *> menuItems)
@@ -22,18 +23,22 @@ void Menu::update(float seconds)
 
 void Menu::keyPressed(QKeyEvent * event)
 {
+    Sound sound(Sound::kButtonSwitch, true);
+    
     switch (event->key())
     {
     case Qt::Key_Up:
+        sound.setPaused(false);
         focusPreviousItem();
         break;
 
     case Qt::Key_Down:
+        sound.setPaused(false);
         focusNextItem();
         break;
 
     default:
-            focusedItem()->keyPressed(event);
+        focusedItem()->keyPressed(event);
         break;
     }
 }

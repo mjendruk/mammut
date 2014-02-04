@@ -51,8 +51,6 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
-
-    updateSound();
 }
 
 void GameMechanics::updateSound()
@@ -60,14 +58,16 @@ void GameMechanics::updateSound()
     glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
     glm::vec3 velocity = glm::vec3(0.0, 0.0, -m_mammut.velocity());
     SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
-    SoundManager::instance().updateSoundSystem();
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
 {
+    Sound sound(Sound::kButtonClick, true);
+    
     switch (event->key())
     {
     case Qt::Key_Escape:
+        sound.setPaused(false);
         emit pause();
         break;
     case Qt::Key_W:
