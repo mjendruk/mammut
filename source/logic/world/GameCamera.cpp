@@ -8,9 +8,8 @@
 
 #include "Mammut.h"
 
-const glm::vec3 GameCamera::s_centerOffset = glm::vec3(0.0f, 0.0f, -3.0f);
-const glm::vec3 GameCamera::s_eyeOffset = glm::vec3(0.0f, 0.1f, 0.3f);
-const float GameCamera::rotationDuration = 0.25;
+const glm::vec3 GameCamera::s_centerOffset = glm::vec3(0.0f, 0.0f, -1.0f);
+const float GameCamera::rotationDuration = 0.25f;
 
 GameCamera::GameCamera(Mammut & mammut)
 :   m_mammut(mammut)
@@ -31,11 +30,15 @@ void GameCamera::update(float seconds)
 
 	m_rotationProgress = std::min(m_rotationProgress + seconds, rotationDuration);
 
-	m_currentRotation = calculateRotation(m_oldRotation, glm::inverse(m_mammut.rotation()), m_rotationProgress);
+	m_currentRotation = calculateRotation(m_oldRotation, m_mammut.rotation(), m_rotationProgress);
 
 	m_center = m_mammut.position() + s_centerOffset;
-	m_eye = m_mammut.position() + glm::vec3(glm::vec4(s_eyeOffset, 1.0) * m_currentRotation);
-	m_up = glm::vec3((m_eye - m_center).xy, 0.0);
+    
+    const glm::vec4 homogenousEyeOffset = m_currentRotation * glm::vec4(0.0f, 0.05f, 0.0f, 1.0f);
+	m_eye = m_mammut.position() + homogenousEyeOffset.xyz() / homogenousEyeOffset.w;
+    
+    const glm::vec4 homogenousUp = m_currentRotation * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	m_up = homogenousUp.xyz() / homogenousUp.w;
 }
 
 const glm::mat4 GameCamera::calculateRotation(const glm::mat4 & oldRotation, const glm::mat4 & targetRotation, float rotationProgress)

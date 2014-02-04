@@ -23,7 +23,6 @@ protected:
 	static const glm::mat4 calculateRotation(const glm::mat4 & oldRotation, const glm::mat4 & targetRotation, float rotationProgress);
 
     static const glm::vec3 s_centerOffset;
-	static const glm::vec3 s_eyeOffset;
 	static const float rotationDuration;
 
     glm::vec3 m_eye;
