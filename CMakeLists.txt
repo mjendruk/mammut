@@ -245,6 +245,8 @@ set(sources
 
     ${source_path}/rendering/Canvas.cpp
     ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/RawFile.cpp
+    ${source_path}/rendering/RawFile.h
     ${source_path}/rendering/Renderer.cpp
     ${source_path}/rendering/Renderer.h
 
@@ -259,8 +261,6 @@ set(sources
 
     ${source_path}/rendering/text/CharacterDrawable.cpp
     ${source_path}/rendering/text/CharacterDrawable.h
-    ${source_path}/rendering/text/RawFile.cpp
-    ${source_path}/rendering/text/RawFile.h
     ${source_path}/rendering/text/StringComposer.cpp
     ${source_path}/rendering/text/StringComposer.h
     ${source_path}/rendering/text/StringDrawer.cpp
@@ -282,7 +282,7 @@ set(sources
     ${source_path}/rendering/world/GameWorldRenderer.h
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
-    ${source_path}/rendering/world/IDrawable.h
+    ${source_path}/rendering/world/DrawableInterface.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
     ${source_path}/rendering/world/RenderCamera.cpp

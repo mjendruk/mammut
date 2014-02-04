@@ -1,9 +1,9 @@
 #pragma once
 
-class IDrawable
+class DrawableInterface
 {
 public:
-    virtual ~IDrawable() {}
+    virtual ~DrawableInterface() {}
 
     virtual void initialize() = 0;
     virtual void draw() = 0;

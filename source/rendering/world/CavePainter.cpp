@@ -5,7 +5,7 @@
 #include <glow/Program.h>
 #include <glow/Shader.h>
 
-#include "IDrawable.h"
+#include "DrawableInterface.h"
 #include "FileAssociatedShader.h"
 
 CavePainter::CavePainter()
@@ -56,7 +56,7 @@ void CavePainter::update(const QList<glow::Program *> & programs)
     //do necessary updates
 }
 
-void CavePainter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix)
+void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix)
 {
     m_program->setUniform("model", modelMatrix);
     drawable.draw();

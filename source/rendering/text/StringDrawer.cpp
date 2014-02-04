@@ -13,7 +13,7 @@
 #include <glow/Shader.h>
 #include <glow/Texture.h>
 
-#include "RawFile.h"
+#include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
 
 const float StringDrawer::s_textureSize = 1024.0f;
