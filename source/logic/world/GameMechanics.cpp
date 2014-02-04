@@ -6,13 +6,13 @@
 #include <sound/SoundManager.h>
 
 GameMechanics::GameMechanics()
-:   m_chunkGenerator(0)
+:   m_chunkGenerator(1337)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
 ,   m_camera(m_mammut)
 {
     connectSignals();
     
-    for (int i = 0; i < 10 ; i++)
+    for (int i = 0; i < 7; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
         for (auto cuboid : m_chunkList.last()->cuboids())
