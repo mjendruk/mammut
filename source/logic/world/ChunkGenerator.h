@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 #include <QSharedPointer>
 #include <glm/glm.hpp>
 
@@ -16,7 +18,7 @@ public:
     QSharedPointer<CuboidChunk> nextChunk();
 
 protected:
-    int m_seed;
+    std::mt19937 m_generator;
     glm::vec3 m_nextTranslation;
 
 };
