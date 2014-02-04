@@ -24,7 +24,7 @@ protected:
 
     static const glm::vec3 s_centerOffset;
     static const glm::vec3 s_eyeOffset;
-	static const float s_rotationDuration;
+    static const float s_rotationDuration;
 
     glm::vec3 m_eye;
     glm::vec3 m_center;
@@ -32,7 +32,7 @@ protected:
 
     glm::mat3 m_initialRotation;
     glm::mat3 m_targetRotation;
-	glm::mat3 m_currentRotation;
-	float m_rotationProgress;
+    glm::mat3 m_currentRotation;
+    float m_rotationProgress;
 
 };
