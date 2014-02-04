@@ -21,7 +21,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     
     std::normal_distribution<> sizeXYDistribution(10, 4);
     std::uniform_real_distribution<> sizeZDistribution(25.0f, 50.0f);
-    std::uniform_real_distribution<> positionXYDistribution(-30.0f, 30.0f);
+    std::uniform_real_distribution<> positionXYDistribution(-35.0f, 35.0f);
     std::uniform_real_distribution<> positionZDistribution(0.0f, 30.0f);
     
     for (int i = 0; i < 20; ++i)
