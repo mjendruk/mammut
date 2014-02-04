@@ -19,7 +19,7 @@
 #include "FileAssociatedShader.h"
 #include "SSAO.h"
 
-const float GameWorldRenderer::nearPlane = 0.1f;
+const float GameWorldRenderer::nearPlane = 0.01f;
 const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
@@ -68,8 +68,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform());
     });
-    
-    m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform());
     
     m_cavePainter.paint(m_caveDrawable, glm::mat4());
     
@@ -132,7 +130,7 @@ void GameWorldRenderer::initialize()
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     m_ssaoOutput->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     
-    m_camera.setFovy(90.0);
+    m_camera.setFovy(80.0);
     m_camera.setZNear(nearPlane);
     m_camera.setZFar(farPlane);
     

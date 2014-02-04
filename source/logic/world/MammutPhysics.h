@@ -28,7 +28,6 @@ public:
     
     void clearForcesAndApplyGravity();
     void applyForce(const glm::vec3 & force);
-    void rotate(const glm::mat3 & rotation);
     
     void setVelocity(const glm::vec3 & velocity);
     

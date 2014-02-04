@@ -12,7 +12,7 @@ RenderCamera::~RenderCamera()
     
 }
 
-void RenderCamera::update(GameCamera camera)
+void RenderCamera::update(const GameCamera & camera)
 {
     setEye(camera.eye());
     setCenter(camera.center());

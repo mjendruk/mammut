@@ -9,9 +9,9 @@
 #include <glow/VertexArrayObject.h>
 #include <glow/Array.h>
 
-#include "IDrawable.h"
+#include "DrawableInterface.h"
 
-class CaveDrawable : public IDrawable
+class CaveDrawable : public DrawableInterface
 {
 public:
     CaveDrawable();

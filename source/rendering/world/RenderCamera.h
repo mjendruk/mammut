@@ -12,5 +12,5 @@ public:
 
     virtual ~RenderCamera();
 
-    void update(GameCamera camera);
+    void update(const GameCamera & camera);
 };

@@ -4,7 +4,7 @@
 #include <glow/ref_ptr.h>
 #include "AbstractPainter.h"
 
-class IDrawable;
+class DrawableInterface;
 
 namespace glow
 {
@@ -20,7 +20,7 @@ public:
 
     virtual bool initialize();
     
-    virtual void paint(IDrawable & drawable, const glm::mat4 & modelMatrix);
+    virtual void paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix);
 
     void setNearFarUniform(const glm::vec2 & nearFar);
     void setViewProjectionUniform(const glm::mat4 & viewProjection);

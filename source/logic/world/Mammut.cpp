@@ -45,7 +45,6 @@ void Mammut::update()
 
 void Mammut::gravityChangeEvent(const glm::mat3 & rotation)
 {
-    m_physics.rotate(rotation);
     m_gravityTransform = glm::inverse(rotation);
 }
 

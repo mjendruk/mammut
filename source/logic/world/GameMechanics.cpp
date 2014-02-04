@@ -8,7 +8,6 @@
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(0)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
-,   m_camera(m_mammut)
 {
     connectSignals();
     
@@ -39,7 +38,7 @@ void GameMechanics::update(float seconds)
 {
 
     m_physicsWorld.stepSimulation(seconds);
-    m_camera.update(seconds);
+    m_camera.update(m_mammut.position(), seconds);
     
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z)
     {
@@ -114,6 +113,7 @@ void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & la
 void GameMechanics::connectSignals()
 {
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, &m_mammut, &Mammut::update);
+    connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
     connect(&m_mammut, &Mammut::crashed, this, &GameMechanics::gameOver);
 }

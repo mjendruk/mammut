@@ -5,9 +5,9 @@
 #include <glow/ref_ptr.h>
 #include <glowutils/UnitCube.h>
 
-#include "IDrawable.h"
+#include "DrawableInterface.h"
 
-class CuboidDrawable : public IDrawable
+class CuboidDrawable : public DrawableInterface
 {
 public:
     CuboidDrawable();
