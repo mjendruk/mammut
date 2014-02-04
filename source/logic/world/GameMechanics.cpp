@@ -36,7 +36,6 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::update(float seconds)
 {
-
     m_physicsWorld.stepSimulation(seconds);
     m_camera.update(m_mammut.position(), seconds);
     

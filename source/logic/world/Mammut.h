@@ -42,5 +42,6 @@ protected:
     
     glm::mat3 m_gravityTransform;
     bool m_isOnObject;
+    bool m_crashed;
     
 };

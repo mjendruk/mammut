@@ -5,9 +5,10 @@
 
 const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
     { "data/sounds/diesel.mp3", true, false },
-    { "data/sounds/alerts.ogg" /*example*/, true, false },
+    { "data/sounds/alerts.ogg", true, false },
     { "data/sounds/button_click.mp3", false, false },
-    { "data/sounds/button_switch.mp3", false, false } };
+    { "data/sounds/button_switch.mp3", false, false },
+    { "data/sounds/impact.wav", false, false } };
 
 
 SoundManager::SoundManager()
@@ -45,7 +46,7 @@ FMOD_VECTOR SoundManager::toFmodVec(const glm::vec3 & glmvec)
 
 FMOD::Channel * SoundManager::createNewChannel2D(int soundID, bool paused)
 {
-    FMOD::Channel *channel = nullptr;
+    FMOD::Channel * channel = nullptr;
 
     FMOD_RESULT result = m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[soundID], paused, &channel);
     checkError(result);
@@ -78,7 +79,8 @@ void SoundManager::setListenerAttributes(const glm::vec3 & position, const glm::
 
 void SoundManager::updateSoundSystem()
 {
-    m_system->update();
+    FMOD_RESULT result = m_system->update();
+    checkError(result);
 }
 
 void SoundManager::init()
