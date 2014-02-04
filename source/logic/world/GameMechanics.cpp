@@ -2,6 +2,9 @@
 
 #include <QKeyEvent>
 
+#include <sound/Sound.h>
+#include <sound/SoundManager.h>
+
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(0)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
@@ -17,6 +20,9 @@ GameMechanics::GameMechanics()
     
     m_physicsWorld.addObject(m_mammut.physics());
     m_physicsWorld.changeGravity(PhysicsWorld::kGravityDown);
+
+    Sound sound(Sound::kDiesel, glm::vec3(20.0f, +10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 0.0f), true);
+    sound.setPaused(false);
 }
 
 GameMechanics::~GameMechanics()
@@ -30,6 +36,7 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::update(float seconds)
 {
+
     m_physicsWorld.stepSimulation(seconds);
     m_camera.update(m_mammut.position(), seconds);
     
@@ -44,6 +51,16 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
+
+    updateSound();
+}
+
+void GameMechanics::updateSound()
+{
+    glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
+    glm::vec3 velocity = glm::vec3(0.0, 0.0, -m_mammut.velocity());
+    SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
+    SoundManager::instance().updateSoundSystem();
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)

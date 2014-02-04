@@ -289,6 +289,11 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.h
     ${source_path}/rendering/world/SSAO.cpp
     ${source_path}/rendering/world/SSAO.h
+
+    ${source_path}/sound/SoundManager.cpp
+    ${source_path}/sound/SoundManager.h
+    ${source_path}/sound/Sound.cpp
+    ${source_path}/sound/Sound.h
 )
 
 # Group source files
@@ -303,7 +308,7 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
-set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
     ${shader_path}/blur.vert
     ${shader_path}/blur.frag
