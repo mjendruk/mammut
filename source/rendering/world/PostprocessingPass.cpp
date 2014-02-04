@@ -21,6 +21,8 @@ PostprocessingPass::PostprocessingPass(const QString name)
 
 PostprocessingPass::~PostprocessingPass()
 {
+    delete m_inputTextures;
+    delete m_output2D;
 }
 
 const QString PostprocessingPass::name() const
@@ -41,7 +43,7 @@ void PostprocessingPass::initBeforeDraw(glow::FrameBufferObject & fbo)
             fbo.setDrawBuffers(m_output2D->keys().toVector().toStdVector());
 
         for (GLenum attachment : m_output2D->keys()){
-            if (attachment > TIU_Depth)
+            if (attachment > TIU_Velocity)
                 fbo.attachTexture2D(attachment, (*m_output2D)[attachment]);
         }
 

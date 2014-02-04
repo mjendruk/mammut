@@ -1,15 +1,18 @@
 #version 410
 
 uniform sampler2D depth;
-uniform sampler2D ssao;
+uniform sampler2D color;
 uniform sampler2D velocity;
 uniform sampler2D neighborMax;
+
 uniform sampler2D randomBuffer;
+//const int RANDOMBUFFER_SIZE = 32;
+//uniform float randomBuffer[RANDOMBUFFER_SIZE];
 
 uniform vec2 viewport;
 uniform float radius;
 uniform float numSamples;
-uniform int currentFPS_targetFPS;
+uniform float currentFPS_targetFPS;
 
 layout (location = 0) out vec4 fragColor;
 
@@ -19,7 +22,7 @@ float hash(ivec2 c)
 {
     if(numSamples <= 5)
         return float(int(c.x + c.y) & 1) * 0.5 + 0.25;
-   else
+    else
         return texelFetch(randomBuffer, ivec2(c.x & 31, c.y & 31), 0).r;
 }
 
@@ -87,7 +90,7 @@ void main()
 
     float jitter = hash(me) - 0.5;
 
-    vec3 resultColor = texelFetch(ssao, me, 0).rgb;
+    vec3 resultColor = texelFetch(color, me, 0).rgb;
 
     float depth_center = texelFetch(depth, me, 0);
 
@@ -128,7 +131,7 @@ void main()
         float radius_sample;
 
         vec2 velocity_sample = readAdjustedVelocity(other, radius_sample);
-        vec3 color_sample = texelFetch(ssao, clamp(other, ivec2(0), ivec2(viewport)), 0).rgb;
+        vec3 color_sample = texelFetch(color, clamp(other, ivec2(0), ivec2(viewport)), 0).rgb;
 
         float coverage_sample = 0.0;
 
@@ -144,8 +147,7 @@ void main()
     }
 
     fragColor = vec4(resultColor / totalCoverage, 1.0);
-    //fragColor = vec4(vec3(texelFetch(depth, ivec2(gl_FragCoord.xy), 0).r*0.8), 1.0);
-    //fragColor = vec4(vec3(texture(depth, v_uv).r), 1.0);
+    fragColor = vec4(vec3(texture(velocity, v_uv)), 1.0);
 }
 
 //===============================

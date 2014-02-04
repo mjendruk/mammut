@@ -25,6 +25,7 @@ enum TextureImageUnits {
     TIU_Normal = 0,
     TIU_Color,
     TIU_Depth,
+    TIU_Velocity,
     TIU_SSAO,
     TIU_MotionBlur,
     TIU_BufferCount // should always be last member and not be used as a name

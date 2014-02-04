@@ -2,7 +2,7 @@
 
 uniform sampler2D velocity;
 uniform float radius;
-//uniform vec2 viewport;
+uniform vec2 viewport;
 
 layout (location = 0) out vec2 fragColor;
 

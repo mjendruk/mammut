@@ -28,8 +28,9 @@ namespace glowutils
 
 class Canvas;
 class GameMechanics;
-class SSAOPass;
 class PostprocessingPass;
+class MotionBlurPass;
+class SSAOPass;
 
 
 class GameWorldRenderer : public Renderer
@@ -75,15 +76,13 @@ protected:
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
     glow::ref_ptr<glow::Texture> m_gBufferVelocity;
+
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
-    glow::ref_ptr<glow::Texture> m_motionBlurTM;
-    glow::ref_ptr<glow::Texture> m_motionBlurTMTemp;
-    glow::ref_ptr<glow::Texture> m_motionBlurNM;
-    glow::ref_ptr<glow::Texture> m_motionBlurNoise;
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
-    glow::ref_ptr<SSAOPass> m_ssaoPass;
     glow::ref_ptr<PostprocessingPass> m_quadPass;
+    glow::ref_ptr<MotionBlurPass> m_motionBlurPass;
+    glow::ref_ptr<SSAOPass> m_ssaoPass;
 
 
     glm::mat4 m_previousViewProjection;
