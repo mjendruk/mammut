@@ -61,15 +61,14 @@ void GameMechanics::updateSound()
 
 void GameMechanics::keyPressed(QKeyEvent * event)
 {
-    Sound sound(Sound::kButtonClick, true);
-    
     switch (event->key())
     {
     case Qt::Key_Escape:
-        sound.setPaused(false);
-        m_backgroundLoop.setPaused(true);
+        {
+        Sound sound(Sound::kButtonClick);
         emit pause();
         break;
+        }
     case Qt::Key_W:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityUp);
         break;

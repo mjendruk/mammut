@@ -22,20 +22,22 @@ void Menu::update(float seconds)
 }
 
 void Menu::keyPressed(QKeyEvent * event)
-{
-    Sound sound(Sound::kButtonSwitch, true);
-    
+{   
     switch (event->key())
     {
     case Qt::Key_Up:
-        sound.setPaused(false);
+        {
+        Sound sound(Sound::kButtonSwitch);
         focusPreviousItem();
         break;
+        }  
 
     case Qt::Key_Down:
-        sound.setPaused(false);
+        {
+        Sound sound(Sound::kButtonSwitch);
         focusNextItem();
         break;
+        }
 
     default:
         focusedItem()->keyPressed(event);
