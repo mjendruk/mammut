@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 
 #include <logic/Mechanics.h>
+#include <sound/Sound.h>
 
 #include "PhysicsWorld.h"
 #include "ChunkGenerator.h"
@@ -47,5 +48,7 @@ protected:
     Mammut m_mammut;
     GameCamera m_camera;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
+
+    Sound m_backgroundLoop;
 
 };

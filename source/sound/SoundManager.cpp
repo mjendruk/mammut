@@ -8,7 +8,8 @@ const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
     { "data/sounds/alerts.ogg", true, false },
     { "data/sounds/button_click.mp3", false, false },
     { "data/sounds/button_switch.mp3", false, false },
-    { "data/sounds/impact.wav", false, false } };
+    { "data/sounds/impact.wav", false, false },
+    { "data/sounds/loop.wav", false, true } };
 
 
 SoundManager::SoundManager()

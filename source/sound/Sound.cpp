@@ -15,7 +15,6 @@ Sound::Sound(SoundFile file, const glm::vec3 & position, const glm::vec3 & veloc
 
 Sound::~Sound()
 {
-
 }
 
 void Sound::setPaused(bool paused)
@@ -57,5 +56,11 @@ void Sound::setVolume(float volume)
 void Sound::setMute(bool mute)
 {
     FMOD_RESULT result = m_channel->setMute(mute);
+    SoundManager::checkError(result);
+}
+
+void Sound::stop()
+{
+    FMOD_RESULT result = m_channel->stop();
     SoundManager::checkError(result);
 }
