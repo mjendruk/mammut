@@ -32,7 +32,7 @@ protected:
     glm::vec3 m_center;
     glm::vec3 m_up;
     
-    glm::vec3 m_currentEyeOffset;
+    glm::vec3 m_currentCenterOffset;
 
     glm::mat3 m_initialRotation;
     glm::mat3 m_targetRotation;

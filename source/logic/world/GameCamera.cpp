@@ -12,7 +12,7 @@
 const float GameCamera::s_rotationDuration = 0.25f;
 
 GameCamera::GameCamera()
-:   m_currentEyeOffset(0.0f)
+:   m_currentCenterOffset(0.0f)
 {
 }
 
@@ -52,11 +52,11 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
 {
     const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     
-    glm::vec3 eyeOffset = glm::normalize(glm::normalize(direction) + defaultLookAt);
-    m_currentEyeOffset = glm::mix(eyeOffset, m_currentEyeOffset, 0.4f);
+    glm::vec3 centerOffset = glm::normalize(glm::normalize(direction) + defaultLookAt);
+    m_currentCenterOffset = glm::mix(centerOffset, m_currentCenterOffset, 0.7f);
     
     m_eye = glm::vec3(glm::mix(m_eye.xy(), position.xy(), 0.5f), position.z);
-    m_center = m_eye + m_currentEyeOffset;
+    m_center = m_eye + m_currentCenterOffset;
     m_up = Util::toCartesian(glm::mat4(m_currentRotation) * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
