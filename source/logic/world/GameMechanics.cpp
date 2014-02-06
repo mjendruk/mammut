@@ -66,6 +66,7 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     case Qt::Key_Escape:
         {
         Sound sound(Sound::kButtonClick);
+        m_backgroundLoop.setPaused(true);
         emit pause();
         break;
         }
