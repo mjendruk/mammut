@@ -2,7 +2,6 @@
 
 #include <QKeyEvent>
 
-#include <sound/Sound.h>
 #include <sound/SoundManager.h>
 
 GameMechanics::GameMechanics()
@@ -50,6 +49,8 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
+
+    updateSound();
 }
 
 void GameMechanics::updateSound()
