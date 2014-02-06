@@ -57,8 +57,8 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
     glm::vec3 eyeOffset = glm::normalize(glm::normalize(clampedDirection) + standardLookAt);
     m_currentEyeOffset = glm::mix(eyeOffset, m_currentEyeOffset, 0.4f);
     
-    m_eye = position;
-    m_center = position + m_currentEyeOffset;
+    m_eye = glm::vec3(glm::mix(m_eye.xy(), position.xy(), 0.5f), position.z);
+    m_center = m_eye + m_currentEyeOffset;
     m_up = Util::toCartesian(glm::mat4(m_currentRotation) * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
