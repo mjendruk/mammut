@@ -76,14 +76,14 @@ glm::vec3 Mammut::position() const
     return m_physics.position();
 }
 
+glm::vec3 Mammut::velocity() const
+{
+    return m_physics.velocity();
+}
+
 glm::mat4 Mammut::rotation() const
 {
     return m_physics.rotation();
-}
-
-float Mammut::velocity() const
-{
-    return -m_physics.velocity().z;
 }
 
 MammutPhysics * Mammut::physics()

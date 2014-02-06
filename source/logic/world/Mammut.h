@@ -22,9 +22,9 @@ public:
     glm::mat4 modelTransform() const;
     
     glm::vec3 position() const;
-    glm::mat4 rotation() const;
+    glm::vec3 velocity() const;
     
-    float velocity() const;
+    glm::mat4 rotation() const;
     
     MammutPhysics * physics();
     
