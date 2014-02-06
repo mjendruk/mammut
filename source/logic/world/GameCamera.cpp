@@ -7,12 +7,12 @@
 #include "glm/gtx/string_cast.hpp"
 
 #include "Mammut.h"
+#include <Util.h>
 
-const glm::vec3 GameCamera::s_centerOffset = glm::vec3(0.0f, 0.0f, -1.0f);
-const glm::vec3 GameCamera::s_eyeOffset = glm::vec3(0.0f, 0.05f, 0.0f);
 const float GameCamera::s_rotationDuration = 0.25f;
 
 GameCamera::GameCamera()
+:   m_currentEyeOffset(0.0f)
 {
 }
 
@@ -20,10 +20,10 @@ GameCamera::~GameCamera()
 {
 }
 
-void GameCamera::update(const glm::vec3 & position, float seconds)
+void GameCamera::update(const glm::vec3 & position, const glm::vec3 & direction, float seconds)
 {
     updateRotationProgress(seconds);
-    updateLookAt(position);
+    updateLookAt(position, direction);
 }
 
 void GameCamera::gravityChangeEvent(const glm::mat3 & rotation)
@@ -48,15 +48,18 @@ void GameCamera::updateRotationProgress(float seconds)
     m_currentRotation = glm::mat3_cast(glm::slerp(from, to, glm::smoothstep(0.0f, 1.0f, m_rotationProgress / s_rotationDuration)));
 }
 
-void GameCamera::updateLookAt(const glm::vec3 & position)
+void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & direction)
 {
-    m_center = position + s_centerOffset;
+    const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     
-    const glm::vec4 homogenousEyeOffset = glm::mat4(m_currentRotation) * glm::vec4(s_eyeOffset, 1.0);
-    m_eye = position + homogenousEyeOffset.xyz() / homogenousEyeOffset.w;
+    glm::vec3 clampedDirection = glm::vec3(direction.xy(), glm::min(direction.z, 0.0f));
     
-    const glm::vec4 homogenousUp = glm::mat4(m_currentRotation) * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-    m_up = homogenousUp.xyz() / homogenousUp.w;
+    glm::vec3 eyeOffset = glm::normalize(glm::normalize(clampedDirection) + standardLookAt);
+    m_currentEyeOffset = glm::mix(eyeOffset, m_currentEyeOffset, 0.4f);
+    
+    m_eye = glm::vec3(glm::mix(m_eye.xy(), position.xy(), 0.5f), position.z);
+    m_center = m_eye + m_currentEyeOffset;
+    m_up = Util::toCartesian(glm::mat4(m_currentRotation) * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 const glm::vec3 & GameCamera::eye() const

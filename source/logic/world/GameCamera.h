@@ -11,7 +11,10 @@ public:
     GameCamera();
     virtual ~GameCamera();
 
-    void update(const glm::vec3 & position, float seconds);
+    void update(const glm::vec3 & position,
+                const glm::vec3 & direction,
+                float seconds);
+    
     void gravityChangeEvent(const glm::mat3 & rotation);
 
     const glm::vec3 & eye() const;
@@ -20,15 +23,16 @@ public:
 
 protected:
     void updateRotationProgress(float seconds);
-    void updateLookAt(const glm::vec3 & position);
+    void updateLookAt(const glm::vec3 & position,
+                      const glm::vec3 & direction);
 
-    static const glm::vec3 s_centerOffset;
-    static const glm::vec3 s_eyeOffset;
     static const float s_rotationDuration;
 
     glm::vec3 m_eye;
     glm::vec3 m_center;
     glm::vec3 m_up;
+    
+    glm::vec3 m_currentEyeOffset;
 
     glm::mat3 m_initialRotation;
     glm::mat3 m_targetRotation;
