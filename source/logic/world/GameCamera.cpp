@@ -50,7 +50,7 @@ void GameCamera::updateRotationProgress(float seconds)
 
 void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & direction)
 {
-    const glm::vec3 standardLookAt(0.0f, 0.0f, -1.0f);
+    const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     
     glm::vec3 clampedDirection = glm::vec3(direction.xy(), glm::min(direction.z, 0.0f));
     
