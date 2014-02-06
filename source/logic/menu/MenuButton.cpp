@@ -2,6 +2,7 @@
 
 #include <QKeyEvent>
 #include <rendering/menu/MenuRenderer.h>
+#include <sound/Sound.h>
 
 MenuButton::MenuButton(const QString & label)
 :   m_label(label)
@@ -20,7 +21,11 @@ void MenuButton::accept(MenuRenderer * renderer)
 void MenuButton::keyPressed(QKeyEvent * event)
 {
     if (event->key() == Qt::Key_Return)
+    {
+        Sound sound(Sound::kButtonClick);
         emit pressed();
+    }
+    
 }
 
 const QString & MenuButton::label() const
