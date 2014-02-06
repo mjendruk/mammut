@@ -208,6 +208,7 @@ set(sources
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
     ${source_path}/Util.cpp
+    ${source_path}/Util.hpp
     ${source_path}/Util.h
 
     ${source_path}/logic/Mechanics.cpp
