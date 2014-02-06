@@ -52,9 +52,7 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
 {
     const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     
-    glm::vec3 clampedDirection = glm::vec3(direction.xy(), glm::min(direction.z, 0.0f));
-    
-    glm::vec3 eyeOffset = glm::normalize(glm::normalize(clampedDirection) + defaultLookAt);
+    glm::vec3 eyeOffset = glm::normalize(glm::normalize(direction) + defaultLookAt);
     m_currentEyeOffset = glm::mix(eyeOffset, m_currentEyeOffset, 0.4f);
     
     m_eye = glm::vec3(glm::mix(m_eye.xy(), position.xy(), 0.5f), position.z);
