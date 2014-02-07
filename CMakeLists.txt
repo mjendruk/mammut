@@ -212,6 +212,8 @@ set(sources
     ${source_path}/logic/Mechanics.cpp
     ${source_path}/logic/Mechanics.h
 
+    ${source_path}/logic/menu/HighscoreMenu.cpp
+    ${source_path}/logic/menu/HighscoreMenu.h
     ${source_path}/logic/menu/MainMenu.cpp
     ${source_path}/logic/menu/MainMenu.h
     ${source_path}/logic/menu/Menu.cpp
@@ -220,6 +222,8 @@ set(sources
     ${source_path}/logic/menu/MenuButton.h
     ${source_path}/logic/menu/MenuItem.cpp
     ${source_path}/logic/menu/MenuItem.h
+    ${source_path}/logic/menu/MenuLogo.cpp
+    ${source_path}/logic/menu/MenuLogo.h
     ${source_path}/logic/menu/PauseMenu.cpp
     ${source_path}/logic/menu/PauseMenu.h
 

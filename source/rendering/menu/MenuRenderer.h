@@ -7,6 +7,7 @@
 
 class Menu;
 class MenuButton;
+class MenuLogo;
 class AbstractBackground;
 
 class MenuRenderer : public Renderer
@@ -18,11 +19,12 @@ public:
     void resize(int width, int height) override;
     void render(glow::FrameBufferObject * fbo, float devicePixelRatio) override;
 
-    void renderButton(const MenuButton * button);
+    void render(const MenuButton * button);
+    void render(const MenuLogo * logo);
 
     void setBackground(AbstractBackground * background);
     void setMenu(const Menu * menu);
-
+    
 protected:
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;

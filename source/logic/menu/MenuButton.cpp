@@ -15,7 +15,7 @@ MenuButton::~MenuButton()
 
 void MenuButton::accept(MenuRenderer * renderer)
 {
-    renderer->renderButton(this);
+    renderer->render(this);
 }
 
 void MenuButton::keyPressed(QKeyEvent * event)
@@ -26,6 +26,11 @@ void MenuButton::keyPressed(QKeyEvent * event)
         emit pressed();
     }
     
+}
+
+bool MenuButton::isFocusable() const
+{
+    return true;
 }
 
 const QString & MenuButton::label() const

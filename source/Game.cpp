@@ -103,6 +103,14 @@ void Game::showMainMenu()
     m_canvas->setRenderer(m_menuRenderer.get());
 }
 
+void Game::showHighscore()
+{
+    m_activeMechanics = &m_highscoreMenu;
+    m_menuRenderer->setMenu(&m_highscoreMenu);
+    m_menuRenderer->setBackground(m_blankBackground.get());
+    m_canvas->setRenderer(m_menuRenderer.get());
+}
+
 void Game::quit()
 {
     m_loop = false;
@@ -140,7 +148,10 @@ void Game::initializeRenderers()
 void Game::connectSignals()
 {   
     connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::startGame);
+    connect(&m_mainMenu, &MainMenu::highscorePressed, this, &Game::showHighscore);
     connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
+
+    connect(&m_highscoreMenu, &HighscoreMenu::backPressed, this, &Game::showMainMenu);
     
     connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resumeGame);
     connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);

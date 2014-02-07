@@ -14,6 +14,7 @@ public:
 
 signals:
     void startPressed();
+    void highscorePressed();
     void quitPressed();
 
 protected:
@@ -22,6 +23,7 @@ protected:
 
 protected:
     MenuButton * m_startButton;
+    MenuButton * m_highscoreButton;
     MenuButton * m_quitButton;
 
 };

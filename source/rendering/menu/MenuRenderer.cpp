@@ -8,6 +8,7 @@
 #include <glow/FrameBufferObject.h>
 
 #include <logic/menu/MenuButton.h>
+#include <logic/menu/MenuLogo.h>
 #include <logic/menu/Menu.h>
 
 #include "AbstractBackground.h"
@@ -50,7 +51,7 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
     const float aspectRatio = m_viewport.x / std::max(static_cast<float>(m_viewport.y), 1.f);
     const glm::mat4 aspectRatioTransform = glm::scale(1.0f / aspectRatio, 1.0f, 1.0f);
 
-    m_translation = aspectRatioTransform * glm::scale(1.5f, 1.5f, 0.0f) * glm::translate(0.0f, 0.0f, 0.0f);
+    m_translation = glm::translate(0.0f, 0.3f, 0.0f) * aspectRatioTransform * glm::scale(1.5f, 1.5f, 0.0f);
     
     for (auto menuItem : m_menu->menuItems())
         menuItem->accept(this);
@@ -60,7 +61,7 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
     fbo->unbind();
 }
 
-void MenuRenderer::renderButton(const MenuButton * button)
+void MenuRenderer::render(const MenuButton * button)
 {
     glm::vec3 color = m_menu->isFocusedItem(button) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
 
@@ -70,6 +71,19 @@ void MenuRenderer::renderButton(const MenuButton * button)
                          color);
 
     m_translation *= glm::translate(0.0f, -0.13f, 0.0f);
+}
+
+void MenuRenderer::render(const MenuLogo * logo)
+{
+    glm::vec3 color(0.6f, 0.13f, 0.02f);
+    glm::mat4 scale = glm::scale(glm::vec3(2.0f));
+    
+    m_stringDrawer.paint("Mammut",
+                         m_translation * scale,
+                         StringDrawer::kAlignCenter,
+                         color);
+    
+    m_translation *= glm::translate(0.0f, -0.3f, 0.0f);
 }
 
 void MenuRenderer::setBackground(AbstractBackground * background)
@@ -83,4 +97,3 @@ void MenuRenderer::setMenu(const Menu * menu)
     assert(menu != nullptr);
     m_menu = menu;
 }
-

@@ -7,6 +7,7 @@
 #include <glow/Timer.h>
 
 #include <logic/menu/MainMenu.h>
+#include <logic/menu/HighscoreMenu.h>
 #include <logic/menu/PauseMenu.h>
 #include <rendering/Canvas.h>
 
@@ -34,6 +35,7 @@ public slots:
     void resumeGame();
     void showPauseMenu();
     void showMainMenu();
+    void showHighscore();
     void quit();
     
 protected:
@@ -48,6 +50,7 @@ protected:
 
 protected:
     MainMenu m_mainMenu;
+    HighscoreMenu m_highscoreMenu;
     PauseMenu m_pauseMenu;
 
     std::unique_ptr<GameMechanics> m_gameMechanics;
