@@ -9,8 +9,6 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
-#include "SimplePostProcPass.h"
-
 const float MotionBlurPostProc::radius = 10.f;
 const float MotionBlurPostProc::numSamples = 15.f; //must be odd
 
@@ -27,36 +25,36 @@ MotionBlurPostProc::~MotionBlurPostProc()
 void MotionBlurPostProc::apply(glow::FrameBufferObject & fbo)
 {
     //fist tileMax pass
-    m_tmVerticalPass->apply(*m_TMTempFBO);
+    m_tmVerticalPass.apply(*m_TMTempFBO);
     
     //second tileMax pass
     m_TMTempTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
-    m_tmHorizontalPass->apply(*m_TMFBO);
+    m_tmHorizontalPass.apply(*m_TMFBO);
     m_TMTempTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 
     //neighborMax pass
     m_TMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
-    m_neighborMaxPass->apply(*m_NMFBO);
+    m_neighborMaxPass.apply(*m_NMFBO);
     m_TMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 
     //motion blur pass
     m_NMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_randomTexture->bind(GL_TEXTURE0 + TIU_BufferCount + 1);
-    m_blurPass->apply(fbo);
+    m_blurPass.apply(fbo);
     m_randomTexture->unbind(GL_TEXTURE0 + TIU_BufferCount + 1);
     m_NMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 }
 
-void MotionBlurPostProc::setInputTextures(const QMap<QString, int> & input)
+void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
 {
     //split into 4 Maps for each pass
-    m_tmVerticalPass->setInputTextures({ { "velocity", input.value("velocity", TIU_Velocity) } });
+    m_tmVerticalPass.setInputTextures({ { "velocity", input.value("velocity", TIU_Velocity) } });
 
-    m_tmHorizontalPass->setInputTextures({ { "tmHorizontal", TIU_BufferCount } });
+    m_tmHorizontalPass.setInputTextures({ { "tmHorizontal", TIU_BufferCount } });
 
-    m_neighborMaxPass->setInputTextures({ { "maxTile", TIU_BufferCount } });
+    m_neighborMaxPass.setInputTextures({ { "maxTile", TIU_BufferCount } });
 
-    m_blurPass->setInputTextures({ { "depth", input.value("depth", TIU_Depth) },
+    m_blurPass.setInputTextures({ { "deptha", input.value("depth", TIU_Depth) },
                                    { "color", input.value("color", TIU_Color) },
                                    { "velocity", input.value("velocity", TIU_Velocity) },
                                    { "neighborMax", TIU_BufferCount },
@@ -65,27 +63,27 @@ void MotionBlurPostProc::setInputTextures(const QMap<QString, int> & input)
 }
 
 
-void MotionBlurPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output)
+void MotionBlurPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
 {
-    m_tmVerticalPass->set2DTextureOutput({}); //own FBOs know where to draw
-    m_tmHorizontalPass->set2DTextureOutput({});
-    m_neighborMaxPass->set2DTextureOutput({});
-    m_blurPass->set2DTextureOutput(output);
+    m_tmVerticalPass.set2DTextureOutput({}); //own FBOs know where to draw
+    m_tmHorizontalPass.set2DTextureOutput({});
+    m_neighborMaxPass.set2DTextureOutput({});
+    m_blurPass.set2DTextureOutput(output);
 }
 
 void MotionBlurPostProc::initialize()
 {
-    m_tmVerticalPass = new SimplePostProcPass();
-    m_tmVerticalPass->setFragmentShader("data/motionBlurTM_vertical.frag");
+    //m_tmVerticalPass = new SimplePostProcPass();
+    m_tmVerticalPass.setFragmentShader("data/motionBlurTM_vertical.frag");
 
-    m_tmHorizontalPass = new SimplePostProcPass();
-    m_tmHorizontalPass->setFragmentShader("data/motionBlurTM_horizontal.frag");
+    //m_tmHorizontalPass = new SimplePostProcPass();
+    m_tmHorizontalPass.setFragmentShader("data/motionBlurTM_horizontal.frag");
 
-    m_neighborMaxPass = new SimplePostProcPass();
-    m_neighborMaxPass->setFragmentShader("data/motionBlurNM.frag");
+    //m_neighborMaxPass = new SimplePostProcPass();
+    m_neighborMaxPass.setFragmentShader("data/motionBlurNM.frag");
 
-    m_blurPass = new SimplePostProcPass();
-    m_blurPass->setFragmentShader("data/motionBlur.frag");
+    //m_blurPass = new SimplePostProcPass();
+    m_blurPass.setFragmentShader("data/motionBlur.frag");
 
     //Textures
     m_TMTempTexture = new glow::Texture(GL_TEXTURE_2D);
@@ -126,11 +124,11 @@ void MotionBlurPostProc::initialize()
 
     m_randomTexture->image2D(0, GL_RED, N, N, 0, GL_RED, GL_FLOAT, &randBuffer[0]);
 
-    m_tmVerticalPass->setUniform("radius", radius);
-    m_tmHorizontalPass->setUniform("radius", radius);
-    m_neighborMaxPass->setUniform("radius", radius);
-    m_blurPass->setUniform("radius", radius);
-    m_blurPass->setUniform("numSamples", numSamples);
+    m_tmVerticalPass.setUniform("radius", radius);
+    m_tmHorizontalPass.setUniform("radius", radius);
+    m_neighborMaxPass.setUniform("radius", radius);
+    m_blurPass.setUniform("radius", radius);
+    m_blurPass.setUniform("numSamples", numSamples);
 
     //FBOs
     m_TMTempFBO = new glow::FrameBufferObject();
@@ -152,8 +150,13 @@ void MotionBlurPostProc::resize(int width, int height)
     m_TMTexture->image2D(0, GL_RG16F, width / radius, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
     m_NMTexture->image2D(0, GL_RG16F, width / radius, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
 
-    m_tmVerticalPass->setUniform("viewport", glm::vec2(width, height));
-    m_tmHorizontalPass->setUniform("viewport", glm::vec2(width, height));
-    m_neighborMaxPass->setUniform("viewport", glm::vec2(width, height));
-    m_blurPass->setUniform("viewport", glm::vec2(width, height));
+    m_tmVerticalPass.setUniform("viewport", glm::vec2(width, height));
+    m_tmHorizontalPass.setUniform("viewport", glm::vec2(width, height));
+    m_neighborMaxPass.setUniform("viewport", glm::vec2(width, height));
+    m_blurPass.setUniform("viewport", glm::vec2(width, height));
+
+    m_tmVerticalPass.resize(width, height);
+    m_tmHorizontalPass.resize(width, height);
+    m_neighborMaxPass.resize(width, height);
+    m_blurPass.resize(width, height);
 }

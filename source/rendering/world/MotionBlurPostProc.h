@@ -4,9 +4,7 @@
 #include <glow/Referenced.h>
 #include <glow/Program.h>
 
-#include "PostProcInterface.h"
-
-class SimplePostProcPass;
+#include "SimplePostProcPass.h"
 
 class MotionBlurPostProc : public PostProcInterface
 {
@@ -16,8 +14,8 @@ public:
 
     virtual void apply(glow::FrameBufferObject & fbo);
     virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, int> & input);
-    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
+    virtual void setInputTextures(const QMap<QString, int> input);
+    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> output);
 
     template<typename T>
     void setUniform(const QString name, const T& value);
@@ -29,10 +27,10 @@ protected:
     static const float radius;
     static const float numSamples;
 
-    glow::ref_ptr<SimplePostProcPass> m_tmVerticalPass; //tm = tileMax
-    glow::ref_ptr<SimplePostProcPass> m_tmHorizontalPass;
-    glow::ref_ptr<SimplePostProcPass> m_neighborMaxPass;
-    glow::ref_ptr<SimplePostProcPass> m_blurPass;
+    SimplePostProcPass m_tmVerticalPass; //tm = tileMax
+    SimplePostProcPass m_tmHorizontalPass;
+    SimplePostProcPass m_neighborMaxPass;
+    SimplePostProcPass m_blurPass;
 
     glow::ref_ptr<glow::FrameBufferObject> m_TMTempFBO;
     glow::ref_ptr<glow::FrameBufferObject> m_TMFBO;
@@ -46,5 +44,5 @@ protected:
 
 template<typename T>
 void MotionBlurPostProc::setUniform(const QString name, const T& value) {
-    m_blurPass->setUniform(name, value);
+    m_blurPass.setUniform(name, value);
 }

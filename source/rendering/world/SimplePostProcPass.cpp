@@ -12,6 +12,7 @@
 SimplePostProcPass::SimplePostProcPass()
 :   m_vertexShader("data/screenquad.vert")
 ,   m_output2DInvalidated(true)
+, m_inputTextures(QMap<QString, int>())
 {
 }
 
@@ -22,9 +23,21 @@ SimplePostProcPass::~SimplePostProcPass()
 void SimplePostProcPass::initBeforeDraw(glow::FrameBufferObject & fbo)
 {
     //set input Textures as uniforms
-    for (QString uniformName : m_inputTextures.keys()) {
-        int textureImageUnit = m_inputTextures[uniformName];
-        m_program->setUniform(uniformName.toStdString(), textureImageUnit);
+
+    qDebug() << endl << "input textures before draw";
+    for (int TIU : m_inputTextures.values()) {
+        qDebug() << TIU << " : " << m_inputTextures.key(TIU);
+    }
+
+    qDebug();
+    qDebug() << "input textures before draw 2";
+    qDebug() << "unique keys" << m_inputTextures.uniqueKeys();
+    
+    for (QString uniformName : m_inputTextures.uniqueKeys()) {
+        int numberOfTextureImageUnit = m_inputTextures.value(uniformName);
+        m_program->setUniform(uniformName.toStdString(), numberOfTextureImageUnit);
+
+        qDebug() << uniformName << " : " << numberOfTextureImageUnit;
     }
 
     if (m_output2DInvalidated){
@@ -60,12 +73,21 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
     glDepthMask(GL_TRUE);
 }
 
-void SimplePostProcPass::setInputTextures(const QMap<QString, int> & input)
+void SimplePostProcPass::setInputTextures(const QMap<QString, int> input)
 {
-    m_inputTextures = input;
+    m_inputTextures = QMap<QString, int>(input);
+    qDebug() << endl << "set Input textures";
+    qDebug() << "argument: " << input;
+    qDebug() << "member: " << m_inputTextures;
+
+    for (QString uniformName : m_inputTextures.keys()) {
+        int numberOfTextureImageUnit = m_inputTextures.value(uniformName);
+        qDebug() << uniformName << " : " << numberOfTextureImageUnit;
+    }
+    qDebug();
 }
 
-void SimplePostProcPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output)
+void SimplePostProcPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
 {
     m_output2D = output;
 

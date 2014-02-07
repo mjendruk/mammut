@@ -13,6 +13,9 @@
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
+#include "SimplePostProcPass.h"
+#include "MotionBlurPostProc.h"
+#include "SSAOPostProc.h"
 
 namespace glow
 {
@@ -28,9 +31,7 @@ namespace glowutils
 
 class Canvas;
 class GameMechanics;
-class SimplePostProcPass;
-class MotionBlurPostProc;
-class SSAOPostProc;
+
 
 
 class GameWorldRenderer : public Renderer
@@ -80,9 +81,9 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
-    glow::ref_ptr<SimplePostProcPass> m_quadPass;
-    glow::ref_ptr<MotionBlurPostProc> m_motionBlurPostProc;
-    glow::ref_ptr<SSAOPostProc> m_ssaoPostProc;
+    SimplePostProcPass m_quadPass;
+    MotionBlurPostProc m_motionBlurPostProc;
+    SSAOPostProc m_ssaoPostProc;
 
 
     glm::mat4 m_previousViewProjection;

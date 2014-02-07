@@ -25,7 +25,7 @@ enum TextureImageUnits {
     TIU_BufferCount // should always be last member
 };
 
-class PostProcInterface : public glow::Referenced
+class PostProcInterface //: public glow::Referenced
 {
 public:
     virtual ~PostProcInterface(){}
@@ -33,6 +33,6 @@ public:
     virtual void apply(glow::FrameBufferObject & frameBuffer) = 0;
     virtual void resize(int width, int height) = 0;
 
-    virtual void setInputTextures(const QMap<QString, int> & input) = 0;
-    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output) = 0;
+    virtual void setInputTextures(const QMap<QString, int> input) = 0;
+    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> output) = 0;
 };

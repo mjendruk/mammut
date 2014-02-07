@@ -4,6 +4,7 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include <QDebug>
 #include <QMap>
 
 #include "glow/Program.h"
@@ -93,27 +94,33 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferVelocity->bind(GL_TEXTURE0 + TIU_Velocity);
 
     //SSAO pass
-    m_ssaoPostProc->setUniform("projection", m_camera.projection());
-    m_ssaoPostProc->setUniform("invProjection", glm::inverse(m_camera.projection()));
-    m_ssaoPostProc->setUniform("normalMatrix", m_camera.normal());
+    qDebug();
+    qDebug() << "SSAO";
+    m_ssaoPostProc.setUniform("projection", m_camera.projection());
+    m_ssaoPostProc.setUniform("invProjection", glm::inverse(m_camera.projection()));
+    m_ssaoPostProc.setUniform("normalMatrix", m_camera.normal());
 
-    m_ssaoPostProc->apply(*m_ssaoFBO);
+    m_ssaoPostProc.apply(*m_ssaoFBO);
 
     //motion blur pass
-    m_motionBlurPostProc->setUniform("currentFPS_targetFPS", fps()/60.f);
+    qDebug();
+    qDebug() << "MB";
+    m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps()/60.f);
 
     m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
-    m_motionBlurPostProc->apply(*m_motionBlurFBO);
+    m_motionBlurPostProc.apply(*m_motionBlurFBO);
     m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
 
     //last pass
+    qDebug();
+    qDebug() << "last quad";
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
 
     m_ssaoOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
-    m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
-    m_quadPass->apply(*fbo);
+    m_quadPass.setUniform("transformi", m_camera.viewProjectionInverted());
+    m_quadPass.apply(*fbo);
     m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
 
     //unbind textures
@@ -146,31 +153,32 @@ void GameWorldRenderer::initialize()
     initializeGBuffer();
 
     //initialize postprocessing passes
-    m_quadPass = new SimplePostProcPass();
-    m_quadPass->setVertexShader("data/quad.vert");
-    m_quadPass->setFragmentShader("data/quad.frag");
-    m_quadPass->setInputTextures({ { "color", TIU_SSAO }
+    //m_quadPass = new SimplePostProcPass();
+    m_quadPass.setVertexShader("data/quad.vert");
+    m_quadPass.setFragmentShader("data/quad.frag");
+    m_quadPass.setInputTextures({ { "result", TIU_MotionBlur }
                                  });
-    m_quadPass->set2DTextureOutput({}); //render on screen
+    m_quadPass.set2DTextureOutput({}); //render on screen
 
+    //SSAO
     m_ssaoOutput = create2DTexture();
-    m_ssaoPostProc = new SSAOPostProc();
-    m_ssaoPostProc->setInputTextures({ { "color", TIU_Color },
-                                       { "normal", TIU_Normal },
-                                       { "depth", TIU_Depth }
+    //m_ssaoPostProc = new SSAOPostProc();
+    m_ssaoPostProc.setInputTextures({ { "color", 1 },
+                                       { "normal", 0 },
+                                       { "depth", 2 }
                                      });
-    m_ssaoPostProc->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
+    m_ssaoPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
     m_ssaoFBO = new glow::FrameBufferObject();
 
-    //m_motionBlurPass
+    //motinBlur
     m_motionBlurOutput = create2DTexture();
-    m_motionBlurPostProc = new MotionBlurPostProc();
-    m_motionBlurPostProc->setInputTextures({ { "color", TIU_SSAO },
-                                             { "depth", TIU_Depth },
-                                             { "velocity", TIU_Velocity }
+    //m_motionBlurPostProc = new MotionBlurPostProc();
+    m_motionBlurPostProc.setInputTextures({ { "color", 1 },
+                                             { "depth", 2 },
+                                             { "velocity", 3 }
                                            });
-    m_motionBlurPostProc->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
+    m_motionBlurPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
 
     m_motionBlurFBO = new glow::FrameBufferObject();
 }
@@ -204,9 +212,9 @@ void GameWorldRenderer::resize(int width, int height)
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_motionBlurOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
-    m_ssaoPostProc->resize(width, height);
-    m_motionBlurPostProc->resize(width, height);
-    m_quadPass->resize(width, height);
+    m_ssaoPostProc.resize(width, height);
+    m_motionBlurPostProc.resize(width, height);
+    m_quadPass.resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()

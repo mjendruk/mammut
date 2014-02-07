@@ -1,6 +1,6 @@
 #version 410
 
-uniform sampler2D color;
+uniform sampler2D result;
 
 //uniform sampler2D motionBlurOutput;
 
@@ -12,6 +12,6 @@ in vec3 v_eye;
 
 void main()
 {
-	fragColor = texture(color, v_uv);
+	fragColor = texture(result, v_uv);
 
 }
