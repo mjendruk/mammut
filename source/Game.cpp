@@ -7,11 +7,17 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include <logic/world/GameMechanics.h>
 #include <rendering/menu/MenuRenderer.h>
 #include <rendering/world/GameWorldRenderer.h>
+
 #include <rendering/menu/BlankBackground.h>
 #include <rendering/menu/ScreenshotBackground.h>
+
+#include <logic/world/GameMechanics.h>
+#include <logic/menu/MainMenu.h>
+#include <logic/menu/HighscoreMenu.h>
+#include <logic/menu/PauseMenu.h>
+
 #include <sound/Sound.h>
 #include <sound/SoundManager.h>
 
@@ -22,7 +28,6 @@ Game::Game(int & argc, char ** argv)
 {
     initializeWindow();
     initializeRenderers();
-    connectSignals();
     
     showMainMenu();
     
@@ -75,40 +80,57 @@ void Game::startGame()
     connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::showPauseMenu);
     connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::showMainMenu);
     
-    m_activeMechanics = m_gameMechanics.get();
+    m_activeMechanics = m_gameMechanics;
     m_canvas->setRenderer(m_gameWorldRenderer.get());
 }
 
 void Game::resumeGame()
 {
-    m_activeMechanics = m_gameMechanics.get();
+    m_activeMechanics = m_gameMechanics;
     m_canvas->setRenderer(m_gameWorldRenderer.get());
 }
 
 void Game::showPauseMenu()
 {
-    m_activeMechanics = &m_pauseMenu;
+    std::shared_ptr<PauseMenu> menu(new PauseMenu());
+    
+    connect(menu.get(), &PauseMenu::resumePressed, this, &Game::resumeGame);
+    connect(menu.get(), &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+    
     m_canvas->setRenderer(m_gameWorldRenderer.get());
     m_screenshotBackground->setScreenshot(m_canvas->screenshot());
-    m_menuRenderer->setMenu(&m_pauseMenu);
     m_menuRenderer->setBackground(m_screenshotBackground.get());
+    
     m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::showMainMenu()
 {
-    m_activeMechanics = &m_mainMenu;
-    m_menuRenderer->setMenu(&m_mainMenu);
+    std::shared_ptr<MainMenu> menu(new MainMenu());
+    
+    connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
+    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscore);
+    connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
+    
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+    
     m_menuRenderer->setBackground(m_blankBackground.get());
     m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::showHighscore()
 {
-    m_activeMechanics = &m_highscoreMenu;
-    m_menuRenderer->setMenu(&m_highscoreMenu);
-    m_menuRenderer->setBackground(m_blankBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
+//    std::shared_ptr<Menu> menu(new HighscoreMenu());
+//    
+//    m_activeMechanics = menu;
+//    m_menuRenderer->setMenu(menu.get());
+//    
+//    m_menuRenderer->setBackground(m_blankBackground.get());
+//    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::quit()
@@ -143,18 +165,6 @@ void Game::initializeRenderers()
     m_gameWorldRenderer.reset(new GameWorldRenderer());
     m_blankBackground.reset(new BlankBackground());
     m_screenshotBackground.reset(new ScreenshotBackground());
-}
-
-void Game::connectSignals()
-{   
-    connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::startGame);
-    connect(&m_mainMenu, &MainMenu::highscorePressed, this, &Game::showHighscore);
-    connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
-
-    connect(&m_highscoreMenu, &HighscoreMenu::backPressed, this, &Game::showMainMenu);
-    
-    connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resumeGame);
-    connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
 }
 
 bool Game::eventFilter(QObject * obj, QEvent * event)

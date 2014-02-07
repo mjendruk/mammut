@@ -6,15 +6,14 @@
 
 #include <glow/Timer.h>
 
-#include <logic/menu/MainMenu.h>
-#include <logic/menu/HighscoreMenu.h>
-#include <logic/menu/PauseMenu.h>
 #include <rendering/Canvas.h>
 
 #include "AbstractApplication.h"
 
 class QMouseEvent;
+
 class GameMechanics;
+class Mechanics;
 
 class MenuRenderer;
 class GameWorldRenderer;
@@ -41,7 +40,6 @@ public slots:
 protected:
     void initializeWindow();
     void initializeRenderers();
-    void connectSignals();
 
     bool eventFilter(QObject * obj, QEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
@@ -49,13 +47,8 @@ protected:
     void keyReleased(QKeyEvent * keyEvent);
 
 protected:
-    MainMenu m_mainMenu;
-    HighscoreMenu m_highscoreMenu;
-    PauseMenu m_pauseMenu;
-
-    std::unique_ptr<GameMechanics> m_gameMechanics;
-
-    Mechanics * m_activeMechanics;
+    std::shared_ptr<GameMechanics> m_gameMechanics;
+    std::shared_ptr<Mechanics> m_activeMechanics;
     
     std::unique_ptr<MenuRenderer> m_menuRenderer;
     std::unique_ptr<GameWorldRenderer> m_gameWorldRenderer;

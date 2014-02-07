@@ -1,8 +1,11 @@
 #include "HighscoreItem.h"
 
+#include <logic/highscore/HighscoreEntry.h>
+
 #include <rendering/menu/MenuRenderer.h>
 
-HighscoreItem::HighscoreItem()
+HighscoreItem::HighscoreItem(const QList<HighscoreEntry> & scores)
+:   m_scores(scores)
 {
 }
 

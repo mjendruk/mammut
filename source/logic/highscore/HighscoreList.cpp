@@ -37,3 +37,8 @@ bool HighscoreList::addScore(const QString & name, unsigned int score)
     m_list.removeLast();
     return true;
 }
+
+const QList<HighscoreEntry> & HighscoreList::scores() const
+{
+    return m_list;
+}

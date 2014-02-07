@@ -1,23 +1,26 @@
 #pragma once
 
+#include <QList>
+
 #include "Menu.h"
 
 class MenuButton;
 class HighscoreItem;
+class HighscoreEntry;
 
 class HighscoreMenu : public Menu
 {
     Q_OBJECT
 
 public:
-    HighscoreMenu();
+    HighscoreMenu(const QList<HighscoreEntry> & scores);
     virtual ~HighscoreMenu();
 
 signals:
     void backPressed();
 
 protected:
-    QList<MenuItem *> initializeMenuItems();
+    QList<MenuItem *> initializeMenuItems(const QList<HighscoreEntry> & scores);
     void connectSignals();
 
 protected:

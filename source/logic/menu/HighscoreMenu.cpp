@@ -3,8 +3,8 @@
 #include "MenuButton.h"
 #include "HighscoreItem.h"
 
-HighscoreMenu::HighscoreMenu()
-:   Menu(initializeMenuItems())
+HighscoreMenu::HighscoreMenu(const QList<HighscoreEntry> & scores)
+:   Menu(initializeMenuItems(scores))
 {
     connectSignals();
 }
@@ -13,9 +13,9 @@ HighscoreMenu::~HighscoreMenu()
 {
 }
 
-QList<MenuItem *> HighscoreMenu::initializeMenuItems()
+QList<MenuItem *> HighscoreMenu::initializeMenuItems(const QList<HighscoreEntry> & scores)
 {
-    m_highscore = new HighscoreItem();
+    m_highscore = new HighscoreItem(scores);
     m_backButton = new MenuButton("Back");
 
     return { m_highscore, m_backButton };
