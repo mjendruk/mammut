@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glow/Program.h>
-
 #include "PostProcInterface.h"
 
 class SimplePostProcPass;
@@ -22,22 +20,19 @@ public:
 
 protected:
     void initialize();
-    void initializeSSAOPrograms();
 
 protected:
     static const int m_kernelSize;
     static const int m_noiseSize;
     static const float m_radius;
 
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_ssaoQuad;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_blurQuad;
+    glow::ref_ptr<SimplePostProcPass> m_ssaoPass;
+    glow::ref_ptr<SimplePostProcPass> m_blurPass;
 
     glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;
-    glow::ref_ptr<glow::FrameBufferObject> m_tempFBO;
 
-    glow::ref_ptr<SimplePostProcPass> m_ssaoPass;
-    glow::ref_ptr<SimplePostProcPass> m_blurPass;
+    glow::ref_ptr<glow::FrameBufferObject> m_tempFBO;
 };
 
 template<typename T>

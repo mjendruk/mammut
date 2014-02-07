@@ -11,14 +11,8 @@
 
 namespace glow
 {
-    class Program;
     class FrameBufferObject;
     class Texture;
-}
-
-namespace glowutils
-{
-    class ScreenAlignedQuad;
 }
 
 enum TextureImageUnits {
