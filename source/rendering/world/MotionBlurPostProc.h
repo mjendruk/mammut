@@ -6,16 +6,7 @@
 
 #include "PostProcInterface.h"
 
-namespace glow
-{
-    class Texture;
-    class FrameBufferObject;
-}
-
-namespace glowutils
-{
-    class ScreenAlignedQuad;
-}
+class SimplePostProcPass;
 
 class MotionBlurPostProc : public PostProcInterface
 {
@@ -28,23 +19,20 @@ public:
     virtual void setInputTextures(const QMap<QString, int> & input);
     virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
 
+    template<typename T>
+    void setUniform(const QString name, const T& value);
+
 protected:
 	void initialize();
-    void initializePrograms();
 
 protected:
     static const float radius;
     static const float numSamples;
 
-    glow::ref_ptr<glow::Program> m_TMTempProgram;
-    glow::ref_ptr<glow::Program> m_TMProgram;
-    glow::ref_ptr<glow::Program> m_NMProgram;
-    glow::ref_ptr<glow::Program> m_blurProgram;
-
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_TMTempQuad;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_TMQuad;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_NMQuad;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_blurQuad;
+    glow::ref_ptr<SimplePostProcPass> m_tmVerticalPass; //tm = tileMax
+    glow::ref_ptr<SimplePostProcPass> m_tmHorizontalPass;
+    glow::ref_ptr<SimplePostProcPass> m_neighborMaxPass;
+    glow::ref_ptr<SimplePostProcPass> m_blurPass;
 
     glow::ref_ptr<glow::FrameBufferObject> m_TMTempFBO;
     glow::ref_ptr<glow::FrameBufferObject> m_TMFBO;
@@ -54,9 +42,9 @@ protected:
     glow::ref_ptr<glow::Texture> m_TMTexture;
     glow::ref_ptr<glow::Texture> m_NMTexture;
     glow::ref_ptr<glow::Texture> m_randomTexture;
-
-    QMap<QString, int> * m_TMTempInputTextures;
-    QMap<QString, int> * m_TMInputTextures;
-    QMap<QString, int> * m_NMInputTextures;
-    QMap<QString, int> * m_blurInputTextures;
 };
+
+template<typename T>
+void MotionBlurPostProc::setUniform(const QString name, const T& value) {
+    m_blurPass->setUniform(name, value);
+}
