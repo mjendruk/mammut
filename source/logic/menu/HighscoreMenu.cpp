@@ -1,6 +1,7 @@
 #include "HighscoreMenu.h"
 
 #include "MenuButton.h"
+#include "HighscoreItem.h"
 
 HighscoreMenu::HighscoreMenu()
 :   Menu(initializeMenuItems())
@@ -14,9 +15,10 @@ HighscoreMenu::~HighscoreMenu()
 
 QList<MenuItem *> HighscoreMenu::initializeMenuItems()
 {
+    m_highscore = new HighscoreItem();
     m_backButton = new MenuButton("Back");
 
-    return { m_backButton };
+    return { m_highscore, m_backButton };
 }
 
 void HighscoreMenu::connectSignals()

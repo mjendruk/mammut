@@ -212,6 +212,13 @@ set(sources
     ${source_path}/logic/Mechanics.cpp
     ${source_path}/logic/Mechanics.h
 
+    ${source_path}/logic/highscore/HighscoreList.cpp
+    ${source_path}/logic/highscore/HighscoreList.h
+    ${source_path}/logic/highscore/HighscoreEntry.cpp
+    ${source_path}/logic/highscore/HighscoreEntry.h
+
+    ${source_path}/logic/menu/HighscoreItem.cpp
+    ${source_path}/logic/menu/HighscoreItem.h
     ${source_path}/logic/menu/HighscoreMenu.cpp
     ${source_path}/logic/menu/HighscoreMenu.h
     ${source_path}/logic/menu/MainMenu.cpp

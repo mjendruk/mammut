@@ -3,6 +3,7 @@
 #include "Menu.h"
 
 class MenuButton;
+class HighscoreItem;
 
 class HighscoreMenu : public Menu
 {
@@ -20,6 +21,7 @@ protected:
     void connectSignals();
 
 protected:
+    HighscoreItem * m_highscore;
     MenuButton * m_backButton;
 
 };

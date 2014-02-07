@@ -2,13 +2,13 @@
 
 #include "MenuItem.h"
 
-class MenuLogo : public MenuItem
+class HighscoreItem : public MenuItem
 {
     Q_OBJECT
 
 public:
-    MenuLogo();
-    virtual ~MenuLogo();
+    HighscoreItem();
+    virtual ~HighscoreItem();
 
     void accept(MenuRenderer * renderer) override;
     void keyPressed(QKeyEvent * event) override;

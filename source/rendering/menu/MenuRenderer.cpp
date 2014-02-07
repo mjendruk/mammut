@@ -9,6 +9,7 @@
 
 #include <logic/menu/MenuButton.h>
 #include <logic/menu/MenuLogo.h>
+#include <logic/menu/HighscoreItem.h>
 #include <logic/menu/Menu.h>
 
 #include "AbstractBackground.h"
@@ -84,6 +85,11 @@ void MenuRenderer::render(const MenuLogo * logo)
                          color);
     
     m_translation *= glm::translate(0.0f, -0.3f, 0.0f);
+}
+
+void MenuRenderer::render(const HighscoreItem * list)
+{
+    m_translation *= glm::translate(0.0f, -0.5f, 0.0f);
 }
 
 void MenuRenderer::setBackground(AbstractBackground * background)
