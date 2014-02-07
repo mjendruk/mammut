@@ -93,7 +93,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferVelocity->bind(GL_TEXTURE0 + TIU_Velocity);
 
     //SSAO pass
-   /* m_ssaoPostProc->setUniform("projection", m_camera.projection());
+    m_ssaoPostProc->setUniform("projection", m_camera.projection());
     m_ssaoPostProc->setUniform("invProjection", glm::inverse(m_camera.projection()));
     m_ssaoPostProc->setUniform("normalMatrix", m_camera.normal());
 
@@ -104,17 +104,17 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
                m_camera.viewport().y * devicePixelRatio);
 
     //motion blur pass
-    m_motionBlurPostProc->setUniform("currentFPS_targetFPS", fps()/60.f);
+  /*  m_motionBlurPostProc->setUniform("currentFPS_targetFPS", fps()/60.f);
 
     m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
     m_motionBlurPostProc->apply(*m_motionBlurFBO);
     m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);*/
 
     //last pass
-    //m_motionBlurOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
+    m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
     m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
     m_quadPass->apply(*fbo);
-    //m_motionBlurOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
+    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
 
     //unbind textures
     m_gBufferVelocity->unbind(GL_TEXTURE0 + TIU_Velocity);
@@ -151,8 +151,7 @@ void GameWorldRenderer::initialize()
     m_quadPass = new SimplePostProcPass();
     m_quadPass->setVertexShader("data/quad.vert");
     m_quadPass->setFragmentShader("data/quad.frag");
-    m_quadPass->setInputTextures({ { "color", TIU_Color }//, 
-                                   //{ "colorOutput", TIU_MotionBlur } 
+    m_quadPass->setInputTextures({ { "color", TIU_SSAO }
                                  });
     m_quadPass->set2DTextureOutput({}); //render on screen
 
