@@ -17,8 +17,8 @@ flat out vec4 v_color;
 smooth out float v_depthInES;
 smooth out float v_eyeDistance;
 
-smooth out vec4 v_currentPositionInSS;
-smooth out vec4 v_previousPositionInSS;
+smooth out vec4 v_currentPositionInWS;
+smooth out vec4 v_previousPositionInWS;
 
 vec3 normalToWorldSpace(vec3 normal)
 {
@@ -57,8 +57,8 @@ void main()
     vec4 vertexInES = view * worldVertex;
     v_depthInES = - (vertexInES.z - nearFar.x)/(nearFar.y-nearFar.x);
 
-    v_currentPositionInSS = viewProjection  * worldVertex;
-    v_previousPositionInSS = prevViewProjection * prevModel * vec4(a_vertex, 1.0);
+    v_currentPositionInWS = worldVertex;
+    v_previousPositionInWS = prevModel * vec4(a_vertex, 1.0);
 
-    gl_Position = v_currentPositionInSS;
+    gl_Position = viewProjection  * worldVertex;
 }

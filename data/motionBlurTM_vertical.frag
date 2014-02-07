@@ -13,14 +13,14 @@ void main() {
     vec2 m = vec2(0.0);
     float largestMagnitude2 = 0.0;
 
-    int tileCornerX = int(gl_FragCoord.y) * int(radius);
-    int tileRowY = int(gl_FragCoord.x);
+    int tileCornerY = int(gl_FragCoord.y) * int(radius);
+    int tileX = int(gl_FragCoord.x);
 
-    int maxCoordX = textureSize(velocity, 0).x - 1;
+    int maxCoordY = int(viewport.y) - 1;
 
     for(int offset = 0; offset < int(radius); ++offset)
     {
-        ivec2 G = ivec2(clamp(tileCornerX + offset, 0, maxCoordX), tileRowY);
+        ivec2 G = ivec2(tileX, clamp(tileCornerY + offset, 0, maxCoordY));
 
         vec2 v_G = texelFetch(velocity, G, 0).rg;
 
@@ -34,6 +34,24 @@ void main() {
     }
 
     fragColor = m;
+/*
+    if((gl_FragCoord.x > 450.0) && (gl_FragCoord.y > 30.0))
+    {
+        fragColor = vec2(1.0,0.0);
+        return;
+    }
+
+    if(gl_FragCoord.x > 450.0)
+    {
+        fragColor = vec2(0.0,1.0);
+        return;
+    }  
+
+    if(gl_FragCoord.y > 30.0)
+    {
+        fragColor = vec2(1.0,1.0);
+        return;
+    }*/
 
 /*
 

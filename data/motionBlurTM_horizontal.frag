@@ -1,6 +1,6 @@
 #version 410
 
-uniform sampler2D velocity;
+uniform sampler2D tmVertical;
 uniform float radius;
 uniform vec2 viewport;
 
@@ -13,16 +13,16 @@ void main() {
     vec2 m = vec2(0.0);
     float largestMagnitude2 = 0.0;
 
-    int tileCornerX = int(gl_FragCoord.y) * int(radius);
-    int tileRowY = int(gl_FragCoord.x);
+    int tileCornerX = int(gl_FragCoord.x) * int(radius);
+    int tileY = int(gl_FragCoord.y);
 
-    int maxCoordX = textureSize(velocity, 0).x - 1;
+    int maxCoordX = int(viewport.x) - 1;
 
-    for(int offset = 0; offset < int(radius); ++offset)
+    for(int offset =0; offset < int(radius); ++offset)
     {
-        ivec2 G = ivec2(clamp(tileCornerX + offset, 0, maxCoordX), tileRowY);
+        ivec2 G = ivec2(clamp(tileCornerX + offset, 0, maxCoordX), tileY);
 
-        vec2 v_G = texelFetch(velocity, G, 0).rg;
+        vec2 v_G = texelFetch(tmVertical, G, 0).rg;
 
         float thisMagnitude2 = dot(v_G, v_G);
 

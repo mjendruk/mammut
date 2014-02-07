@@ -4,7 +4,7 @@
 #include <glow/Referenced.h>
 #include <glow/Program.h>
 
-#include "PostprocessingPass.h"
+#include "PostProcInterface.h"
 
 namespace glow
 {
@@ -17,15 +17,16 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
-class MotionBlurPass : public PostprocessingPass
+class MotionBlurPostProc : public PostProcInterface
 {
 public:
-    MotionBlurPass(const QString name);
-    ~MotionBlurPass();
+    MotionBlurPostProc();
+    ~MotionBlurPostProc();
 
     virtual void apply(glow::FrameBufferObject & fbo);
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, int> & input);
+    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
 
 protected:
 	void initialize();
@@ -35,10 +36,12 @@ protected:
     static const float radius;
     static const float numSamples;
 
+    glow::ref_ptr<glow::Program> m_TMTempProgram;
     glow::ref_ptr<glow::Program> m_TMProgram;
     glow::ref_ptr<glow::Program> m_NMProgram;
     glow::ref_ptr<glow::Program> m_blurProgram;
 
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_TMTempQuad;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_TMQuad;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_NMQuad;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_blurQuad;

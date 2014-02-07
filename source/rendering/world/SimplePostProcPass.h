@@ -8,6 +8,8 @@
 #include <glow/ref_ptr.h>
 #include <glow/Referenced.h>
 
+#include "PostProcInterface.h"
+
 
 namespace glow
 {
@@ -21,45 +23,33 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
-enum TextureImageUnits {
-    TIU_Normal = 0,
-    TIU_Color,
-    TIU_Depth,
-    TIU_Velocity,
-    TIU_SSAO,
-    TIU_MotionBlur,
-    TIU_BufferCount // should always be last member and not be used as a name
-};
-
-class PostprocessingPass : public glow::Referenced
+class SimplePostProcPass : public PostProcInterface
 {
 public:
-    PostprocessingPass(const QString name);
-    virtual ~PostprocessingPass();
-
-    const QString name() const;
+    SimplePostProcPass();
+    virtual ~SimplePostProcPass();
 
     virtual void apply(glow::FrameBufferObject & frameBuffer);
     virtual void resize(int width, int height);
-
     virtual void setInputTextures(const QMap<QString, int> & input);
     virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
-    virtual void setVertexShader(const QString output);
-    virtual void setFragmentShader(const QString output);
+    
+    void setVertexShader(const QString output);
+    void setFragmentShader(const QString output);
 
     template<typename T>
     void setUniform(const QString name, const T& value);
 
 protected:
-    virtual glow::ref_ptr<glow::Program> initializeProgram();
-    virtual void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
+    void initializeProgram();
+    void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
 
 protected:
     QString const m_name;
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    QMap<QString, int> * m_inputTextures;
-    QMap<GLenum, glow::Texture*> * m_output2D;
+    QMap<QString, int> m_inputTextures;
+    QMap<GLenum, glow::Texture*> m_output2D;
     QString m_fragmentShader;
     QString m_vertexShader;
 
@@ -67,9 +57,9 @@ protected:
 };
 
 template<typename T>
-void PostprocessingPass::setUniform(const QString name, const T& value) {
+void SimplePostProcPass::setUniform(const QString name, const T& value) {
     if (!m_program) {
-        m_program = initializeProgram();
+        initializeProgram();
         m_quad = new glowutils::ScreenAlignedQuad(m_program);
     }
     m_program->setUniform(name.toStdString(), value);

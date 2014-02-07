@@ -1,4 +1,4 @@
-#include "SSAOPass.h"
+#include "SSAOPostProc.h"
 
 #include <glm/gtx/random.hpp>
 
@@ -10,25 +10,24 @@
 
 #include "FileAssociatedShader.h"
 
-const int SSAOPass::m_kernelSize = 32;
-const int SSAOPass::m_noiseSize = 4;
-const float SSAOPass::m_radius = 25.0f;
+const int SSAOPostProc::m_kernelSize = 32;
+const int SSAOPostProc::m_noiseSize = 4;
+const float SSAOPostProc::m_radius = 25.0f;
 
-SSAOPass::SSAOPass(QString name)
-:   PostprocessingPass(name)
-,   m_ssaoInputTextures(new QMap<QString, int>)
+SSAOPostProc::SSAOPostProc()
+:   m_ssaoInputTextures(new QMap<QString, int>)
 ,   m_blurInputTextures(new QMap<QString, int>)
 {
     initialize();
 }
 
-SSAOPass::~SSAOPass()
+SSAOPostProc::~SSAOPostProc()
 {
 }
 
-void SSAOPass::apply(glow::FrameBufferObject & fbo)
+void SSAOPostProc::apply(glow::FrameBufferObject & fbo)
 {
-    glDisable(GL_DEPTH_TEST);
+    /*glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -62,11 +61,12 @@ void SSAOPass::apply(glow::FrameBufferObject & fbo)
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
 
-    m_program = m_ssaoProgram;
+    m_program = m_ssaoProgram;*/
 }
 
-void SSAOPass::setInputTextures(const QMap<QString, int> & input)
+void SSAOPostProc::setInputTextures(const QMap<QString, int> & input)
 {
+    /*
     //split into 2 Maps for each pass (ssao, blur)
     m_ssaoInputTextures->clear();
     m_ssaoInputTextures->insert("normal", input.value("normal"));
@@ -77,11 +77,16 @@ void SSAOPass::setInputTextures(const QMap<QString, int> & input)
     m_blurInputTextures->insert("color", input.value("color"));
     m_blurInputTextures->insert("ssao", TIU_BufferCount);
 
-    m_inputTextures = m_ssaoInputTextures;
+    m_inputTextures = m_ssaoInputTextures;*/
 }
 
-void SSAOPass::initialize()
+void SSAOPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output)
 {
+
+}
+
+void SSAOPostProc::initialize()
+{/*
     initializeSSAOPrograms();
 
     m_ssaoTexture = new glow::Texture(GL_TEXTURE_2D);
@@ -131,11 +136,11 @@ void SSAOPass::initialize()
 
     m_fbo = new glow::FrameBufferObject();
     m_fbo->attachTexture2D(GL_COLOR_ATTACHMENT0, m_ssaoTexture);
-    m_fbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
+    m_fbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });*/
 }
 
-void SSAOPass::initializeSSAOPrograms()
-{
+void SSAOPostProc::initializeSSAOPrograms()
+{/*
     setVertexShader("data/blur.vert");
     setFragmentShader("data/blur.frag");
     m_blurProgram = initializeProgram(); 
@@ -144,12 +149,12 @@ void SSAOPass::initializeSSAOPrograms()
     setVertexShader("data/ssao.vert");
     setFragmentShader("data/ssao.frag");
     m_ssaoProgram = initializeProgram();
-    m_ssaoQuad = new glowutils::ScreenAlignedQuad(m_ssaoProgram);
+    m_ssaoQuad = new glowutils::ScreenAlignedQuad(m_ssaoProgram);*/
 }
 
-void SSAOPass::resize(int width, int height)
-{
+void SSAOPostProc::resize(int width, int height)
+{/*
     m_ssaoTexture->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_ssaoProgram->setUniform("viewport", glm::vec2(width, height));
+    m_ssaoProgram->setUniform("viewport", glm::vec2(width, height));*/
 }
 

@@ -28,9 +28,9 @@ namespace glowutils
 
 class Canvas;
 class GameMechanics;
-class PostprocessingPass;
-class MotionBlurPass;
-class SSAOPass;
+class SimplePostProcPass;
+class MotionBlurPostProc;
+class SSAOPostProc;
 
 
 class GameWorldRenderer : public Renderer
@@ -80,9 +80,9 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
-    glow::ref_ptr<PostprocessingPass> m_quadPass;
-    glow::ref_ptr<MotionBlurPass> m_motionBlurPass;
-    glow::ref_ptr<SSAOPass> m_ssaoPass;
+    glow::ref_ptr<SimplePostProcPass> m_quadPass;
+    glow::ref_ptr<MotionBlurPostProc> m_motionBlurPostProc;
+    glow::ref_ptr<SSAOPostProc> m_ssaoPostProc;
 
 
     glm::mat4 m_previousViewProjection;

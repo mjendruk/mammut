@@ -19,9 +19,9 @@
 #include "Painter.h"
 #include "RenderCamera.h"
 #include "FileAssociatedShader.h"
-#include "PostprocessingPass.h"
-#include "MotionBlurPass.h"
-#include "SSAOPass.h"
+#include "SimplePostProcPass.h"
+#include "MotionBlurPostProc.h"
+#include "SSAOPostProc.h"
 
 const float GameWorldRenderer::nearPlane = 0.1f;
 const float GameWorldRenderer::farPlane = 700.0f;
@@ -29,6 +29,7 @@ const float GameWorldRenderer::farPlane = 700.0f;
 GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
 ,   m_lastFrame(QTime::currentTime())
+,   m_avgTimeSinceLastFrame(0.0)
 ,   m_gameMechanics(nullptr)
 {
     initialize();
@@ -71,13 +72,16 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->previousModelTransform());
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
     });
     m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform(), m_previousMammutModel);
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     
     m_gBufferFBO->unbind();
     
+    m_previousViewProjection = m_camera.viewProjection();
+    m_previousMammutModel = m_gameMechanics->mammut().modelTransform();
+
     //
     ////post processing 
     //
@@ -89,28 +93,28 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferVelocity->bind(GL_TEXTURE0 + TIU_Velocity);
 
     //SSAO pass
-    m_ssaoPass->setUniform("projection", m_camera.projection());
-    m_ssaoPass->setUniform("invProjection", glm::inverse(m_camera.projection()));
-    m_ssaoPass->setUniform("normalMatrix", m_camera.normal());
+   /* m_ssaoPostProc->setUniform("projection", m_camera.projection());
+    m_ssaoPostProc->setUniform("invProjection", glm::inverse(m_camera.projection()));
+    m_ssaoPostProc->setUniform("normalMatrix", m_camera.normal());
 
-    m_ssaoPass->apply(*m_ssaoFBO);
+    m_ssaoPostProc->apply(*m_ssaoFBO);
 
     glViewport(0, 0,
                m_camera.viewport().x * devicePixelRatio,
                m_camera.viewport().y * devicePixelRatio);
 
     //motion blur pass
-    m_motionBlurPass->setUniform("currentFPS_targetFPS", fps()/60.f);
+    m_motionBlurPostProc->setUniform("currentFPS_targetFPS", fps()/60.f);
 
     m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
-    m_motionBlurPass->apply(*m_motionBlurFBO);
-    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
+    m_motionBlurPostProc->apply(*m_motionBlurFBO);
+    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);*/
 
     //last pass
-    m_motionBlurOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
+    //m_motionBlurOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
     m_quadPass->setUniform("transformi", m_camera.viewProjectionInverted());
     m_quadPass->apply(*fbo);
-    m_motionBlurOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
+    //m_motionBlurOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
 
     //unbind textures
     m_gBufferVelocity->unbind(GL_TEXTURE0 + TIU_Velocity);
@@ -125,6 +129,8 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     fbo->bind();
     m_hud.paint(m_gameMechanics->mammut());
     fbo->unbind();
+
+    
 }
 
 void GameWorldRenderer::initialize()
@@ -142,32 +148,32 @@ void GameWorldRenderer::initialize()
     initializeGBuffer();
 
     //initialize postprocessing passes
-    m_quadPass = new PostprocessingPass("quad");
+    m_quadPass = new SimplePostProcPass();
     m_quadPass->setVertexShader("data/quad.vert");
     m_quadPass->setFragmentShader("data/quad.frag");
-    m_quadPass->setInputTextures({ { "color", TIU_Color }, 
-                                   { "colorOutput", TIU_MotionBlur } 
+    m_quadPass->setInputTextures({ { "color", TIU_Color }//, 
+                                   //{ "colorOutput", TIU_MotionBlur } 
                                  });
     m_quadPass->set2DTextureOutput({}); //render on screen
 
     m_ssaoOutput = create2DTexture();
-    m_ssaoPass = new SSAOPass("ssaoPass");
-    m_ssaoPass->setInputTextures({ { "color", TIU_Color },
+    m_ssaoPostProc = new SSAOPostProc();
+    m_ssaoPostProc->setInputTextures({ { "color", TIU_Color },
                                    { "normal", TIU_Normal },
                                    { "depth", TIU_Depth }
                                  });
-    m_ssaoPass->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
+    m_ssaoPostProc->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
     m_ssaoFBO = new glow::FrameBufferObject();
 
     //m_motionBlurPass
     m_motionBlurOutput = create2DTexture();
-    m_motionBlurPass = new MotionBlurPass("motionBlur");
-    m_motionBlurPass->setInputTextures({ { "color", TIU_Color },
+    m_motionBlurPostProc = new MotionBlurPostProc();
+    m_motionBlurPostProc->setInputTextures({ { "color", TIU_SSAO },
                                          { "depth", TIU_Depth },
                                          { "velocity", TIU_Velocity }
                                        });
-    m_motionBlurPass->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
+    m_motionBlurPostProc->set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
 
     m_motionBlurFBO = new glow::FrameBufferObject();
 }
@@ -200,8 +206,9 @@ void GameWorldRenderer::resize(int width, int height)
 
     m_ssaoOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_motionBlurOutput->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_ssaoPass->resize(width, height);
-    m_motionBlurPass->resize(width, height);
+
+    m_ssaoPostProc->resize(width, height);
+    m_motionBlurPostProc->resize(width, height);
     m_quadPass->resize(width, height);
 }
 

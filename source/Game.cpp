@@ -189,7 +189,10 @@ void Game::keyPressed(QKeyEvent * keyEvent)
         m_paused = !m_paused;
 
     if (keyEvent->key() == Qt::Key_R)
+    {
         glowutils::FileRegistry::instance().reloadAll();
+        qDebug() << "reload shaders";
+    }
     
     m_activeMechanics->keyPressed(keyEvent);
 }

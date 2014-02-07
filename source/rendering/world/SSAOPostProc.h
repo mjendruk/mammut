@@ -2,17 +2,18 @@
 
 #include <glow/Program.h>
 
-#include "PostprocessingPass.h"
+#include "PostProcInterface.h"
 
-class SSAOPass : public PostprocessingPass
+class SSAOPostProc : public PostProcInterface
 {
 public:
-    SSAOPass(QString name);
-    virtual ~SSAOPass();
+    SSAOPostProc();
+    virtual ~SSAOPostProc();
 
     virtual void apply(glow::FrameBufferObject & frameBuffer);
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, int> & input);
+    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> & output);
 
 protected:
     void initialize();

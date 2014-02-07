@@ -283,16 +283,17 @@ set(sources
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
     ${source_path}/rendering/world/IDrawable.h
-    ${source_path}/rendering/world/MotionBlurPass.cpp
-    ${source_path}/rendering/world/MotionBlurPass.h
+    ${source_path}/rendering/world/MotionBlurPostProc.cpp
+    ${source_path}/rendering/world/MotionBlurPostProc.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
-    ${source_path}/rendering/world/PostprocessingPass.cpp
-    ${source_path}/rendering/world/PostprocessingPass.h
+    ${source_path}/rendering/world/PostProcInterface.h
+    ${source_path}/rendering/world/SimplePostProcPass.cpp
+    ${source_path}/rendering/world/SimplePostProcPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
-    ${source_path}/rendering/world/SSAOPass.cpp
-    ${source_path}/rendering/world/SSAOPass.h
+    ${source_path}/rendering/world/SSAOPostProc.cpp
+    ${source_path}/rendering/world/SSAOPostProc.h
 )
 
 # Group source files

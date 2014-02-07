@@ -23,7 +23,7 @@ float hash(ivec2 c)
     if(numSamples <= 5)
         return float(int(c.x + c.y) & 1) * 0.5 + 0.25;
     else
-        return texelFetch(randomBuffer, ivec2(c.x & 31, c.y & 31), 0).r;
+        return texelFetch(randomBuffer, ivec2(c.x & 31, c.y & 31), 0).r * 255.0;
 }
 
 vec2 readAdjustedVelocity(ivec2 C, sampler2D sampler, out float r)
@@ -97,9 +97,10 @@ void main()
     float r_neighborhood;
     vec2 v_neighborhood = readAdjustedNeighborhoodVelocity(me, r_neighborhood);
 
-    if(r_neighborhood <= 0.1)
+    if(r_neighborhood <= 0.4)
     {
         fragColor = vec4(resultColor, 1.0);
+        fragColor = vec4(0.1, 0.2, 0.3, 1.0);
         return;
     }
         
@@ -147,12 +148,16 @@ void main()
     }
 
     fragColor = vec4(resultColor / totalCoverage, 1.0);
-    fragColor = vec4(vec3(texture(velocity, v_uv)), 1.0);
+    float fl;
+    //vec2 vec = readAdjustedNeighborhoodVelocity(me, fl);
+    //fragColor = vec4(vec3(length(texelFetch(velocity, me, 0).xy / viewport)), 1.0);
+    //fragColor = vec4(texture(velocity, v_uv).rgb, 1.0);
+    //fragColor = vec4(vec3(vec, 0.0), 1.0);
 }
 
 //===============================
-
 /*
+
 float cone(vec2 X, vec2 Y, vec2 v)
 {
     return clamp(1 - length(X - Y) / length(v), 0.0, 1.0);
@@ -172,18 +177,18 @@ float softDepthCompare(float za, float zb)
 
 void main()
 {
-    float blurScale = float(currentFPS) / float(targetFPS);
+    float blurScale = currentFPS_targetFPS;
 
     vec2 X = v_uv;
-    vec2 v = texture(neighborMax, v_uv / radius).rg;
+    vec2 v = texture(neighborMax, v_uv.yx*radius).rg;
     if(length(v) < length(1/viewport) * 0.9)
     {
-        fragColor = texture(ssao, X);
+        fragColor = texture(color, X);
         return;
     }
 
     float weight = 1.0 / texture(velocity, X);
-    vec4 sum = texture(ssao, X) * weight;
+    vec4 sum = texture(color, X) * weight;
 
     float j = noise1(X) * 0.5;
 
@@ -201,20 +206,20 @@ void main()
                     + b * cone(X, Y, texture(velocity, X).rg)
                     + cylinder(Y, X, texture(velocity, Y).rg) * cylinder(X, Y, texture(velocity, X).rg) * 2;
         weight += alpha;
-        sum += alpha * texture(ssao, Y);
+        sum += alpha * texture(color, Y);
         }
 
     }
 
     fragColor = sum / weight;//texture(ssao, X) * 0.5;
-    //fragColor = texture(velocity, v_uv);
+    fragColor = texture(neighborMax, v_uv.yx);
     //fragColor = vec4(v, 0.0, 1.0);
 
 }
 
 
 
-void main2() {
+/*void main2() {
 
     vec4 finalColor = texture(ssao, v_uv);
 

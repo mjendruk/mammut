@@ -35,6 +35,7 @@ bool StringDrawer::initialize()
 
     if (!initializeTexture())
         return false;
+    qDebug() << "inited Tex";
     
     if (!m_stringComposer.readSpecificsFromFile("data/P22UndergroundPro-Medium.txt", s_textureSize))
         return false;
@@ -76,9 +77,7 @@ bool StringDrawer::initializeProgram()
 }
 
 bool StringDrawer::initializeTexture()
-{
-    m_characterAtlas = new glow::Texture();
-    
+{   
     const QString fileName("data/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
     
     RawFile file(fileName.toStdString());
@@ -86,6 +85,7 @@ bool StringDrawer::initializeTexture()
     if (!file.isValid())
         return false;
     
+    m_characterAtlas = new glow::Texture();
     m_characterAtlas->image2D(0, GL_R8, s_textureSize, s_textureSize, 0, GL_RED, GL_UNSIGNED_BYTE, file.data());
     
     m_characterAtlas->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -103,6 +103,8 @@ void StringDrawer::paint(
     m_program->setUniform("characterAtlas", 0);
     m_program->setUniform("color", color);
     
+    if (m_characterAtlas.get() == nullptr)
+        initializeTexture();
     m_characterAtlas->bind(GL_TEXTURE0);
     
     QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(text);
