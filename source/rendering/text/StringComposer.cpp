@@ -6,6 +6,8 @@
 #include <QRegularExpression>
 #include <QByteArray>
 
+#include <glm/gtx/transform.hpp>
+
 StringComposer::StringComposer()
 {
 }
@@ -75,13 +77,21 @@ void StringComposer::parseCharacterLine(const QString & line, float textureSize)
     float height = it.next().captured(1).toUInt();
     float xOffset = it.next().captured(1).toFloat();
     float yOffset = it.next().captured(1).toFloat();
+    float xAdvance = it.next().captured(1).toFloat();
     
-    float xAdvance = it.next().captured(1).toFloat() / textureSize;
+    glm::vec3 size = glm::vec3(width, height, 1.0f) / textureSize;
     
-    glm::vec2 position = glm::vec2(x, textureSize - (y + height)) / textureSize;
-    glm::vec2 size = glm::vec2(width, height) / textureSize;
-    glm::vec2 offset = glm::vec2(xOffset, yOffset - height) / textureSize;
+    glm::vec3 textureCoordPosition = glm::vec3(x, textureSize - (y + height), 0.0f) / textureSize;
+    glm::mat4 textureCoordTransform = glm::translate(textureCoordPosition)
+                                  * glm::scale(size);
     
-    auto specifics = new CharacterSpecifics { position, size, offset, xAdvance };
+    glm::vec3 vertexPosition = glm::vec3(xOffset, yOffset - height, 0.0f) / textureSize;
+    glm::mat4 vertexTransform = glm::translate(vertexPosition)
+                                * glm::scale(size);
+    
+    auto specifics = new CharacterSpecifics { vertexTransform,
+                                              textureCoordTransform,
+                                              xAdvance / textureSize };
+    
     m_characterSpecifics.insert(id, specifics);
 }

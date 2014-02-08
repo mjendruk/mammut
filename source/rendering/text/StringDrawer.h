@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QString>
+#include <QVector>
+
 #include <glm/glm.hpp>
 #include <glow/ref_ptr.h>
 
@@ -31,8 +33,14 @@ protected:
     bool initializeProgram();
     bool initializeTexture();
     
-    glm::mat4 alignmentTransform(const QList<CharacterSpecifics *> & list,
-                                 Alignment alignment) const;
+    static void prepareTransforms(const QList<CharacterSpecifics *> characterSpecificsList,
+                                  const glm::mat4 & modelMatrix,
+                                  Alignment alignment,
+                                  QVector<glm::mat4> & vertexTransforms,
+                                  QVector<glm::mat4> & textureCoordTransforms);
+    
+    static glm::mat4 alignmentTransform(const QList<CharacterSpecifics *> & list,
+                                        Alignment alignment);
 
 protected:
     static const float s_textureSize;

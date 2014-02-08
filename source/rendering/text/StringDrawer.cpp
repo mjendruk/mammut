@@ -100,56 +100,72 @@ void StringDrawer::paint(
     Alignment alignment, 
     const glm::vec3 color)
 {
+    QVector<glm::mat4> vertexTransforms;
+    QVector<glm::mat4> textureCoordTransforms;
+    
+    QList<CharacterSpecifics *> characterSpecificsList = m_stringComposer.characterSequence(text);
+    
+    prepareTransforms(characterSpecificsList,
+                      modelMatrix,
+                      alignment,
+                      vertexTransforms,
+                      textureCoordTransforms);
+    
+    qDebug() << "CharacterSpecificsList:" << characterSpecificsList.size();
+    qDebug() << "VertexTransforms:" << vertexTransforms.size();
+    qDebug() << "TextureCoordTransforms:" << textureCoordTransforms.size();
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    
     m_program->setUniform("characterAtlas", 0);
     m_program->setUniform("color", color);
     
     m_characterAtlas->bind(GL_TEXTURE0);
     
-    QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(text);
-    
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    
-    glm::mat4 transform = modelMatrix * alignmentTransform(list, alignment);
-    
-    for (int i = 0; i < list.size(); i++) {
-        CharacterSpecifics * currentSpecifics = list[i];
-        
-        glm::mat4 positionTransform;
-        glm::mat4 textureCoordTransform;
-
-        textureCoordTransform *= glm::translate(glm::vec3(currentSpecifics->position, 0.0f));
-        textureCoordTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
-        
-        positionTransform *= transform;
-        positionTransform *= glm::translate(glm::vec3(currentSpecifics->offset, 0.0f));
-        positionTransform *= glm::scale(glm::vec3(currentSpecifics->size, 1.0f));
-        
-        m_program->setUniform("positionTransform", positionTransform);
-        m_program->setUniform("textureCoordTransform", textureCoordTransform);
-        
-        m_program->use();
-        m_drawable.draw();
-        m_program->release();
-        
-        transform *= glm::translate(currentSpecifics->xAdvance, 0.0f, 0.0f);
-    }
+    m_program->use();
+    m_drawable.draw(characterSpecificsList.count(),
+                    vertexTransforms,
+                    textureCoordTransforms);
+    m_program->release();
     
     glDisable(GL_BLEND);
 }
 
-glm::mat4 StringDrawer::alignmentTransform(const QList<CharacterSpecifics *> & list, Alignment alignment) const
+void StringDrawer::prepareTransforms(
+    const QList<CharacterSpecifics *> characterSpecificsList,
+    const glm::mat4 & modelMatrix,
+    Alignment alignment,
+    QVector<glm::mat4> & vertexTransforms,
+    QVector<glm::mat4> & textureCoordTransforms)
+{
+    glm::mat4 transform = modelMatrix * alignmentTransform(characterSpecificsList, alignment);
+    
+    for (auto * specifics : characterSpecificsList)
+    {
+        glm::mat4 vertexTransform = transform * specifics->vertexTransform;
+        
+        vertexTransforms << vertexTransform;
+        textureCoordTransforms << specifics->textureCoordTransform;
+        
+        transform *= glm::translate(specifics->xAdvance, 0.0f, 0.0f);
+    }
+}
+
+glm::mat4 StringDrawer::alignmentTransform(
+    const QList<CharacterSpecifics *> & characterSpecificsList, Alignment alignment)
 {
     float offset;
     
-    const float length = std::accumulate(list.begin(), list.end(), 0.0f,
+    const float length = std::accumulate(characterSpecificsList.begin(),
+                                         characterSpecificsList.end(), 0.0f,
         [] (float sum, CharacterSpecifics * specifics) {
             return sum + specifics->xAdvance;
         });
     
     switch (alignment) {
         case kAlignLeft:
-            offset = - list.first()->offset.x;
+            offset = 0;
             break;
             
         case kAlignCenter:

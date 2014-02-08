@@ -8,9 +8,8 @@
 
 struct CharacterSpecifics
 {
-    glm::vec2 position;
-    glm::vec2 size;
-    glm::vec2 offset;
+    glm::mat4 vertexTransform;
+    glm::mat4 textureCoordTransform;
     float xAdvance;
 };
 
