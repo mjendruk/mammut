@@ -94,8 +94,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_gBufferVelocity->bind(GL_TEXTURE0 + TIU_Velocity);
 
     //SSAO pass
-    qDebug();
-    qDebug() << "SSAO";
     m_ssaoPostProc.setUniform("projection", m_camera.projection());
     m_ssaoPostProc.setUniform("invProjection", glm::inverse(m_camera.projection()));
     m_ssaoPostProc.setUniform("normalMatrix", m_camera.normal());
@@ -103,8 +101,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_ssaoPostProc.apply(*m_ssaoFBO);
 
     //motion blur pass
-    qDebug();
-    qDebug() << "MB";
     m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps()/60.f);
 
     m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
@@ -112,8 +108,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
 
     //last pass
-    qDebug();
-    qDebug() << "last quad";
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
@@ -153,7 +147,6 @@ void GameWorldRenderer::initialize()
     initializeGBuffer();
 
     //initialize postprocessing passes
-    //m_quadPass = new SimplePostProcPass();
     m_quadPass.setVertexShader("data/quad.vert");
     m_quadPass.setFragmentShader("data/quad.frag");
     m_quadPass.setInputTextures({ { "result", TIU_MotionBlur }
@@ -162,22 +155,20 @@ void GameWorldRenderer::initialize()
 
     //SSAO
     m_ssaoOutput = create2DTexture();
-    //m_ssaoPostProc = new SSAOPostProc();
     m_ssaoPostProc.setInputTextures({ { "color", 1 },
-                                       { "normal", 0 },
-                                       { "depth", 2 }
-                                     });
+                                      { "normal", 0 },
+                                      { "depth", 2 }
+                                    });
     m_ssaoPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
     m_ssaoFBO = new glow::FrameBufferObject();
 
     //motinBlur
     m_motionBlurOutput = create2DTexture();
-    //m_motionBlurPostProc = new MotionBlurPostProc();
     m_motionBlurPostProc.setInputTextures({ { "color", 1 },
-                                             { "depth", 2 },
-                                             { "velocity", 3 }
-                                           });
+                                            { "depth", 2 },
+                                            { "velocity", 3 }
+                                          });
     m_motionBlurPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
 
     m_motionBlurFBO = new glow::FrameBufferObject();

@@ -22,22 +22,10 @@ SimplePostProcPass::~SimplePostProcPass()
 
 void SimplePostProcPass::initBeforeDraw(glow::FrameBufferObject & fbo)
 {
-    //set input Textures as uniforms
-
-    qDebug() << endl << "input textures before draw";
-    for (int TIU : m_inputTextures.values()) {
-        qDebug() << TIU << " : " << m_inputTextures.key(TIU);
-    }
-
-    qDebug();
-    qDebug() << "input textures before draw 2";
-    qDebug() << "unique keys" << m_inputTextures.uniqueKeys();
-    
+    //set input Textures as uniforms    
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
         int numberOfTextureImageUnit = m_inputTextures.value(uniformName);
         m_program->setUniform(uniformName.toStdString(), numberOfTextureImageUnit);
-
-        qDebug() << uniformName << " : " << numberOfTextureImageUnit;
     }
 
     if (m_output2DInvalidated){
@@ -58,7 +46,6 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
     if (!m_program)
        initializeProgram();
 
-
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,20 +63,11 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
 void SimplePostProcPass::setInputTextures(const QMap<QString, int> input)
 {
     m_inputTextures = QMap<QString, int>(input);
-    qDebug() << endl << "set Input textures";
-    qDebug() << "argument: " << input;
-    qDebug() << "member: " << m_inputTextures;
-
-    for (QString uniformName : m_inputTextures.keys()) {
-        int numberOfTextureImageUnit = m_inputTextures.value(uniformName);
-        qDebug() << uniformName << " : " << numberOfTextureImageUnit;
-    }
-    qDebug();
 }
 
 void SimplePostProcPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
 {
-    m_output2D = output;
+    m_output2D = QMap<GLenum, glow::Texture*>(output);
 
     m_output2DInvalidated = true;
 }

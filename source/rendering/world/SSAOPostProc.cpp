@@ -39,14 +39,18 @@ void SSAOPostProc::apply(glow::FrameBufferObject & fbo)
 void SSAOPostProc::setInputTextures(const QMap<QString, int> input)
 {
     //split into 2 Maps for each pass (ssao, blur)
-    m_ssaoPass.setInputTextures({ { "normal", input.value("normal", TIU_Normal) },
-                                   { "depth", input.value("depth", TIU_Depth) },
-                                   { "noise", TIU_BufferCount }
-                                 });
+    QMap<QString, int> tempSSAO;
+    tempSSAO["normal"] = input.value("normal", TIU_Normal);
+    tempSSAO["depth"] = input.value("depth", TIU_Depth);
+    tempSSAO["noise"] = TIU_BufferCount;
 
-    m_blurPass.setInputTextures({ { "color", input.value("color", TIU_Color) },
-                                   { "ssao", TIU_BufferCount }
-                                 });
+    m_ssaoPass.setInputTextures(tempSSAO);
+
+    QMap<QString, int> tempBlur;
+    tempBlur["color"] = input.value("color", TIU_Color);
+    tempBlur["ssao"] = TIU_BufferCount;
+
+    m_blurPass.setInputTextures(tempBlur);
 }
 
 void SSAOPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)

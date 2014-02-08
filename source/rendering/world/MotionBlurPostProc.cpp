@@ -48,18 +48,21 @@ void MotionBlurPostProc::apply(glow::FrameBufferObject & fbo)
 void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
 {
     //split into 4 Maps for each pass
-    m_tmVerticalPass.setInputTextures({ { "velocity", input.value("velocity", TIU_Velocity) } });
+    QMap<QString, int> tempTmV;
+    tempTmV["velocity"] = input.value("velocity", TIU_Velocity);
+    m_tmVerticalPass.setInputTextures(tempTmV);
 
     m_tmHorizontalPass.setInputTextures({ { "tmHorizontal", TIU_BufferCount } });
 
     m_neighborMaxPass.setInputTextures({ { "maxTile", TIU_BufferCount } });
 
-    m_blurPass.setInputTextures({ { "deptha", input.value("depth", TIU_Depth) },
-                                   { "color", input.value("color", TIU_Color) },
-                                   { "velocity", input.value("velocity", TIU_Velocity) },
-                                   { "neighborMax", TIU_BufferCount },
-                                   { "randomBuffer", TIU_BufferCount + 1 }
-                                 });
+    QMap<QString, int> tempBlur;
+    tempBlur["depth"] = input.value("depth", TIU_Depth);
+    tempBlur["color"] = input.value("color", TIU_Color);
+    tempBlur["velocity"] = input.value("velocity", TIU_Velocity);
+    tempBlur["neighborMax"] = TIU_BufferCount;
+    tempBlur["randomBuffer"] = TIU_BufferCount + 1;
+    m_blurPass.setInputTextures(tempBlur);
 }
 
 
