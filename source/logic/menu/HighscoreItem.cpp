@@ -26,3 +26,8 @@ bool HighscoreItem::isFocusable() const
 {
     return false;
 }
+
+const QList<HighscoreEntry> & HighscoreItem::scores() const
+{
+    return m_scores;
+}

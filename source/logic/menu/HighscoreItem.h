@@ -18,6 +18,8 @@ public:
 
     bool isFocusable() const override;
 
+    const QList<HighscoreEntry> & scores() const;
+
 protected:
     QList<HighscoreEntry> m_scores;
 

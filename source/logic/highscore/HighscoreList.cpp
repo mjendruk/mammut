@@ -13,7 +13,7 @@ HighscoreList::~HighscoreList()
 
 bool HighscoreList::addScore(const QString & name, unsigned int score)
 {
-    if (m_list.isEmpty())
+    if (m_list.size() < 10)
     {
         m_list.append(HighscoreEntry(name, score));
         return true;
