@@ -24,13 +24,12 @@
 #include "MotionBlurPostProc.h"
 #include "SSAOPostProc.h"
 
-const float GameWorldRenderer::nearPlane = 0.1f;
+const float GameWorldRenderer::nearPlane = 0.01f;
 const float GameWorldRenderer::farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
 ,   m_lastFrame(QTime::currentTime())
-,   m_avgTimeSinceLastFrame(0.0)
 ,   m_gameMechanics(nullptr)
 {
     initialize();
@@ -71,11 +70,11 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
     });
-    m_painter.paint(m_cuboidDrawable, m_gameMechanics->mammut().modelTransform(), m_previousMammutModel);
+
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     
     m_gBufferFBO->unbind();
@@ -140,15 +139,15 @@ void GameWorldRenderer::initialize()
     m_caveDrawable.initialize();
     m_hud.initialize();
 
-    m_camera.setFovy(90.0);
+    m_camera.setFovy(80.0);
     m_camera.setZNear(nearPlane);
     m_camera.setZFar(farPlane);
 
     initializeGBuffer();
 
     //initialize postprocessing passes
-    m_quadPass.setVertexShader("data/quad.vert");
-    m_quadPass.setFragmentShader("data/quad.frag");
+    m_quadPass.setVertexShader("data/shaders/quad.vert");
+    m_quadPass.setFragmentShader("data/shaders/quad.frag");
     m_quadPass.setInputTextures({ { "result", TIU_MotionBlur }
                                  });
     m_quadPass.set2DTextureOutput({}); //render on screen
@@ -156,7 +155,7 @@ void GameWorldRenderer::initialize()
     //SSAO
     m_ssaoOutput = create2DTexture();
     m_ssaoPostProc.setInputTextures({ { "color", TIU_Color },
-                                      { "normal", TIU_Normal },
+				      { "normal", TIU_Normal },
                                       { "depth", TIU_Depth }
                                     });
     m_ssaoPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });

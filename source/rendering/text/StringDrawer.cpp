@@ -13,7 +13,7 @@
 #include <glow/Shader.h>
 #include <glow/Texture.h>
 
-#include "RawFile.h"
+#include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
 
 const float StringDrawer::s_textureSize = 1024.0f;
@@ -36,7 +36,7 @@ bool StringDrawer::initialize()
     if (!initializeTexture())
         return false;
     
-    if (!m_stringComposer.readSpecificsFromFile("data/P22UndergroundPro-Medium.txt", s_textureSize))
+    if (!m_stringComposer.readSpecificsFromFile("data/fonts/P22UndergroundPro-Medium.txt", s_textureSize))
         return false;
 
     return true;
@@ -46,14 +46,14 @@ bool StringDrawer::initializeProgram()
 {
     m_program = new glow::Program();
 
-    QFile vertShaderFile("data/string_drawer.vert");
+    QFile vertShaderFile("data/shaders/string_drawer.vert");
     if (!vertShaderFile.open(QIODevice::ReadOnly))
     {
         qCritical() << "Could not open vertex shader source";
         return false;
     }
 
-    QFile fragShaderFile("data/string_drawer.frag");
+    QFile fragShaderFile("data/shaders/string_drawer.frag");
     if (!fragShaderFile.open(QIODevice::ReadOnly))
     {
         qCritical() << "Could not open fragment shader source";
@@ -79,7 +79,7 @@ bool StringDrawer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
-    const QString fileName("data/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
+    const QString fileName("data/fonts/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
     
     RawFile file(fileName.toStdString());
     

@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 
 #include <logic/Mechanics.h>
+#include <sound/Sound.h>
 
 #include "PhysicsWorld.h"
 #include "ChunkGenerator.h"
@@ -22,6 +23,7 @@ public:
     virtual ~GameMechanics();
 
     void update(float seconds) override;
+    void updateSound();
 
     void keyPressed(QKeyEvent * event) override;
     void keyReleased(QKeyEvent * event) override;
@@ -46,5 +48,7 @@ protected:
     Mammut m_mammut;
     GameCamera m_camera;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
+
+    Sound m_backgroundLoop;
 
 };

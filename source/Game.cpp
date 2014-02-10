@@ -14,6 +14,8 @@
 #include <rendering/world/GameWorldRenderer.h>
 #include <rendering/menu/BlankBackground.h>
 #include <rendering/menu/ScreenshotBackground.h>
+#include <sound/Sound.h>
+#include <sound/SoundManager.h>
 
 Game::Game(int & argc, char ** argv)
 :   AbstractApplication(argc, argv)
@@ -52,6 +54,7 @@ void Game::run()
                 QThread::msleep(sleepTime);
         }
         
+        SoundManager::instance().updateSoundSystem();
         QCoreApplication::processEvents();
         
         nextTime += delta;

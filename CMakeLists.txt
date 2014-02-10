@@ -203,11 +203,10 @@ set(sources
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/GlowExtensions.cpp
-    ${source_path}/GlowExtensions.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
     ${source_path}/Util.cpp
+    ${source_path}/Util.hpp
     ${source_path}/Util.h
 
     ${source_path}/logic/Mechanics.cpp
@@ -245,6 +244,8 @@ set(sources
 
     ${source_path}/rendering/Canvas.cpp
     ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/RawFile.cpp
+    ${source_path}/rendering/RawFile.h
     ${source_path}/rendering/Renderer.cpp
     ${source_path}/rendering/Renderer.h
 
@@ -259,8 +260,6 @@ set(sources
 
     ${source_path}/rendering/text/CharacterDrawable.cpp
     ${source_path}/rendering/text/CharacterDrawable.h
-    ${source_path}/rendering/text/RawFile.cpp
-    ${source_path}/rendering/text/RawFile.h
     ${source_path}/rendering/text/StringComposer.cpp
     ${source_path}/rendering/text/StringComposer.h
     ${source_path}/rendering/text/StringDrawer.cpp
@@ -282,7 +281,7 @@ set(sources
     ${source_path}/rendering/world/GameWorldRenderer.h
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
-    ${source_path}/rendering/world/IDrawable.h
+    ${source_path}/rendering/world/DrawableInterface.h
     ${source_path}/rendering/world/MotionBlurPostProc.cpp
     ${source_path}/rendering/world/MotionBlurPostProc.h
     ${source_path}/rendering/world/Painter.cpp
@@ -294,6 +293,11 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.h
     ${source_path}/rendering/world/SSAOPostProc.cpp
     ${source_path}/rendering/world/SSAOPostProc.h
+
+    ${source_path}/sound/SoundManager.cpp
+    ${source_path}/sound/SoundManager.h
+    ${source_path}/sound/Sound.cpp
+    ${source_path}/sound/Sound.h
 )
 
 # Group source files
@@ -308,7 +312,7 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
-set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data")
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
     ${shader_path}/blur.vert
     ${shader_path}/blur.frag

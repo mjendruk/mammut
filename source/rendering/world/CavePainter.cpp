@@ -6,7 +6,7 @@
 #include <glow/Shader.h>
 #include <glowutils/File.h>
 
-#include "IDrawable.h"
+#include "DrawableInterface.h"
 
 CavePainter::CavePainter()
 :   m_program(nullptr)
@@ -23,9 +23,9 @@ bool CavePainter::initialize()
     m_program = new glow::Program();
 
     glow::Shader * m_fragShader = glowutils::createShaderFromFile(
-        GL_FRAGMENT_SHADER, "data/cuboid.frag");
+	GL_FRAGMENT_SHADER,  "data/shaders/cuboid.frag");
     glow::Shader * m_vertShader = glowutils::createShaderFromFile(
-        GL_VERTEX_SHADER, "data/cuboid.vert");
+	GL_VERTEX_SHADER, "data/shaders/cuboid.vert");
     m_program->attach(m_vertShader, m_fragShader);
     m_program->link();
 
@@ -58,7 +58,7 @@ void CavePainter::update(const QList<glow::Program *> & programs)
     //do necessary updates
 }
 
-void CavePainter::paint(IDrawable & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
+void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
 {
     m_program->setUniform("model", modelMatrix);
     m_program->setUniform("prevModel", prevModelMatrix);

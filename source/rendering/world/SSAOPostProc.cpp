@@ -62,12 +62,12 @@ void SSAOPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
 void SSAOPostProc::initialize()
 {
     //m_blurPass = new SimplePostProcPass();
-    m_blurPass.setVertexShader("data/blur.vert");
-    m_blurPass.setFragmentShader("data/blur.frag");
+    m_blurPass.setVertexShader("data/shaders/blur.vert");
+    m_blurPass.setFragmentShader("data/shaders/blur.frag");
 
     //m_ssaoPass = new SimplePostProcPass();
-    m_ssaoPass.setVertexShader("data/ssao.vert");
-    m_ssaoPass.setFragmentShader("data/ssao.frag");
+    m_ssaoPass.setVertexShader("data/shaders/ssao.vert");
+    m_ssaoPass.setFragmentShader("data/shaders/ssao.frag");
 
     m_ssaoTexture = new glow::Texture(GL_TEXTURE_2D);
     m_ssaoTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);

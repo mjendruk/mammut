@@ -10,7 +10,7 @@
 
 
 SimplePostProcPass::SimplePostProcPass()
-:   m_vertexShader("data/screenquad.vert")
+:   m_vertexShader("data/shaders/screenquad.vert")
 ,   m_output2DInvalidated(true)
 , m_inputTextures(QMap<QString, int>())
 {

@@ -12,12 +12,14 @@
 #include <btBulletDynamicsCommon.h>
 
 #include <Util.h>
+#include <sound/Sound.h>
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
 ,   m_isOnObject(false)
+,   m_crashed(false)
 {
     const glm::vec3 size(0.1f);
 }
@@ -45,7 +47,6 @@ void Mammut::update()
 
 void Mammut::gravityChangeEvent(const glm::mat3 & rotation)
 {
-    m_physics.rotate(rotation);
     m_gravityTransform = glm::inverse(rotation);
 }
 
@@ -62,7 +63,13 @@ void Mammut::collisionEvent(const PhysicsObject & object,
             m_isOnObject = true;
             break;
         case Util::kZAxis:
+        {
+            if (!m_crashed)
+                Sound sound(Sound::kImpact);
+            
+            m_crashed = true;
             emit crashed();
+        }
             break;
     }
 }
@@ -77,14 +84,14 @@ glm::vec3 Mammut::position() const
     return m_physics.position();
 }
 
+glm::vec3 Mammut::velocity() const
+{
+    return m_physics.velocity();
+}
+
 glm::mat4 Mammut::rotation() const
 {
     return m_physics.rotation();
-}
-
-float Mammut::velocity() const
-{
-    return -m_physics.velocity().z;
 }
 
 MammutPhysics * Mammut::physics()

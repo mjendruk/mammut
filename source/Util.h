@@ -19,5 +19,10 @@ glm::mat4 toGlmMat4(const btVector3 & vec3);
     
 btVector3 toBtVec3(const glm::vec3 & vec3);
 btMatrix3x3 toBtMat3(const glm::mat3 & mat3);
+    
+template <typename genType>
+glm::detail::tvec3<genType> toCartesian(const glm::detail::tvec4<genType> & homogenousVec);
 
-} // namespace Util
+} // namespace
+
+#include "Util.hpp"

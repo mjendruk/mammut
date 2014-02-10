@@ -10,7 +10,7 @@
 #include <glow/FrameBufferObject.h>
 
 const float MotionBlurPostProc::radius = 20.f;
-const float MotionBlurPostProc::numSamples = 15.f; //must be odd
+const float MotionBlurPostProc::numSamples = 15.f; //must be odds
 
 MotionBlurPostProc::MotionBlurPostProc()
 {
@@ -77,16 +77,16 @@ void MotionBlurPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> o
 void MotionBlurPostProc::initialize()
 {
     //m_tmVerticalPass = new SimplePostProcPass();
-    m_tmVerticalPass.setFragmentShader("data/motionBlurTM_vertical.frag");
+    m_tmVerticalPass.setFragmentShader("data/shaders/motionBlurTM_vertical.frag");
 
     //m_tmHorizontalPass = new SimplePostProcPass();
-    m_tmHorizontalPass.setFragmentShader("data/motionBlurTM_horizontal.frag");
+    m_tmHorizontalPass.setFragmentShader("data/shaders/motionBlurTM_horizontal.frag");
 
     //m_neighborMaxPass = new SimplePostProcPass();
-    m_neighborMaxPass.setFragmentShader("data/motionBlurNM.frag");
+    m_neighborMaxPass.setFragmentShader("data/shaders/motionBlurNM.frag");
 
     //m_blurPass = new SimplePostProcPass();
-    m_blurPass.setFragmentShader("data/motionBlur.frag");
+    m_blurPass.setFragmentShader("data/shaders/motionBlur.frag");
 
     //Textures
     m_TMTempTexture = new glow::Texture(GL_TEXTURE_2D);

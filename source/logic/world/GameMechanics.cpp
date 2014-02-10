@@ -2,14 +2,16 @@
 
 #include <QKeyEvent>
 
+#include <sound/SoundManager.h>
+
 GameMechanics::GameMechanics()
-:   m_chunkGenerator(0)
+:   m_chunkGenerator(1337)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
-,   m_camera(m_mammut)
+,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
     
-    for (int i = 0; i < 10 ; i++)
+    for (int i = 0; i < 7; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
         for (auto cuboid : m_chunkList.last()->cuboids())
@@ -27,12 +29,14 @@ GameMechanics::~GameMechanics()
     });
     
     m_physicsWorld.removeObject(m_mammut.physics());
+    m_backgroundLoop.stop();
 }
 
 void GameMechanics::update(float seconds)
 {
+    m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
-    m_camera.update(seconds);
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
     
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z)
     {
@@ -45,6 +49,15 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
+
+    updateSound();
+}
+
+void GameMechanics::updateSound()
+{
+    glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
+    glm::vec3 velocity = glm::vec3(0.0, 0.0, m_mammut.velocity().z);
+    SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -52,8 +65,12 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     switch (event->key())
     {
     case Qt::Key_Escape:
+        {
+        Sound sound(Sound::kButtonClick);
+        m_backgroundLoop.setPaused(true);
         emit pause();
         break;
+        }
     case Qt::Key_W:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityUp);
         break;
@@ -97,6 +114,7 @@ void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & la
 void GameMechanics::connectSignals()
 {
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, &m_mammut, &Mammut::update);
+    connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
     connect(&m_mammut, &Mammut::crashed, this, &GameMechanics::gameOver);
 }

@@ -42,15 +42,6 @@ void MammutPhysics::applyForce(const glm::vec3 & force)
     m_rigidBody->applyCentralForce(Util::toBtVec3(force));
 }
 
-void MammutPhysics::rotate(const glm::mat3 & rotation)
-{
-    btTransform transform;
-    m_motionState->getWorldTransform(transform);
-
-    transform.setBasis(Util::toBtMat3(rotation));
-    m_rigidBody->setCenterOfMassTransform(transform);
-}
-
 void MammutPhysics::setVelocity(const glm::vec3 & velocity)
 {
     m_rigidBody->setLinearVelocity(Util::toBtVec3(velocity));
