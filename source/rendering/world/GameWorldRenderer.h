@@ -32,8 +32,6 @@ namespace glowutils
 class Canvas;
 class GameMechanics;
 
-
-
 class GameWorldRenderer : public Renderer
 {
 public:
@@ -50,11 +48,15 @@ public:
 protected:
     void initialize();
     void initializeGBuffer();
+    void initializePostProcPasses();
 
-protected:
+    void updatePainter();
+
     void updateFPS();
+
     glow::ref_ptr<glow::Texture> create2DTexture();
 
+protected:
     static const float nearPlane;
     static const float farPlane;
     static const float motionBlurRadius;
@@ -67,7 +69,6 @@ protected:
 
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
-
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
     glow::ref_ptr<glow::FrameBufferObject> m_ssaoFBO;
@@ -85,9 +86,7 @@ protected:
     MotionBlurPostProc m_motionBlurPostProc;
     SSAOPostProc m_ssaoPostProc;
 
-
     glm::mat4 m_previousViewProjection;
-    glm::mat4 m_previousMammutModel;
     
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;

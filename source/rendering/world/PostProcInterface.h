@@ -25,7 +25,7 @@ enum TextureImageUnits {
     TIU_BufferCount // should always be last member
 };
 
-class PostProcInterface //: public glow::Referenced
+class PostProcInterface
 {
 public:
     virtual ~PostProcInterface(){}

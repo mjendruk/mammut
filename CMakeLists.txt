@@ -318,8 +318,12 @@ set(shaders
     ${shader_path}/blur.frag
     ${shader_path}/cuboid.vert
     ${shader_path}/cuboid.frag
-    ${shader_path}/quad.vert
+    ${shader_path}/motionBlur.frag
+    ${shader_path}/motionBlurNM.frag
+    ${shader_path}/motionBlurTM_horizontal.frag
+    ${shader_path}/motionBlurTM_vertical.frag
     ${shader_path}/quad.frag
+    ${shader_path}/screenquad.vert
     ${shader_path}/screenshot_background.vert
     ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert

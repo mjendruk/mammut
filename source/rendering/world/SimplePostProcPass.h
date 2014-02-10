@@ -46,10 +46,13 @@ protected:
 
 protected:
     QString const m_name;
+    
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
+    
     QMap<QString, int> m_inputTextures;
     QMap<GLenum, glow::Texture*> m_output2D;
+
     QString m_fragmentShader;
     QString m_vertexShader;
 
