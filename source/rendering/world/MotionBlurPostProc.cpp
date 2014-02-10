@@ -9,7 +9,7 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
-const float MotionBlurPostProc::radius = 10.f;
+const float MotionBlurPostProc::radius = 20.f;
 const float MotionBlurPostProc::numSamples = 15.f; //must be odd
 
 MotionBlurPostProc::MotionBlurPostProc()
@@ -52,7 +52,7 @@ void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
     tempTmV["velocity"] = input.value("velocity", TIU_Velocity);
     m_tmVerticalPass.setInputTextures(tempTmV);
 
-    m_tmHorizontalPass.setInputTextures({ { "tmHorizontal", TIU_BufferCount } });
+    m_tmHorizontalPass.setInputTextures({ { "tmVertical", TIU_BufferCount } });
 
     m_neighborMaxPass.setInputTextures({ { "maxTile", TIU_BufferCount } });
 

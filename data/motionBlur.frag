@@ -6,8 +6,6 @@ uniform sampler2D velocity;
 uniform sampler2D neighborMax;
 
 uniform sampler2D randomBuffer;
-//const int RANDOMBUFFER_SIZE = 32;
-//uniform float randomBuffer[RANDOMBUFFER_SIZE];
 
 uniform vec2 viewport;
 uniform float radius;
@@ -23,24 +21,20 @@ float hash(ivec2 c)
     if(numSamples <= 5)
         return float(int(c.x + c.y) & 1) * 0.5 + 0.25;
     else
-        return texelFetch(randomBuffer, ivec2(c.x & 31, c.y & 31), 0).r * 255.0;
+        return texelFetch(randomBuffer, ivec2(c.x & 31, c.y & 31), 0).r;
 }
 
 vec2 readAdjustedVelocity(ivec2 C, sampler2D sampler, out float r)
 {
-    vec2 q = texelFetch(sampler, C, 0).xy;
+    vec2 q = texelFetch(sampler, C, 0).xy * viewport;
     float lenq = length(q);
 
     r = (lenq * 0.5) * currentFPS_targetFPS;
-    bool rMuchLargerThanZero = (r >= 0.01);
 
     //HALF_PIX = 0.5
     r = clamp(r, 0.5, radius);
 
-    if(rMuchLargerThanZero)
-        return q * (r / lenq);
-    else
-        return q;
+    return q * (r / lenq);
 }
 
 vec2 readAdjustedVelocity(ivec2 C, out float r)
@@ -83,37 +77,45 @@ float softZCompare(float z_A, float z_B)
 }
 
 void main()
-{
-    ivec2 screensize = ivec2(viewport);
-
+{   // coords: [0, viewport]
     ivec2 me = ivec2(gl_FragCoord.xy);
-
+    // jitter [0 , 1] -> [-0.5, 0.5]
     float jitter = hash(me) - 0.5;
 
     vec3 resultColor = texelFetch(color, me, 0).rgb;
 
     float depth_center = texelFetch(depth, me, 0);
 
-    float r_neighborhood;
-    vec2 v_neighborhood = readAdjustedNeighborhoodVelocity(me, r_neighborhood);
+    // largest velocity in neighborhood of current pixel
+    // r_n: [0, radius]    +   v_n: length(v_n) = r_n
+    float radius_neighborhood;
+    vec2 velocity_neighborhood = readAdjustedNeighborhoodVelocity(me, radius_neighborhood);
 
-    if(r_neighborhood <= 0.4)
+    if(radius_neighborhood <= 0.55)
     {
         fragColor = vec4(resultColor, 1.0);
-        fragColor = vec4(0.1, 0.2, 0.3, 1.0);
+        //fragColor = vec4(0.1, 0.2, 0.3, 1.0);
         return;
     }
-        
+    // veclocity and its length (radius) of current pixel (sample center)
+    // radius: [0, radius]   + velocity: length(velocity) = radius
     float radius_center;
     vec2 velocity_center = readAdjustedVelocity(me, radius_center);
 
-    float varianceThreshold = 1.5;
+    float varianceThreshold = 2.5;
 
-    vec2 w_neighborhood = normalize(v_neighborhood);
-    vec2 w_center = (radius_center < varianceThreshold) ? w_neighborhood : normalize(velocity_center);
+    // w_neighnorhood: direction of the largset velocity in neigborhood
+    // length: 1
+    vec2 direction_neighborhood = normalize(velocity_neighborhood);
+    // direction_center: velocity direction of center (current pixel)
+    // either largest neighborhood velocity direction or velocity of current pixel
+    // if velocity of current pixel is to slow -> use velocity of neighbor
+    // length: 1
+    vec2 direction_center = (radius_center < varianceThreshold) ? direction_neighborhood : normalize(velocity_center);
 
+    //
     float invRadius_center = 1.0 / radius_center;
-    float totalCoverage = (numSamples / 40.0) * invRadius_center;
+    float totalCoverage = (numSamples / 55.0) * invRadius_center;
     resultColor *= totalCoverage;
 
     for(int i = 0; i < numSamples; ++i)
@@ -121,16 +123,23 @@ void main()
         //SMOOTHER ??
         //Do Something -> continue;
 
-        float t = clamp( mix( -1.0, 1.0, (float(i) + 1.0 + jitter) / numSamples + 1.0) * 1.2, -1, 1);
-        float dist = t * r_neighborhood;
+        if(i == (numSamples - 1)/2)
+            continue;
 
-        vec2 offset = dist * (((i & 1) == 1 ) ? w_center : w_neighborhood);
-        ivec2 other = ivec2(offset + vec2(me) + vec2(0.5));
-
+        // [-1, 1]
+        float t = clamp( mix( -1.0, 1.0, (float(i) + 1.0 + jitter) / (numSamples + 1.0)) * 1.2, -1.0, 1.0);
+        // distance (less or equal largest neighbor velocity): [-radius, radius]
+        float dist = t * radius_neighborhood;
+        // offset vector that will be added to current point: [-radius, radius]
+        // (either direction of current point or largest neighborhood)
+        vec2 offset = dist * (((i & 1) == 1 ) ? direction_center : direction_neighborhood);
+        // current sample point: [0, viewport]
+        ivec2 other = clamp(ivec2(offset + vec2(me) + vec2(0.5)), ivec2(0.0), ivec2(viewport));
+        //depth of sample
         float depth_sample = texelFetch(depth, other, 0).x;
-
+        // velocity length of sample: [0, radius]
         float radius_sample;
-
+        // velocity of sample
         vec2 velocity_sample = readAdjustedVelocity(other, radius_sample);
         vec3 color_sample = texelFetch(color, clamp(other, ivec2(0), ivec2(viewport)), 0).rgb;
 
@@ -149,107 +158,9 @@ void main()
 
     fragColor = vec4(resultColor / totalCoverage, 1.0);
     float fl;
-    //vec2 vec = readAdjustedNeighborhoodVelocity(me, fl);
+    vec2 vec = readAdjustedNeighborhoodVelocity(me, fl);
+    //fragColor = vec4(vec3(fl), 1.0);
     //fragColor = vec4(vec3(length(texelFetch(velocity, me, 0).xy / viewport)), 1.0);
     //fragColor = vec4(texture(velocity, v_uv).rgb, 1.0);
     //fragColor = vec4(vec3(vec, 0.0), 1.0);
 }
-
-//===============================
-/*
-
-float cone(vec2 X, vec2 Y, vec2 v)
-{
-    return clamp(1 - length(X - Y) / length(v), 0.0, 1.0);
-}
-
-float cylinder(vec2 X, vec2 Y, vec2 v)
-{
-    return 1.0 - smoothstep(0.95 * length(v), 1.05* length(v), length(X - Y));
-}
-
-float softDepthCompare(float za, float zb)
-{
-    return clamp( 1 - (za - zb) / 10, 0.0, 1.0);
-}
-
-
-
-void main()
-{
-    float blurScale = currentFPS_targetFPS;
-
-    vec2 X = v_uv;
-    vec2 v = texture(neighborMax, v_uv.yx*radius).rg;
-    if(length(v) < length(1/viewport) * 0.9)
-    {
-        fragColor = texture(color, X);
-        return;
-    }
-
-    float weight = 1.0 / texture(velocity, X);
-    vec4 sum = texture(color, X) * weight;
-
-    float j = noise1(X) * 0.5;
-
-    for(int i = 0; i < numSamples; i++)
-    {
-        if(i != ((numSamples-1)/2))
-        {
-            float t = mix(-1.0, 1.0, (i + j + 1.0)/(numSamples + 1.0));
-        vec2 Y = X + v * t + length(1/viewport) * 0.5;
-
-        float f = softDepthCompare(texture(depth, X), texture(depth, Y));
-        float b = softDepthCompare(texture(depth, Y), texture(depth, X));
-
-        float alpha = f * cone(Y, X, texture(velocity, Y).rg)
-                    + b * cone(X, Y, texture(velocity, X).rg)
-                    + cylinder(Y, X, texture(velocity, Y).rg) * cylinder(X, Y, texture(velocity, X).rg) * 2;
-        weight += alpha;
-        sum += alpha * texture(color, Y);
-        }
-
-    }
-
-    fragColor = sum / weight;//texture(ssao, X) * 0.5;
-    fragColor = texture(neighborMax, v_uv.yx);
-    //fragColor = vec4(v, 0.0, 1.0);
-
-}
-
-
-
-/*void main2() {
-
-    vec4 finalColor = texture(ssao, v_uv);
-
-    //TexSize nicht nutzen!
-
-    //vec2 texelSize = 1.0 / vec2(textureSize(ssao, 0));
-
-    vec2 texCoord = v_uv;
-
-    vec2 blurVec = texture(velocity, v_uv).rg;
-
-   // blurVec *= step(0.1, abs(blurVec));
-
-
-    float blurScale = float(currentFPS) / float(targetFPS);
-    blurVec *= blurScale * 2.5;
-
-    for(int i = 1; i < numSamples; ++i)  
-    {
-        vec2 offset = blurVec * (float(i) / float(numSamples - 1) - 0.5);
-        vec2 offsetVelocity = texture(velocity, texCoord + offset).rg;
-        offset *= step(0.001, abs(offsetVelocity));
-        finalColor += texture(ssao, texCoord + offset);
-    }
-     
-    fragColor = vec4(finalColor.xyz / float(numSamples), 1.0);
-
-    //fragColor = vec4(texture(velocity, v_uv).rg * 0.5 + 0.5, 0.0, 1.0);
-
-    //fragColor = vec4(texture(velocity, v_uv).rg * 0.5 + 0.5, 0.0, 1.0);
-
-}
-*/

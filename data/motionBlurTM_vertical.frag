@@ -34,42 +34,4 @@ void main() {
     }
 
     fragColor = m;
-/*
-    if((gl_FragCoord.x > 450.0) && (gl_FragCoord.y > 30.0))
-    {
-        fragColor = vec2(1.0,0.0);
-        return;
-    }
-
-    if(gl_FragCoord.x > 450.0)
-    {
-        fragColor = vec2(0.0,1.0);
-        return;
-    }  
-
-    if(gl_FragCoord.y > 30.0)
-    {
-        fragColor = vec2(1.0,1.0);
-        return;
-    }*/
-
-/*
-
-    ivec2 v_uvRadius = ivec2(gl_FragCoord.xy * radius);//v_uv * radius;
-    vec2 maxVelocity = texelFetch(velocity, v_uvRadius, 0).rg;
-
-    for(int u=0; u < radius; u++)
-    {
-        for(int v=0; v < radius; v++)
-        {
-            vec2 textureOutput = texelFetch(velocity, v_uvRadius + ivec2(u,v), 0).rg;
-
-            //if sparen durch step
-            //wenn länge textureOutput länger als länge maxVelocity → stepValue = 1.0 → sonst 0.0
-            float stepValue = step(length(textureOutput), length(maxVelocity)); 
-            maxVelocity = stepValue * textureOutput + (1 - stepValue) * maxVelocity;
-        }
-    }
-
-    fragColor = maxVelocity;*/
 }

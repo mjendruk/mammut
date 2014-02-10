@@ -112,10 +112,10 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
 
-    m_ssaoOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
+    m_motionBlurOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
     m_quadPass.setUniform("transformi", m_camera.viewProjectionInverted());
     m_quadPass.apply(*fbo);
-    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
+    m_motionBlurOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
 
     //unbind textures
     m_gBufferVelocity->unbind(GL_TEXTURE0 + TIU_Velocity);
@@ -155,9 +155,9 @@ void GameWorldRenderer::initialize()
 
     //SSAO
     m_ssaoOutput = create2DTexture();
-    m_ssaoPostProc.setInputTextures({ { "color", 1 },
-                                      { "normal", 0 },
-                                      { "depth", 2 }
+    m_ssaoPostProc.setInputTextures({ { "color", TIU_Color },
+                                      { "normal", TIU_Normal },
+                                      { "depth", TIU_Depth }
                                     });
     m_ssaoPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
@@ -165,9 +165,9 @@ void GameWorldRenderer::initialize()
 
     //motinBlur
     m_motionBlurOutput = create2DTexture();
-    m_motionBlurPostProc.setInputTextures({ { "color", 1 },
-                                            { "depth", 2 },
-                                            { "velocity", 3 }
+    m_motionBlurPostProc.setInputTextures({ { "color", TIU_SSAO },
+                                            { "depth", TIU_Depth },
+                                            { "velocity", TIU_Velocity }
                                           });
     m_motionBlurPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
 

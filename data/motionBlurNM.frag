@@ -49,24 +49,4 @@ void main() {
     }
 
     fragColor = m;
-/*
-    vec2 maxVelocity = texture(maxTile, v_uv * radius).rg;
-
-    float maxStep = 0.0;
-
-    for(int u=-1; u < 1; ++u)
-    {
-        for(int v=-1; v < 1; ++v)
-        {
-            vec2 textureOutput = texture(maxTile, v_uv  * radius + vec2(u,v) * length(1 / viewport)).rg;
-
-            //if sparen durch step
-            //wenn länge textureOutput länger als länge maxVelocity → stepValue = 1.0 → sonst 0.0
-            float stepValue = step(length(textureOutput), length(maxVelocity)); 
-            maxVelocity = stepValue * textureOutput + (1 - stepValue) * maxVelocity;
-
-        }
-    }
-
-    fragColor = maxVelocity;*/
 }
