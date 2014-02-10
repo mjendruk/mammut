@@ -4,9 +4,6 @@ layout (location = 0) out vec4 normalOut;
 layout (location = 1) out vec4 colorOut;
 layout (location = 2) out vec2 velocityOut;
 
-uniform vec2 viewport;
-uniform float radius;
-
 uniform mat4 viewProjection;
 uniform mat4 prevViewProjection;
 
@@ -32,10 +29,6 @@ void main()
     vec2 prevPosition = (prevPosTemp.xy / prevPosTemp.w); 
 
     vec2 velocity = position - prevPosition;
-  /*  if(length(velocity) > radius * length(1/viewport))
-    {
-        velocity /= length(velocity);
-        velocity *= radius * length(1/viewport);
-    }*/
-    velocityOut = velocity;// * max(0.5 * length(1/viewport), min( length(velocity), length(radius / viewport) ));
+
+    velocityOut = velocity;
 }

@@ -24,8 +24,8 @@ void HUD::initialize()
 
 void HUD::paint(const Mammut & mammut)
 {
-    QString velocityString = QString("Speed: %1").arg(max(0, static_cast<int>(-mammut.velocity().z)));
-    QString scoreString = QString("Score: %1").arg(max(0, static_cast<int>(-mammut.position().z)));
+    QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(-mammut.velocity().z)));
+    QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-mammut.position().z)));
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
     

@@ -1,5 +1,8 @@
 #version 410
 
+// code basis: G3D Engine
+// algorithm: A Reconstruction Filter for Plausible Motion Blur (Morgan McGuire et al.)
+
 uniform sampler2D depth;
 uniform sampler2D color;
 uniform sampler2D velocity;
@@ -113,16 +116,15 @@ void main()
     // length: 1
     vec2 direction_center = (radius_center < varianceThreshold) ? direction_neighborhood : normalize(velocity_center);
 
-    //
+    // coverage for current pixel
+    // Higher initial weight increases the ability of the background
+    // to overcome the out-blurred part of moving objects
     float invRadius_center = 1.0 / radius_center;
     float totalCoverage = (numSamples / 55.0) * invRadius_center;
     resultColor *= totalCoverage;
 
     for(int i = 0; i < numSamples; ++i)
     {
-        //SMOOTHER ??
-        //Do Something -> continue;
-
         if(i == (numSamples - 1)/2)
             continue;
 
@@ -159,8 +161,4 @@ void main()
     fragColor = vec4(resultColor / totalCoverage, 1.0);
     float fl;
     vec2 vec = readAdjustedNeighborhoodVelocity(me, fl);
-    //fragColor = vec4(vec3(fl), 1.0);
-    //fragColor = vec4(vec3(length(texelFetch(velocity, me, 0).xy / viewport)), 1.0);
-    //fragColor = vec4(texture(velocity, v_uv).rgb, 1.0);
-    //fragColor = vec4(vec3(vec, 0.0), 1.0);
 }
