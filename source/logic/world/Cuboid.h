@@ -22,8 +22,6 @@ public:
     virtual ~Cuboid();
 
     glm::mat4 modelTransform() const;
-    virtual glm::mat4 previousModelTransform() const;
-    virtual void shiftPreviousModelTransform();
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
     

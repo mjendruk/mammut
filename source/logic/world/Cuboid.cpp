@@ -39,16 +39,6 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
     return boundingBox;
 }
 
-glm::mat4 Cuboid::previousModelTransform() const
-{
-    return m_previousModelTransform;
-}
-
-void Cuboid::shiftPreviousModelTransform()
-{
-    m_previousModelTransform = modelTransform();
-}
-
 btRigidBody * Cuboid::rigidBody() const
 {
     return m_rigidBody.get();
