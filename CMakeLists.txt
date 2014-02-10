@@ -226,7 +226,9 @@ set(sources
     ${source_path}/logic/menu/Menu.cpp
     ${source_path}/logic/menu/Menu.h
     ${source_path}/logic/menu/MenuButton.cpp
-    ${source_path}/logic/menu/MenuButton.h
+    ${source_path}/logic/menu/MenuButton.h    
+    ${source_path}/logic/menu/MenuInput.cpp
+    ${source_path}/logic/menu/MenuInput.h
     ${source_path}/logic/menu/MenuItem.cpp
     ${source_path}/logic/menu/MenuItem.h
     ${source_path}/logic/menu/MenuLogo.cpp
