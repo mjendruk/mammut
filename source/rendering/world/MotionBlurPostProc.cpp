@@ -1,6 +1,5 @@
 #include "MotionBlurPostProc.h"
 
-#include <QDebug>
 #include <glm/gtx/random.hpp>
 
 #include <glow/Program.h>
@@ -48,21 +47,21 @@ void MotionBlurPostProc::apply(glow::FrameBufferObject & fbo)
 void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
 {
     //split into 4 Maps for each pass
-    QMap<QString, int> tempTmV;
-    tempTmV["velocity"] = input.value("velocity", TIU_Velocity);
-    m_tmVerticalPass.setInputTextures(tempTmV);
+    QMap<QString, int> tmVerticalInputTextures;
+    tmVerticalInputTextures["velocity"] = input.value("velocity", TIU_Velocity);
+    m_tmVerticalPass.setInputTextures(tmVerticalInputTextures);
 
     m_tmHorizontalPass.setInputTextures({ { "tmVertical", TIU_BufferCount } });
 
     m_neighborMaxPass.setInputTextures({ { "maxTile", TIU_BufferCount } });
 
-    QMap<QString, int> tempBlur;
-    tempBlur["depth"] = input.value("depth", TIU_Depth);
-    tempBlur["color"] = input.value("color", TIU_Color);
-    tempBlur["velocity"] = input.value("velocity", TIU_Velocity);
-    tempBlur["neighborMax"] = TIU_BufferCount;
-    tempBlur["randomBuffer"] = TIU_BufferCount + 1;
-    m_blurPass.setInputTextures(tempBlur);
+    QMap<QString, int> blurInputTextures;
+    blurInputTextures["depth"] = input.value("depth", TIU_Depth);
+    blurInputTextures["color"] = input.value("color", TIU_Color);
+    blurInputTextures["velocity"] = input.value("velocity", TIU_Velocity);
+    blurInputTextures["neighborMax"] = TIU_BufferCount;
+    blurInputTextures["randomBuffer"] = TIU_BufferCount + 1;
+    m_blurPass.setInputTextures(blurInputTextures);
 }
 
 

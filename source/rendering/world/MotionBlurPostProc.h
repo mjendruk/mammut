@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glow/ref_ptr.h>
-#include <glow/Referenced.h>
 #include <glow/Program.h>
 
 #include "SimplePostProcPass.h"

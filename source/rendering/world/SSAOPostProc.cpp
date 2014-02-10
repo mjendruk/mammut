@@ -1,7 +1,5 @@
 #include "SSAOPostProc.h"
 
-#include <QDebug>
-
 #include <glm/gtx/random.hpp>
 
 #include <glow/Program.h>

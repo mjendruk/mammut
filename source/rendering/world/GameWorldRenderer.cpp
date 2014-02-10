@@ -4,7 +4,6 @@
 
 #include <glm/gtx/transform.hpp>
 
-#include <QDebug>
 #include <QMap>
 
 #include "glow/Program.h"
@@ -57,7 +56,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
     m_gBufferFBO->bind();
     
-    glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
@@ -65,6 +63,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     });
     //cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4()); 
+
     m_gBufferFBO->unbind();
     
     m_previousViewProjection = m_camera.viewProjection();
@@ -163,7 +162,7 @@ void GameWorldRenderer::initializePostProcPasses()
 
     m_ssaoFBO = new glow::FrameBufferObject();
 
-    //motinBlur
+    //motionBlur
     m_motionBlurOutput = create2DTexture();
     m_motionBlurPostProc.setInputTextures({ { "color", TIU_SSAO },
                                             { "depth", TIU_Depth },

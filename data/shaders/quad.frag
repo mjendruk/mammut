@@ -2,9 +2,6 @@
 
 uniform sampler2D result;
 
-//uniform sampler2D motionBlurOutput;
-
-
 layout (location = 0) out vec4 fragColor;
 
 in vec2 v_uv;

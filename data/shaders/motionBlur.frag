@@ -159,6 +159,4 @@ void main()
     }
 
     fragColor = vec4(resultColor / totalCoverage, 1.0);
-    float fl;
-    vec2 vec = readAdjustedNeighborhoodVelocity(me, fl);
 }

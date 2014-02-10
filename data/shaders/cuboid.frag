@@ -24,11 +24,8 @@ void main()
     vec4 posTemp = viewProjection * v_currentPositionInWS;
     vec4 prevPosTemp = prevViewProjection * v_previousPositionInWS;
 
-
     vec2 position = (posTemp.xy / posTemp.w); 
     vec2 prevPosition = (prevPosTemp.xy / prevPosTemp.w); 
 
-    vec2 velocity = position - prevPosition;
-
-    velocityOut = velocity;
+    velocityOut = position - prevPosition;
 }
