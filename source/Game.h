@@ -7,7 +7,7 @@
 #include <glow/Timer.h>
 
 #include <rendering/Canvas.h>
-
+#include <logic/highscore/HighscoreList.h>
 #include "AbstractApplication.h"
 
 class QMouseEvent;
@@ -54,6 +54,8 @@ protected:
     std::unique_ptr<GameWorldRenderer> m_gameWorldRenderer;
     std::unique_ptr<BlankBackground> m_blankBackground;
     std::unique_ptr<ScreenshotBackground> m_screenshotBackground;
+    
+    HighscoreList m_highscoreList;
     
     QMainWindow m_window;
     Canvas * m_canvas;

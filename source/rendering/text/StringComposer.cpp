@@ -66,6 +66,8 @@ bool StringComposer::readSpecificsFromFile(const QString & fileName, float textu
 
 void StringComposer::parseCharacterLine(const QString & line, float textureSize)
 {
+    // Note: The coordinate origin of the input file is at the upper left corner.
+    
     QRegularExpression regExp("=(\\S+)");
     QRegularExpressionMatchIterator it = regExp.globalMatch(line);
     
@@ -83,10 +85,10 @@ void StringComposer::parseCharacterLine(const QString & line, float textureSize)
     
     glm::vec3 textureCoordPosition = glm::vec3(x, textureSize - (y + height), 0.0f) / textureSize;
     glm::mat4 textureCoordTransform = glm::translate(textureCoordPosition)
-                                  * glm::scale(size);
+                                      * glm::scale(size);
     
     glm::vec3 vertexPosition = glm::vec3(xOffset, yOffset - height, 0.0f) / textureSize;
-    glm::mat4 vertexTransform = glm::translate(vertexPosition)
+    glm::mat4 vertexTransform = glm::translate(vertexPosition - glm::vec3(0.0f, 0.08f, 0.0f))
                                 * glm::scale(size);
     
     auto specifics = new CharacterSpecifics { vertexTransform,

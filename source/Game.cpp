@@ -29,6 +29,17 @@ Game::Game(int & argc, char ** argv)
     initializeWindow();
     initializeRenderers();
     
+    m_highscoreList.addScore("Max", 9000);
+    m_highscoreList.addScore("Johannes", 8000);
+    m_highscoreList.addScore("Clemens", 7000);
+    m_highscoreList.addScore("Caro", 6000);
+    m_highscoreList.addScore("Friedrich", 5000);
+    m_highscoreList.addScore("Max", 9000);
+    m_highscoreList.addScore("Johannes", 8000);
+    m_highscoreList.addScore("Clemens", 7000);
+    m_highscoreList.addScore("Caro", 6000);
+    m_highscoreList.addScore("Friedrich", 5000);
+    
     showMainMenu();
     
     QTimer::singleShot(0, this, SLOT(run()));
@@ -124,13 +135,15 @@ void Game::showMainMenu()
 
 void Game::showHighscore()
 {
-//    std::shared_ptr<Menu> menu(new HighscoreMenu());
-//    
-//    m_activeMechanics = menu;
-//    m_menuRenderer->setMenu(menu.get());
-//    
-//    m_menuRenderer->setBackground(m_blankBackground.get());
-//    m_canvas->setRenderer(m_menuRenderer.get());
+    std::shared_ptr<HighscoreMenu> menu(new HighscoreMenu(m_highscoreList.scores()));
+    
+    connect(menu.get(), &HighscoreMenu::backPressed, this, &Game::showMainMenu);
+    
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+    
+    m_menuRenderer->setBackground(m_blankBackground.get());
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 void Game::quit()

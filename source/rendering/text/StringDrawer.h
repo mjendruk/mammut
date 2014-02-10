@@ -20,6 +20,8 @@ class StringDrawer
 public:
     enum Alignment { kAlignLeft, kAlignCenter, kAlignRight };
     
+    static const float s_lineHeight;
+    
     StringDrawer();
     ~StringDrawer();
 

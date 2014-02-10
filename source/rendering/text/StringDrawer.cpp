@@ -16,6 +16,7 @@
 #include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
 
+const float StringDrawer::s_lineHeight = 0.11f;
 const float StringDrawer::s_textureSize = 1024.0f;
 
 StringDrawer::StringDrawer()
