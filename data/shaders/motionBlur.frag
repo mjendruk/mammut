@@ -87,7 +87,7 @@ void main()
 
     vec3 resultColor = texelFetch(color, me, 0).rgb;
 
-    float depth_center = texelFetch(depth, me, 0);
+    float depth_center = texelFetch(depth, me, 0).r;
 
     // largest velocity in neighborhood of current pixel
     // r_n: [0, radius]    +   v_n: length(v_n) = r_n

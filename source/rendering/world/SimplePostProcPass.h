@@ -6,7 +6,10 @@
 #include <GL/glew.h>
 
 #include <glow/ref_ptr.h>
+#include <glow/Program.h>
 #include <glow/Referenced.h>
+
+#include <glowutils/ScreenAlignedQuad.h>
 
 #include "PostProcInterface.h"
 
