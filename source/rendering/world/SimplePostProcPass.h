@@ -64,9 +64,8 @@ protected:
 
 template<typename T>
 void SimplePostProcPass::setUniform(const QString name, const T& value) {
-    if (!m_program) {
+    if (!m_program) 
         initializeProgram();
-        m_quad = new glowutils::ScreenAlignedQuad(m_program);
-    }
+    
     m_program->setUniform(name.toStdString(), value);
 }

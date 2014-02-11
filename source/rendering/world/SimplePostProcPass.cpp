@@ -1,7 +1,5 @@
 #include "SimplePostProcPass.h"
 
-#include <QDebug>
-
 #include <glow/Program.h>
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
@@ -24,8 +22,8 @@ void SimplePostProcPass::initBeforeDraw(glow::FrameBufferObject & fbo)
 {
     //set input Textures as uniforms    
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
-        int numberOfTextureImageUnit = m_inputTextures.value(uniformName);
-        m_program->setUniform(uniformName.toStdString(), numberOfTextureImageUnit);
+        int indexOfTextureImageUnit = m_inputTextures.value(uniformName);
+        m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
     }
 
     if (m_output2DInvalidated){
