@@ -66,15 +66,6 @@ void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
     m_blurPass.setInputTextures(blurInputTextures);
 }
 
-
-void MotionBlurPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
-{
-    m_tmVerticalPass.set2DTextureOutput({}); //own FBOs know where to draw
-    m_tmHorizontalPass.set2DTextureOutput({});
-    m_neighborMaxPass.set2DTextureOutput({});
-    m_blurPass.set2DTextureOutput(output);
-}
-
 void MotionBlurPostProc::initialize()
 {
     m_tmVerticalPass.setFragmentShader("data/shaders/motionBlurTM_vertical.frag");

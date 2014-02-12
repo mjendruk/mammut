@@ -11,7 +11,6 @@ public:
     virtual void apply(glow::FrameBufferObject & frameBuffer);
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, int> input);
-    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> output);
 
     template<typename T>
     void setUniform(const QString name, const T& value);

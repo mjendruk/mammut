@@ -31,5 +31,4 @@ public:
     virtual void resize(int width, int height) = 0;
 
     virtual void setInputTextures(const QMap<QString, int> input) = 0;
-    virtual void set2DTextureOutput(const QMap<GLenum, glow::Texture*> output) = 0;
 };

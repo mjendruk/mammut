@@ -154,9 +154,10 @@ void GameWorldRenderer::initializePostProcPasses()
                                       { "normal", TIU_Normal },
                                       { "depth", TIU_Depth }
                                     });
-    m_ssaoPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_ssaoOutput } });
 
     m_ssaoFBO = new glow::FrameBufferObject();
+    m_ssaoFBO->setDrawBuffers( { GL_COLOR_ATTACHMENT0 } );
+    m_ssaoFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_ssaoOutput);
 
     //motionBlur
     m_motionBlurOutput = Util::create2DTexture();
@@ -164,14 +165,14 @@ void GameWorldRenderer::initializePostProcPasses()
                                             { "depth", TIU_Depth },
                                             { "velocity", TIU_Velocity }
                                           });
-    m_motionBlurPostProc.set2DTextureOutput({ { GL_COLOR_ATTACHMENT0, m_motionBlurOutput } });
 
     m_motionBlurFBO = new glow::FrameBufferObject();
+    m_motionBlurFBO->setDrawBuffers( { GL_COLOR_ATTACHMENT0 } );
+    m_motionBlurFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_motionBlurOutput);
 
     //last pass: use this pass for edge enhancement
     m_quadPass.setFragmentShader("data/shaders/quad.frag");
     m_quadPass.setInputTextures({ { "result", TIU_MotionBlur } });
-    m_quadPass.set2DTextureOutput({}); //render on screen
 }
 
 void GameWorldRenderer::resize(int width, int height)

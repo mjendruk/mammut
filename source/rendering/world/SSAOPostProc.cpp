@@ -53,12 +53,6 @@ void SSAOPostProc::setInputTextures(const QMap<QString, int> input)
     m_blurPass.setInputTextures(blurInputTextures);
 }
 
-void SSAOPostProc::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
-{
-    m_ssaoPass.set2DTextureOutput({}); //FBO knows where to draw
-    m_blurPass.set2DTextureOutput(output);
-}
-
 void SSAOPostProc::initialize()
 {
     m_blurPass.setVertexShader("data/shaders/blur.vert");

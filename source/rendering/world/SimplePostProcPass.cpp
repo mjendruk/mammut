@@ -28,17 +28,6 @@ void SimplePostProcPass::initBeforeDraw(glow::FrameBufferObject & fbo)
         m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
     }
 
-    if (m_output2DInvalidated){
-        if (!m_output2D.isEmpty())
-            fbo.setDrawBuffers(m_output2D.keys().toVector().toStdVector());
-
-        for (GLenum attachment : m_output2D.keys()){
-            if (attachment > TIU_Velocity)
-                fbo.attachTexture2D(attachment, m_output2D[attachment]);
-        }
-
-        m_output2DInvalidated = false;
-    }
 }
 
 void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
@@ -63,13 +52,6 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
 void SimplePostProcPass::setInputTextures(const QMap<QString, int> input)
 {
     m_inputTextures = QMap<QString, int>(input);
-}
-
-void SimplePostProcPass::set2DTextureOutput(const QMap<GLenum, glow::Texture*> output)
-{
-    m_output2D = QMap<GLenum, glow::Texture*>(output);
-
-    m_output2DInvalidated = true;
 }
 
 void SimplePostProcPass::setVertexShader(QString vertexShader)
