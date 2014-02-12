@@ -29,7 +29,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_paused(false)
 {
     initializeWindow();
-    initializeRenderers();
+    initializeRendering();
     
     showMainMenu();
     
@@ -74,125 +74,13 @@ void Game::run()
     }
 }
 
-void Game::startGame()
-{
-    m_gameMechanics.reset(new GameMechanics());
-    m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
-    
-    connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::pauseGame);
-    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::endGame);
-    
-    m_activeMechanics = m_gameMechanics;
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-}
-
-void Game::pauseGame()
-{
-    std::shared_ptr<PauseMenu> menu(new PauseMenu());
-    
-    connect(menu.get(), &PauseMenu::resumePressed, this, &Game::resumeGame);
-    connect(menu.get(), &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
-    
-    m_activeMechanics = menu;
-    m_menuRenderer->setMenu(menu.get());
-    
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
-    m_menuRenderer->setBackground(m_screenshotBackground.get());
-    
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::resumeGame()
-{
-    m_activeMechanics = m_gameMechanics;
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-}
-
-void Game::showMainMenu()
-{
-    std::shared_ptr<MainMenu> menu(new MainMenu());
-    
-    connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
-    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
-    connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
-    
-    m_activeMechanics = menu;
-    m_menuRenderer->setMenu(menu.get());
-    
-    m_menuRenderer->setBackground(m_blankBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::endGame(int score)
-{
-    if (m_highscoreList.isHighscore(score))
-    {
-        showNewHighscoreMenu(score);
-    }
-    else
-    {
-        showGameOverMenu(score);
-    }
-}
-
-void Game::showHighscoreMenu()
-{
-    std::shared_ptr<HighscoreMenu> menu(new HighscoreMenu(m_highscoreList.scores()));
-    
-    connect(menu.get(), &HighscoreMenu::backPressed, this, &Game::showMainMenu);
-    
-    m_activeMechanics = menu;
-    m_menuRenderer->setMenu(menu.get());
-    
-    m_menuRenderer->setBackground(m_blankBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::showNewHighscoreMenu(int score)
-{
-    std::shared_ptr<NewHighscoreMenu> menu(new NewHighscoreMenu("Max", score));
-    
-    connect(menu.get(), &NewHighscoreMenu::nameEntered, [this, score](const QString & name)
-            {
-                m_highscoreList.addScore(name, score);
-                showGameOverMenu(score);
-            });
-    
-    m_activeMechanics = menu;
-    m_menuRenderer->setMenu(menu.get());
-    
-    m_menuRenderer->setBackground(m_blankBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::showGameOverMenu(int score)
-{
-    std::shared_ptr<GameOverMenu> menu(new GameOverMenu(score));
-    
-    connect(menu.get(), &GameOverMenu::retryPressed, this, &Game::startGame);
-    connect(menu.get(), &GameOverMenu::toMainMenuPressed, this, &Game::showMainMenu);
-    
-    m_activeMechanics = menu;
-    m_menuRenderer->setMenu(menu.get());
-    
-    m_menuRenderer->setBackground(m_blankBackground.get());    
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::quit()
-{
-    m_loop = false;
-    QApplication::quit();
-}
-
 void Game::initializeWindow()
 {
     QSurfaceFormat format;
     format.setVersion(4, 1);
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
-
+    
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
@@ -206,12 +94,110 @@ void Game::initializeWindow()
     m_window.show();
 }
 
-void Game::initializeRenderers()
+void Game::initializeRendering()
 {
     m_menuRenderer.reset(new MenuRenderer());
     m_gameWorldRenderer.reset(new GameWorldRenderer());
     m_blankBackground.reset(new BlankBackground());
     m_screenshotBackground.reset(new ScreenshotBackground());
+}
+
+void Game::startGame()
+{
+    m_gameMechanics = std::make_shared<GameMechanics>();
+    m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
+    
+    connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::pauseGame);
+    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::endGame);
+    
+    m_activeMechanics = m_gameMechanics;
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+}
+
+void Game::pauseGame()
+{
+    auto menu = std::make_shared<PauseMenu>();
+    
+    connect(menu.get(), &PauseMenu::resumePressed, this, &Game::resumeGame);
+    connect(menu.get(), &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    
+    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
+    
+    activateMenu(menu, m_screenshotBackground.get());}
+
+void Game::resumeGame()
+{
+    m_activeMechanics = m_gameMechanics;
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+}
+
+void Game::showMainMenu()
+{
+    auto menu = std::make_shared<MainMenu>();
+    
+    connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
+    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
+    connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::endGame(int score)
+{
+    m_gameMechanics.reset();
+    
+    if (m_highscoreList.isHighscore(score))
+        showNewHighscoreMenu(score);
+    else
+        showGameOverMenu(score);
+}
+
+void Game::showHighscoreMenu()
+{
+    auto menu = std::make_shared<HighscoreMenu>(m_highscoreList.scores());
+    
+    connect(menu.get(), &HighscoreMenu::backPressed, this, &Game::showMainMenu);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showNewHighscoreMenu(int score)
+{
+    auto menu = std::make_shared<NewHighscoreMenu>("Max", score);
+    
+    connect(menu.get(), &NewHighscoreMenu::nameEntered,
+            [this, score](const QString & name)
+    {
+        m_highscoreList.addScore(name, score);
+        showGameOverMenu(score);
+    });
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showGameOverMenu(int score)
+{
+    auto menu = std::make_shared<GameOverMenu>(score);
+    
+    connect(menu.get(), &GameOverMenu::retryPressed, this, &Game::startGame);
+    connect(menu.get(), &GameOverMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::quit()
+{
+    m_loop = false;
+    QApplication::quit();
+}
+
+void Game::activateMenu(std::shared_ptr<Menu> menu,
+    AbstractBackground * background)
+{
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+    m_menuRenderer->setBackground(background);
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 bool Game::eventFilter(QObject * obj, QEvent * event)

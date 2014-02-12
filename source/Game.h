@@ -12,11 +12,14 @@
 
 class QMouseEvent;
 
-class GameMechanics;
 class Mechanics;
+class GameMechanics;
+class Menu;
 
 class MenuRenderer;
 class GameWorldRenderer;
+
+class AbstractBackground;
 class BlankBackground;
 class ScreenshotBackground;
 
@@ -32,6 +35,9 @@ public slots:
     void run();
 
 protected:
+    void initializeWindow();
+    void initializeRendering();
+    
     void startGame();
     void pauseGame();
     void resumeGame();
@@ -41,12 +47,10 @@ protected:
     void showMainMenu();
     void showHighscoreMenu();
     void quit();
+    
+    void activateMenu(std::shared_ptr<Menu> menu, AbstractBackground * background);
 
-    void initializeWindow();
-    void initializeRenderers();
-
-    bool eventFilter(QObject * obj, QEvent * event);
-    void mouseMoveEvent(QMouseEvent * event);
+    bool eventFilter(QObject * obj, QEvent * event) override;
     void keyPressed(QKeyEvent * keyEvent);
     void keyReleased(QKeyEvent * keyEvent);
 
