@@ -11,7 +11,7 @@
 
 #include <glowutils/ScreenAlignedQuad.h>
 
-#include "PostProcInterface.h"
+#include "AbstractPostProc.h"
 
 
 namespace glow
@@ -26,7 +26,7 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
-class SimplePostProcPass : public PostProcInterface
+class SimplePostProcPass : public AbstractPostProc
 {
 public:
     SimplePostProcPass();

@@ -4,7 +4,7 @@
 
 #include "SimplePostProcPass.h"
 
-class MotionBlurPostProc : public PostProcInterface
+class MotionBlurPostProc : public AbstractPostProc
 {
 public:
     MotionBlurPostProc();

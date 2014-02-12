@@ -267,6 +267,7 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/AbstractPostProc.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
@@ -286,7 +287,6 @@ set(sources
     ${source_path}/rendering/world/MotionBlurPostProc.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
-    ${source_path}/rendering/world/PostProcInterface.h
     ${source_path}/rendering/world/SimplePostProcPass.cpp
     ${source_path}/rendering/world/SimplePostProcPass.h
     ${source_path}/rendering/world/RenderCamera.cpp

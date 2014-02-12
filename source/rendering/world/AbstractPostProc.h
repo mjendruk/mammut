@@ -22,10 +22,10 @@ enum TextureImageUnits {
     TIU_BufferCount // should always be last member
 };
 
-class PostProcInterface
+class AbstractPostProc
 {
 public:
-    virtual ~PostProcInterface(){}
+    virtual ~AbstractPostProc(){}
 
     virtual void apply(glow::FrameBufferObject & frameBuffer) = 0;
     virtual void resize(int width, int height) = 0;

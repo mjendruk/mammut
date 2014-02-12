@@ -31,6 +31,7 @@ GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
 ,   m_lastFrame(QTime::currentTime())
 ,   m_gameMechanics(nullptr)
+,   m_avgTimeSinceLastFrame(0.f)
 {
     initialize();
 }

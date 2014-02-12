@@ -1,10 +1,8 @@
 #pragma once
 
-#include "PostProcInterface.h"
-
 #include "SimplePostProcPass.h"
 
-class SSAOPostProc : public PostProcInterface
+class SSAOPostProc : public AbstractPostProc
 {
 public:
     SSAOPostProc();
