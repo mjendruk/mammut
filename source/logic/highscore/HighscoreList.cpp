@@ -43,7 +43,7 @@ bool HighscoreList::addScore(const QString & name, unsigned int score)
 
 bool HighscoreList::isHighscore(unsigned int score) const
 {
-    return m_list.last().score() < score || m_list.size() < s_limit;
+    return m_list.size() < s_limit || m_list.last().score() < score;
 }
 
 const QList<HighscoreEntry> & HighscoreList::scores() const
