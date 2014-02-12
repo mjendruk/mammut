@@ -15,15 +15,15 @@ namespace glow
     class Texture;
 }
 
-class StringDrawer
+class TextRenderer
 {
 public:
     enum Alignment { kAlignLeft, kAlignCenter, kAlignRight };
     
     static const float s_lineHeight;
     
-    StringDrawer();
-    ~StringDrawer();
+    TextRenderer();
+    ~TextRenderer();
 
     void paint(const QString & text,
                const glm::mat4 & modelMatrix,

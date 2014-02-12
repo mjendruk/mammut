@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 #include <rendering/Renderer.h>
-#include <rendering/text/StringDrawer.h>
+#include <rendering/text/TextRenderer.h>
 
 class Menu;
 class MenuButton;
@@ -34,7 +34,7 @@ public:
 protected:
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;
-    StringDrawer m_stringDrawer;
+    TextRenderer m_textRenderer;
 
     AbstractBackground * m_background;
     const Menu * m_menu;

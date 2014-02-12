@@ -1,4 +1,4 @@
-#include "StringDrawer.h"
+#include "TextRenderer.h"
 
 #include <numeric>
 
@@ -16,20 +16,20 @@
 #include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
 
-const float StringDrawer::s_lineHeight = 0.11f;
-const float StringDrawer::s_textureSize = 1024.0f;
+const float TextRenderer::s_lineHeight = 0.11f;
+const float TextRenderer::s_textureSize = 1024.0f;
 
-StringDrawer::StringDrawer()
+TextRenderer::TextRenderer()
 {
     initialize();
 }
 
-StringDrawer::~StringDrawer()
+TextRenderer::~TextRenderer()
 {
 
 }
 
-bool StringDrawer::initialize()
+bool TextRenderer::initialize()
 {
     if (!initializeProgram())
         return false;
@@ -43,7 +43,7 @@ bool StringDrawer::initialize()
     return true;
 }
 
-bool StringDrawer::initializeProgram()
+bool TextRenderer::initializeProgram()
 {
     m_program = new glow::Program();
     
@@ -62,7 +62,7 @@ bool StringDrawer::initializeProgram()
     return true;
 }
 
-bool StringDrawer::initializeTexture()
+bool TextRenderer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
@@ -81,7 +81,7 @@ bool StringDrawer::initializeTexture()
     return true;
 }
 
-void StringDrawer::paint(
+void TextRenderer::paint(
     const QString & text,
     const glm::mat4 & modelMatrix,
     Alignment alignment, 
@@ -114,7 +114,7 @@ void StringDrawer::paint(
     glDisable(GL_BLEND);
 }
 
-void StringDrawer::prepareTransforms(
+void TextRenderer::prepareTransforms(
     const QList<CharacterSpecifics *> characterSpecificsList,
     const glm::mat4 & modelMatrix,
     Alignment alignment,
@@ -134,7 +134,7 @@ void StringDrawer::prepareTransforms(
     }
 }
 
-glm::mat4 StringDrawer::alignmentTransform(
+glm::mat4 TextRenderer::alignmentTransform(
     const QList<CharacterSpecifics *> & characterSpecificsList, Alignment alignment)
 {
     float offset;

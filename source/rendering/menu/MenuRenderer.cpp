@@ -71,12 +71,12 @@ void MenuRenderer::render(const MenuButton * button)
 {
     const glm::vec3 color = m_menu->isFocusedItem(button) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
     
-    m_stringDrawer.paint(button->label(), 
+    m_textRenderer.paint(button->label(), 
                          m_translation,
-                         StringDrawer::kAlignCenter,
+                         TextRenderer::kAlignCenter,
                          color);
 
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.5f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
 }
 
 void MenuRenderer::render(const MenuLogo * logo)
@@ -84,12 +84,12 @@ void MenuRenderer::render(const MenuLogo * logo)
     const glm::vec3 color(0.6f, 0.13f, 0.02f);
     const glm::mat4 scale = glm::scale(glm::vec3(2.0f));
     
-    m_stringDrawer.paint("Mammut",
+    m_textRenderer.paint("Mammut",
                          m_translation * scale,
-                         StringDrawer::kAlignCenter,
+                         TextRenderer::kAlignCenter,
                          color);
     
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 2.0f * 1.5f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 2.0f * 1.5f, 0.0f);
 }
 
 void MenuRenderer::render(const HighscoreItem * list)
@@ -99,55 +99,55 @@ void MenuRenderer::render(const HighscoreItem * list)
     const glm::vec3 titleColor(0.6f, 0.13f, 0.02f);
     const glm::mat4 entryScale = glm::scale(glm::vec3(0.7f));
     
-    m_stringDrawer.paint("Name",
+    m_textRenderer.paint("Name",
                          m_translation * glm::translate(namePosition, 0.0f, 0.0f),
-                         StringDrawer::kAlignLeft,
+                         TextRenderer::kAlignLeft,
                          titleColor);
     
-    m_stringDrawer.paint("Score",
+    m_textRenderer.paint("Score",
                          m_translation * glm::translate(scorePosition, 0.0f, 0.0f),
-                         StringDrawer::kAlignLeft,
+                         TextRenderer::kAlignLeft,
                          titleColor);
     
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.1f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.1f, 0.0f);
     
     for (const HighscoreEntry & entry : list->scores())
     {
-        m_stringDrawer.paint(entry.name(), m_translation * glm::translate(namePosition, 0.0f, 0.0f) * entryScale);
-        m_stringDrawer.paint(QString::number(entry.score()), m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);
+        m_textRenderer.paint(entry.name(), m_translation * glm::translate(namePosition, 0.0f, 0.0f) * entryScale);
+        m_textRenderer.paint(QString::number(entry.score()), m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);
         
-        m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 0.8f, 0.0f);
+        m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 0.8f, 0.0f);
     }
     
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 0.2f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 0.2f, 0.0f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
 {
     const glm::vec3 color = m_menu->isFocusedItem(input) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
     
-    m_stringDrawer.paint(input->label() + ": ",
+    m_textRenderer.paint(input->label() + ": ",
                          m_translation,
-                         StringDrawer::kAlignRight,
+                         TextRenderer::kAlignRight,
                          color);
     
-    m_stringDrawer.paint(input->text() + "_",
+    m_textRenderer.paint(input->text() + "_",
                          m_translation,
-                         StringDrawer::kAlignLeft);
+                         TextRenderer::kAlignLeft);
     
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.5f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
 }
 
 void MenuRenderer::render(const MenuText * text)
 {
     const glm::vec3 color(0.6f, 0.13f, 0.02f);
     
-    m_stringDrawer.paint(text->text(), 
+    m_textRenderer.paint(text->text(), 
                          m_translation,
-                         StringDrawer::kAlignCenter,
+                         TextRenderer::kAlignCenter,
                          color);
 
-    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.5f, 0.0f);
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
 }
 
 void MenuRenderer::setBackground(AbstractBackground * background)

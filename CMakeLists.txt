@@ -282,8 +282,8 @@ set(sources
     ${source_path}/rendering/text/CharacterDrawable.h
     ${source_path}/rendering/text/StringComposer.cpp
     ${source_path}/rendering/text/StringComposer.h
-    ${source_path}/rendering/text/StringDrawer.cpp
-    ${source_path}/rendering/text/StringDrawer.h
+    ${source_path}/rendering/text/TextRenderer.cpp
+    ${source_path}/rendering/text/TextRenderer.h
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h

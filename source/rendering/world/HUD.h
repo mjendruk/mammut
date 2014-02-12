@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rendering/text/StringDrawer.h>
+#include <rendering/text/TextRenderer.h>
 
 class Mammut;
 class RenderCamera;
@@ -17,7 +17,7 @@ public:
     void paint(const Mammut & mammut);
 
 protected:
-    StringDrawer m_stringDrawer;
+    TextRenderer m_textRenderer;
 
     const RenderCamera & m_camera;
     const GameWorldRenderer & m_gameWorldRenderer;

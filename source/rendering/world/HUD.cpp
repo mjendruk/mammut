@@ -31,16 +31,16 @@ void HUD::paint(const Mammut & mammut)
     
     glDisable(GL_DEPTH_TEST);
     
-    m_stringDrawer.paint(velocityString,
+    m_textRenderer.paint(velocityString,
                          glm::translate(-0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f));
     
-    m_stringDrawer.paint(scoreString,
+    m_textRenderer.paint(scoreString,
                          glm::translate(0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
-                         StringDrawer::kAlignRight);
+                         TextRenderer::kAlignRight);
 
-    m_stringDrawer.paint(fpsString,
+    m_textRenderer.paint(fpsString,
                          glm::translate(-0.99f, 0.88f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
-                         StringDrawer::kAlignLeft);
+                         TextRenderer::kAlignLeft);
 
     
     glEnable(GL_DEPTH_TEST);
