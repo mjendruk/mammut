@@ -1,7 +1,9 @@
 #include "MenuInput.h"
 
 #include <QKeyEvent>
+
 #include <rendering/menu/MenuRenderer.h>
+#include <sound/Sound.h>
 
 MenuInput::MenuInput(const QString & label, const QString & placeholder)
 :   m_label(label)
@@ -26,8 +28,11 @@ void MenuInput::keyPressed(QKeyEvent * event)
             m_text.chop(1);
             break;
         case Qt::Key_Return:
+            {
             emit enterPressed(text());
+            Sound sound(Sound::kButtonClick);
             break;
+            }
         default:
             m_text.append(event->text());
     }
