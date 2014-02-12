@@ -3,8 +3,6 @@
 #include <numeric>
 
 #include <QDebug>
-#include <QFile>
-#include <QTextStream>
 
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -12,6 +10,8 @@
 #include <glow/Program.h>
 #include <glow/Shader.h>
 #include <glow/Texture.h>
+
+#include <glowutils/File.h>
 
 #include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
@@ -46,32 +46,18 @@ bool StringDrawer::initialize()
 bool StringDrawer::initializeProgram()
 {
     m_program = new glow::Program();
-
-    QFile vertShaderFile("data/shaders/string_drawer.vert");
-    if (!vertShaderFile.open(QIODevice::ReadOnly))
-    {
-        qCritical() << "Could not open vertex shader source";
-        return false;
-    }
-
-    QFile fragShaderFile("data/shaders/string_drawer.frag");
-    if (!fragShaderFile.open(QIODevice::ReadOnly))
-    {
-        qCritical() << "Could not open fragment shader source";
-        return false;
-    }
-
-    QTextStream vertShaderStream(&vertShaderFile);
-    QTextStream fragShaderStream(&fragShaderFile);
-
-    auto vertShader = glow::Shader::fromString(GL_VERTEX_SHADER, vertShaderStream.readAll().toStdString());
-    auto fragShader = glow::Shader::fromString(GL_FRAGMENT_SHADER, fragShaderStream.readAll().toStdString());
-
-    m_program->attach(vertShader, fragShader);
+    
+    m_program->attach(
+        glowutils::createShaderFromFile(GL_VERTEX_SHADER, "data/shaders/string_drawer.vert"),
+        glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, "data/shaders/string_drawer.frag"));
+    
     m_program->link();
-
-    vertShaderFile.close();
-    fragShaderFile.close();
+    
+    if (!m_program->isLinked())
+    {
+        qDebug() << m_program->infoLog().c_str();
+        return false;
+    }
 
     return true;
 }
@@ -80,9 +66,7 @@ bool StringDrawer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
-    const QString fileName("data/fonts/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
-    
-    RawFile file(fileName.toStdString());
+    RawFile file("data/fonts/P22UndergroundPro-Medium.1024.1024.r.ub.raw");
     
     if (!file.isValid())
         return false;
@@ -92,6 +76,8 @@ bool StringDrawer::initializeTexture()
     m_characterAtlas->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     m_characterAtlas->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    m_program->setUniform("characterAtlas", 0);
+    
     return true;
 }
 
@@ -115,10 +101,9 @@ void StringDrawer::paint(
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
-    m_program->setUniform("characterAtlas", 0);
-    m_program->setUniform("color", color);
-    
     m_characterAtlas->bind(GL_TEXTURE0);
+    
+    m_program->setUniform("color", color);
     
     m_program->use();
     m_drawable.draw(characterSpecificsList.count(),

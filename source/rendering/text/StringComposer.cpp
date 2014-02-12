@@ -47,13 +47,8 @@ bool StringComposer::readSpecificsFromFile(const QString & fileName, float textu
     
     QTextStream stream(&file);
     
-    QString firstLine = stream.readLine();
-    
-    QRegularExpression regExp("\"(.+)\"");
-    QString fontName = regExp.match(firstLine).captured(1);
-    
-    qDebug() << "Reading info of font" << qPrintable(fontName);
-    
+    // Skip first two lines
+    stream.readLine();
     stream.readLine();
     
     while (!stream.atEnd())
