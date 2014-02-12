@@ -26,43 +26,43 @@ MotionBlurPostProc::~MotionBlurPostProc()
 void MotionBlurPostProc::apply(glow::FrameBufferObject & fbo)
 {
     //fist tileMax pass
-    m_tmVerticalPass.apply(*m_TMTempFBO);
+    m_tmVerticalPass.apply(*m_TMVerticalFBO);
     
     //second tileMax pass
-    m_TMTempTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_TMVerticalTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_tmHorizontalPass.apply(*m_TMFBO);
-    m_TMTempTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_TMVerticalTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 
     //neighborMax pass
-    m_TMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_TMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_neighborMaxPass.apply(*m_NMFBO);
-    m_TMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_TMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 
     //motion blur pass
-    m_NMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
-    m_randomTexture->bind(GL_TEXTURE0 + TIU_BufferCount + 1);
+    //m_NMTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_randomTexture->bind(GL_TEXTURE0 + TIU_BufferCount + 1);
     m_blurPass.apply(fbo);
-    m_randomTexture->unbind(GL_TEXTURE0 + TIU_BufferCount + 1);
-    m_NMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_randomTexture->unbind(GL_TEXTURE0 + TIU_BufferCount + 1);
+    //m_NMTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 }
 
-void MotionBlurPostProc::setInputTextures(const QMap<QString, int> input)
+void MotionBlurPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
     //split into 4 Maps for each pass
-    QMap<QString, int> tmVerticalInputTextures;
-    tmVerticalInputTextures["velocity"] = input.value("velocity", TIU_Velocity);
+    QMap<QString, glow::Texture*> tmVerticalInputTextures;
+    tmVerticalInputTextures["velocity"] = input.value("velocity");
     m_tmVerticalPass.setInputTextures(tmVerticalInputTextures);
 
-    m_tmHorizontalPass.setInputTextures({ { "tmVertical", TIU_BufferCount } });
+    m_tmHorizontalPass.setInputTextures({ { "tmVertical", m_TMVerticalTexture } });
 
-    m_neighborMaxPass.setInputTextures({ { "maxTile", TIU_BufferCount } });
+    m_neighborMaxPass.setInputTextures({ { "maxTile", m_TMTexture } });
 
-    QMap<QString, int> blurInputTextures;
-    blurInputTextures["depth"] = input.value("depth", TIU_Depth);
-    blurInputTextures["color"] = input.value("color", TIU_Color);
-    blurInputTextures["velocity"] = input.value("velocity", TIU_Velocity);
-    blurInputTextures["neighborMax"] = TIU_BufferCount;
-    blurInputTextures["randomBuffer"] = TIU_BufferCount + 1;
+    QMap<QString, glow::Texture*> blurInputTextures;
+    blurInputTextures["depth"] = input.value("depth");
+    blurInputTextures["color"] = input.value("color");
+    blurInputTextures["velocity"] = input.value("velocity");
+    blurInputTextures["neighborMax"] = m_NMTexture;
+    blurInputTextures["randomBuffer"] = m_randomTexture;
     m_blurPass.setInputTextures(blurInputTextures);
 }
 
@@ -77,7 +77,7 @@ void MotionBlurPostProc::initialize()
     m_blurPass.setFragmentShader("data/shaders/motionBlur.frag");
 
     //Textures
-    m_TMTempTexture = Util::create2DTexture();
+    m_TMVerticalTexture = Util::create2DTexture();
     m_TMTexture = Util::create2DTexture();
     m_NMTexture = Util::create2DTexture();
     m_randomTexture = Util::create2DTexture();
@@ -99,9 +99,9 @@ void MotionBlurPostProc::initialize()
     m_blurPass.setUniform("numSamples", numSamples);
 
     //FBOs
-    m_TMTempFBO = new glow::FrameBufferObject();
-    m_TMTempFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_TMTempTexture);
-    m_TMTempFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
+    m_TMVerticalFBO = new glow::FrameBufferObject();
+    m_TMVerticalFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_TMVerticalTexture);
+    m_TMVerticalFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
 
     m_TMFBO = new glow::FrameBufferObject();
     m_TMFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_TMTexture);
@@ -114,7 +114,7 @@ void MotionBlurPostProc::initialize()
 
 void MotionBlurPostProc::resize(int width, int height)
 {
-    m_TMTempTexture->image2D(0, GL_RG16F, width, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
+    m_TMVerticalTexture->image2D(0, GL_RG16F, width, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
     m_TMTexture->image2D(0, GL_RG16F, width / radius, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
     m_NMTexture->image2D(0, GL_RG16F, width / radius, height / radius, 0, GL_RG, GL_FLOAT, nullptr);
 

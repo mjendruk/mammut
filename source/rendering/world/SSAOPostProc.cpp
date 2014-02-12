@@ -26,29 +26,29 @@ SSAOPostProc::~SSAOPostProc()
 void SSAOPostProc::apply(glow::FrameBufferObject & fbo)
 {
     // first SSAO Pass
-    m_noiseTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_noiseTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_ssaoPass.apply(*m_tempFBO);
-    m_noiseTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_noiseTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
     
     //second SSAO Pass (blur)
-    m_ssaoTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_ssaoTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
     m_blurPass.apply(fbo);
-    m_ssaoTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    //m_ssaoTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
 }
 
-void SSAOPostProc::setInputTextures(const QMap<QString, int> input)
+void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
     //split into 2 Maps for each pass (ssao, blur)
-    QMap<QString, int> ssaoInputTextures;
-    ssaoInputTextures["normal"] = input.value("normal", TIU_Normal);
-    ssaoInputTextures["depth"] = input.value("depth", TIU_Depth);
-    ssaoInputTextures["noise"] = TIU_BufferCount;
+    QMap<QString, glow::Texture*> ssaoInputTextures;
+    ssaoInputTextures["normal"] = input.value("normal");
+    ssaoInputTextures["depth"] = input.value("depth");
+    ssaoInputTextures["noise"] = m_noiseTexture;
 
     m_ssaoPass.setInputTextures(ssaoInputTextures);
 
-    QMap<QString, int> blurInputTextures;
-    blurInputTextures["color"] = input.value("color", TIU_Color);
-    blurInputTextures["ssao"] = TIU_BufferCount;
+    QMap<QString, glow::Texture*> blurInputTextures;
+    blurInputTextures["color"] = input.value("color");
+    blurInputTextures["ssao"] = m_ssaoTexture;
 
     m_blurPass.setInputTextures(blurInputTextures);
 }

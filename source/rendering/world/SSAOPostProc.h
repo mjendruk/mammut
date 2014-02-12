@@ -10,7 +10,7 @@ public:
 
     virtual void apply(glow::FrameBufferObject & frameBuffer);
     virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, int> input);
+    virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
 
     template<typename T>
     void setUniform(const QString name, const T& value);

@@ -34,7 +34,7 @@ public:
 
     virtual void apply(glow::FrameBufferObject & frameBuffer);
     virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, int> input);
+    virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
     
     void setVertexShader(const QString output);
     void setFragmentShader(const QString output);
@@ -44,7 +44,8 @@ public:
 
 protected:
     void initializeProgram();
-    void initBeforeDraw(glow::FrameBufferObject & frameBuffer);
+    void bindTextures();
+    void unbindTextures();
 
 protected:
     QString const m_name;
@@ -52,7 +53,7 @@ protected:
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
     
-    QMap<QString, int> m_inputTextures;
+    QMap<QString, glow::Texture*> m_inputTextures;
 
     QString m_fragmentShader;
     QString m_vertexShader;

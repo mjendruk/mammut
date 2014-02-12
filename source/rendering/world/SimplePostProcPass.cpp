@@ -11,8 +11,7 @@
 
 SimplePostProcPass::SimplePostProcPass()
 :   m_vertexShader("data/shaders/screenquad.vert")
-,   m_output2DInvalidated(true)
-,   m_inputTextures(QMap<QString, int>())
+,   m_inputTextures(QMap<QString, glow::Texture*>())
 {
 }
 
@@ -20,14 +19,23 @@ SimplePostProcPass::~SimplePostProcPass()
 {
 }
 
-void SimplePostProcPass::initBeforeDraw(glow::FrameBufferObject & fbo)
+void SimplePostProcPass::bindTextures()
 {
     //set input Textures as uniforms    
+    int indexOfTextureImageUnit = 0;
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
-        int indexOfTextureImageUnit = m_inputTextures.value(uniformName);
+        glow::Texture * texture = m_inputTextures.value(uniformName);
+        texture->bind(GL_TEXTURE0 + indexOfTextureImageUnit);
         m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
-    }
 
+        ++indexOfTextureImageUnit;
+    }
+}
+
+void SimplePostProcPass::unbindTextures()
+{
+    for (glow::Texture * texture : m_inputTextures.values())
+        texture->unbind();
 }
 
 void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
@@ -39,19 +47,21 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
     glDepthMask(GL_FALSE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    initBeforeDraw(fbo);
+    bindTextures();
 
     fbo.bind();
     m_quad->draw();
     fbo.unbind();
 
+    unbindTextures();
+
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
 }
 
-void SimplePostProcPass::setInputTextures(const QMap<QString, int> input)
+void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
-    m_inputTextures = QMap<QString, int>(input);
+    m_inputTextures = QMap<QString, glow::Texture*>(input);
 }
 
 void SimplePostProcPass::setVertexShader(QString vertexShader)

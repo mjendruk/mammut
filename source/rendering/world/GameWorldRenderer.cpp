@@ -74,12 +74,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     // post processing 
     ////
 
-    //bind gBuffer textures
-    m_gBufferNormals->bind(GL_TEXTURE0 + TIU_Normal);
-    m_gBufferColor->bind(GL_TEXTURE0 + TIU_Color);
-    m_gBufferDepth->bind(GL_TEXTURE0 + TIU_Depth);
-    m_gBufferVelocity->bind(GL_TEXTURE0 + TIU_Velocity);
-
     //SSAO pass
     m_ssaoPostProc.setUniform("projection", m_camera.projection());
     m_ssaoPostProc.setUniform("invProjection", glm::inverse(m_camera.projection()));
@@ -89,25 +83,15 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
     //motion blur pass
     m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps()/60.f);
-
-    m_ssaoOutput->bind(GL_TEXTURE0 + TIU_SSAO);
     m_motionBlurPostProc.apply(*m_motionBlurFBO);
-    m_ssaoOutput->unbind(GL_TEXTURE0 + TIU_SSAO);
 
     //last pass
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
 
-    m_motionBlurOutput->bind(GL_TEXTURE0 + TIU_MotionBlur);
     m_quadPass.apply(*fbo);
-    m_motionBlurOutput->unbind(GL_TEXTURE0 + TIU_MotionBlur);
 
-    //unbind textures
-    m_gBufferVelocity->unbind(GL_TEXTURE0 + TIU_Velocity);
-    m_gBufferDepth->unbind(GL_TEXTURE0 + TIU_Depth);
-    m_gBufferColor->unbind(GL_TEXTURE0 + TIU_Color);
-    m_gBufferNormals->unbind(GL_TEXTURE0 + TIU_Normal);
 
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
@@ -150,9 +134,9 @@ void GameWorldRenderer::initializePostProcPasses()
 {
     //SSAO
     m_ssaoOutput = Util::create2DTexture();
-    m_ssaoPostProc.setInputTextures({ { "color", TIU_Color },
-                                      { "normal", TIU_Normal },
-                                      { "depth", TIU_Depth }
+    m_ssaoPostProc.setInputTextures({ { "color", m_gBufferColor },
+                                      { "normal", m_gBufferNormals },
+                                      { "depth", m_gBufferDepth }
                                     });
 
     m_ssaoFBO = new glow::FrameBufferObject();
@@ -161,9 +145,9 @@ void GameWorldRenderer::initializePostProcPasses()
 
     //motionBlur
     m_motionBlurOutput = Util::create2DTexture();
-    m_motionBlurPostProc.setInputTextures({ { "color", TIU_SSAO },
-                                            { "depth", TIU_Depth },
-                                            { "velocity", TIU_Velocity }
+    m_motionBlurPostProc.setInputTextures({ { "color", m_ssaoOutput },
+                                            { "depth", m_gBufferDepth },
+                                            { "velocity", m_gBufferVelocity }
                                           });
 
     m_motionBlurFBO = new glow::FrameBufferObject();
@@ -172,7 +156,7 @@ void GameWorldRenderer::initializePostProcPasses()
 
     //last pass: use this pass for edge enhancement
     m_quadPass.setFragmentShader("data/shaders/quad.frag");
-    m_quadPass.setInputTextures({ { "result", TIU_MotionBlur } });
+    m_quadPass.setInputTextures({ { "result", m_motionBlurOutput } });
 }
 
 void GameWorldRenderer::resize(int width, int height)

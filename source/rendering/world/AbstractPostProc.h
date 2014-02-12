@@ -28,7 +28,7 @@ public:
     virtual ~AbstractPostProc(){}
 
     virtual void apply(glow::FrameBufferObject & frameBuffer) = 0;
-    virtual void resize(int width, int height) = 0;
+    virtual void setInputTextures(const QMap<QString, glow::Texture*> input) = 0;
 
-    virtual void setInputTextures(const QMap<QString, int> input) = 0;
+    virtual void resize(int width, int height){}
 };
