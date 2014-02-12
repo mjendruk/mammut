@@ -33,12 +33,12 @@ public slots:
 
 protected:
     void startGame();
+    void pauseGame();
     void resumeGame();
     void endGame(int score);
     void showNewHighscoreMenu(int score);
     void showGameOverMenu(int score);
     void showMainMenu();
-    void showPauseMenu();
     void showHighscoreMenu();
     void quit();
 
