@@ -18,7 +18,6 @@
 
 #include "Painter.h"
 #include "RenderCamera.h"
-#include "FileAssociatedShader.h"
 #include "SimplePostProcPass.h"
 #include "MotionBlurPostProc.h"
 #include "SSAOPostProc.h"

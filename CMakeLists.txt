@@ -274,10 +274,6 @@ set(sources
     ${source_path}/rendering/world/CavePainter.h
     ${source_path}/rendering/world/CuboidDrawable.cpp
     ${source_path}/rendering/world/CuboidDrawable.h
-    ${source_path}/rendering/world/FileAssociatedAsset.cpp
-    ${source_path}/rendering/world/FileAssociatedAsset.h
-    ${source_path}/rendering/world/FileAssociatedShader.cpp
-    ${source_path}/rendering/world/FileAssociatedShader.h
     ${source_path}/rendering/world/GameWorldRenderer.cpp
     ${source_path}/rendering/world/GameWorldRenderer.h
     ${source_path}/rendering/world/HUD.cpp
