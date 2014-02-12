@@ -219,28 +219,29 @@ set(sources
 
     ${source_path}/logic/menu/GameOverMenu.cpp
     ${source_path}/logic/menu/GameOverMenu.h
-    ${source_path}/logic/menu/HighscoreItem.cpp
-    ${source_path}/logic/menu/HighscoreItem.h
     ${source_path}/logic/menu/HighscoreMenu.cpp
     ${source_path}/logic/menu/HighscoreMenu.h
     ${source_path}/logic/menu/MainMenu.cpp
     ${source_path}/logic/menu/MainMenu.h
     ${source_path}/logic/menu/Menu.cpp
     ${source_path}/logic/menu/Menu.h
-    ${source_path}/logic/menu/MenuButton.cpp
-    ${source_path}/logic/menu/MenuButton.h    
-    ${source_path}/logic/menu/MenuInput.cpp
-    ${source_path}/logic/menu/MenuInput.h
-    ${source_path}/logic/menu/MenuItem.cpp
-    ${source_path}/logic/menu/MenuItem.h
-    ${source_path}/logic/menu/MenuLogo.cpp
-    ${source_path}/logic/menu/MenuLogo.h
-    ${source_path}/logic/menu/MenuText.cpp
-    ${source_path}/logic/menu/MenuText.h
     ${source_path}/logic/menu/PauseMenu.cpp
     ${source_path}/logic/menu/PauseMenu.h
     ${source_path}/logic/menu/NewHighscoreMenu.cpp
     ${source_path}/logic/menu/NewHighscoreMenu.h
+    
+    ${source_path}/logic/menu/items/MenuItem.cpp
+    ${source_path}/logic/menu/items/MenuItem.h
+    ${source_path}/logic/menu/items/HighscoreItem.cpp
+    ${source_path}/logic/menu/items/HighscoreItem.h
+    ${source_path}/logic/menu/items/MenuButton.cpp
+    ${source_path}/logic/menu/items/MenuButton.h    
+    ${source_path}/logic/menu/items/MenuInput.cpp
+    ${source_path}/logic/menu/items/MenuInput.h
+    ${source_path}/logic/menu/items/MenuLogo.cpp
+    ${source_path}/logic/menu/items/MenuLogo.h
+    ${source_path}/logic/menu/items/MenuText.cpp
+    ${source_path}/logic/menu/items/MenuText.h
 
     ${source_path}/logic/world/ChunkGenerator.cpp
     ${source_path}/logic/world/ChunkGenerator.h

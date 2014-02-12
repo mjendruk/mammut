@@ -7,15 +7,17 @@
 
 #include <glow/FrameBufferObject.h>
 
-#include <logic/menu/MenuButton.h>
-#include <logic/menu/MenuLogo.h>
-#include <logic/menu/HighscoreItem.h>
-#include <logic/menu/MenuInput.h>
-#include <logic/menu/MenuText.h>
-#include <logic/highscore/HighscoreEntry.h>
 #include <logic/menu/Menu.h>
+#include <logic/menu/items/MenuButton.h>
+#include <logic/menu/items/MenuLogo.h>
+#include <logic/menu/items/HighscoreItem.h>
+#include <logic/menu/items/MenuInput.h>
+#include <logic/menu/items/MenuText.h>
+
+#include <logic/highscore/HighscoreEntry.h>
 
 #include "AbstractBackground.h"
+
 
 MenuRenderer::MenuRenderer()
 :   m_background(nullptr)

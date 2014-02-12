@@ -1,7 +1,7 @@
 #include "HighscoreMenu.h"
 
-#include "MenuButton.h"
-#include "HighscoreItem.h"
+#include <logic/menu/items/MenuButton.h>
+#include <logic/menu/items/HighscoreItem.h>
 
 HighscoreMenu::HighscoreMenu(const QList<HighscoreEntry> & scores)
 :   Menu(initializeMenuItems(scores))

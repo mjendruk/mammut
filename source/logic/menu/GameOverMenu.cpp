@@ -1,7 +1,7 @@
 #include "GameOverMenu.h"
 
-#include "MenuButton.h"
-#include "MenuText.h"
+#include <logic/menu/items/MenuButton.h>
+#include <logic/menu/items/MenuText.h>
 
 GameOverMenu::GameOverMenu(int score)
 :   Menu(initializeMenuItems(score))

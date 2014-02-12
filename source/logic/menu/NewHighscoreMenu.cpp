@@ -2,8 +2,8 @@
 
 #include <QString>
 
-#include "MenuInput.h"
-#include "MenuText.h"
+#include <logic/menu/items/MenuInput.h>
+#include <logic/menu/items/MenuText.h>
 
 
 NewHighscoreMenu::NewHighscoreMenu(const QString & cachedName, int score)

@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
-#include "MenuLogo.h"
-#include "MenuButton.h"
+#include <logic/menu/items/MenuLogo.h>
+#include <logic/menu/items/MenuButton.h>
 
 MainMenu::MainMenu()
 :   Menu(initializeMenuItems())

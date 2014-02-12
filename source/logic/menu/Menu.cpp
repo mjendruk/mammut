@@ -1,9 +1,12 @@
 #include "Menu.h"
 
 #include <cassert>
+
 #include <QKeyEvent>
+
 #include <sound/Sound.h>
-#include "MenuItem.h"
+
+#include <logic/menu/items/MenuItem.h>
 
 Menu::Menu(QList<MenuItem *> menuItems)
 :   m_menuItems(menuItems)
