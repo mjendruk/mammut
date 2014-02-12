@@ -1,5 +1,7 @@
 #include "SimplePostProcPass.h"
 
+#include <QVector>
+
 #include <glow/Program.h>
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>

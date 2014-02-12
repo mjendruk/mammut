@@ -54,8 +54,6 @@ protected:
 
     void updateFPS();
 
-    glow::ref_ptr<glow::Texture> create2DTexture();
-
 protected:
     static const float nearPlane;
     static const float farPlane;

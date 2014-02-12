@@ -8,8 +8,10 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
+#include "Util.h"
+
 const float MotionBlurPostProc::radius = 20.f;
-const float MotionBlurPostProc::numSamples = 15.f; //must be odd
+const int MotionBlurPostProc::numSamples = 15; //must be odd
 
 MotionBlurPostProc::MotionBlurPostProc()
 {
@@ -84,33 +86,10 @@ void MotionBlurPostProc::initialize()
     m_blurPass.setFragmentShader("data/shaders/motionBlur.frag");
 
     //Textures
-    m_TMTempTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_TMTempTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_TMTempTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_TMTempTexture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_TMTempTexture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_TMTempTexture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_TMTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_TMTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_TMTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_TMTexture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_TMTexture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_TMTexture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    
-    m_NMTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_NMTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_NMTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_NMTexture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_NMTexture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_NMTexture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_randomTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_randomTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_randomTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_randomTexture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_randomTexture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_randomTexture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    m_TMTempTexture = Util::create2DTexture();
+    m_TMTexture = Util::create2DTexture();
+    m_NMTexture = Util::create2DTexture();
+    m_randomTexture = Util::create2DTexture();
 
     //static Uniforms
     const int N = 32;

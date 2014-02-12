@@ -23,7 +23,7 @@ protected:
 
 protected:
     static const float radius;
-    static const float numSamples;
+    static const int numSamples;
 
     SimplePostProcPass m_tmVerticalPass; //tm = tileMax
     SimplePostProcPass m_tmHorizontalPass;

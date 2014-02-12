@@ -22,6 +22,7 @@
 #include "SimplePostProcPass.h"
 #include "MotionBlurPostProc.h"
 #include "SSAOPostProc.h"
+#include "Util.h"
 
 const float GameWorldRenderer::nearPlane = 0.01f;
 const float GameWorldRenderer::farPlane = 700.0f;
@@ -136,10 +137,10 @@ void GameWorldRenderer::initializeGBuffer()
 {
     m_gBufferFBO = new glow::FrameBufferObject();
 
-    m_gBufferColor = create2DTexture();
-    m_gBufferNormals = create2DTexture();
-    m_gBufferDepth = create2DTexture();
-    m_gBufferVelocity = create2DTexture();
+    m_gBufferColor = Util::create2DTexture();
+    m_gBufferNormals = Util::create2DTexture();
+    m_gBufferDepth = Util::create2DTexture();
+    m_gBufferVelocity = Util::create2DTexture();
 
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormals);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT1, m_gBufferColor);
@@ -153,7 +154,7 @@ void GameWorldRenderer::initializeGBuffer()
 void GameWorldRenderer::initializePostProcPasses()
 {
     //SSAO
-    m_ssaoOutput = create2DTexture();
+    m_ssaoOutput = Util::create2DTexture();
     m_ssaoPostProc.setInputTextures({ { "color", TIU_Color },
                                       { "normal", TIU_Normal },
                                       { "depth", TIU_Depth }
@@ -163,7 +164,7 @@ void GameWorldRenderer::initializePostProcPasses()
     m_ssaoFBO = new glow::FrameBufferObject();
 
     //motionBlur
-    m_motionBlurOutput = create2DTexture();
+    m_motionBlurOutput = Util::create2DTexture();
     m_motionBlurPostProc.setInputTextures({ { "color", TIU_SSAO },
                                             { "depth", TIU_Depth },
                                             { "velocity", TIU_Velocity }
@@ -231,13 +232,3 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
     m_gameMechanics = mechanics;
 }
 
-glow::ref_ptr<glow::Texture> GameWorldRenderer::create2DTexture()
-{
-    glow::ref_ptr<glow::Texture> texture =  new glow::Texture(GL_TEXTURE_2D);
-    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    return texture;
-}

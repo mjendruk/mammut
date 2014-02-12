@@ -8,6 +8,8 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
+#include "Util.h"
+
 const int SSAOPostProc::m_kernelSize = 32;
 const int SSAOPostProc::m_noiseSize = 4;
 const float SSAOPostProc::m_radius = 25.0f;
@@ -65,19 +67,8 @@ void SSAOPostProc::initialize()
     m_ssaoPass.setVertexShader("data/shaders/ssao.vert");
     m_ssaoPass.setFragmentShader("data/shaders/ssao.frag");
 
-    m_ssaoTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_ssaoTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_ssaoTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_ssaoTexture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_ssaoTexture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_ssaoTexture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    m_noiseTexture = new glow::Texture(GL_TEXTURE_2D);
-    m_noiseTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_noiseTexture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-    m_noiseTexture->setParameter(GL_TEXTURE_WRAP_R, GL_REPEAT);
+    m_ssaoTexture = Util::create2DTexture();
+    m_noiseTexture = Util::create2DTexture();
 
     //init noise texture and ssao kernel
     glow::Array<glm::vec3> kernel = glow::Array<glm::vec3>();

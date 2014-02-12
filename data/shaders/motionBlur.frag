@@ -12,7 +12,7 @@ uniform sampler2D randomBuffer;
 
 uniform vec2 viewport;
 uniform float radius;
-uniform float numSamples;
+uniform int numSamples;
 uniform float currentFPS_targetFPS;
 
 layout (location = 0) out vec4 fragColor;
@@ -129,7 +129,7 @@ void main()
             continue;
 
         // [-1, 1]
-        float t = clamp( mix( -1.0, 1.0, (float(i) + 1.0 + jitter) / (numSamples + 1.0)) * 1.2, -1.0, 1.0);
+        float t = clamp( mix( -1.0, 1.0, (float(i) + 1.0 + jitter) / (numSamples + 1)) * 1.2, -1.0, 1.0);
         // distance (less or equal largest neighbor velocity): [-radius, radius]
         float dist = t * radius_neighborhood;
         // offset vector that will be added to current point: [-radius, radius]
