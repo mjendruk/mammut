@@ -1,6 +1,9 @@
 #include "HUD.h"
 
 #include <algorithm>
+
+#include <QDebug>
+
 #include <glm/gtx/transform.hpp>
 
 #include <logic/world/Mammut.h>
@@ -28,18 +31,22 @@ void HUD::paint(const Mammut & mammut)
     QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-mammut.position().z)));
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
+    const glm::mat4 aspectRatioTransform = glm::scale(1.0f / m_camera.aspectRatio(), 1.0f, 1.0f);
     
     glDisable(GL_DEPTH_TEST);
     
     m_textRenderer.paint(velocityString,
-                         glm::translate(-0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f));
+                         aspectRatioTransform
+                         * glm::translate(m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
+                         TextRenderer::kAlignRight);
     
     m_textRenderer.paint(scoreString,
-                         glm::translate(0.95f, -0.86f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
-                         TextRenderer::kAlignRight);
+                         aspectRatioTransform
+                         * glm::translate(-m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
+                         TextRenderer::kAlignLeft);
 
     m_textRenderer.paint(fpsString,
-                         glm::translate(-0.99f, 0.88f, 0.0f) * glm::scale(1.0f, m_camera.aspectRatio(), 1.0f),
+                         glm::translate(-1.0f, 1.0f, 0.0f) * aspectRatioTransform,
                          TextRenderer::kAlignLeft);
 
     
