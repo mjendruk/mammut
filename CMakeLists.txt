@@ -364,7 +364,6 @@ set_target_properties(${target}
 
 add_definitions("-DGLM_SWIZZLE")
 add_definitions("-D_USE_MATH_DEFINES")
-add_definitions("-DQ_COMPILER_INITIALIZER_LISTS")
 
 # Deployment
 install(TARGETS ${target}

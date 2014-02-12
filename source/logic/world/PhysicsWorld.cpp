@@ -32,7 +32,7 @@ PhysicsWorld::PhysicsWorld()
 {
     btContactSolverInfo& info = m_dynamicsWorld.getSolverInfo();
     info.m_splitImpulse = 1;
-    info.m_splitImpulsePenetrationThreshold = -0.02;
+    info.m_splitImpulsePenetrationThreshold = -0.02f;
     
     m_dynamicsWorld.setInternalTickCallback(forwardPreTickCallback, this, true);
     m_dynamicsWorld.setInternalTickCallback(forwardPostTickCallback, this, false);
