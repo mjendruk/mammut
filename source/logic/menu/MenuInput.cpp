@@ -3,8 +3,9 @@
 #include <QKeyEvent>
 #include <rendering/menu/MenuRenderer.h>
 
-MenuInput::MenuInput(const QString & label)
+MenuInput::MenuInput(const QString & label, const QString & placeholder)
 :   m_label(label)
+,   m_placeholder(placeholder)
 {
 }
 
@@ -40,5 +41,7 @@ const QString & MenuInput::label() const
 
 const QString & MenuInput::text() const
 {
+    if (m_text.isNull()) return m_placeholder;
+
     return m_text;
 }

@@ -7,6 +7,7 @@
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
+,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
@@ -34,8 +35,15 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::update(float seconds)
 {
+    if (m_gameOver)
+    {
+        emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
+        return;
+    }
+    
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
+    
     m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
     
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z)
@@ -116,7 +124,10 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, &m_mammut, &Mammut::update);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
-    connect(&m_mammut, &Mammut::crashed, this, &GameMechanics::gameOver);
+    
+    connect(&m_mammut, &Mammut::crashed, [this]() {
+        m_gameOver = true;
+    });
 }
 
 

@@ -32,14 +32,18 @@ public slots:
     void run();
     void startGame();
     void resumeGame();
-    void showPauseMenu();
+    void endGame(int score);
     void showMainMenu();
-    void showHighscore();
+    void showPauseMenu();
+    void showHighscoreMenu();
     void quit();
     
 protected:
     void initializeWindow();
     void initializeRenderers();
+
+    void showNewHighscoreMenu(int score);
+    void showGameOverMenu(int score);
 
     bool eventFilter(QObject * obj, QEvent * event);
     void mouseMoveEvent(QMouseEvent * event);

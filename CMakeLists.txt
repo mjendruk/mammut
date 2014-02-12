@@ -217,6 +217,8 @@ set(sources
     ${source_path}/logic/highscore/HighscoreEntry.cpp
     ${source_path}/logic/highscore/HighscoreEntry.h
 
+    ${source_path}/logic/menu/GameOverMenu.cpp
+    ${source_path}/logic/menu/GameOverMenu.h
     ${source_path}/logic/menu/HighscoreItem.cpp
     ${source_path}/logic/menu/HighscoreItem.h
     ${source_path}/logic/menu/HighscoreMenu.cpp
@@ -233,8 +235,12 @@ set(sources
     ${source_path}/logic/menu/MenuItem.h
     ${source_path}/logic/menu/MenuLogo.cpp
     ${source_path}/logic/menu/MenuLogo.h
+    ${source_path}/logic/menu/MenuText.cpp
+    ${source_path}/logic/menu/MenuText.h
     ${source_path}/logic/menu/PauseMenu.cpp
     ${source_path}/logic/menu/PauseMenu.h
+    ${source_path}/logic/menu/NewHighscoreMenu.cpp
+    ${source_path}/logic/menu/NewHighscoreMenu.h
 
     ${source_path}/logic/world/ChunkGenerator.cpp
     ${source_path}/logic/world/ChunkGenerator.h

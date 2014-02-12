@@ -10,6 +10,7 @@ class MenuButton;
 class MenuLogo;
 class HighscoreItem;
 class MenuInput;
+class MenuText;
 class AbstractBackground;
 
 class MenuRenderer : public Renderer
@@ -25,6 +26,7 @@ public:
     void render(const MenuLogo * logo);
     void render(const HighscoreItem * item);
     void render(const MenuInput * input);
+    void render(const MenuText * text);
 
     void setBackground(AbstractBackground * background);
     void setMenu(const Menu * menu);

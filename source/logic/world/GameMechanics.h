@@ -36,7 +36,7 @@ public:
 
 signals:
     void pause();
-    void gameOver();
+    void gameOver(int score);
     
 protected:
     void connectSignals();
@@ -48,6 +48,8 @@ protected:
     Mammut m_mammut;
     GameCamera m_camera;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    
+    bool m_gameOver;
 
     Sound m_backgroundLoop;
 

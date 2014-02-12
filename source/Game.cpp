@@ -14,9 +14,11 @@
 #include <rendering/menu/ScreenshotBackground.h>
 
 #include <logic/world/GameMechanics.h>
-#include <logic/menu/MainMenu.h>
+#include <logic/menu/GameOverMenu.h>
 #include <logic/menu/HighscoreMenu.h>
+#include <logic/menu/MainMenu.h>
 #include <logic/menu/PauseMenu.h>
+#include <logic/menu/NewHighscoreMenu.h>
 
 #include <sound/Sound.h>
 #include <sound/SoundManager.h>
@@ -29,16 +31,12 @@ Game::Game(int & argc, char ** argv)
     initializeWindow();
     initializeRenderers();
     
-    m_highscoreList.addScore("Max", 9000);
-    m_highscoreList.addScore("Johannes", 8000);
-    m_highscoreList.addScore("Clemens", 7000);
-    m_highscoreList.addScore("Caro", 6000);
-    m_highscoreList.addScore("Friedrich", 5000);
-    m_highscoreList.addScore("Max", 9000);
-    m_highscoreList.addScore("Johannes", 8000);
-    m_highscoreList.addScore("Clemens", 7000);
-    m_highscoreList.addScore("Caro", 6000);
-    m_highscoreList.addScore("Friedrich", 5000);
+    m_highscoreList.addScore("Max", 1000);
+    m_highscoreList.addScore("Johannes", 700);
+    m_highscoreList.addScore("Clemens", 300);
+    m_highscoreList.addScore("Caro", 200);
+    m_highscoreList.addScore("Friedrich", 100);
+
     
     showMainMenu();
     
@@ -89,7 +87,7 @@ void Game::startGame()
     m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
     
     connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::showPauseMenu);
-    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::showMainMenu);
+    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::endGame);
     
     m_activeMechanics = m_gameMechanics;
     m_canvas->setRenderer(m_gameWorldRenderer.get());
@@ -123,7 +121,7 @@ void Game::showMainMenu()
     std::shared_ptr<MainMenu> menu(new MainMenu());
     
     connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
-    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscore);
+    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
     connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
     
     m_activeMechanics = menu;
@@ -133,7 +131,19 @@ void Game::showMainMenu()
     m_canvas->setRenderer(m_menuRenderer.get());
 }
 
-void Game::showHighscore()
+void Game::endGame(int score)
+{
+    if (m_highscoreList.isHighscore(score))
+    {
+        showNewHighscoreMenu(score);
+    }
+    else
+    {
+        showGameOverMenu(score);
+    }
+}
+
+void Game::showHighscoreMenu()
 {
     std::shared_ptr<HighscoreMenu> menu(new HighscoreMenu(m_highscoreList.scores()));
     
@@ -178,6 +188,43 @@ void Game::initializeRenderers()
     m_gameWorldRenderer.reset(new GameWorldRenderer());
     m_blankBackground.reset(new BlankBackground());
     m_screenshotBackground.reset(new ScreenshotBackground());
+}
+
+void Game::showNewHighscoreMenu(int score)
+{
+    std::shared_ptr<NewHighscoreMenu> menu(new NewHighscoreMenu("Max", score));
+
+    connect(menu.get(), &NewHighscoreMenu::nameEntered, [this, score](const QString & name) 
+    {
+        m_highscoreList.addScore(name, score);
+        showGameOverMenu(score); 
+    });
+
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
+    m_menuRenderer->setBackground(m_screenshotBackground.get());
+
+    m_canvas->setRenderer(m_menuRenderer.get());
+}
+
+void Game::showGameOverMenu(int score)
+{
+    std::shared_ptr<GameOverMenu> menu(new GameOverMenu(score));
+
+    connect(menu.get(), &GameOverMenu::retryPressed, this, &Game::startGame);
+    connect(menu.get(), &GameOverMenu::toMainMenuPressed, this, &Game::showMainMenu);
+
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
+    m_menuRenderer->setBackground(m_screenshotBackground.get());
+
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 bool Game::eventFilter(QObject * obj, QEvent * event)

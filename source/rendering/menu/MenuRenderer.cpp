@@ -11,6 +11,7 @@
 #include <logic/menu/MenuLogo.h>
 #include <logic/menu/HighscoreItem.h>
 #include <logic/menu/MenuInput.h>
+#include <logic/menu/MenuText.h>
 #include <logic/highscore/HighscoreEntry.h>
 #include <logic/menu/Menu.h>
 
@@ -132,6 +133,18 @@ void MenuRenderer::render(const MenuInput * input)
                          m_translation,
                          StringDrawer::kAlignLeft);
     
+    m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.5f, 0.0f);
+}
+
+void MenuRenderer::render(const MenuText * text)
+{
+    const glm::vec3 color(0.6f, 0.13f, 0.02f);
+    
+    m_stringDrawer.paint(text->text(), 
+                         m_translation,
+                         StringDrawer::kAlignCenter,
+                         color);
+
     m_translation *= glm::translate(0.0f, - StringDrawer::s_lineHeight * 1.5f, 0.0f);
 }
 
