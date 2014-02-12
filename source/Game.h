@@ -27,23 +27,23 @@ class Game : public AbstractApplication
 public:
     Game(int & argc, char ** argv);
     virtual ~Game();
-
+    
 public slots:
     void run();
+
+protected:
     void startGame();
     void resumeGame();
     void endGame(int score);
+    void showNewHighscoreMenu(int score);
+    void showGameOverMenu(int score);
     void showMainMenu();
     void showPauseMenu();
     void showHighscoreMenu();
     void quit();
-    
-protected:
+
     void initializeWindow();
     void initializeRenderers();
-
-    void showNewHighscoreMenu(int score);
-    void showGameOverMenu(int score);
 
     bool eventFilter(QObject * obj, QEvent * event);
     void mouseMoveEvent(QMouseEvent * event);

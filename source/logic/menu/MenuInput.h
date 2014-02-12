@@ -22,7 +22,7 @@ public:
     const QString & text() const;
 
 signals:
-    void pressed();
+    void enterPressed(const QString & text);
 
 protected:
     QString m_label;

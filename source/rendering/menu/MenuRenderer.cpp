@@ -55,7 +55,7 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
     const float aspectRatio = m_viewport.x / std::max(static_cast<float>(m_viewport.y), 1.f);
     const glm::mat4 aspectRatioTransform = glm::scale(1.0f / aspectRatio, 1.0f, 1.0f);
 
-    m_translation = glm::translate(0.0f, 0.9f, 0.0f) * aspectRatioTransform * glm::scale(1.5f, 1.5f, 1.0f);
+    m_translation = glm::translate(0.0f, 0.85f, 0.0f) * aspectRatioTransform * glm::scale(1.5f, 1.5f, 1.0f);
     
     for (auto menuItem : m_menu->menuItems())
         menuItem->accept(this);

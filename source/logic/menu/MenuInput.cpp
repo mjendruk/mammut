@@ -20,13 +20,17 @@ void MenuInput::accept(MenuRenderer * renderer)
 
 void MenuInput::keyPressed(QKeyEvent * event)
 {
-    if (event->key() == Qt::Key_Backspace)
+    switch (event->key())
     {
-        m_text.chop(1);
-        return;
+        case Qt::Key_Backspace:
+            m_text.chop(1);
+            break;
+        case Qt::Key_Return:
+            emit enterPressed(text());
+            break;
+        default:
+            m_text.append(event->text());
     }
-    
-    m_text.append(event->text());
 }
 
 bool MenuInput::isFocusable() const

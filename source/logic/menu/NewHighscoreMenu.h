@@ -5,7 +5,6 @@
 
 class QString;
 
-class MenuButton;
 class MenuInput;
 class MenuText;
 
@@ -17,8 +16,6 @@ public:
     NewHighscoreMenu(const QString & cachedName, int score);
     virtual ~NewHighscoreMenu();
 
-    void onOkPressed();
-
 signals:
     void nameEntered(const QString & name);
 
@@ -28,6 +25,5 @@ protected:
 
 protected:
     MenuInput * m_input;
-    MenuButton * m_okButton;
 
 };
