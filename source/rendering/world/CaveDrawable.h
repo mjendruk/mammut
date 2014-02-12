@@ -17,11 +17,11 @@ public:
     CaveDrawable();
     ~CaveDrawable();
 
-    void initialize() override;
     void draw() override;
     void update(glm::vec3 camPosition);
 
 protected:
+    void initialize() override;
     void initializeIndices();
     void addRings(int numRings);
     void buildDuplicatedVertices();

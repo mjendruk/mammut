@@ -17,8 +17,6 @@ class CavePainter : public AbstractPainter
 public:
     CavePainter();
     virtual ~CavePainter();
-
-    virtual bool initialize();
     
     virtual void paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix);
 
@@ -26,8 +24,9 @@ public:
     void setViewProjectionUniforms(const glm::mat4 & viewProjection, const glm::mat4 & prevViewProjection);
     void setViewUniform(const glm::mat4 & view);
     void setEyeUniform(const glm::vec3 & eye);
-    
-    virtual void update(const QList<glow::Program *> & programs);
+
+protected:
+    virtual void initialize();
 
 protected:
     glow::Program * m_program;

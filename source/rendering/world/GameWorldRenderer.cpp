@@ -119,12 +119,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
 void GameWorldRenderer::initialize()
 {
-    m_painter.initialize();
-    m_cavePainter.initialize();
-    m_cuboidDrawable.initialize();
-    m_caveDrawable.initialize();
-    m_hud.initialize();
-
     m_camera.setFovy(80.0);
     m_camera.setZNear(nearPlane);
     m_camera.setZFar(farPlane);
@@ -205,11 +199,6 @@ void GameWorldRenderer::updateFPS()
 
 void GameWorldRenderer::updatePainter()
 {
-    // recompile file associated shaders if required
-    QList<glow::Program*> programsWithInvalidatedUniforms(FileAssociatedShader::process());
-    m_painter.update(programsWithInvalidatedUniforms);
-    m_cavePainter.update(programsWithInvalidatedUniforms);
-
     m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
     m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));

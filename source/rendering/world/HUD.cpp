@@ -18,10 +18,6 @@ HUD::~HUD()
 {
 }
 
-void HUD::initialize()
-{
-}
-
 void HUD::paint(const Mammut & mammut)
 {
     QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(-mammut.velocity().z)));

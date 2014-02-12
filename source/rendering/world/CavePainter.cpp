@@ -11,6 +11,7 @@
 CavePainter::CavePainter()
 :   m_program(nullptr)
 {
+    initialize();
 }
 
 CavePainter::~CavePainter()
@@ -18,7 +19,7 @@ CavePainter::~CavePainter()
     delete m_program;
 }
 
-bool CavePainter::initialize()
+void CavePainter::initialize()
 {
     m_program = new glow::Program();
 
@@ -28,8 +29,6 @@ bool CavePainter::initialize()
 	GL_VERTEX_SHADER, "data/shaders/cuboid.vert");
     m_program->attach(m_vertShader, m_fragShader);
     m_program->link();
-
-    return true;
 }
 
 void CavePainter::setNearFarUniform(const glm::vec2 & nearFar)
@@ -51,11 +50,6 @@ void CavePainter::setViewUniform(const glm::mat4 & view)
 void CavePainter::setEyeUniform(const glm::vec3 & eye)
 {
     m_program->setUniform("eye", eye);
-}
-
-void CavePainter::update(const QList<glow::Program *> & programs)
-{
-    //do necessary updates
 }
 
 void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)

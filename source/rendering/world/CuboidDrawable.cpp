@@ -9,7 +9,7 @@
 CuboidDrawable::CuboidDrawable()
 :   m_cube(nullptr)
 {
-
+    initialize();
 }
 
 CuboidDrawable::~CuboidDrawable()

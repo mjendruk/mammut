@@ -11,13 +11,14 @@
 Painter::Painter()
 :   m_program(nullptr)
 {
+    initialize();
 }
 
 Painter::~Painter()
 {
 }
 
-bool Painter::initialize()
+void Painter::initialize()
 {
     m_program = new glow::Program();
 
@@ -27,8 +28,6 @@ bool Painter::initialize()
  	    GL_VERTEX_SHADER, "data/shaders/cuboid.vert");
     m_program->attach(m_vertShader, m_fragShader);
     m_program->link();
-
-    return true;
 }
 
 void Painter::setNearFarUniform(const glm::vec2 & nearFar)
@@ -50,11 +49,6 @@ void Painter::setViewUniform(const glm::mat4 & view)
 void Painter::setEyeUniform(const glm::vec3 & eye)
 {
     m_program->setUniform("eye", eye);
-}
-
-void Painter::update(const QList<glow::Program *> & programs)
-{
-    //do necessary updates
 }
 
 void Painter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)

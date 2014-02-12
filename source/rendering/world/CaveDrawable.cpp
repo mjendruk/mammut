@@ -34,6 +34,8 @@ CaveDrawable::CaveDrawable()
         float angleOffset = (3.14159265359f * 2 / s_verticesPerRing) * (i + 0.5f);
         dummyArrayOffset << glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * s_radius;
     }
+
+    initialize();
 }
 
 CaveDrawable::~CaveDrawable()

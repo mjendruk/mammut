@@ -13,7 +13,6 @@ public:
         const GameWorldRenderer & renderer);
     ~HUD();
 
-    void initialize();
     void paint(const Mammut & mammut);
 
 protected:
