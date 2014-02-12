@@ -31,18 +31,6 @@ Game::Game(int & argc, char ** argv)
     initializeWindow();
     initializeRenderers();
     
-    m_highscoreList.addScore("Max", 5000);
-    m_highscoreList.addScore("Johannes", 4000);
-    m_highscoreList.addScore("Clemens", 3000);
-    m_highscoreList.addScore("Caro", 2000);
-    m_highscoreList.addScore("Friedrich", 1000);
-    m_highscoreList.addScore("Moritz", 900);
-    m_highscoreList.addScore("Karsten", 800);
-    m_highscoreList.addScore("Yannick", 700);
-    m_highscoreList.addScore("Aileen", 600);
-    m_highscoreList.addScore("Noop", 500);
-
-    
     showMainMenu();
     
     QTimer::singleShot(0, this, SLOT(run()));
