@@ -47,18 +47,16 @@ public:
 
 protected:
     void initialize();
-    void initializeGBuffer();
+    void initializeGBuffers();
     void initializePostProcPasses();
 
-    void updatePainter();
+    void updatePainters();
 
     void updateFPS();
 
 protected:
     static const float nearPlane;
     static const float farPlane;
-    static const float motionBlurRadius;
-    static const float motionBlurS;
     
     Painter m_painter;
     CavePainter m_cavePainter;

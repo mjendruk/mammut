@@ -49,7 +49,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_caveDrawable.update(m_camera.eye());
 
     updateFPS();
-    updatePainter();
+    updatePainters();
     
     ////
     // geometry pass
@@ -107,11 +107,11 @@ void GameWorldRenderer::initialize()
     m_camera.setZNear(nearPlane);
     m_camera.setZFar(farPlane);
 
-    initializeGBuffer();
+    initializeGBuffers();
     initializePostProcPasses();
 }
 
-void GameWorldRenderer::initializeGBuffer()
+void GameWorldRenderer::initializeGBuffers()
 {
     m_gBufferFBO = new glow::FrameBufferObject();
 
@@ -182,7 +182,7 @@ void GameWorldRenderer::updateFPS()
     m_lastFrame = QTime::currentTime();
 }
 
-void GameWorldRenderer::updatePainter()
+void GameWorldRenderer::updatePainters()
 {
     m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
