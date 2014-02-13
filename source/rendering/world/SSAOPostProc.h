@@ -13,8 +13,9 @@ public:
     virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
     virtual glow::Texture* outputTexture();
 
-    template<typename T>
-    void setUniform(const QString name, const T& value);
+    void setProjectionUniform(glm::mat4 projection);
+    void setInverseProjectionUniform(glm::mat4 invProjection);
+    void setNormalMatrixUniform(glm::mat3 normalMatrix);
 
 protected:
     void initialize();
@@ -32,8 +33,3 @@ protected:
 
     glow::ref_ptr<glow::Texture> m_noiseTexture;
 };
-
-template<typename T>
-void SSAOPostProc::setUniform(const QString name, const T& value) {
-    m_ssaoPass.setUniform(name, value);
-}

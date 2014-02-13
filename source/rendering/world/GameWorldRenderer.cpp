@@ -84,14 +84,14 @@ void GameWorldRenderer::drawGeometry()
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     //SSAO pass
-    m_ssaoPostProc.setUniform("projection", m_camera.projection());
-    m_ssaoPostProc.setUniform("invProjection", glm::inverse(m_camera.projection()));
-    m_ssaoPostProc.setUniform("normalMatrix", m_camera.normal());
+    m_ssaoPostProc.setProjectionUniform(m_camera.projection());
+    m_ssaoPostProc.setInverseProjectionUniform(glm::inverse(m_camera.projection()));
+    m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
 
     m_ssaoPostProc.apply();
 
     //motion blur pass
-    m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps() / 60.f);
+    m_motionBlurPostProc.setFPSUniform(fps() / 60.f);
     m_motionBlurPostProc.apply();
 
     //copy final texture to screen

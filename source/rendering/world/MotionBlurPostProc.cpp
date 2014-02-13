@@ -103,3 +103,9 @@ void MotionBlurPostProc::resize(int width, int height)
     m_neighborMaxPass.setUniform("viewport", glm::vec2(width, height));
     m_blurPass.setUniform("viewport", glm::vec2(width, height));
 }
+
+
+void MotionBlurPostProc::setFPSUniform(float current_targetFPS)
+{
+    m_blurPass.setUniform("currentFPS_targetFPS", current_targetFPS);
+}

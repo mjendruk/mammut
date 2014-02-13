@@ -104,3 +104,17 @@ void SSAOPostProc::resize(int width, int height)
     m_ssaoPass.resize(width, height);
     m_blurPass.resize(width, height);
 }
+
+void SSAOPostProc::setProjectionUniform(glm::mat4 projection)
+{
+    m_ssaoPass.setUniform("projection", projection);
+}
+
+void SSAOPostProc::setInverseProjectionUniform(glm::mat4 invProjection)
+{
+    m_ssaoPass.setUniform("invProjection", invProjection);
+}
+void SSAOPostProc::setNormalMatrixUniform(glm::mat3 normalMatrix)
+{
+    m_ssaoPass.setUniform("normalMatrix", normalMatrix);
+}

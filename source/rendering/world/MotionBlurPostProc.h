@@ -15,8 +15,7 @@ public:
     virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
     virtual glow::Texture* outputTexture();
 
-    template<typename T>
-    void setUniform(const QString name, const T& value);
+    void setFPSUniform(float current_targetFPS);
 
 protected:
 	void initialize();
@@ -37,8 +36,3 @@ protected:
     glow::ref_ptr<glow::Texture> m_NMOutputTexture;
     glow::ref_ptr<glow::Texture> m_randomTexture;
 };
-
-template<typename T>
-void MotionBlurPostProc::setUniform(const QString name, const T& value) {
-    m_blurPass.setUniform(name, value);
-}
