@@ -51,8 +51,10 @@ protected:
     void initializePostProcPasses();
 
     void updatePainters();
-
     void updateFPS();
+
+    void drawGeometry();
+    void applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio);
 
 protected:
     static const float nearPlane;

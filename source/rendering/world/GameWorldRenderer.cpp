@@ -51,39 +51,47 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     updateFPS();
     updatePainters();
     
-    ////
-    // geometry pass
-    ////
-
-    m_gBufferFBO->bind();
+    // render
+    drawGeometry();
+    applyPostproc(fbo, devicePixelRatio);
     
+    //paint HUD over
+    fbo->bind();
+    m_hud.paint(m_gameMechanics->mammut());
+    fbo->unbind();
+
+    // update previous view projection matrix for next frame
+    m_previousViewProjection = m_camera.viewProjection();
+}
+
+void GameWorldRenderer::drawGeometry()
+{
+    m_gBufferFBO->bind();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
     });
     //cave does not move at the moment, so model and prevModel are the same [motionBlur]
-    m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4()); 
+    m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
 
     m_gBufferFBO->unbind();
-    
-    m_previousViewProjection = m_camera.viewProjection();
+}
 
-    ////
-    // post processing 
-    ////
-    
+void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
+{
     //SSAO pass
     m_ssaoPostProc.setUniform("projection", m_camera.projection());
     m_ssaoPostProc.setUniform("invProjection", glm::inverse(m_camera.projection()));
     m_ssaoPostProc.setUniform("normalMatrix", m_camera.normal());
 
     m_ssaoPostProc.apply();
-    
+
     //motion blur pass
-    m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps()/60.f);
+    m_motionBlurPostProc.setUniform("currentFPS_targetFPS", fps() / 60.f);
     m_motionBlurPostProc.apply();
-    
+
     //copy final texture to screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0,
@@ -92,14 +100,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
     fbo->bind();
     m_renderOnScreenQuad->draw();
-    fbo->unbind();
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    
-    //paint HUD
-    fbo->bind();
-    m_hud.paint(m_gameMechanics->mammut());
     fbo->unbind();
 }
 
