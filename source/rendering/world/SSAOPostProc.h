@@ -21,10 +21,10 @@ protected:
     void initialize();
 
 protected:
-    static const int kernelSize;
-    static const int noiseSize;
-    static const float radius;
-    static const QList<QString> requiredSamplers;
+    static const int s_kernelSize;
+    static const int s_noiseSize;
+    static const float s_radius;
+    static const QList<QString> s_requiredSamplers;
 
     SimplePostProcPass m_ssaoPass;
     SimplePostProcPass m_blurPass;

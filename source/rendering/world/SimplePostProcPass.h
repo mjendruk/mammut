@@ -69,6 +69,6 @@ protected:
 };
 
 template<typename T>
-void SimplePostProcPass::setUniform(const QString name, const T& value) {
+void SimplePostProcPass::setUniform(const QString name, const T & value) {
     m_program->setUniform(name.toStdString(), value);
 }

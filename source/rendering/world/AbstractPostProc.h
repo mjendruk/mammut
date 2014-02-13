@@ -15,7 +15,7 @@ namespace glow
 class AbstractPostProc
 {
 public:
-    virtual ~AbstractPostProc(){}
+    virtual ~AbstractPostProc() = 0;
 
     virtual void apply() = 0;
 

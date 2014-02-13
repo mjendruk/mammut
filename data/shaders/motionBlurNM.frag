@@ -14,7 +14,6 @@ void main() {
 
     float largestMagnitude2 = -1.0;
 
-    //das über viewport berechnen
     ivec2 maxCoord = ivec2(viewport) - ivec2(1.0);
 
     ivec2 currentTile = ivec2(gl_FragCoord.xy);

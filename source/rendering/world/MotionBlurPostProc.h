@@ -21,10 +21,10 @@ protected:
 	void initialize();
 
 protected:
-    static const float radius;
-    static const int numSamples;
-    static const int randomBufferSize;
-    static const QList<QString> requiredSamplers;
+    static const float s_radius;
+    static const int s_numSamples;
+    static const int s_randomBufferSize;
+    static const QList<QString> s_requiredSamplers;
 
     SimplePostProcPass m_tmVerticalPass; //tm = tileMax
     SimplePostProcPass m_tmHorizontalPass;
