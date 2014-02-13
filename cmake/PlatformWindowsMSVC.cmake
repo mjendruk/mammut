@@ -19,7 +19,7 @@ set(DEFAULT_COMPILE_DEFS_RELEASE
 
 
 set(WIN32_COMPILE_FLAGS
-	"/nologo /Zc:wchar_t /Zc:forScope /GL /GF /GR /GS- /Zi /fp:precise /MP /wd4267"
+	"/nologo /Zc:wchar_t /Zc:forScope /GL /GF /GR /GS- /Zi /fp:precise /MP /wd4267 /wd4273 /wd4251"
 	# nologo       -> no logo
  	# Zc:wchar_t   -> treat wchar_t as built-in type: yes
  	# Zc:forScope  -> force conformance in for loop scope: Yes
@@ -87,3 +87,6 @@ set(DEFAULT_LINKER_FLAGS_RELEASE
 
 # Add platform specific libraries for linking
 set(EXTRA_LIBS "")
+
+add_definitions("-DNOMINMAX")
+add_definitions("-DQ_COMPILER_INITIALIZER_LISTS")

@@ -267,27 +267,28 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/AbstractPostProc.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
     ${source_path}/rendering/world/CavePainter.h
     ${source_path}/rendering/world/CuboidDrawable.cpp
     ${source_path}/rendering/world/CuboidDrawable.h
-    ${source_path}/rendering/world/FileAssociatedAsset.cpp
-    ${source_path}/rendering/world/FileAssociatedAsset.h
-    ${source_path}/rendering/world/FileAssociatedShader.cpp
-    ${source_path}/rendering/world/FileAssociatedShader.h
     ${source_path}/rendering/world/GameWorldRenderer.cpp
     ${source_path}/rendering/world/GameWorldRenderer.h
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
     ${source_path}/rendering/world/DrawableInterface.h
+    ${source_path}/rendering/world/MotionBlurPostProc.cpp
+    ${source_path}/rendering/world/MotionBlurPostProc.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
+    ${source_path}/rendering/world/SimplePostProcPass.cpp
+    ${source_path}/rendering/world/SimplePostProcPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
-    ${source_path}/rendering/world/SSAO.cpp
-    ${source_path}/rendering/world/SSAO.h
+    ${source_path}/rendering/world/SSAOPostProc.cpp
+    ${source_path}/rendering/world/SSAOPostProc.h
 
     ${source_path}/sound/SoundManager.cpp
     ${source_path}/sound/SoundManager.h
@@ -309,12 +310,15 @@ source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$"
 
 set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
-    ${shader_path}/blur.vert
     ${shader_path}/blur.frag
     ${shader_path}/cuboid.vert
     ${shader_path}/cuboid.frag
-    ${shader_path}/quad.vert
+    ${shader_path}/motionBlur.frag
+    ${shader_path}/motionBlurNM.frag
+    ${shader_path}/motionBlurTM_horizontal.frag
+    ${shader_path}/motionBlurTM_vertical.frag
     ${shader_path}/quad.frag
+    ${shader_path}/screenquad.vert
     ${shader_path}/screenshot_background.vert
     ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert
@@ -355,7 +359,6 @@ set_target_properties(${target}
 
 add_definitions("-DGLM_SWIZZLE")
 add_definitions("-D_USE_MATH_DEFINES")
-add_definitions("-DQ_COMPILER_INITIALIZER_LISTS")
 
 # Deployment
 install(TARGETS ${target}
