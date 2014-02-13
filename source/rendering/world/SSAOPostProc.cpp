@@ -35,7 +35,7 @@ void SSAOPostProc::apply()
     m_blurPass.apply();
 }
 
-void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
+void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> & input)
 {
     for (QString sampler : requiredSamplers)
         assert(input.contains(sampler));

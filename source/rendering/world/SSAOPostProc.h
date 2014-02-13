@@ -10,7 +10,7 @@ public:
 
     virtual void apply();
     virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
+    virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
     virtual glow::Texture* outputTexture();
 
     template<typename T>

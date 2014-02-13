@@ -39,7 +39,7 @@ void MotionBlurPostProc::apply()
     m_blurPass.apply();
 }
 
-void MotionBlurPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
+void MotionBlurPostProc::setInputTextures(const QMap<QString, glow::Texture*> & input)
 {
     for (QString sampler : requiredSamplers)
         assert(input.contains(sampler));

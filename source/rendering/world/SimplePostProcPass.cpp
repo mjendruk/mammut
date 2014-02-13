@@ -72,7 +72,7 @@ void SimplePostProcPass::apply()
     glDepthMask(GL_TRUE);
 }
 
-void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> input)
+void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
 {
     m_inputTextures = QMap<QString, glow::Texture*>(input);
 
