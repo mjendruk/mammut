@@ -3,14 +3,10 @@
 #include <cassert>
 
 #include <QDebug>
-#include <QApplication>
 #include <QResizeEvent>
-#include <QOpenGLContext>
 
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
-#include <glow/DebugMessageOutput.h>
-
 
 #include "Renderer.h"
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include <glow/ref_ptr.h>
 #include <glowutils/UnitCube.h>
 

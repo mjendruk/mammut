@@ -1,12 +1,10 @@
 #include "SSAOPostProc.h"
 
+#include <vector>
+
 #include <glm/gtx/random.hpp>
 
-#include <glow/Program.h>
-#include <glow/Shader.h>
-#include <glowutils/ScreenAlignedQuad.h>
 #include <glow/Texture.h>
-#include <glow/FrameBufferObject.h>
 
 #include "Util.h"
 

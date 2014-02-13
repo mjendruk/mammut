@@ -1,7 +1,7 @@
 #include "PhysicsWorld.h"
 
-#include <QDebug>
 #include <glm/gtx/transform.hpp>
+
 #include <Util.h>
 #include "PhysicsObject.h"
 

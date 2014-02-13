@@ -1,7 +1,5 @@
 #include "Painter.h"
 
-#include <glm/gtx/transform.hpp>
-
 #include <glow/Program.h>
 #include <glow/Shader.h>
 #include <glowutils/global.h>

@@ -1,12 +1,9 @@
 #include "GameCamera.h"
 
-#include <iostream>
 #include <algorithm>
-#include <QDebug>
 
-#include "glm/gtx/string_cast.hpp"
+#include <glm/gtc/quaternion.hpp>
 
-#include "Mammut.h"
 #include <Util.h>
 
 const float GameCamera::s_rotationDuration = 0.25f;

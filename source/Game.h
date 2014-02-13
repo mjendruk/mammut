@@ -8,13 +8,13 @@
 
 #include <logic/menu/MainMenu.h>
 #include <logic/menu/PauseMenu.h>
-#include <rendering/Canvas.h>
 
 #include "AbstractApplication.h"
 
 class QMouseEvent;
-class GameMechanics;
 
+class GameMechanics;
+class Canvas;
 class MenuRenderer;
 class GameWorldRenderer;
 class BlankBackground;

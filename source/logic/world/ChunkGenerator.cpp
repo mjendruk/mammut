@@ -1,6 +1,7 @@
 #include "ChunkGenerator.h"
 
 #include <glm/glm.hpp>
+
 #include "Cuboid.h"
 
 ChunkGenerator::ChunkGenerator(int seed)

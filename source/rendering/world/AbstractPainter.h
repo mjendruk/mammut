@@ -2,19 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include <QList>
-#include <QSize>
-
-class QStringList;
-class QKeyEvent;
-
-namespace glow
-{
-    class Program;
-}
-
-class RenderCamera;
 class DrawableInterface;
+
 
 class AbstractPainter
 {

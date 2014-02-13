@@ -1,15 +1,16 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
 #include <glm/glm.hpp>
 
-#include <glow/ref_ptr.h>
-#include <glow/Buffer.h>
-#include <glow/VertexArrayObject.h>
-
 #include "DrawableInterface.h"
+
+namespace glow
+{
+    class Buffer;
+    class VertexArrayObject;
+}
 
 class CaveDrawable : public DrawableInterface
 {

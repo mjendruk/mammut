@@ -6,22 +6,16 @@
 
 #include <QMap>
 
-#include "glow/Texture.h"
-#include "glow/Program.h"
-#include "glow/FrameBufferobject.h"
-#include "glowutils/File.h"
-#include "glowutils/ScreenAlignedQuad.h"
+#include <glow/Texture.h>
+#include <glow/Program.h>
+#include <glow/FrameBufferobject.h>
+#include <glowutils/ScreenAlignedQuad.h>
 
 #include <logic/world/Cuboid.h>
 #include <logic/world/Mammut.h>
 #include <logic/world/GameMechanics.h>
 #include <logic/world/GameCamera.h>
 
-#include "Painter.h"
-#include "RenderCamera.h"
-#include "SimplePostProcPass.h"
-#include "MotionBlurPostProc.h"
-#include "SSAOPostProc.h"
 #include "Util.h"
 
 const float GameWorldRenderer::nearPlane = 0.01f;

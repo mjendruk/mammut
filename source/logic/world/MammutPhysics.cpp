@@ -1,8 +1,7 @@
 #include "MammutPhysics.h"
 
 #include <cassert>
-#include <QList>
-#include <QDebug>
+
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
 #include <Util.h>

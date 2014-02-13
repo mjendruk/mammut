@@ -7,14 +7,12 @@
 #include <QTextStream>
 
 #include <glm/gtx/transform.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
 #include <glow/Texture.h>
 
 #include <rendering/RawFile.h>
-#include "CharacterDrawable.h"
 
 const float StringDrawer::s_textureSize = 1024.0f;
 

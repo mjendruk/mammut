@@ -1,15 +1,6 @@
 #include "Mammut.h"
 
-#include <cmath>
-#include <iostream>
-
-#include <QDebug>
-
 #include <glm/gtx/transform.hpp>
-#include <glm/gtx/string_cast.hpp>
-#include <glowutils/AxisAlignedBoundingBox.h>
-
-#include <btBulletDynamicsCommon.h>
 
 #include <Util.h>
 #include <sound/Sound.h>

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QList>
-
 class btManifoldPoint;
 class btRigidBody;
 class btVector3;

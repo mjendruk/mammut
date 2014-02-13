@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QObject>
 #include <QTime>
 
 #include <glow/ref_ptr.h>
@@ -13,7 +12,6 @@
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
-#include "SimplePostProcPass.h"
 #include "MotionBlurPostProc.h"
 #include "SSAOPostProc.h"
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include "SimplePostProcPass.h"
 
 class SSAOPostProc : public AbstractPostProc

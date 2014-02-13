@@ -2,6 +2,7 @@
 
 #include <QKeyEvent>
 
+#include "Cuboid.h"
 #include <sound/SoundManager.h>
 
 GameMechanics::GameMechanics()

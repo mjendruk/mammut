@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QList>
 #include <glow/ref_ptr.h>
 #include "AbstractPainter.h"
 
