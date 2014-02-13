@@ -9,7 +9,7 @@
 #include "Util.h"
 
 const int SSAOPostProc::s_kernelSize = 32;
-const int SSAOPostProc::s_noiseSize = 4;
+const int SSAOPostProc::s_noiseSize = 5;
 const float SSAOPostProc::s_radius = 25.0f;
 const QList<QString> SSAOPostProc::s_requiredSamplers = { "normal", "depth", "color" };
 
@@ -48,6 +48,7 @@ void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> & input)
 
     QMap<QString, glow::Texture*> blurInputTextures;
     blurInputTextures["color"] = input.value("color");
+    blurInputTextures["normal"] = input.value("normal");
     blurInputTextures["ssao"] = m_ssaoOutputTexture;
 
     m_blurPass.setInputTextures(blurInputTextures);
