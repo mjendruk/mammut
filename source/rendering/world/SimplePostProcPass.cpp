@@ -1,5 +1,8 @@
 #include "SimplePostProcPass.h"
 
+#include <cassert>
+
+#include <QtGlobal>
 #include <QVector>
 
 #include <glow/Program.h>
@@ -11,12 +14,16 @@
 #include <Util.h>
 
 
-SimplePostProcPass::SimplePostProcPass(TextureFormat format)
-:   m_vertexShader("data/shaders/screenquad.vert")
+SimplePostProcPass::SimplePostProcPass(TextureFormat format, const QString fragmentShader, const QString vertexShader)
+:   m_textureFormat(TextureFormat(format))
+,   m_vertexShader(vertexShader)
+,   m_fragmentShader(fragmentShader)
 ,   m_inputTextures(QMap<QString, glow::Texture*>())
-,   m_textureFormat(TextureFormat(format))
 {
+    assert(!fragmentShader.isEmpty());
+
     initialize();
+    initializeProgram();
 }
 
 SimplePostProcPass::~SimplePostProcPass()
@@ -33,13 +40,10 @@ void SimplePostProcPass::initialize()
 
 void SimplePostProcPass::bindTextures()
 {
-    //set input Textures as uniforms    
     int indexOfTextureImageUnit = 0;
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
         glow::Texture * texture = m_inputTextures.value(uniformName);
         texture->bind(GL_TEXTURE0 + indexOfTextureImageUnit);
-        m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
-
         ++indexOfTextureImageUnit;
     }
 }
@@ -52,9 +56,6 @@ void SimplePostProcPass::unbindTextures()
 
 void SimplePostProcPass::apply()
 {
-    if (!m_program)
-       initializeProgram();
-
     glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,21 +75,18 @@ void SimplePostProcPass::apply()
 void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
     m_inputTextures = QMap<QString, glow::Texture*>(input);
+
+    int indexOfTextureImageUnit = 0;
+
+    for (QString uniformName : m_inputTextures.uniqueKeys()) {
+        m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
+        ++indexOfTextureImageUnit;
+    }
 }
 
 glow::Texture* SimplePostProcPass::outputTexture()
 {
     return m_outputTexture;
-}
-
-void SimplePostProcPass::setVertexShader(QString vertexShader)
-{
-    m_vertexShader = vertexShader;
-}
-
-void SimplePostProcPass::setFragmentShader(QString fragmentShader)
-{
-    m_fragmentShader = fragmentShader;
 }
 
 void SimplePostProcPass::initializeProgram()

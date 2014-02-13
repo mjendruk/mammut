@@ -15,8 +15,8 @@ const int SSAOPostProc::m_noiseSize = 4;
 const float SSAOPostProc::m_radius = 25.0f;
 
 SSAOPostProc::SSAOPostProc()
-:   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT })
-,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT })
+:   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/ssao.frag", "data/shaders/ssao.vert")
+,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/blur.frag", "data/shaders/blur.vert")
 {
     initialize();
 }
@@ -58,12 +58,6 @@ glow::Texture* SSAOPostProc::outputTexture()
 
 void SSAOPostProc::initialize()
 {
-    m_blurPass.setVertexShader("data/shaders/blur.vert");
-    m_blurPass.setFragmentShader("data/shaders/blur.frag");
-
-    m_ssaoPass.setVertexShader("data/shaders/ssao.vert");
-    m_ssaoPass.setFragmentShader("data/shaders/ssao.frag");
-
     m_ssaoOutputTexture = m_ssaoPass.outputTexture();
     m_noiseTexture = Util::create2DTexture();
 

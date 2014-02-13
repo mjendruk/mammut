@@ -36,16 +36,13 @@ struct TextureFormat
 class SimplePostProcPass : public AbstractPostProc
 {
 public:
-    SimplePostProcPass(TextureFormat format);
+    SimplePostProcPass(TextureFormat format, const QString fragmentShader, const QString vertexShader = QString("data/shaders/screenquad.vert"));
     virtual ~SimplePostProcPass();
 
     virtual void apply();
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
     virtual glow::Texture* outputTexture();
-    
-    void setVertexShader(const QString output);
-    void setFragmentShader(const QString output);
 
     template<typename T>
     void setUniform(const QString name, const T& value);
@@ -73,8 +70,5 @@ protected:
 
 template<typename T>
 void SimplePostProcPass::setUniform(const QString name, const T& value) {
-    if (!m_program) 
-        initializeProgram();
-    
     m_program->setUniform(name.toStdString(), value);
 }

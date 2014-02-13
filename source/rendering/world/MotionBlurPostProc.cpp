@@ -14,10 +14,10 @@ const float MotionBlurPostProc::radius = 20.f;
 const int MotionBlurPostProc::numSamples = 15; //must be odd
 
 MotionBlurPostProc::MotionBlurPostProc()
-:   m_tmVerticalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }))
-,   m_tmHorizontalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }))
-,   m_neighborMaxPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }))
-,   m_blurPass(SimplePostProcPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }))
+:   m_tmVerticalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurTM_vertical.frag"))
+,   m_tmHorizontalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurTM_horizontal.frag"))
+,   m_neighborMaxPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurNM.frag"))
+,   m_blurPass(SimplePostProcPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/motionBlur.frag"))
 {
     initialize();
 }
@@ -64,14 +64,6 @@ glow::Texture* MotionBlurPostProc::outputTexture()
 
 void MotionBlurPostProc::initialize()
 {
-    m_tmVerticalPass.setFragmentShader("data/shaders/motionBlurTM_vertical.frag");
-
-    m_tmHorizontalPass.setFragmentShader("data/shaders/motionBlurTM_horizontal.frag");
-
-    m_neighborMaxPass.setFragmentShader("data/shaders/motionBlurNM.frag");
-
-    m_blurPass.setFragmentShader("data/shaders/motionBlur.frag");
-
     //Textures
     m_TMVerticalOutputTexture = m_tmVerticalPass.outputTexture();
     m_TMOutputTexture = m_tmHorizontalPass.outputTexture();
