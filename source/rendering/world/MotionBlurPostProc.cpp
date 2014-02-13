@@ -15,11 +15,11 @@ const int MotionBlurPostProc::numSamples = 15; //must be odd
 const int MotionBlurPostProc::randomBufferSize = 32;
 const QList<QString> MotionBlurPostProc::requiredSamplers = { "depth", "color", "velocity" };
 
-MotionBlurPostProc::MotionBlurPostProc()
+MotionBlurPostProc::MotionBlurPostProc(TextureFormat outputFormat)
 :   m_tmVerticalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurTM_vertical.frag"))
 ,   m_tmHorizontalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurTM_horizontal.frag"))
 ,   m_neighborMaxPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurNM.frag"))
-,   m_blurPass(SimplePostProcPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/motionBlur.frag"))
+,   m_blurPass(SimplePostProcPass(outputFormat, "data/shaders/motionBlur.frag"))
 {
     initialize();
 }

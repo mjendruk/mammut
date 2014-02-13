@@ -31,6 +31,8 @@ GameWorldRenderer::GameWorldRenderer()
 , m_lastFrame(QTime::currentTime())
 , m_gameMechanics(nullptr)
 , m_avgTimeSinceLastFrame(0.f)
+, m_ssaoPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
+, m_motionBlurPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
 {
     initialize();
 }

@@ -14,8 +14,8 @@
 #include <Util.h>
 
 
-SimplePostProcPass::SimplePostProcPass(TextureFormat format, const QString fragmentShader, const QString vertexShader)
-:   m_textureFormat(TextureFormat(format))
+SimplePostProcPass::SimplePostProcPass(TextureFormat outputFormat, const QString fragmentShader, const QString vertexShader)
+:   m_textureFormat(TextureFormat(outputFormat))
 ,   m_vertexShader(vertexShader)
 ,   m_fragmentShader(fragmentShader)
 ,   m_inputTextures(QMap<QString, glow::Texture*>())

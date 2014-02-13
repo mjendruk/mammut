@@ -5,7 +5,7 @@
 class SSAOPostProc : public AbstractPostProc
 {
 public:
-    SSAOPostProc();
+    SSAOPostProc(TextureFormat outputFormat);
     virtual ~SSAOPostProc();
 
     virtual void apply();

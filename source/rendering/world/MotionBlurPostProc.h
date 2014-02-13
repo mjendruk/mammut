@@ -7,7 +7,7 @@
 class MotionBlurPostProc : public AbstractPostProc
 {
 public:
-    MotionBlurPostProc();
+    MotionBlurPostProc(TextureFormat outputFormat);
     ~MotionBlurPostProc();
 
     virtual void apply();

@@ -36,7 +36,7 @@ struct TextureFormat
 class SimplePostProcPass : public AbstractPostProc
 {
 public:
-    SimplePostProcPass(TextureFormat format, const QString fragmentShader, const QString vertexShader = QString("data/shaders/screenquad.vert"));
+    SimplePostProcPass(TextureFormat outputFormat, const QString fragmentShader, const QString vertexShader = QString("data/shaders/screenquad.vert"));
     virtual ~SimplePostProcPass();
 
     virtual void apply();

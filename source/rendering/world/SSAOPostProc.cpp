@@ -15,9 +15,9 @@ const int SSAOPostProc::noiseSize = 4;
 const float SSAOPostProc::radius = 25.0f;
 const QList<QString> SSAOPostProc::requiredSamplers = { "normal", "depth", "color" };
 
-SSAOPostProc::SSAOPostProc()
+SSAOPostProc::SSAOPostProc(TextureFormat outputFormat)
 :   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/ssao.frag", "data/shaders/ssao.vert")
-,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/blur.frag")
+,   m_blurPass(outputFormat, "data/shaders/blur.frag")
 {
     initialize();
 }
