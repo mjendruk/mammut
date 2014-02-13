@@ -310,7 +310,6 @@ source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$"
 
 set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
-    ${shader_path}/blur.vert
     ${shader_path}/blur.frag
     ${shader_path}/cuboid.vert
     ${shader_path}/cuboid.frag

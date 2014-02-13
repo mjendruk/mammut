@@ -16,7 +16,7 @@ const float SSAOPostProc::m_radius = 25.0f;
 
 SSAOPostProc::SSAOPostProc()
 :   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/ssao.frag", "data/shaders/ssao.vert")
-,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/blur.frag", "data/shaders/blur.vert")
+,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/blur.frag")
 {
     initialize();
 }
