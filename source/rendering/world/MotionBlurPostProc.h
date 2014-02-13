@@ -24,6 +24,8 @@ protected:
 protected:
     static const float radius;
     static const int numSamples;
+    static const int randomBufferSize;
+    static const QList<QString> requiredSamplers;
 
     SimplePostProcPass m_tmVerticalPass; //tm = tileMax
     SimplePostProcPass m_tmHorizontalPass;

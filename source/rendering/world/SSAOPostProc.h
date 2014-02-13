@@ -20,9 +20,10 @@ protected:
     void initialize();
 
 protected:
-    static const int m_kernelSize;
-    static const int m_noiseSize;
-    static const float m_radius;
+    static const int kernelSize;
+    static const int noiseSize;
+    static const float radius;
+    static const QList<QString> requiredSamplers;
 
     SimplePostProcPass m_ssaoPass;
     SimplePostProcPass m_blurPass;

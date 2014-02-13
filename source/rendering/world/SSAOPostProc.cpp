@@ -10,9 +10,10 @@
 
 #include "Util.h"
 
-const int SSAOPostProc::m_kernelSize = 32;
-const int SSAOPostProc::m_noiseSize = 4;
-const float SSAOPostProc::m_radius = 25.0f;
+const int SSAOPostProc::kernelSize = 32;
+const int SSAOPostProc::noiseSize = 4;
+const float SSAOPostProc::radius = 25.0f;
+const QList<QString> SSAOPostProc::requiredSamplers = { "normal", "depth", "color" };
 
 SSAOPostProc::SSAOPostProc()
 :   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/ssao.frag", "data/shaders/ssao.vert")
@@ -36,6 +37,9 @@ void SSAOPostProc::apply()
 
 void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
+    for (QString sampler : requiredSamplers)
+        assert(input.contains(sampler));
+
     //split into 2 Maps for each pass (ssao, blur)
     QMap<QString, glow::Texture*> ssaoInputTextures;
     ssaoInputTextures["normal"] = input.value("normal");
@@ -63,7 +67,7 @@ void SSAOPostProc::initialize()
 
     //init noise texture and ssao kernel
     glow::Array<glm::vec3> kernel = glow::Array<glm::vec3>();
-    for (int i = 0; i < m_kernelSize; ++i) {
+    for (int i = 0; i < kernelSize; ++i) {
         kernel << glm::normalize(glm::vec3(
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(-1.0f, 1.0f),
@@ -75,7 +79,7 @@ void SSAOPostProc::initialize()
         kernel[i] *= scale;
     }
 
-    const int noiseBufferSize = m_noiseSize*m_noiseSize;
+    const int noiseBufferSize = noiseSize*noiseSize;
     glow::Array<glm::vec3> noise = glow::Array<glm::vec3>();
     for (int i = 0; i < noiseBufferSize; ++i) {
         noise << glm::normalize(glm::vec3(
@@ -85,12 +89,12 @@ void SSAOPostProc::initialize()
             );
     }
 
-    m_noiseTexture->image2D(0, GL_RGB32F, m_noiseSize, m_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
+    m_noiseTexture->image2D(0, GL_RGB32F, noiseSize, noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
 
-    m_ssaoPass.setUniform("noiseTexSize", m_noiseSize);
-    m_ssaoPass.setUniform("kernelSize", m_kernelSize);
+    m_ssaoPass.setUniform("noiseTexSize", noiseSize);
+    m_ssaoPass.setUniform("kernelSize", kernelSize);
     m_ssaoPass.setUniform("kernel", kernel);
-    m_ssaoPass.setUniform("radius", m_radius);
+    m_ssaoPass.setUniform("radius", radius);
 }
 
 void SSAOPostProc::resize(int width, int height)

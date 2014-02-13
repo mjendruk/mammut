@@ -11,7 +11,9 @@
 #include "Util.h"
 
 const float MotionBlurPostProc::radius = 20.f;
-const int MotionBlurPostProc::numSamples = 15; //must be odd
+const int MotionBlurPostProc::numSamples = 15; //must be odd 
+const int MotionBlurPostProc::randomBufferSize = 32;
+const QList<QString> MotionBlurPostProc::requiredSamplers = { "depth", "color", "velocity" };
 
 MotionBlurPostProc::MotionBlurPostProc()
 :   m_tmVerticalPass(SimplePostProcPass({ GL_RG16F, GL_RG, GL_FLOAT }, "data/shaders/motionBlurTM_vertical.frag"))
@@ -39,6 +41,9 @@ void MotionBlurPostProc::apply()
 
 void MotionBlurPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
+    for (QString sampler : requiredSamplers)
+        assert(input.contains(sampler));
+
     //split into 4 Maps for each pass
     QMap<QString, glow::Texture*> tmVerticalInputTextures;
     tmVerticalInputTextures["velocity"] = input.value("velocity");
@@ -69,15 +74,14 @@ void MotionBlurPostProc::initialize()
     m_TMOutputTexture = m_tmHorizontalPass.outputTexture();
     m_NMOutputTexture = m_neighborMaxPass.outputTexture();
 
-    const int N = 32;
     glow::Array<glm::float_t> randBuffer = glow::Array<glm::float_t>();
 
-    for (int i = 0; i < N * N; ++i) {
+    for (int i = 0; i < randomBufferSize * randomBufferSize; ++i) {
         randBuffer << float(glm::linearRand(0.0, 1.0));
     }
 
     m_randomTexture = Util::create2DTexture();
-    m_randomTexture->image2D(0, GL_RED, N, N, 0, GL_RED, GL_FLOAT, &randBuffer[0]);
+    m_randomTexture->image2D(0, GL_RED, randomBufferSize, randomBufferSize, 0, GL_RED, GL_FLOAT, &randBuffer[0]);
 
     //static Uniforms
     m_tmVerticalPass.setUniform("radius", radius);
