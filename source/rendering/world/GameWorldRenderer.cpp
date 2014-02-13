@@ -6,6 +6,7 @@
 
 #include <QMap>
 
+#include "glow/Texture.h"
 #include "glow/Program.h"
 #include "glow/FrameBufferobject.h"
 #include "glowutils/File.h"

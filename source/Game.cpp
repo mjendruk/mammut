@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include "glowutils/FileRegistry.h"
+#include <glowutils/File.h>
 
 #include <logic/world/GameMechanics.h>
 #include <rendering/menu/MenuRenderer.h>
@@ -193,7 +193,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 
     if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::AltModifier)
     {
-        glowutils::FileRegistry::instance().reloadAll();
+        glowutils::File::reloadAll();
         qDebug() << "reload shaders"; 
 
         return;

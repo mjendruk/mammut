@@ -4,7 +4,7 @@
 
 #include <QMainWindow>
 
-#include <glow/Timer.h>
+#include <glowutils/Timer.h>
 
 #include <logic/menu/MainMenu.h>
 #include <logic/menu/PauseMenu.h>
@@ -62,7 +62,7 @@ protected:
     QMainWindow m_window;
     Canvas * m_canvas;
     
-    glow::Timer m_timer;
+    glowutils::Timer m_timer;
     bool m_loop;
     bool m_paused;
 };

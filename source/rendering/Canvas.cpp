@@ -7,9 +7,6 @@
 #include <QResizeEvent>
 #include <QOpenGLContext>
 
-// TODO: Remove this after updating to new glow version
-#include <glow/Buffer.h>
-
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 #include <glow/DebugMessageOutput.h>

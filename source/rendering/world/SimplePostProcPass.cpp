@@ -9,7 +9,7 @@
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 #include <glowutils/ScreenAlignedQuad.h>
-#include <glowutils/File.h>
+#include <glowutils/global.h>
 
 #include <Util.h>
 
@@ -43,7 +43,7 @@ void SimplePostProcPass::bindTextures()
     int indexOfTextureImageUnit = 0;
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
         glow::Texture * texture = m_inputTextures.value(uniformName);
-        texture->bind(GL_TEXTURE0 + indexOfTextureImageUnit);
+        texture->bindActive(GL_TEXTURE0 + indexOfTextureImageUnit);
         ++indexOfTextureImageUnit;
     }
 }

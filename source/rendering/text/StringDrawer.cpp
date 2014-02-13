@@ -103,7 +103,7 @@ void StringDrawer::paint(
     m_program->setUniform("characterAtlas", 0);
     m_program->setUniform("color", color);
     
-    m_characterAtlas->bind(GL_TEXTURE0);
+    m_characterAtlas->bindActive(GL_TEXTURE0);
     
     QList<CharacterSpecifics *> list = m_stringComposer.characterSequence(text);
     

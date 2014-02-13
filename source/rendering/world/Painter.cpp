@@ -4,7 +4,7 @@
 
 #include <glow/Program.h>
 #include <glow/Shader.h>
-#include <glowutils/File.h>
+#include <glowutils/global.h>
 
 #include "DrawableInterface.h"
 
