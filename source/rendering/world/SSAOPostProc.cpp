@@ -66,13 +66,13 @@ void SSAOPostProc::initialize()
     m_noiseTexture = Util::create2DTexture();
 
     //init noise texture and ssao kernel
-    glow::Array<glm::vec3> kernel = glow::Array<glm::vec3>();
+    std::vector<glm::vec3> kernel = std::vector<glm::vec3>();
     for (int i = 0; i < s_kernelSize; ++i) {
-        kernel << glm::normalize(glm::vec3(
+        kernel.push_back(glm::normalize(glm::vec3(
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(0.1f, 1.0f))
-            );
+            ));
 
         float scale = glm::linearRand(0.0f, 1.0f);
         scale = glm::mix(0.1f, 1.0f, scale * scale);
@@ -80,13 +80,13 @@ void SSAOPostProc::initialize()
     }
 
     const int noiseBufferSize = s_noiseSize * s_noiseSize;
-    glow::Array<glm::vec3> noise = glow::Array<glm::vec3>();
+    std::vector<glm::vec3> noise = std::vector<glm::vec3>();
     for (int i = 0; i < noiseBufferSize; ++i) {
-        noise << glm::normalize(glm::vec3(
+        noise.push_back(glm::normalize(glm::vec3(
             glm::linearRand(-1.0f, 1.0f),
             glm::linearRand(-1.0f, 1.0f),
             0.0f)
-            );
+            ));
     }
 
     m_noiseTexture->image2D(0, GL_RGB32F, s_noiseSize, s_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);

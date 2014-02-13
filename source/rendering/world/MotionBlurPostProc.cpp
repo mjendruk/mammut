@@ -74,10 +74,10 @@ void MotionBlurPostProc::initialize()
     m_TMOutputTexture = m_tmHorizontalPass.outputTexture();
     m_NMOutputTexture = m_neighborMaxPass.outputTexture();
 
-    glow::Array<glm::float_t> randBuffer = glow::Array<glm::float_t>();
+    std::vector<glm::float_t> randBuffer = std::vector<glm::float_t>();
 
     for (int i = 0; i < s_randomBufferSize * s_randomBufferSize; ++i) {
-        randBuffer << float(glm::linearRand(0.0, 1.0));
+        randBuffer.push_back(float(glm::linearRand(0.0, 1.0)));
     }
 
     m_randomTexture = Util::create2DTexture();

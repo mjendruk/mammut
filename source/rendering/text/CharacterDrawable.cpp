@@ -13,9 +13,9 @@ CharacterDrawable::~CharacterDrawable()
 {
 }
 
-const glow::Vec2Array CharacterDrawable::triangleStrip()
+const std::vector<glm::vec2> CharacterDrawable::triangleStrip()
 {
-    return glow::Vec2Array {
+    return {
         glm::vec2(0.0f, 0.0f),
         glm::vec2(1.0f, 0.0f),
         glm::vec2(1.0f, 1.0f),
@@ -29,8 +29,7 @@ void CharacterDrawable::initialize()
     
     m_vao->bind();
     
-    m_buffer = new glow::Buffer();
-    m_buffer->bind(GL_ARRAY_BUFFER);
+    m_buffer = new glow::Buffer(GL_ARRAY_BUFFER);
     m_buffer->setData(triangleStrip());
     
     glow::VertexAttributeBinding * vertices = m_vao->binding(0);
