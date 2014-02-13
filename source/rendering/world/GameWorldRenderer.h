@@ -67,8 +67,6 @@ protected:
     CaveDrawable m_caveDrawable;
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
-    glow::ref_ptr<glow::FrameBufferObject> m_ssaoFBO;
-    glow::ref_ptr<glow::FrameBufferObject> m_motionBlurFBO;
 
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
@@ -78,7 +76,7 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
-    SimplePostProcPass m_quadPass;
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     MotionBlurPostProc m_motionBlurPostProc;
     SSAOPostProc m_ssaoPostProc;
 

@@ -26,15 +26,23 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
+struct TextureFormat
+{
+    GLint internalFormat;
+    GLenum format;
+    GLenum type;
+};
+
 class SimplePostProcPass : public AbstractPostProc
 {
 public:
-    SimplePostProcPass();
+    SimplePostProcPass(TextureFormat format);
     virtual ~SimplePostProcPass();
 
-    virtual void apply(glow::FrameBufferObject & frameBuffer);
+    virtual void apply();
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
+    virtual glow::Texture* outputTexture();
     
     void setVertexShader(const QString output);
     void setFragmentShader(const QString output);
@@ -43,22 +51,24 @@ public:
     void setUniform(const QString name, const T& value);
 
 protected:
+    void initialize();
     void initializeProgram();
     void bindTextures();
     void unbindTextures();
 
+
 protected:
-    QString const m_name;
-    
+    glow::ref_ptr<glow::FrameBufferObject> m_fbo;
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    
+
     QMap<QString, glow::Texture*> m_inputTextures;
+    glow::ref_ptr<glow::Texture> m_outputTexture;
 
     QString m_fragmentShader;
     QString m_vertexShader;
 
-    bool m_output2DInvalidated;
+    TextureFormat m_textureFormat;
 };
 
 template<typename T>

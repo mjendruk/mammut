@@ -8,15 +8,27 @@
 #include <glowutils/ScreenAlignedQuad.h>
 #include <glowutils/File.h>
 
+#include <Util.h>
 
-SimplePostProcPass::SimplePostProcPass()
+
+SimplePostProcPass::SimplePostProcPass(TextureFormat format)
 :   m_vertexShader("data/shaders/screenquad.vert")
 ,   m_inputTextures(QMap<QString, glow::Texture*>())
+,   m_textureFormat(TextureFormat(format))
 {
+    initialize();
 }
 
 SimplePostProcPass::~SimplePostProcPass()
 {
+}
+
+void SimplePostProcPass::initialize()
+{
+    m_outputTexture = Util::create2DTexture();
+    m_fbo = new glow::FrameBufferObject();
+    m_fbo->setDrawBuffer(GL_COLOR_ATTACHMENT0);
+    m_fbo->attachTexture2D(GL_COLOR_ATTACHMENT0, m_outputTexture); 
 }
 
 void SimplePostProcPass::bindTextures()
@@ -38,7 +50,7 @@ void SimplePostProcPass::unbindTextures()
         texture->unbind();
 }
 
-void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
+void SimplePostProcPass::apply()
 {
     if (!m_program)
        initializeProgram();
@@ -49,9 +61,9 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
 
     bindTextures();
 
-    fbo.bind();
+    m_fbo->bind();
     m_quad->draw();
-    fbo.unbind();
+    m_fbo->unbind();
 
     unbindTextures();
 
@@ -62,6 +74,11 @@ void SimplePostProcPass::apply(glow::FrameBufferObject & fbo)
 void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> input)
 {
     m_inputTextures = QMap<QString, glow::Texture*>(input);
+}
+
+glow::Texture* SimplePostProcPass::outputTexture()
+{
+    return m_outputTexture;
 }
 
 void SimplePostProcPass::setVertexShader(QString vertexShader)
@@ -92,7 +109,5 @@ void SimplePostProcPass::initializeProgram()
 
 void SimplePostProcPass::resize(int width, int height)
 {
-    // resize local Textures
-    // set Viewport Uniforms:
-    // m_program->setUniform("viewport", glm::vec2(width, height));
+    m_outputTexture->image2D(0, m_textureFormat.internalFormat, width, height, 0, m_textureFormat.format, m_textureFormat.type, nullptr);
 }

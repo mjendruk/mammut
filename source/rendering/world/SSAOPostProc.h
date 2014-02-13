@@ -8,9 +8,10 @@ public:
     SSAOPostProc();
     virtual ~SSAOPostProc();
 
-    virtual void apply(glow::FrameBufferObject & frameBuffer);
+    virtual void apply();
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
+    virtual glow::Texture* outputTexture();
 
     template<typename T>
     void setUniform(const QString name, const T& value);
@@ -26,10 +27,9 @@ protected:
     SimplePostProcPass m_ssaoPass;
     SimplePostProcPass m_blurPass;
 
-    glow::ref_ptr<glow::Texture> m_ssaoTexture;
-    glow::ref_ptr<glow::Texture> m_noiseTexture;
+    glow::ref_ptr<glow::Texture> m_ssaoOutputTexture;
 
-    glow::ref_ptr<glow::FrameBufferObject> m_tempFBO;
+    glow::ref_ptr<glow::Texture> m_noiseTexture;
 };
 
 template<typename T>

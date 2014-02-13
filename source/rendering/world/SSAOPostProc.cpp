@@ -15,6 +15,8 @@ const int SSAOPostProc::m_noiseSize = 4;
 const float SSAOPostProc::m_radius = 25.0f;
 
 SSAOPostProc::SSAOPostProc()
+:   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT })
+,   m_blurPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT })
 {
     initialize();
 }
@@ -23,17 +25,13 @@ SSAOPostProc::~SSAOPostProc()
 {
 }
 
-void SSAOPostProc::apply(glow::FrameBufferObject & fbo)
+void SSAOPostProc::apply()
 {
     // first SSAO Pass
-    //m_noiseTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
-    m_ssaoPass.apply(*m_tempFBO);
-    //m_noiseTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    m_ssaoPass.apply();
     
     //second SSAO Pass (blur)
-    //m_ssaoTexture->bind(GL_TEXTURE0 + TIU_BufferCount);
-    m_blurPass.apply(fbo);
-    //m_ssaoTexture->unbind(GL_TEXTURE0 + TIU_BufferCount);
+    m_blurPass.apply();
 }
 
 void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
@@ -48,9 +46,14 @@ void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> input)
 
     QMap<QString, glow::Texture*> blurInputTextures;
     blurInputTextures["color"] = input.value("color");
-    blurInputTextures["ssao"] = m_ssaoTexture;
+    blurInputTextures["ssao"] = m_ssaoOutputTexture;
 
     m_blurPass.setInputTextures(blurInputTextures);
+}
+
+glow::Texture* SSAOPostProc::outputTexture()
+{
+    return m_blurPass.outputTexture();
 }
 
 void SSAOPostProc::initialize()
@@ -61,7 +64,7 @@ void SSAOPostProc::initialize()
     m_ssaoPass.setVertexShader("data/shaders/ssao.vert");
     m_ssaoPass.setFragmentShader("data/shaders/ssao.frag");
 
-    m_ssaoTexture = Util::create2DTexture();
+    m_ssaoOutputTexture = m_ssaoPass.outputTexture();
     m_noiseTexture = Util::create2DTexture();
 
     //init noise texture and ssao kernel
@@ -94,15 +97,10 @@ void SSAOPostProc::initialize()
     m_ssaoPass.setUniform("kernelSize", m_kernelSize);
     m_ssaoPass.setUniform("kernel", kernel);
     m_ssaoPass.setUniform("radius", m_radius);
-
-    m_tempFBO = new glow::FrameBufferObject();
-    m_tempFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_ssaoTexture);
-    m_tempFBO->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
 }
 
 void SSAOPostProc::resize(int width, int height)
 {
-    m_ssaoTexture->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_ssaoPass.setUniform("viewport", glm::vec2(width, height));
 
     m_ssaoPass.resize(width, height);

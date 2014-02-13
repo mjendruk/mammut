@@ -10,9 +10,10 @@ public:
     MotionBlurPostProc();
     ~MotionBlurPostProc();
 
-    virtual void apply(glow::FrameBufferObject & fbo);
+    virtual void apply();
     virtual void resize(int width, int height);
     virtual void setInputTextures(const QMap<QString, glow::Texture*> input);
+    virtual glow::Texture* outputTexture();
 
     template<typename T>
     void setUniform(const QString name, const T& value);
@@ -28,14 +29,10 @@ protected:
     SimplePostProcPass m_tmHorizontalPass;
     SimplePostProcPass m_neighborMaxPass;
     SimplePostProcPass m_blurPass;
-
-    glow::ref_ptr<glow::FrameBufferObject> m_TMVerticalFBO;
-    glow::ref_ptr<glow::FrameBufferObject> m_TMFBO;
-    glow::ref_ptr<glow::FrameBufferObject> m_NMFBO;
     
-    glow::ref_ptr<glow::Texture> m_TMVerticalTexture;
-    glow::ref_ptr<glow::Texture> m_TMTexture;
-    glow::ref_ptr<glow::Texture> m_NMTexture;
+    glow::ref_ptr<glow::Texture> m_TMVerticalOutputTexture;
+    glow::ref_ptr<glow::Texture> m_TMOutputTexture;
+    glow::ref_ptr<glow::Texture> m_NMOutputTexture;
     glow::ref_ptr<glow::Texture> m_randomTexture;
 };
 
