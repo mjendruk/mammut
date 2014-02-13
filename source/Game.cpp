@@ -191,10 +191,12 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
 
-    if (keyEvent->key() == Qt::Key_R)
+    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::AltModifier)
     {
         glowutils::FileRegistry::instance().reloadAll();
-        qDebug() << "reload shaders";
+        qDebug() << "reload shaders"; 
+
+        return;
     }
     
     m_activeMechanics->keyPressed(keyEvent);
