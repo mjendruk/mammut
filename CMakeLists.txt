@@ -232,8 +232,8 @@ set(sources
     
     ${source_path}/logic/menu/items/MenuItem.cpp
     ${source_path}/logic/menu/items/MenuItem.h
-    ${source_path}/logic/menu/items/HighscoreItem.cpp
-    ${source_path}/logic/menu/items/HighscoreItem.h
+    ${source_path}/logic/menu/items/HighscoreListItem.cpp
+    ${source_path}/logic/menu/items/HighscoreListItem.h
     ${source_path}/logic/menu/items/MenuButton.cpp
     ${source_path}/logic/menu/items/MenuButton.h    
     ${source_path}/logic/menu/items/MenuInput.cpp

@@ -10,7 +10,7 @@
 #include <logic/menu/Menu.h>
 #include <logic/menu/items/MenuButton.h>
 #include <logic/menu/items/MenuLogo.h>
-#include <logic/menu/items/HighscoreItem.h>
+#include <logic/menu/items/HighscoreListItem.h>
 #include <logic/menu/items/MenuInput.h>
 #include <logic/menu/items/MenuText.h>
 
@@ -92,7 +92,7 @@ void MenuRenderer::render(const MenuLogo * logo)
     m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 2.0f * 1.5f, 0.0f);
 }
 
-void MenuRenderer::render(const HighscoreItem * list)
+void MenuRenderer::render(const HighscoreListItem * item)
 {
     const float namePosition = -0.6f;
     const float scorePosition = 0.3f;
@@ -111,7 +111,7 @@ void MenuRenderer::render(const HighscoreItem * list)
     
     m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.1f, 0.0f);
     
-    for (const HighscoreEntry & entry : list->scores())
+    for (const HighscoreEntry & entry : item->scores())
     {
         m_textRenderer.paint(entry.name(), m_translation * glm::translate(namePosition, 0.0f, 0.0f) * entryScale);
         m_textRenderer.paint(QString::number(entry.score()), m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);

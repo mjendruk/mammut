@@ -5,13 +5,13 @@
 
 class HighscoreEntry;
 
-class HighscoreItem : public MenuItem
+class HighscoreListItem : public MenuItem
 {
     Q_OBJECT
 
 public:
-    HighscoreItem(const QList<HighscoreEntry> & scores);
-    virtual ~HighscoreItem();
+    HighscoreListItem(const QList<HighscoreEntry> & scores);
+    virtual ~HighscoreListItem();
 
     void accept(MenuRenderer * renderer) override;
     void keyPressed(QKeyEvent * event) override;

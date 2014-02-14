@@ -5,7 +5,7 @@
 #include "Menu.h"
 
 class MenuButton;
-class HighscoreItem;
+class HighscoreListItem;
 class HighscoreEntry;
 
 class HighscoreMenu : public Menu
@@ -24,7 +24,7 @@ protected:
     void connectSignals();
 
 protected:
-    HighscoreItem * m_highscore;
+    HighscoreListItem * m_highscore;
     MenuButton * m_backButton;
 
 };
