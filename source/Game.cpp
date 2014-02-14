@@ -7,12 +7,20 @@
 
 #include <glowutils/File.h>
 
-#include <logic/world/GameMechanics.h>
-#include <rendering/Canvas.h>
 #include <rendering/menu/MenuRenderer.h>
 #include <rendering/world/GameWorldRenderer.h>
 #include <rendering/menu/BlankBackground.h>
 #include <rendering/menu/ScreenshotBackground.h>
+
+#include <rendering/Canvas.h>
+
+#include <logic/world/GameMechanics.h>
+#include <logic/menu/GameOverMenu.h>
+#include <logic/menu/HighscoreMenu.h>
+#include <logic/menu/MainMenu.h>
+#include <logic/menu/PauseMenu.h>
+#include <logic/menu/NewHighscoreMenu.h>
+
 #include <sound/SoundManager.h>
 
 Game::Game(int & argc, char ** argv)
@@ -21,8 +29,7 @@ Game::Game(int & argc, char ** argv)
 ,   m_paused(false)
 {
     initializeWindow();
-    initializeRenderers();
-    connectSignals();
+    initializeRendering();
     
     showMainMenu();
     
@@ -67,55 +74,13 @@ void Game::run()
     }
 }
 
-void Game::startGame()
-{
-    m_gameMechanics.reset(new GameMechanics());
-    m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
-    
-    connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::showPauseMenu);
-    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::showMainMenu);
-    
-    m_activeMechanics = m_gameMechanics.get();
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-}
-
-void Game::resumeGame()
-{
-    m_activeMechanics = m_gameMechanics.get();
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-}
-
-void Game::showPauseMenu()
-{
-    m_activeMechanics = &m_pauseMenu;
-    m_canvas->setRenderer(m_gameWorldRenderer.get());
-    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
-    m_menuRenderer->setMenu(&m_pauseMenu);
-    m_menuRenderer->setBackground(m_screenshotBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::showMainMenu()
-{
-    m_activeMechanics = &m_mainMenu;
-    m_menuRenderer->setMenu(&m_mainMenu);
-    m_menuRenderer->setBackground(m_blankBackground.get());
-    m_canvas->setRenderer(m_menuRenderer.get());
-}
-
-void Game::quit()
-{
-    m_loop = false;
-    QApplication::quit();
-}
-
 void Game::initializeWindow()
 {
     QSurfaceFormat format;
     format.setVersion(4, 1);
     format.setDepthBufferSize(24);
     format.setProfile(QSurfaceFormat::CoreProfile);
-
+    
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
@@ -129,7 +94,7 @@ void Game::initializeWindow()
     m_window.show();
 }
 
-void Game::initializeRenderers()
+void Game::initializeRendering()
 {
     m_menuRenderer.reset(new MenuRenderer());
     m_gameWorldRenderer.reset(new GameWorldRenderer());
@@ -137,13 +102,102 @@ void Game::initializeRenderers()
     m_screenshotBackground.reset(new ScreenshotBackground());
 }
 
-void Game::connectSignals()
-{   
-    connect(&m_mainMenu, &MainMenu::startPressed, this, &Game::startGame);
-    connect(&m_mainMenu, &MainMenu::quitPressed, this, &Game::quit);
+void Game::startGame()
+{
+    m_gameMechanics = std::make_shared<GameMechanics>();
+    m_gameWorldRenderer->setGameMechanics(m_gameMechanics.get());
     
-    connect(&m_pauseMenu, &PauseMenu::resumePressed, this, &Game::resumeGame);
-    connect(&m_pauseMenu, &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    connect(m_gameMechanics.get(), &GameMechanics::pause, this, &Game::pauseGame);
+    connect(m_gameMechanics.get(), &GameMechanics::gameOver, this, &Game::endGame);
+    
+    m_activeMechanics = m_gameMechanics;
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+}
+
+void Game::pauseGame()
+{
+    auto menu = std::make_shared<PauseMenu>();
+    
+    connect(menu.get(), &PauseMenu::resumePressed, this, &Game::resumeGame);
+    connect(menu.get(), &PauseMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    
+    m_screenshotBackground->setScreenshot(m_canvas->screenshot());
+    
+    activateMenu(menu, m_screenshotBackground.get());}
+
+void Game::resumeGame()
+{
+    m_activeMechanics = m_gameMechanics;
+    m_canvas->setRenderer(m_gameWorldRenderer.get());
+}
+
+void Game::showMainMenu()
+{
+    auto menu = std::make_shared<MainMenu>();
+    
+    connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
+    connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
+    connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::endGame(int score)
+{
+    m_gameMechanics.reset();
+    
+    if (m_highscoreList.isHighscore(score))
+        showNewHighscoreMenu(score);
+    else
+        showGameOverMenu(score);
+}
+
+void Game::showHighscoreMenu()
+{
+    auto menu = std::make_shared<HighscoreMenu>(m_highscoreList.scores());
+    
+    connect(menu.get(), &HighscoreMenu::backPressed, this, &Game::showMainMenu);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showNewHighscoreMenu(int score)
+{
+    auto menu = std::make_shared<NewHighscoreMenu>(m_lastName, score);
+    
+    connect(menu.get(), &NewHighscoreMenu::nameEntered,
+            [this, score](const QString & name)
+    {
+        m_highscoreList.addScore(name, score);
+        m_lastName = name;
+        showGameOverMenu(score);
+    });
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showGameOverMenu(int score)
+{
+    auto menu = std::make_shared<GameOverMenu>(score);
+    
+    connect(menu.get(), &GameOverMenu::retryPressed, this, &Game::startGame);
+    connect(menu.get(), &GameOverMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::quit()
+{
+    m_loop = false;
+    QApplication::quit();
+}
+
+void Game::activateMenu(std::shared_ptr<Menu> menu, AbstractBackground * background)
+{
+    m_activeMechanics = menu;
+    m_menuRenderer->setMenu(menu.get());
+    m_menuRenderer->setBackground(background);
+    m_canvas->setRenderer(m_menuRenderer.get());
 }
 
 bool Game::eventFilter(QObject * obj, QEvent * event)
@@ -176,8 +230,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->isAutoRepeat())
         return;
     
-    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier)
-    {
+    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier) {
         if (m_window.isFullScreen())
             m_window.showNormal();
         else

@@ -10,7 +10,7 @@ const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
 ,   m_isOnObject(false)
-,   m_crashed(false)
+,   m_isCrashed(false)
 {
     const glm::vec3 size(0.1f);
 }
@@ -54,14 +54,11 @@ void Mammut::collisionEvent(const PhysicsObject & object,
             m_isOnObject = true;
             break;
         case Util::kZAxis:
-        {
-            if (!m_crashed)
+            if (!m_isCrashed) {
                 Sound sound(Sound::kImpact);
-            
-            m_crashed = true;
-            emit crashed();
-        }
-            break;
+                emit crashed();
+                m_isCrashed = true;
+            }
     }
 }
 

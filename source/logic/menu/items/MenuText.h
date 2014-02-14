@@ -3,23 +3,22 @@
 #include <QString>
 #include "MenuItem.h"
 
-class MenuButton : public MenuItem
+class MenuText : public MenuItem
 {
     Q_OBJECT
 
 public:
-    MenuButton(const QString & label);
-    virtual ~MenuButton();
+    MenuText(const QString & text);
+    virtual ~MenuText();
 
     void accept(MenuRenderer * renderer) override;
     void keyPressed(QKeyEvent * event) override;
 
-    const QString & label() const;
+    bool isFocusable() const override;
 
-signals:
-    void pressed();
+    const QString & text() const;
 
 protected:
-    QString m_label;
+    QString m_text;
 
 };

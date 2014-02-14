@@ -1,6 +1,6 @@
 #include "PauseMenu.h"
 
-#include "MenuButton.h"
+#include <logic/menu/items/MenuButton.h>
 
 PauseMenu::PauseMenu()
 :   Menu(initializeMenuItems())

@@ -1,15 +1,21 @@
 #include "Menu.h"
 
 #include <cassert>
+
 #include <QKeyEvent>
+
 #include <sound/Sound.h>
-#include "MenuItem.h"
+
+#include <logic/menu/items/MenuItem.h>
 
 Menu::Menu(QList<MenuItem *> menuItems)
 :   m_menuItems(menuItems)
 ,   m_focusIndex(0)
 {
     assert(!menuItems.isEmpty());
+
+    if (!focusedItem()->isFocusable())
+        focusNextItem();
 }
 
 Menu::~Menu()
@@ -62,11 +68,17 @@ bool Menu::isFocusedItem(const MenuItem * menuItem) const
 void Menu::focusPreviousItem()
 {
     m_focusIndex = m_focusIndex == 0 ? m_menuItems.count() - 1 : m_focusIndex - 1;
+
+    if (!focusedItem()->isFocusable())
+        focusPreviousItem();
 }
 
 void Menu::focusNextItem()
 {
     m_focusIndex = m_focusIndex == m_menuItems.count() - 1 ? 0 : m_focusIndex + 1;
+
+    if (!focusedItem()->isFocusable())
+        focusNextItem();
 }
 
 MenuItem * Menu::focusedItem() const

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QString>
+#include <QVector>
+
 #include <glm/glm.hpp>
 #include <glow/ref_ptr.h>
 
@@ -13,26 +15,36 @@ namespace glow
     class Texture;
 }
 
-class StringDrawer
+class TextRenderer
 {
 public:
     enum Alignment { kAlignLeft, kAlignCenter, kAlignRight };
     
-    StringDrawer();
-    ~StringDrawer();
+    static const float s_lineHeight;
+    
+    TextRenderer();
+    ~TextRenderer();
 
     void paint(const QString & text,
                const glm::mat4 & modelMatrix,
                Alignment alignment = kAlignLeft,
                const glm::vec3 color = glm::vec3(1.0f));
 
+    bool isValid() const;
+
 protected:
     bool initialize();
     bool initializeProgram();
     bool initializeTexture();
     
-    glm::mat4 alignmentTransform(const QList<CharacterSpecifics *> & list,
-                                 Alignment alignment) const;
+    static void prepareTransforms(const QList<CharacterSpecifics *> characterSpecificsList,
+                                  const glm::mat4 & modelMatrix,
+                                  Alignment alignment,
+                                  QVector<glm::mat4> & vertexTransforms,
+                                  QVector<glm::mat4> & textureCoordTransforms);
+    
+    static glm::mat4 alignmentTransform(const QList<CharacterSpecifics *> & list,
+                                        Alignment alignment);
 
 protected:
     static const float s_textureSize;
@@ -42,5 +54,7 @@ protected:
 
     CharacterDrawable m_drawable;
     StringComposer m_stringComposer;
+
+    bool m_valid;
 
 };

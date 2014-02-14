@@ -13,4 +13,6 @@ public:
     virtual void accept(MenuRenderer * renderer) = 0;
     virtual void keyPressed(QKeyEvent * event) = 0;
 
+    virtual bool isFocusable() const = 0;
+
 };

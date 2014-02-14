@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <QVector>
+
 #include <glm/glm.hpp>
 
 #include <glow/ref_ptr.h>
@@ -18,7 +20,9 @@ public:
     CharacterDrawable();
     virtual ~CharacterDrawable();
 
-    void draw();
+    void draw(unsigned int instancesCount,
+              const QVector<glm::mat4> & vertexTransforms,
+              const QVector<glm::mat4> & textureCoordTransforms);
 
 protected:
     void initialize();
@@ -26,6 +30,8 @@ protected:
     
 protected:
     glow::ref_ptr<glow::VertexArrayObject> m_vao;
-    glow::ref_ptr<glow::Buffer> m_buffer;
+    glow::ref_ptr<glow::Buffer> m_vertexBuffer;
+    glow::ref_ptr<glow::Buffer> m_vertexTransformBuffer;
+    glow::ref_ptr<glow::Buffer> m_textureCoordTransformBuffer;
 
 };

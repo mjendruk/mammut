@@ -212,16 +212,36 @@ set(sources
     ${source_path}/logic/Mechanics.cpp
     ${source_path}/logic/Mechanics.h
 
+    ${source_path}/logic/highscore/HighscoreList.cpp
+    ${source_path}/logic/highscore/HighscoreList.h
+    ${source_path}/logic/highscore/HighscoreEntry.cpp
+    ${source_path}/logic/highscore/HighscoreEntry.h
+
+    ${source_path}/logic/menu/GameOverMenu.cpp
+    ${source_path}/logic/menu/GameOverMenu.h
+    ${source_path}/logic/menu/HighscoreMenu.cpp
+    ${source_path}/logic/menu/HighscoreMenu.h
     ${source_path}/logic/menu/MainMenu.cpp
     ${source_path}/logic/menu/MainMenu.h
     ${source_path}/logic/menu/Menu.cpp
     ${source_path}/logic/menu/Menu.h
-    ${source_path}/logic/menu/MenuButton.cpp
-    ${source_path}/logic/menu/MenuButton.h
-    ${source_path}/logic/menu/MenuItem.cpp
-    ${source_path}/logic/menu/MenuItem.h
     ${source_path}/logic/menu/PauseMenu.cpp
     ${source_path}/logic/menu/PauseMenu.h
+    ${source_path}/logic/menu/NewHighscoreMenu.cpp
+    ${source_path}/logic/menu/NewHighscoreMenu.h
+    
+    ${source_path}/logic/menu/items/MenuItem.cpp
+    ${source_path}/logic/menu/items/MenuItem.h
+    ${source_path}/logic/menu/items/HighscoreListItem.cpp
+    ${source_path}/logic/menu/items/HighscoreListItem.h
+    ${source_path}/logic/menu/items/MenuButton.cpp
+    ${source_path}/logic/menu/items/MenuButton.h    
+    ${source_path}/logic/menu/items/MenuInput.cpp
+    ${source_path}/logic/menu/items/MenuInput.h
+    ${source_path}/logic/menu/items/MenuLogo.cpp
+    ${source_path}/logic/menu/items/MenuLogo.h
+    ${source_path}/logic/menu/items/MenuText.cpp
+    ${source_path}/logic/menu/items/MenuText.h
 
     ${source_path}/logic/world/ChunkGenerator.cpp
     ${source_path}/logic/world/ChunkGenerator.h
@@ -262,8 +282,8 @@ set(sources
     ${source_path}/rendering/text/CharacterDrawable.h
     ${source_path}/rendering/text/StringComposer.cpp
     ${source_path}/rendering/text/StringComposer.h
-    ${source_path}/rendering/text/StringDrawer.cpp
-    ${source_path}/rendering/text/StringDrawer.h
+    ${source_path}/rendering/text/TextRenderer.cpp
+    ${source_path}/rendering/text/TextRenderer.h
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
