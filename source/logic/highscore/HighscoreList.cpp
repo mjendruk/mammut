@@ -7,6 +7,7 @@
 
 HighscoreList::HighscoreList()
 {
+    addScore("Mum", 1000);
 }
 
 HighscoreList::~HighscoreList()
