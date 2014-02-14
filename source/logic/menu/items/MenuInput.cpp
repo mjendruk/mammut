@@ -1,5 +1,6 @@
 #include "MenuInput.h"
 
+#include <QDebug>
 #include <QKeyEvent>
 
 #include <rendering/menu/MenuRenderer.h>
@@ -25,8 +26,11 @@ void MenuInput::keyPressed(QKeyEvent * event)
     switch (event->key())
     {
         case Qt::Key_Backspace:
+            {
             m_text.chop(1);
+            Sound sound(Sound::kTypewriter);
             break;
+            } 
         case Qt::Key_Return:
             {
             emit enterPressed(text());
@@ -34,7 +38,11 @@ void MenuInput::keyPressed(QKeyEvent * event)
             break;
             }
         default:
+            {
             m_text.append(event->text());
+            Sound sound(Sound::kTypewriter);
+            break;
+            }
     }
 }
 

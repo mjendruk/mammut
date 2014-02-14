@@ -4,11 +4,10 @@
 #include <fmod_errors.h>
 
 const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
-    { "data/sounds/diesel.mp3", true, false },
-    { "data/sounds/alerts.ogg", true, false },
     { "data/sounds/button_click.wav", false, false },
     { "data/sounds/button_switch.wav", false, false },
     { "data/sounds/impact.wav", false, false },
+    { "data/sounds/typewriter.wav", false, false },
     { "data/sounds/loop.wav", false, true } };
 
 
@@ -176,6 +175,9 @@ FMOD::Sound * SoundManager::createSound(const QString & fileName, bool is3D, boo
 
     if (isLoop) {
         result = sound->setMode(FMOD_LOOP_NORMAL);
+        checkError(result);
+    } else {
+        result = sound->setMode(FMOD_LOOP_OFF);
         checkError(result);
     }
 
