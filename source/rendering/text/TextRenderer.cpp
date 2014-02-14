@@ -21,7 +21,7 @@ const float TextRenderer::s_textureSize = 1024.0f;
 
 TextRenderer::TextRenderer()
 {
-    initialize();
+    m_valid = initialize();
 }
 
 TextRenderer::~TextRenderer()
@@ -112,6 +112,11 @@ void TextRenderer::paint(
     m_program->release();
     
     glDisable(GL_BLEND);
+}
+
+bool TextRenderer::isValid() const
+{
+    return m_valid;
 }
 
 void TextRenderer::prepareTransforms(

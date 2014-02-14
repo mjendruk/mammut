@@ -30,6 +30,8 @@ public:
                Alignment alignment = kAlignLeft,
                const glm::vec3 color = glm::vec3(1.0f));
 
+    bool isValid() const;
+
 protected:
     bool initialize();
     bool initializeProgram();
@@ -52,5 +54,7 @@ protected:
 
     CharacterDrawable m_drawable;
     StringComposer m_stringComposer;
+
+    bool m_valid;
 
 };
