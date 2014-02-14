@@ -1,5 +1,8 @@
 #pragma once
 
+#include <random>
+#include <vector>
+
 #include <glm/glm.hpp>
 
 #include "SimplePostProcPass.h"
@@ -21,6 +24,7 @@ public:
 
 protected:
     void initialize();
+    void pointsOnSphere(const unsigned int minN, std::vector<glm::vec3> & points);
 
 protected:
     static const int s_kernelSize;
@@ -34,4 +38,6 @@ protected:
     glow::ref_ptr<glow::Texture> m_ssaoOutputTexture;
 
     glow::ref_ptr<glow::Texture> m_noiseTexture;
+
+    std::mt19937 rng;
 };
