@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include <QDebug>
-
 #include <glm/gtx/transform.hpp>
 
 #include <logic/world/Mammut.h>
@@ -36,13 +34,11 @@ void HUD::paint(const Mammut & mammut)
     glDisable(GL_DEPTH_TEST);
     
     m_textRenderer.paint(velocityString,
-                         aspectRatioTransform
-                         * glm::translate(m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
+                         aspectRatioTransform * glm::translate(m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
                          TextRenderer::kAlignRight);
     
     m_textRenderer.paint(scoreString,
-                         aspectRatioTransform
-                         * glm::translate(-m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
+                         aspectRatioTransform * glm::translate(-m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
                          TextRenderer::kAlignLeft);
 
     m_textRenderer.paint(fpsString,
