@@ -1,7 +1,5 @@
 #include "TextRenderer.h"
 
-#include <numeric>
-
 #include <QDebug>
 
 #include <glm/gtx/transform.hpp>
@@ -53,8 +51,7 @@ bool TextRenderer::initializeProgram()
     
     m_program->link();
     
-    if (!m_program->isLinked())
-    {
+    if (!m_program->isLinked()) {
         qDebug() << m_program->infoLog().c_str();
         return false;
     }
@@ -128,8 +125,7 @@ void TextRenderer::prepareTransforms(
 {
     glm::mat4 transform = modelMatrix * alignmentTransform(characterSpecificsList, alignment);
     
-    for (auto * specifics : characterSpecificsList)
-    {
+    for (auto * specifics : characterSpecificsList) {
         glm::mat4 vertexTransform = transform * specifics->vertexTransform;
         
         vertexTransforms << vertexTransform;
@@ -144,13 +140,12 @@ glm::mat4 TextRenderer::alignmentTransform(
 {
     float offset;
     
-    const float length = std::accumulate(characterSpecificsList.begin(),
-                                         characterSpecificsList.end(), 0.0f,
-        [] (float sum, CharacterSpecifics * specifics) {
-            return sum + specifics->xAdvance;
-        });
+    float length = 0.0f;
+    for (CharacterSpecifics * specifics : characterSpecificsList)
+        length += specifics->xAdvance;
     
-    switch (alignment) {
+    switch (alignment)
+    {
         case kAlignLeft:
             offset = 0;
             break;
