@@ -230,8 +230,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->isAutoRepeat())
         return;
     
-    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier)
-    {
+    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier) {
         if (m_window.isFullScreen())
             m_window.showNormal();
         else

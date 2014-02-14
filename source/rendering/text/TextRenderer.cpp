@@ -125,7 +125,7 @@ void TextRenderer::prepareTransforms(
 {
     glm::mat4 transform = modelMatrix * alignmentTransform(characterSpecificsList, alignment);
     
-    for (auto * specifics : characterSpecificsList) {
+    for (CharacterSpecifics * specifics : characterSpecificsList) {
         glm::mat4 vertexTransform = transform * specifics->vertexTransform;
         
         vertexTransforms << vertexTransform;

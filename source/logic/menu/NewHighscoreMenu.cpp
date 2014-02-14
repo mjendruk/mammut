@@ -18,8 +18,8 @@ NewHighscoreMenu::~NewHighscoreMenu()
 
 QList<MenuItem *> NewHighscoreMenu::initializeMenuItems(const QString & cachedName, int score)
 {
-    auto congratsText = new MenuText(QString("Congratulations!"));
-    auto scoreText = new MenuText(QString("New Highscore: %1").arg(score));
+    MenuText * congratsText = new MenuText(QString("Congratulations!"));
+    MenuText * scoreText = new MenuText(QString("New Highscore: %1").arg(score));
     m_input = new MenuInput("Name", cachedName);
 
     return { congratsText, scoreText, m_input };

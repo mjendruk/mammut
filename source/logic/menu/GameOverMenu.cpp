@@ -15,7 +15,7 @@ GameOverMenu::~GameOverMenu()
 
 QList<MenuItem *> GameOverMenu::initializeMenuItems(int score)
 {
-    auto scoreText = new MenuText(QString("Your Score: %1").arg(score));
+    MenuText * scoreText = new MenuText(QString("Your Score: %1").arg(score));
     m_retryButton = new MenuButton("Retry");
     m_toMainMenuButton = new MenuButton("Back to Main Menu");
 

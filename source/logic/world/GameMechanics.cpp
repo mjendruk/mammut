@@ -15,7 +15,7 @@ GameMechanics::GameMechanics()
     for (int i = 0; i < 7; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
-        for (auto cuboid : m_chunkList.last()->cuboids())
+        for (Cuboid * cuboid : m_chunkList.last()->cuboids())
             m_physicsWorld.addObject(cuboid);
     }
     
@@ -46,12 +46,12 @@ void GameMechanics::update(float seconds)
     m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
     
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z) {
-        for (auto cuboid : m_chunkList.first()->cuboids())
+        for (Cuboid * cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
         m_chunkList.removeFirst();
 
         m_chunkList << m_chunkGenerator.nextChunk();
-        for (auto cuboid : m_chunkList.last()->cuboids()) {
+        for (Cuboid * cuboid : m_chunkList.last()->cuboids()) {
             m_physicsWorld.addObject(cuboid);
         }
     }

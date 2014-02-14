@@ -59,7 +59,7 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 
     m_translation = glm::translate(0.0f, 0.85f, 0.0f) * aspectRatioTransform * glm::scale(1.5f, 1.5f, 1.0f);
     
-    for (auto menuItem : m_menu->menuItems())
+    for (MenuItem * menuItem : m_menu->menuItems())
         menuItem->accept(this);
     
     glEnable(GL_DEPTH_TEST);
