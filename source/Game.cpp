@@ -163,12 +163,13 @@ void Game::showHighscoreMenu()
 
 void Game::showNewHighscoreMenu(int score)
 {
-    auto menu = std::make_shared<NewHighscoreMenu>("Max", score);
+    auto menu = std::make_shared<NewHighscoreMenu>(m_lastName, score);
     
     connect(menu.get(), &NewHighscoreMenu::nameEntered,
             [this, score](const QString & name)
     {
         m_highscoreList.addScore(name, score);
+        m_lastName = name;
         showGameOverMenu(score);
     });
     

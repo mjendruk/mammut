@@ -71,4 +71,6 @@ protected:
     glow::Timer m_timer;
     bool m_loop;
     bool m_paused;
+
+    QString m_lastName;
 };
