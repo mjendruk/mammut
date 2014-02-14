@@ -35,8 +35,7 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::update(float seconds)
 {
-    if (m_gameOver)
-    {
+    if (m_gameOver) {
         emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
         return;
     }
@@ -46,8 +45,7 @@ void GameMechanics::update(float seconds)
     
     m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
     
-    if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z)
-    {
+    if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z) {
         for (auto cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
         m_chunkList.removeFirst();
@@ -129,7 +127,3 @@ void GameMechanics::connectSignals()
         m_gameOver = true;
     });
 }
-
-
-
-

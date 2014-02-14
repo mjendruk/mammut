@@ -192,8 +192,7 @@ void Game::quit()
     QApplication::quit();
 }
 
-void Game::activateMenu(std::shared_ptr<Menu> menu,
-    AbstractBackground * background)
+void Game::activateMenu(std::shared_ptr<Menu> menu, AbstractBackground * background)
 {
     m_activeMechanics = menu;
     m_menuRenderer->setMenu(menu.get());

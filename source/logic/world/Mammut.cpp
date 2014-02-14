@@ -63,8 +63,7 @@ void Mammut::collisionEvent(const PhysicsObject & object,
             m_isOnObject = true;
             break;
         case Util::kZAxis:
-            if (!m_isCrashed)
-            {
+            if (!m_isCrashed) {
                 Sound sound(Sound::kImpact);
                 emit crashed();
                 m_isCrashed = true;

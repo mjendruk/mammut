@@ -10,7 +10,7 @@ public:
     HighscoreList();
     virtual ~HighscoreList();
 
-    bool addScore(const QString & name, unsigned int score);
+    void addScore(const QString & name, unsigned int score);
     bool isHighscore(unsigned int score) const;
 
     const QList<HighscoreEntry> & scores() const;

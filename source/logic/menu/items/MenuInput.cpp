@@ -50,7 +50,8 @@ const QString & MenuInput::label() const
 
 const QString & MenuInput::text() const
 {
-    if (m_text.isNull()) return m_placeholder;
+    if (m_text.isNull()) 
+        return m_placeholder;
 
     return m_text;
 }

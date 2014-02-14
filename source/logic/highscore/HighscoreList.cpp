@@ -1,5 +1,7 @@
 #include "HighscoreList.h"
 
+#include <cassert>
+
 #include <QMutableListIterator>
 #include "HighscoreEntry.h"
 
@@ -11,18 +13,20 @@ HighscoreList::~HighscoreList()
 {
 }
 
-bool HighscoreList::addScore(const QString & name, unsigned int score)
+void HighscoreList::addScore(const QString & name, unsigned int score)
 {
+    assert(isHighscore(score));
+
     if (m_list.isEmpty())
     {
         m_list.append(HighscoreEntry(name, score));
-        return true;
+        return;
     }
 
     if (m_list.size() >= s_limit)
     {
         if (m_list.last().score() >= score)
-            return false;
+            return;
         
         m_list.removeLast();
     }
@@ -38,7 +42,7 @@ bool HighscoreList::addScore(const QString & name, unsigned int score)
     
     it.insert(HighscoreEntry(name, score));
 
-    return true;
+    return;
 }
 
 bool HighscoreList::isHighscore(unsigned int score) const
