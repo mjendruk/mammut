@@ -76,20 +76,20 @@ void MenuRenderer::render(const MenuButton * button)
                          TextRenderer::kAlignCenter,
                          color);
 
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
+    moveTranslationDown(1.5f);
 }
 
 void MenuRenderer::render(const MenuLogo * logo)
 {
     const glm::vec3 color(0.6f, 0.13f, 0.02f);
-    const glm::mat4 scale = glm::scale(glm::vec3(2.0f));
+    const float scale = 2.0f;
     
     m_textRenderer.paint("Mammut",
-                         m_translation * scale,
+                         m_translation * glm::scale(glm::vec3(scale)),
                          TextRenderer::kAlignCenter,
                          color);
     
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 2.0f * 1.5f, 0.0f);
+    moveTranslationDown(scale * 1.5f);
 }
 
 void MenuRenderer::render(const HighscoreListItem * item)
@@ -109,17 +109,17 @@ void MenuRenderer::render(const HighscoreListItem * item)
                          TextRenderer::kAlignLeft,
                          titleColor);
     
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.1f, 0.0f);
+    moveTranslationDown(1.1f);
     
     for (const HighscoreEntry & entry : item->scores())
     {
         m_textRenderer.paint(entry.name(), m_translation * glm::translate(namePosition, 0.0f, 0.0f) * entryScale);
         m_textRenderer.paint(QString::number(entry.score()), m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);
         
-        m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 0.8f, 0.0f);
+        moveTranslationDown(0.8f);
     }
     
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 0.2f, 0.0f);
+    moveTranslationDown(0.2f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
@@ -135,7 +135,7 @@ void MenuRenderer::render(const MenuInput * input)
                          m_translation,
                          TextRenderer::kAlignLeft);
     
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
+    moveTranslationDown(1.5f);
 }
 
 void MenuRenderer::render(const MenuText * text)
@@ -147,7 +147,7 @@ void MenuRenderer::render(const MenuText * text)
                          TextRenderer::kAlignCenter,
                          color);
 
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * 1.5f, 0.0f);
+    moveTranslationDown(1.5f);
 }
 
 void MenuRenderer::setBackground(AbstractBackground * background)
@@ -160,4 +160,9 @@ void MenuRenderer::setMenu(const Menu * menu)
 {
     assert(menu != nullptr);
     m_menu = menu;
+}
+
+void MenuRenderer::moveTranslationDown(float lineHeightScale)
+{
+    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * lineHeightScale, 0.0f);
 }

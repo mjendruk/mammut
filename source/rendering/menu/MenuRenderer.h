@@ -32,6 +32,9 @@ public:
     void setMenu(const Menu * menu);
     
 protected:
+    void moveTranslationDown(float lineHeightScale);
+
+protected:
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;
     TextRenderer m_textRenderer;
