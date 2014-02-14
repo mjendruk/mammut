@@ -1,11 +1,8 @@
 #pragma once
 
-#include <functional>
-
 #include <GL/glew.h>
 
 #include <QWindow>
-#include <QScopedPointer>
 #include <QOpenGLContext>
 
 #include <glow/ref_ptr.h>

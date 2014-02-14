@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QObject>
 #include <QTime>
 
 #include <glow/ref_ptr.h>
@@ -13,6 +12,8 @@
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
+#include "MotionBlurPostProc.h"
+#include "SSAOPostProc.h"
 
 namespace glow
 {
@@ -28,7 +29,6 @@ namespace glowutils
 
 class Canvas;
 class GameMechanics;
-class SSAO;
 
 class GameWorldRenderer : public Renderer
 {
@@ -45,11 +45,16 @@ public:
 
 protected:
     void initialize();
-    void initializeGBuffer();
+    void initializeGBuffers();
+    void initializePostProcPasses();
 
-protected:
+    void updatePainters();
     void updateFPS();
 
+    void drawGeometry();
+    void applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio);
+
+protected:
     static const float nearPlane;
     static const float farPlane;
     
@@ -61,15 +66,22 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     CaveDrawable m_caveDrawable;
 
-    glow::ref_ptr<glow::Program> m_DepthProgram;
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
+
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
     glow::ref_ptr<glow::Texture> m_gBufferNormals;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
-    glow::ref_ptr<glow::Texture> m_ssaoOutput;
-    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-    glow::ref_ptr<SSAO> m_ssao;
+    glow::ref_ptr<glow::Texture> m_gBufferVelocity;
 
+    glow::ref_ptr<glow::Texture> m_ssaoOutput;
+    glow::ref_ptr<glow::Texture> m_motionBlurOutput;
+    
+    glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
+    MotionBlurPostProc m_motionBlurPostProc;
+    SSAOPostProc m_ssaoPostProc;
+
+    glm::mat4 m_previousViewProjection;
+    
     QTime m_lastFrame;
     float m_avgTimeSinceLastFrame;
     

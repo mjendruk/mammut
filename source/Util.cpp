@@ -2,6 +2,8 @@
 
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
+#include <glow/Texture.h>
+
 
 namespace Util
 {
@@ -39,6 +41,17 @@ btMatrix3x3 toBtMat3(const glm::mat3 & mat3)
     return btMatrix3x3(toBtVec3(glm::row(mat3, 0)),
                        toBtVec3(glm::row(mat3, 1)),
                        toBtVec3(glm::row(mat3, 2)));
+}
+
+glow::Texture * create2DTexture()
+{
+    glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);
+    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    return texture;
 }
 
 } // namespace

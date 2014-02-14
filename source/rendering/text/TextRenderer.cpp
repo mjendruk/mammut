@@ -9,7 +9,7 @@
 #include <glow/Shader.h>
 #include <glow/Texture.h>
 
-#include <glowutils/File.h>
+#include <glowutils/global.h>
 
 #include <rendering/RawFile.h>
 #include "CharacterDrawable.h"
@@ -98,7 +98,7 @@ void TextRenderer::paint(
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    m_characterAtlas->bind(GL_TEXTURE0);
+    m_characterAtlas->bindActive(GL_TEXTURE0);
     
     m_program->setUniform("color", color);
     

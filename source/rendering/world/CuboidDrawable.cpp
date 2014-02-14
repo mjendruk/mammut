@@ -2,14 +2,10 @@
 
 #include <cassert>
 
-#include <glow/VertexArrayObject.h>
-#include <glow/Buffer.h>
-#include <glow/VertexAttributeBinding.h>
-
 CuboidDrawable::CuboidDrawable()
 :   m_cube(nullptr)
 {
-
+    initialize();
 }
 
 CuboidDrawable::~CuboidDrawable()

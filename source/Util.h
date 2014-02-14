@@ -6,6 +6,11 @@
 #include <LinearMath/btQuaternion.h>
 #include <LinearMath/btMatrix3x3.h>
 
+namespace glow
+{
+    class Texture;
+}
+
 namespace Util
 {
 
@@ -22,6 +27,8 @@ btMatrix3x3 toBtMat3(const glm::mat3 & mat3);
     
 template <typename genType>
 glm::detail::tvec3<genType> toCartesian(const glm::detail::tvec4<genType> & homogenousVec);
+
+glow::Texture * create2DTexture();
 
 } // namespace
 

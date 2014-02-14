@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include <glow/ref_ptr.h>
 #include <glowutils/UnitCube.h>
 
@@ -13,10 +11,10 @@ public:
     CuboidDrawable();
     ~CuboidDrawable();
 
-    void initialize() override;
     void draw() override;
 
 protected:
+    void initialize() override;
     glow::ref_ptr<glowutils::UnitCube> m_cube;
 
 };

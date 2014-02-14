@@ -1,17 +1,18 @@
 #include "Game.h"
 
-#include <ratio>
-
 #include <QTimer>
 #include <QThread>
 #include <QDebug>
 #include <QMouseEvent>
 
+#include <glowutils/File.h>
+
 #include <rendering/menu/MenuRenderer.h>
 #include <rendering/world/GameWorldRenderer.h>
-
 #include <rendering/menu/BlankBackground.h>
 #include <rendering/menu/ScreenshotBackground.h>
+
+#include <rendering/Canvas.h>
 
 #include <logic/world/GameMechanics.h>
 #include <logic/menu/GameOverMenu.h>
@@ -20,7 +21,6 @@
 #include <logic/menu/PauseMenu.h>
 #include <logic/menu/NewHighscoreMenu.h>
 
-#include <sound/Sound.h>
 #include <sound/SoundManager.h>
 
 Game::Game(int & argc, char ** argv)
@@ -241,6 +241,14 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
+
+    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::AltModifier)
+    {
+        glowutils::File::reloadAll();
+        qDebug() << "reload shaders"; 
+
+        return;
+    }
     
     m_activeMechanics->keyPressed(keyEvent);
 }

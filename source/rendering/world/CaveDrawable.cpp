@@ -1,19 +1,11 @@
 #include "CaveDrawable.h"
 
-#include <cassert>
-
-#include <iostream>
-#include <cmath>
-#include <cassert>
-#include <algorithm>
-
 #include <glm/gtx/random.hpp>
 
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
-#include <QDebug>
 
 const int CaveDrawable::s_verticesPerRing = 20;
 const float CaveDrawable::s_radius = 200.f;
@@ -29,11 +21,13 @@ CaveDrawable::CaveDrawable()
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
         float angle = (3.14159265359f * 2 / s_verticesPerRing) * i;
-        dummyArray << glm::vec3(cos(angle), sin(angle), 0.0) * s_radius;
+        dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * s_radius);
 
         float angleOffset = (3.14159265359f * 2 / s_verticesPerRing) * (i + 0.5f);
-        dummyArrayOffset << glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * s_radius;
+        dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * s_radius);
     }
+
+    initialize();
 }
 
 CaveDrawable::~CaveDrawable()
@@ -83,22 +77,22 @@ void CaveDrawable::initializeIndices()
             index += vertex;
             
             if (ring % 2 == 0) {
-                m_indices << index;
-                m_indices << index + ((vertex == 0) ? s_verticesPerRing * 2 - 1 : s_verticesPerRing - 1);
-                m_indices << index + s_verticesPerRing;
+                m_indices.push_back(index);
+                m_indices.push_back(index + ((vertex == 0) ? s_verticesPerRing * 2 - 1 : s_verticesPerRing - 1));
+                m_indices.push_back(index + s_verticesPerRing);
 
-                m_indices << index;
-                m_indices << index + s_verticesPerRing;
-                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1);
+                m_indices.push_back(index);
+                m_indices.push_back(index + s_verticesPerRing);
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1));
             }
             else {
-                m_indices << index;
-                m_indices << index + s_verticesPerRing;
-                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1);
+                m_indices.push_back(index);
+                m_indices.push_back(index + s_verticesPerRing);
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
 
-                m_indices << index;
-                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1);
-                m_indices << index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1);
+                m_indices.push_back(index);
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1));
             }
         }
     }
@@ -149,11 +143,11 @@ void CaveDrawable::addRings(int numRings)
     int size = m_vertices.size();
     for (int i = m_activeRingPosition + s_numRings - numRings; i < m_activeRingPosition + s_numRings; i++) {
         for (glm::vec3 v : dummyArray){
-            m_vertices << v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride) + getRandomOffset();
+            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride) + getRandomOffset());
         }
 
         for (glm::vec3 v : dummyArrayOffset){
-            m_vertices << v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride) + getRandomOffset();
+            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride) + getRandomOffset());
         }
     }
     buildDuplicatedVertices();
@@ -164,7 +158,7 @@ void CaveDrawable::buildDuplicatedVertices()
 {
     m_duplicatedVertices.clear();
     for (int i : m_indices) {
-        m_duplicatedVertices << m_vertices[i];
+        m_duplicatedVertices.push_back(m_vertices[i]);
     }
 }
 
@@ -178,8 +172,8 @@ void CaveDrawable::buildNormals()
 
         glm::vec3 normal = glm::normalize(glm::cross(a, b));
 
-        m_normals << normal;
-        m_normals << normal;
-        m_normals << normal;
+        m_normals.push_back(normal);
+        m_normals.push_back(normal);
+        m_normals.push_back(normal);
     }
 }

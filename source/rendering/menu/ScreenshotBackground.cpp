@@ -6,7 +6,7 @@
 #include <glow/Shader.h>
 #include <glow/Program.h>
 #include <glowutils/ScreenAlignedQuad.h>
-#include <glowutils/File.h>
+#include <glowutils/global.h>
 
 ScreenshotBackground::ScreenshotBackground()
 {

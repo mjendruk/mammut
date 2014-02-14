@@ -1,7 +1,9 @@
 #pragma once
 
+#include <QList>
 #include <glowutils/AxisAlignedBoundingBox.h>
-#include "Cuboid.h"
+
+class Cuboid;
 
 class CuboidChunk
 {

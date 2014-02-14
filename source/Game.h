@@ -4,18 +4,17 @@
 
 #include <QMainWindow>
 
-#include <glow/Timer.h>
+#include <glowutils/Timer.h>
 
-#include <rendering/Canvas.h>
 #include <logic/highscore/HighscoreList.h>
 #include "AbstractApplication.h"
 
-class QMouseEvent;
 
 class Mechanics;
 class GameMechanics;
 class Menu;
 
+class Canvas;
 class MenuRenderer;
 class GameWorldRenderer;
 
@@ -68,7 +67,7 @@ protected:
     QMainWindow m_window;
     Canvas * m_canvas;
     
-    glow::Timer m_timer;
+    glowutils::Timer m_timer;
     bool m_loop;
     bool m_paused;
 
