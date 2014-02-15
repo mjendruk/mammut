@@ -47,8 +47,6 @@ void GameMechanics::update(float seconds)
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
     
-    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
-    
     if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z) {
         for (Cuboid * cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
@@ -61,6 +59,12 @@ void GameMechanics::update(float seconds)
     }
     updateSound();
     PerfCounter::end("game");
+}
+
+void GameMechanics::tickUpdate(float seconds)
+{
+    m_mammut.update();
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
 }
 
 void GameMechanics::updateSound()
@@ -123,7 +127,7 @@ void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & la
 
 void GameMechanics::connectSignals()
 {
-    connect(&m_physicsWorld, &PhysicsWorld::simulationTick, &m_mammut, &Mammut::update);
+    connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
     

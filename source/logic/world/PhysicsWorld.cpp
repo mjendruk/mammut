@@ -46,7 +46,7 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::stepSimulation(float seconds)
 {
-    m_dynamicsWorld.stepSimulation(seconds, 12, 0.002f);
+    m_dynamicsWorld.stepSimulation(seconds, 25, 0.002f);
 }
 
 void PhysicsWorld::changeGravity(GravityDirection direction)
@@ -75,7 +75,7 @@ void PhysicsWorld::removeObject(PhysicsObject * object)
 
 void PhysicsWorld::preTickCallback(float timeStep)
 {
-    emit simulationTick();
+    emit simulationTick(timeStep);
 }
 
 void PhysicsWorld::postTickCallback(float timeStep)

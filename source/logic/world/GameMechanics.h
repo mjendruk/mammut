@@ -23,7 +23,7 @@ public:
     virtual ~GameMechanics();
 
     void update(float seconds) override;
-    void updateSound();
+    void tickUpdate(float seconds);
 
     void keyPressed(QKeyEvent * event) override;
     void keyReleased(QKeyEvent * event) override;
@@ -40,6 +40,7 @@ signals:
     
 protected:
     void connectSignals();
+    void updateSound();
     
 protected:
     PhysicsWorld m_physicsWorld;

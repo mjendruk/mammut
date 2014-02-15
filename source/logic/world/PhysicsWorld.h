@@ -26,7 +26,7 @@ public:
     void postTickCallback(float timeStep);
 
 signals:
-    void simulationTick();
+    void simulationTick(float seconds);
     void gravityChanged(const glm::mat3 & rotation);
 
 protected:
