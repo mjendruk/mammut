@@ -37,10 +37,14 @@ protected:
     static const QList<QString> s_requiredSamplers;
 
     SimplePostProcPass m_ssaoPass;
-    SimplePostProcPass m_blurPass;
+    SimplePostProcPass m_horizontalBlurPass;
+    SimplePostProcPass m_verticalBlurPass;
+    SimplePostProcPass m_outputPass;
 
-    glow::ref_ptr<glow::Texture> m_ssaoOutputTexture;
+    glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;
+    glow::ref_ptr<glow::Texture> m_horizontalBlurTexture;
+    glow::ref_ptr<glow::Texture> m_verticalBlurTexture;
 
     std::mt19937 rng;
 };

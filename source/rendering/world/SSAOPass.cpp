@@ -15,8 +15,10 @@ const float SSAOPass::s_radius = 25.0f;
 const QList<QString> SSAOPass::s_requiredSamplers = { "normal", "depth", "color" };
 
 SSAOPass::SSAOPass()
-:   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_RGBA32F)
-,   m_blurPass("data/shaders/blur.frag", GL_RGBA32F)
+:   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_R32F)
+,   m_horizontalBlurPass("data/shaders/horizontal_blur.frag", GL_R32F)
+,   m_verticalBlurPass("data/shaders/vertical_blur.frag", GL_R32F)
+,   m_outputPass("data/shaders/ssao_output.frag", GL_RGBA32F)
 {
     initialize();
 }
@@ -54,7 +56,10 @@ void SSAOPass::apply()
     m_ssaoPass.apply();
     
     //second SSAO Pass (blur)
-    m_blurPass.apply();
+    m_horizontalBlurPass.apply();
+    m_verticalBlurPass.apply();
+    
+    m_outputPass.apply();
 }
 
 void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
@@ -63,29 +68,38 @@ void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
         assert(input.contains(sampler));
 
     //split into 2 Maps for each pass (ssao, blur)
-    QMap<QString, glow::Texture*> ssaoInputTextures;
+    QMap<QString, glow::Texture *> ssaoInputTextures;
     ssaoInputTextures["normal"] = input.value("normal");
     ssaoInputTextures["depth"] = input.value("depth");
     ssaoInputTextures["noise"] = m_noiseTexture;
 
     m_ssaoPass.setInputTextures(ssaoInputTextures);
 
-    QMap<QString, glow::Texture*> blurInputTextures;
-    blurInputTextures["color"] = input.value("color");
-    blurInputTextures["normal"] = input.value("normal");
-    blurInputTextures["ssao"] = m_ssaoOutputTexture;
-
-    m_blurPass.setInputTextures(blurInputTextures);
+    QMap<QString, glow::Texture *> horizontalBlurInputTextures;
+    horizontalBlurInputTextures["ssao"] = m_ssaoTexture;
+    m_horizontalBlurPass.setInputTextures(horizontalBlurInputTextures);
+    
+    QMap<QString, glow::Texture *> verticalBlurInputTextures;
+    verticalBlurInputTextures["horizontalBlur"] = m_horizontalBlurTexture;
+    m_verticalBlurPass.setInputTextures(verticalBlurInputTextures);
+    
+    QMap<QString, glow::Texture *> outputPassInputTextures;
+    outputPassInputTextures["color"] = input.value("color");
+    outputPassInputTextures["blurredSsao"] = m_verticalBlurTexture;
+    m_outputPass.setInputTextures(outputPassInputTextures);
 }
 
 glow::Texture* SSAOPass::outputTexture()
 {
-    return m_blurPass.outputTexture();
+    return m_outputPass.outputTexture();
 }
 
 void SSAOPass::initialize()
 {
-    m_ssaoOutputTexture = m_ssaoPass.outputTexture();
+    m_ssaoTexture = m_ssaoPass.outputTexture();
+    m_horizontalBlurTexture = m_horizontalBlurPass.outputTexture();
+    m_verticalBlurTexture = m_verticalBlurPass.outputTexture();
+    
     m_noiseTexture = Util::create2DTexture();
 
     //init noise texture and ssao kernel
@@ -124,7 +138,9 @@ void SSAOPass::resize(int width, int height)
     m_ssaoPass.setUniform("viewport", glm::vec2(width, height));
 
     m_ssaoPass.resize(width, height);
-    m_blurPass.resize(width, height);
+    m_horizontalBlurPass.resize(width, height);
+    m_verticalBlurPass.resize(width, height);
+    m_outputPass.resize(width, height);
 }
 
 void SSAOPass::setProjectionUniform(const glm::mat4 & projection)
@@ -136,6 +152,7 @@ void SSAOPass::setInverseProjectionUniform(const glm::mat4 & invProjection)
 {
     m_ssaoPass.setUniform("invProjection", invProjection);
 }
+
 void SSAOPass::setNormalMatrixUniform(const glm::mat3 & normalMatrix)
 {
     m_ssaoPass.setUniform("normalMatrix", normalMatrix);

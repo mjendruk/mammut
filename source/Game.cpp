@@ -48,7 +48,7 @@ void Game::run()
     long double currentTime;
     long double frameTime;
     
-    while(m_loop) 
+    while(m_loop)
     {   
         currentTime = m_timer.elapsed();
         frameTime = currentTime - lastTime;
@@ -57,7 +57,8 @@ void Game::run()
         SoundManager::instance().updateSoundSystem();
         QCoreApplication::processEvents();
         
-        m_activeMechanics->update(frameTime / std::nano::den);
+        if (!m_paused)
+            m_activeMechanics->update(frameTime / std::nano::den);
 
         if(!m_window.isMinimized())
             m_canvas->render();
