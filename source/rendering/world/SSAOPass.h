@@ -3,24 +3,28 @@
 #include <random>
 #include <vector>
 
+#include <QString>
+
 #include <glm/glm.hpp>
 
 #include "SimplePostProcPass.h"
 
-class SSAOPostProc : public AbstractPostProc
+
+class SSAOPass : public AbstractPostProcPass
 {
 public:
-    SSAOPostProc(TextureFormat outputFormat);
-    virtual ~SSAOPostProc();
+    SSAOPass();
+    virtual ~SSAOPass();
 
-    virtual void apply();
-    virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
-    virtual glow::Texture* outputTexture();
+    void apply() override;
+    void resize(int width, int height) override;
+    
+    void setInputTextures(const QMap<QString, glow::Texture *> & input) override;
+    glow::Texture * outputTexture() override;
 
-    void setProjectionUniform(glm::mat4 projection);
-    void setInverseProjectionUniform(glm::mat4 invProjection);
-    void setNormalMatrixUniform(glm::mat3 normalMatrix);
+    void setProjectionUniform(const glm::mat4 & projection);
+    void setInverseProjectionUniform(const glm::mat4 & invProjection);
+    void setNormalMatrixUniform(const glm::mat3 & normalMatrix);
 
 protected:
     void initialize();
@@ -36,7 +40,6 @@ protected:
     SimplePostProcPass m_blurPass;
 
     glow::ref_ptr<glow::Texture> m_ssaoOutputTexture;
-
     glow::ref_ptr<glow::Texture> m_noiseTexture;
 
     std::mt19937 rng;

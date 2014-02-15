@@ -289,7 +289,8 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
-    ${source_path}/rendering/world/AbstractPostProc.h
+    ${source_path}/rendering/world/AbstractPostProcPass.cpp
+    ${source_path}/rendering/world/AbstractPostProcPass.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
@@ -301,16 +302,17 @@ set(sources
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
     ${source_path}/rendering/world/DrawableInterface.h
-    ${source_path}/rendering/world/MotionBlurPostProc.cpp
-    ${source_path}/rendering/world/MotionBlurPostProc.h
+    ${source_path}/rendering/world/MotionBlurPass.cpp
+    ${source_path}/rendering/world/MotionBlurPass.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
     ${source_path}/rendering/world/SimplePostProcPass.cpp
+    ${source_path}/rendering/world/SimplePostProcPass.hpp
     ${source_path}/rendering/world/SimplePostProcPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
-    ${source_path}/rendering/world/SSAOPostProc.cpp
-    ${source_path}/rendering/world/SSAOPostProc.h
+    ${source_path}/rendering/world/SSAOPass.cpp
+    ${source_path}/rendering/world/SSAOPass.h
 
     ${source_path}/sound/SoundManager.cpp
     ${source_path}/sound/SoundManager.h

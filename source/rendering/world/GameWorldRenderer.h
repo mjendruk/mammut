@@ -12,8 +12,8 @@
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
-#include "MotionBlurPostProc.h"
-#include "SSAOPostProc.h"
+#include "MotionBlurPass.h"
+#include "SSAOPass.h"
 
 namespace glow
 {
@@ -77,8 +77,8 @@ protected:
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
-    MotionBlurPostProc m_motionBlurPostProc;
-    SSAOPostProc m_ssaoPostProc;
+    MotionBlurPass m_motionBlurPass;
+    SSAOPass m_ssaoPostProc;
 
     glm::mat4 m_previousViewProjection;
     

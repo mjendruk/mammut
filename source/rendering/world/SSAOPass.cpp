@@ -1,4 +1,4 @@
-#include "SSAOPostProc.h"
+#include "SSAOPass.h"
 
 #include <array>
 
@@ -9,26 +9,24 @@
 
 #include "Util.h"
 
-const int SSAOPostProc::s_kernelSize = 32;
-const int SSAOPostProc::s_noiseSize = 5;
-const float SSAOPostProc::s_radius = 25.0f;
-const QList<QString> SSAOPostProc::s_requiredSamplers = { "normal", "depth", "color" };
+const int SSAOPass::s_kernelSize = 32;
+const int SSAOPass::s_noiseSize = 5;
+const float SSAOPass::s_radius = 25.0f;
+const QList<QString> SSAOPass::s_requiredSamplers = { "normal", "depth", "color" };
 
-std::mt19937 rng;
-
-SSAOPostProc::SSAOPostProc(TextureFormat outputFormat)
-:   m_ssaoPass({ GL_RGBA32F, GL_RGBA, GL_FLOAT }, "data/shaders/ssao.frag", "data/shaders/ssao.vert")
-,   m_blurPass(outputFormat, "data/shaders/blur.frag")
+SSAOPass::SSAOPass()
+:   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_RGBA32F)
+,   m_blurPass("data/shaders/blur.frag", GL_RGBA32F)
 {
     initialize();
 }
 
-SSAOPostProc::~SSAOPostProc()
+SSAOPass::~SSAOPass()
 {
 }
 
 /** This method returns at least minN uniformly distributed vectors located on a z-oriented hemisphere */
-void SSAOPostProc::pointsOnSphere(const unsigned int minN, std::vector<glm::vec3> & points)
+void SSAOPass::pointsOnSphere(const unsigned int minN, std::vector<glm::vec3> & points)
 {
     //get vectors uniformly distributed on a sphere
     auto v = glowutils::Icosahedron::vertices();
@@ -50,7 +48,7 @@ void SSAOPostProc::pointsOnSphere(const unsigned int minN, std::vector<glm::vec3
 }
 
 
-void SSAOPostProc::apply()
+void SSAOPass::apply()
 {
     // first SSAO Pass
     m_ssaoPass.apply();
@@ -59,7 +57,7 @@ void SSAOPostProc::apply()
     m_blurPass.apply();
 }
 
-void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> & input)
+void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
 {
     for (QString sampler : s_requiredSamplers)
         assert(input.contains(sampler));
@@ -80,12 +78,12 @@ void SSAOPostProc::setInputTextures(const QMap<QString, glow::Texture*> & input)
     m_blurPass.setInputTextures(blurInputTextures);
 }
 
-glow::Texture* SSAOPostProc::outputTexture()
+glow::Texture* SSAOPass::outputTexture()
 {
     return m_blurPass.outputTexture();
 }
 
-void SSAOPostProc::initialize()
+void SSAOPass::initialize()
 {
     m_ssaoOutputTexture = m_ssaoPass.outputTexture();
     m_noiseTexture = Util::create2DTexture();
@@ -121,7 +119,7 @@ void SSAOPostProc::initialize()
     m_ssaoPass.setUniform("kernel", kernel);
 }
 
-void SSAOPostProc::resize(int width, int height)
+void SSAOPass::resize(int width, int height)
 {
     m_ssaoPass.setUniform("viewport", glm::vec2(width, height));
 
@@ -129,16 +127,16 @@ void SSAOPostProc::resize(int width, int height)
     m_blurPass.resize(width, height);
 }
 
-void SSAOPostProc::setProjectionUniform(glm::mat4 projection)
+void SSAOPass::setProjectionUniform(const glm::mat4 & projection)
 {
     m_ssaoPass.setUniform("projection", projection);
 }
 
-void SSAOPostProc::setInverseProjectionUniform(glm::mat4 invProjection)
+void SSAOPass::setInverseProjectionUniform(const glm::mat4 & invProjection)
 {
     m_ssaoPass.setUniform("invProjection", invProjection);
 }
-void SSAOPostProc::setNormalMatrixUniform(glm::mat3 normalMatrix)
+void SSAOPass::setNormalMatrixUniform(const glm::mat3 & normalMatrix)
 {
     m_ssaoPass.setUniform("normalMatrix", normalMatrix);
 }

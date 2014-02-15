@@ -28,8 +28,6 @@ GameWorldRenderer::GameWorldRenderer()
 , m_lastFrame(QTime::currentTime())
 , m_gameMechanics(nullptr)
 , m_avgTimeSinceLastFrame(0.f)
-, m_ssaoPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
-, m_motionBlurPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
 {
     initialize();
 }
@@ -92,8 +90,8 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     PerfCounter::end("ssao");
 
     PerfCounter::begin("mb");
-    m_motionBlurPostProc.setFPSUniform(fps() / 60.f);
-    m_motionBlurPostProc.apply();
+    m_motionBlurPass.setFPSUniform(fps() / 60.f);
+    m_motionBlurPass.apply();
     glFinish();
     PerfCounter::end("mb");
 
@@ -149,8 +147,8 @@ void GameWorldRenderer::initializePostProcPasses()
                                     });
 
     //motionBlur
-    m_motionBlurOutput = m_motionBlurPostProc.outputTexture();
-    m_motionBlurPostProc.setInputTextures({ { "color", m_ssaoOutput },
+    m_motionBlurOutput = m_motionBlurPass.outputTexture();
+    m_motionBlurPass.setInputTextures({ { "color", m_ssaoOutput },
                                             { "depth", m_gBufferDepth },
                                             { "velocity", m_gBufferVelocity }
                                           });
@@ -168,7 +166,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
     m_ssaoPostProc.resize(width, height);
-    m_motionBlurPostProc.resize(width, height);
+    m_motionBlurPass.resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()

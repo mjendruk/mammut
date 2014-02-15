@@ -1,17 +1,16 @@
 #pragma once
 
-#include <QString>
 #include <QMap>
 
 #include <GL/glew.h>
 
 #include <glow/ref_ptr.h>
-#include <glow/Program.h>
-
 #include <glowutils/ScreenAlignedQuad.h>
 
-#include "AbstractPostProc.h"
+#include "AbstractPostProcPass.h"
 
+
+class QString;
 
 namespace glow
 {
@@ -25,49 +24,38 @@ namespace glowutils
     class ScreenAlignedQuad;
 }
 
-struct TextureFormat
-{
-    GLint internalFormat;
-    GLenum format;
-    GLenum type;
-};
-
-class SimplePostProcPass : public AbstractPostProc
+class SimplePostProcPass : public AbstractPostProcPass
 {
 public:
-    SimplePostProcPass(TextureFormat outputFormat, const QString fragmentShader, const QString vertexShader = QString("data/shaders/screenquad.vert"));
+    SimplePostProcPass(const QString & vertexShaderSource,
+                       const QString & fragmentShaderSource,
+                       GLenum outputTextureFormat);
+    
+    SimplePostProcPass(const QString & fragmentShaderSource,
+                       GLenum outputTextureFormat);
+    
     virtual ~SimplePostProcPass();
 
-    virtual void apply();
-    virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
-    virtual glow::Texture* outputTexture();
+    void apply() override;
+    void resize(int width, int height) override;
+    void setInputTextures(const QMap<QString, glow::Texture *> & input) override;
+    glow::Texture * outputTexture() override;
 
     template<typename T>
-    void setUniform(const QString name, const T& value);
-
+    void setUniform(const QString & name, const T & value);
+    
 protected:
-    void initialize();
-    void initializeProgram();
+    void initializeFbo();
     void bindTextures();
-    void unbindTextures();
-
 
 protected:
     glow::ref_ptr<glow::FrameBufferObject> m_fbo;
-    glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
 
-    QMap<QString, glow::Texture*> m_inputTextures;
+    QMap<QString, glow::Texture *> m_inputTextures;
     glow::ref_ptr<glow::Texture> m_outputTexture;
 
-    QString m_fragmentShader;
-    QString m_vertexShader;
-
-    TextureFormat m_textureFormat;
+    GLenum m_textureFormat;
 };
 
-template<typename T>
-void SimplePostProcPass::setUniform(const QString name, const T & value) {
-    m_program->setUniform(name.toStdString(), value);
-}
+#include "SimplePostProcPass.hpp"

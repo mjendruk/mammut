@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include <QtGlobal>
+#include <QString>
 #include <QVector>
 
 #include <glow/Program.h>
@@ -14,44 +14,57 @@
 #include <Util.h>
 
 
-SimplePostProcPass::SimplePostProcPass(TextureFormat outputFormat, const QString fragmentShader, const QString vertexShader)
-:   m_textureFormat(TextureFormat(outputFormat))
-,   m_vertexShader(vertexShader)
-,   m_fragmentShader(fragmentShader)
-,   m_inputTextures(QMap<QString, glow::Texture*>())
+SimplePostProcPass::SimplePostProcPass(
+    const QString & vertexShaderSource,
+    const QString & fragmentShaderSource,
+    GLenum outputTextureFormat)
+:   m_textureFormat(outputTextureFormat)
 {
-    assert(!fragmentShader.isEmpty());
+    initializeFbo();
 
-    initialize();
-    initializeProgram();
+    glow::ref_ptr<glow::Program> program = new glow::Program();
+    
+    program->attach(glowutils::createShaderFromFile(GL_VERTEX_SHADER, vertexShaderSource.toStdString()),
+                    glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderSource.toStdString()));
+    
+    m_quad = new glowutils::ScreenAlignedQuad(program);
+    
+    CheckGLError();
+}
+
+SimplePostProcPass::SimplePostProcPass(
+    const QString & fragmentShaderSource,
+    GLenum outputTextureFormat)
+:   m_textureFormat(outputTextureFormat)
+{
+    initializeFbo();
+
+    m_quad = new glowutils::ScreenAlignedQuad(
+        glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderSource.toStdString()));
+    
+    CheckGLError();
 }
 
 SimplePostProcPass::~SimplePostProcPass()
 {
 }
 
-void SimplePostProcPass::initialize()
+void SimplePostProcPass::initializeFbo()
 {
     m_outputTexture = Util::create2DTexture();
+    
     m_fbo = new glow::FrameBufferObject();
     m_fbo->setDrawBuffer(GL_COLOR_ATTACHMENT0);
-    m_fbo->attachTexture2D(GL_COLOR_ATTACHMENT0, m_outputTexture); 
+    m_fbo->attachTexture2D(GL_COLOR_ATTACHMENT0, m_outputTexture);
 }
 
 void SimplePostProcPass::bindTextures()
 {
     int indexOfTextureImageUnit = 0;
-    for (QString uniformName : m_inputTextures.uniqueKeys()) {
-        glow::Texture * texture = m_inputTextures.value(uniformName);
+    for (glow::Texture * texture : m_inputTextures.values()) {
         texture->bindActive(GL_TEXTURE0 + indexOfTextureImageUnit);
         ++indexOfTextureImageUnit;
     }
-}
-
-void SimplePostProcPass::unbindTextures()
-{
-    for (glow::Texture * texture : m_inputTextures.values())
-        texture->unbind();
 }
 
 void SimplePostProcPass::apply()
@@ -66,46 +79,27 @@ void SimplePostProcPass::apply()
     m_quad->draw();
     m_fbo->unbind();
 
-    unbindTextures();
-
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
 }
 
-void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
+void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture *> & input)
 {
-    m_inputTextures = QMap<QString, glow::Texture*>(input);
+    m_inputTextures = input;
 
     int indexOfTextureImageUnit = 0;
-
     for (QString uniformName : m_inputTextures.uniqueKeys()) {
-        m_program->setUniform(uniformName.toStdString(), indexOfTextureImageUnit);
+        setUniform(uniformName, indexOfTextureImageUnit);
         ++indexOfTextureImageUnit;
     }
 }
 
-glow::Texture* SimplePostProcPass::outputTexture()
+glow::Texture * SimplePostProcPass::outputTexture()
 {
     return m_outputTexture;
 }
 
-void SimplePostProcPass::initializeProgram()
-{
-    m_program = new glow::Program();
-
-    glow::Shader* vertShader = glowutils::createShaderFromFile(GL_VERTEX_SHADER, m_vertexShader.toStdString());
-    glow::Shader* fragShader = glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, m_fragmentShader.toStdString());
-    
-    m_program->attach(vertShader, fragShader);
-    m_program->link();
-
-    m_quad = new glowutils::ScreenAlignedQuad(m_program);
-
-    CheckGLError();
-}
-
-
 void SimplePostProcPass::resize(int width, int height)
 {
-    m_outputTexture->image2D(0, m_textureFormat.internalFormat, width, height, 0, m_textureFormat.format, m_textureFormat.type, nullptr);
+    m_outputTexture->storage2D(1, m_textureFormat, width, height);
 }
