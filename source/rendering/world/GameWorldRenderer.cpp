@@ -73,7 +73,6 @@ void GameWorldRenderer::drawGeometry()
     });
     //cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
-
     m_gBufferFBO->unbind();
     PerfCounter::end("geom");
 }
@@ -82,7 +81,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
 {
     PerfCounter::begin("ssao");
     m_ssaoPostProc.setProjectionUniform(m_camera.projection());
-    m_ssaoPostProc.setInverseProjectionUniform(glm::inverse(m_camera.projection()));
+    m_ssaoPostProc.setInverseProjectionUniform(m_camera.projectionInverted());
     m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
 
     m_ssaoPostProc.apply();
@@ -106,7 +105,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->unbind();
     PerfCounter::end("blit");
     glFinish();
-    qDebug() << PerfCounter::getString();
+//    qDebug() << PerfCounter::getString();
 }
 
 void GameWorldRenderer::initialize()
@@ -124,11 +123,11 @@ void GameWorldRenderer::initializeGBuffers()
     m_gBufferFBO = new glow::FrameBufferObject();
 
     m_gBufferColor = Util::create2DTexture();
-    m_gBufferNormals = Util::create2DTexture();
+    m_gBufferNormalDepth = Util::create2DTexture();
     m_gBufferDepth = Util::create2DTexture();
     m_gBufferVelocity = Util::create2DTexture();
 
-    m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormals);
+    m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormalDepth);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT1, m_gBufferColor);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT2, m_gBufferVelocity);
     m_gBufferFBO->attachTexture2D(GL_DEPTH_ATTACHMENT, m_gBufferDepth);
@@ -142,8 +141,7 @@ void GameWorldRenderer::initializePostProcPasses()
     //SSAO
     m_ssaoOutput = m_ssaoPostProc.outputTexture();
     m_ssaoPostProc.setInputTextures({ { "color", m_gBufferColor },
-                                      { "normal", m_gBufferNormals },
-                                      { "depth", m_gBufferDepth }
+                                      { "normal_depth", m_gBufferNormalDepth }
                                     });
 
     //motionBlur
@@ -160,10 +158,10 @@ void GameWorldRenderer::resize(int width, int height)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     
-    m_gBufferNormals->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, nullptr);
-    m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    m_gBufferNormalDepth->storage2D(1, GL_RGBA32F, width, height);
+    m_gBufferColor->storage2D(1, GL_RGBA32F, width, height);
+    m_gBufferVelocity->storage2D(1, GL_RG16F, width, height);
+    m_gBufferDepth->storage2D(1, GL_DEPTH_COMPONENT24, width, height);
 
     m_ssaoPostProc.resize(width, height);
     m_motionBlurPass.resize(width, height);

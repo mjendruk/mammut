@@ -69,7 +69,7 @@ protected:
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
 
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
-    glow::ref_ptr<glow::Texture> m_gBufferNormals;
+    glow::ref_ptr<glow::Texture> m_gBufferNormalDepth;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
     glow::ref_ptr<glow::Texture> m_gBufferVelocity;
 

@@ -6,7 +6,7 @@ layout (location = 0) out vec4 fragColor;
 
 in vec2 v_uv;
 
-const int blurSize = 8;
+const int blurSize = 5;
 
 void main()
 {

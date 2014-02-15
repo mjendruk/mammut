@@ -233,7 +233,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
 
-    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::AltModifier)
+    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::ControlModifier)
     {
         glowutils::File::reloadAll();
         qDebug() << "reload shaders"; 

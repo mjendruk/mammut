@@ -7,8 +7,7 @@
     See "license.txt" or "http://copyfree.org/licenses/mit/license.txt".
 *******************************************************************************/
 
-uniform sampler2D normal;
-uniform sampler2D depth;
+uniform sampler2D normal_depth;
 uniform sampler2D noise;
 uniform vec2 viewport;
 uniform int noiseTexSize;
@@ -43,7 +42,7 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
         offset.xy = offset.xy * 0.5 + 0.5; // scale/bias to texcoords
         
         //get sample depth:
-        float sampleDepth = texture(normal, vec2(1.0) - offset.xy).a;
+        float sampleDepth = texture(normal_depth, vec2(1.0) - offset.xy).a;
 
         //do not occlude if range check is zero
         float rangeCheck = smoothstep(0.0, 1.0, radius / (abs(originPos.z - sampleDepth - 0.00)));
@@ -54,7 +53,7 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
 }
 
 void main() {
-    if(texture(depth, v_uv).r == 1.0) {
+    if(texture(normal_depth, v_uv).a == 1.0) {
         fragColor = vec4(1.0);
         return;
     }
@@ -63,13 +62,13 @@ void main() {
     noiseTexCoords *= v_uv;
     
     //get view space origin:
-    float originDepth = texture(normal, v_uv).a;
+    float originDepth = texture(normal_depth, v_uv).a;
     vec3 originPos = (v_eyevector);
     originPos /= originPos.z + 0.08; //there, i fixed it: originPos.z is a little smaller than the far plane...
     originPos *= originDepth;
 
     //get view space normal:
-    vec3 normal = normalMatrix * texture(normal, v_uv).rgb;
+    vec3 normal = normalMatrix * texture(normal_depth, v_uv).rgb;
     normal = normalize(normal);
     normal.z *= -1;
         

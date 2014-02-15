@@ -12,7 +12,7 @@
 const int SSAOPass::s_kernelSize = 32;
 const int SSAOPass::s_noiseSize = 5;
 const float SSAOPass::s_radius = 25.0f;
-const QList<QString> SSAOPass::s_requiredSamplers = { "normal", "depth", "color" };
+const QList<QString> SSAOPass::s_requiredSamplers = { "normal_depth", "color" };
 
 SSAOPass::SSAOPass()
 :   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_R32F)
@@ -69,8 +69,7 @@ void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
 
     //split into 2 Maps for each pass (ssao, blur)
     QMap<QString, glow::Texture *> ssaoInputTextures;
-    ssaoInputTextures["normal"] = input.value("normal");
-    ssaoInputTextures["depth"] = input.value("depth");
+    ssaoInputTextures["normal_depth"] = input.value("normal_depth");
     ssaoInputTextures["noise"] = m_noiseTexture;
 
     m_ssaoPass.setInputTextures(ssaoInputTextures);
