@@ -25,6 +25,7 @@ public:
     void setProjectionUniform(const glm::mat4 & projection);
     void setInverseProjectionUniform(const glm::mat4 & invProjection);
     void setNormalMatrixUniform(const glm::mat3 & normalMatrix);
+    void setFarPlaneUniform(float farPlane);
 
 protected:
     void initialize();
@@ -33,13 +34,11 @@ protected:
 protected:
     static const int s_kernelSize;
     static const int s_noiseSize;
-    static const float s_radius;
     static const QList<QString> s_requiredSamplers;
 
     SimplePostProcPass m_ssaoPass;
     SimplePostProcPass m_horizontalBlurPass;
     SimplePostProcPass m_verticalBlurPass;
-    SimplePostProcPass m_outputPass;
 
     glow::ref_ptr<glow::Texture> m_ssaoTexture;
     glow::ref_ptr<glow::Texture> m_noiseTexture;

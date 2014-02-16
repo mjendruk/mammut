@@ -83,6 +83,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_ssaoPostProc.setProjectionUniform(m_camera.projection());
     m_ssaoPostProc.setInverseProjectionUniform(m_camera.projectionInverted());
     m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
+    m_ssaoPostProc.setFarPlaneUniform(farPlane);
 
     m_ssaoPostProc.apply();
     glFinish();
@@ -105,7 +106,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->unbind();
     PerfCounter::end("blit");
     glFinish();
-//    qDebug() << PerfCounter::getString();
+    qDebug() << PerfCounter::getString();
 }
 
 void GameWorldRenderer::initialize()

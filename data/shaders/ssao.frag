@@ -10,6 +10,7 @@
 uniform sampler2D normal_depth;
 uniform sampler2D noise;
 uniform vec2 viewport;
+uniform float farPlane;
 uniform int noiseTexSize;
 
 uniform mat3 normalMatrix;
@@ -23,13 +24,14 @@ uniform vec3 kernel[MAX_KERNEL_SIZE];
 layout (location = 0) out vec4 fragColor;
 
 smooth in vec2 v_uv;
-smooth in vec3 v_eyevector;
+smooth in vec2 v_noiseUv;
+smooth in vec3 v_viewRay;
 
+float radius = 10.0;
+float uPower = 5.0;
 
-float radius = 0.0001;
-float uPower = 2.0;
-
-float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
+float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) 
+{
     float occlusion = 0.0;
     for (int i = 0; i < kernelSize; ++i) {
         //get sample position in ES:
@@ -42,41 +44,31 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) {
         offset.xy = offset.xy * 0.5 + 0.5; // scale/bias to texcoords
         
         //get sample depth:
-        float sampleDepth = texture(normal_depth, vec2(1.0) - offset.xy).a;
+        float sampleDepth = texture(normal_depth, offset.xy).a;
 
         //do not occlude if range check is zero
-        float rangeCheck = smoothstep(0.0, 1.0, radius / (abs(originPos.z - sampleDepth - 0.00)));
-        occlusion += rangeCheck * step(sampleDepth, samplePos.z);
+        // float rangeCheck = smoothstep(0.0, 1.0, radius / (abs(originPos.z - sampleDepth)));
+        occlusion += step(samplePos.z, sampleDepth);
     }
     occlusion = 1 - (occlusion / float(kernelSize));
     return pow(occlusion, uPower);
 }
 
-void main() {
-    if(texture(normal_depth, v_uv).a == 1.0) {
-        fragColor = vec4(1.0);
-        return;
-    }
-    //get noise texture coords:
-    vec2 noiseTexCoords = viewport / vec2(noiseTexSize);
-    noiseTexCoords *= v_uv;
-    
+void main() 
+{    
     //get view space origin:
     float originDepth = texture(normal_depth, v_uv).a;
-    vec3 originPos = (v_eyevector);
-    originPos /= originPos.z + 0.08; //there, i fixed it: originPos.z is a little smaller than the far plane...
-    originPos *= originDepth;
+    originDepth = - originDepth / farPlane;
+    vec3 originPos = v_viewRay * originDepth;
 
     //get view space normal:
-    vec3 normal = normalMatrix * texture(normal_depth, v_uv).rgb;
-    normal = normalize(normal);
-    normal.z *= -1;
+    vec3 normal = normalize(texture(normal_depth, v_uv).rgb);
         
     //construct kernel basis matrix:
-    vec3 rvec = texture(noise, noiseTexCoords).rgb * 2.0 - 1.0;
+    vec3 rvec = texture(noise, v_noiseUv).rgb * 2.0 - 1.0;
     vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
     vec3 bitangent = cross(tangent, normal);
     mat3 kernelBasis = mat3(tangent, bitangent, normal);
     
-    fragColor = vec4(vec3(ssao(kernelBasis, originPos, radius)), 1.0);
+    fragColor = vec4(ssao(kernelBasis, originPos, sqrt(originDepth) * radius), vec3(0.0));
 }

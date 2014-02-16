@@ -9,16 +9,14 @@
 
 #include "Util.h"
 
-const int SSAOPass::s_kernelSize = 32;
-const int SSAOPass::s_noiseSize = 5;
-const float SSAOPass::s_radius = 25.0f;
+const int SSAOPass::s_kernelSize = 24;
+const int SSAOPass::s_noiseSize = 4;
 const QList<QString> SSAOPass::s_requiredSamplers = { "normal_depth", "color" };
 
 SSAOPass::SSAOPass()
 :   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_R32F)
 ,   m_horizontalBlurPass("data/shaders/horizontal_blur.frag", GL_R32F)
-,   m_verticalBlurPass("data/shaders/vertical_blur.frag", GL_R32F)
-,   m_outputPass("data/shaders/ssao_output.frag", GL_RGBA32F)
+,   m_verticalBlurPass("data/shaders/vertical_blur.frag", GL_RGBA32F)
 {
     initialize();
 }
@@ -58,8 +56,6 @@ void SSAOPass::apply()
     //second SSAO Pass (blur)
     m_horizontalBlurPass.apply();
     m_verticalBlurPass.apply();
-    
-    m_outputPass.apply();
 }
 
 void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
@@ -76,21 +72,19 @@ void SSAOPass::setInputTextures(const QMap<QString, glow::Texture*> & input)
 
     QMap<QString, glow::Texture *> horizontalBlurInputTextures;
     horizontalBlurInputTextures["ssao"] = m_ssaoTexture;
+    horizontalBlurInputTextures["normal_depth"] = input.value("normal_depth");
     m_horizontalBlurPass.setInputTextures(horizontalBlurInputTextures);
     
     QMap<QString, glow::Texture *> verticalBlurInputTextures;
     verticalBlurInputTextures["horizontalBlur"] = m_horizontalBlurTexture;
+    verticalBlurInputTextures["normal_depth"] = input.value("normal_depth");
+    verticalBlurInputTextures["color"] = input.value("color");
     m_verticalBlurPass.setInputTextures(verticalBlurInputTextures);
-    
-    QMap<QString, glow::Texture *> outputPassInputTextures;
-    outputPassInputTextures["color"] = input.value("color");
-    outputPassInputTextures["blurredSsao"] = m_verticalBlurTexture;
-    m_outputPass.setInputTextures(outputPassInputTextures);
 }
 
 glow::Texture* SSAOPass::outputTexture()
 {
-    return m_outputPass.outputTexture();
+    return m_verticalBlurPass.outputTexture();
 }
 
 void SSAOPass::initialize()
@@ -102,17 +96,30 @@ void SSAOPass::initialize()
     m_noiseTexture = Util::create2DTexture();
 
     //init noise texture and ssao kernel
-    std::vector<glm::vec3> kernel = std::vector<glm::vec3>();
-        std::vector<glm::vec3> hemisphere;
-        pointsOnSphere(s_kernelSize, hemisphere);
-
+    std::vector<glm::vec3> kernel;
+    
     for (int i = 0; i < s_kernelSize; ++i) {
-        kernel.push_back(hemisphere[i]);
-
-        float scale = glm::linearRand(0.0f, 1.0f);
-        scale = glm::mix(0.1f, 1.0f, scale * scale);
-        kernel[i] *= scale;
+        glm::vec3 sample = glm::vec3(glm::linearRand(-1.0f, 1.0f),
+                                     glm::linearRand(-1.0f, 1.0f),
+                                     glm::linearRand(0.0f, 1.0f));
+        
+        sample *= glm::linearRand(0.0f, 1.0f);
+        
+        kernel.push_back(sample);
     }
+    
+//    std::vector<glm::vec3> kernel = std::vector<glm::vec3>();
+//    std::vector<glm::vec3> hemisphere;
+//    pointsOnSphere(s_kernelSize, hemisphere);
+//    
+//    for (int i = 0; i < s_kernelSize; ++i) {
+//        kernel.push_back(hemisphere[i]);
+//        
+//        float scale = glm::linearRand(0.0f, 1.0f);
+//        scale = glm::mix(0.1f, 1.0f, scale * scale);
+//        kernel[i] *= scale;
+//    }
+    
 
     const int noiseBufferSize = s_noiseSize * s_noiseSize;
     std::vector<glm::vec3> noise = std::vector<glm::vec3>();
@@ -128,7 +135,6 @@ void SSAOPass::initialize()
 
     m_ssaoPass.setUniform("noiseTexSize", s_noiseSize);
     m_ssaoPass.setUniform("kernelSize", s_kernelSize);
-    m_ssaoPass.setUniform("radius", s_radius);
     m_ssaoPass.setUniform("kernel", kernel);
 }
 
@@ -139,7 +145,6 @@ void SSAOPass::resize(int width, int height)
     m_ssaoPass.resize(width, height);
     m_horizontalBlurPass.resize(width, height);
     m_verticalBlurPass.resize(width, height);
-    m_outputPass.resize(width, height);
 }
 
 void SSAOPass::setProjectionUniform(const glm::mat4 & projection)
@@ -155,4 +160,9 @@ void SSAOPass::setInverseProjectionUniform(const glm::mat4 & invProjection)
 void SSAOPass::setNormalMatrixUniform(const glm::mat3 & normalMatrix)
 {
     m_ssaoPass.setUniform("normalMatrix", normalMatrix);
+}
+
+void SSAOPass::setFarPlaneUniform(float farPlane)
+{
+    m_ssaoPass.setUniform("farPlane", farPlane);
 }
