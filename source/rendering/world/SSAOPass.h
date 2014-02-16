@@ -23,8 +23,7 @@ public:
     glow::Texture * outputTexture() override;
 
     void setProjectionUniform(const glm::mat4 & projection);
-    void setInverseProjectionUniform(const glm::mat4 & invProjection);
-    void setNormalMatrixUniform(const glm::mat3 & normalMatrix);
+    void setInverseProjectionUniform(const glm::mat4 & inverseProjection);
     void setFarPlaneUniform(float farPlane);
 
 protected:

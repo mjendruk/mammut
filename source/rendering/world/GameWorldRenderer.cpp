@@ -82,7 +82,6 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     PerfCounter::begin("ssao");
     m_ssaoPostProc.setProjectionUniform(m_camera.projection());
     m_ssaoPostProc.setInverseProjectionUniform(m_camera.projectionInverted());
-    m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
     m_ssaoPostProc.setFarPlaneUniform(farPlane);
 
     m_ssaoPostProc.apply();
@@ -142,15 +141,13 @@ void GameWorldRenderer::initializePostProcPasses()
     //SSAO
     m_ssaoOutput = m_ssaoPostProc.outputTexture();
     m_ssaoPostProc.setInputTextures({ { "color", m_gBufferColor },
-                                      { "normal_depth", m_gBufferNormalDepth }
-                                    });
+                                      { "normal_depth", m_gBufferNormalDepth } });
 
     //motionBlur
     m_motionBlurOutput = m_motionBlurPass.outputTexture();
     m_motionBlurPass.setInputTextures({ { "color", m_ssaoOutput },
-                                            { "depth", m_gBufferDepth },
-                                            { "velocity", m_gBufferVelocity }
-                                          });
+                                        { "depth", m_gBufferDepth },
+                                        { "velocity", m_gBufferVelocity } });
     //set texture that will be rendered on screen
     m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(nullptr, m_motionBlurOutput);
 }

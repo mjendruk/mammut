@@ -9,13 +9,9 @@
 
 uniform sampler2D normal_depth;
 uniform sampler2D noise;
-uniform vec2 viewport;
 uniform float farPlane;
-uniform int noiseTexSize;
 
-uniform mat3 normalMatrix;
 uniform mat4 projection;
-uniform mat4 viewProjectionInv;
 
 const int MAX_KERNEL_SIZE = 128;
 uniform int kernelSize;

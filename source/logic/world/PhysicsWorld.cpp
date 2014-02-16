@@ -46,7 +46,7 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::stepSimulation(float seconds)
 {
-    m_dynamicsWorld.stepSimulation(seconds, 25, 0.002f);
+    m_dynamicsWorld.stepSimulation(seconds, 14, 0.005f);
 }
 
 void PhysicsWorld::changeGravity(GravityDirection direction)

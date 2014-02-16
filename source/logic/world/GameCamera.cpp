@@ -55,7 +55,7 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
     glm::vec3 realDirection = glm::length(direction) == 0.0f ? glm::vec3(0.0f, 0.0f, -1.0f) : direction;
     
     glm::vec3 centerOffset = glm::normalize(glm::normalize(realDirection) + defaultLookAt);
-    m_currentCenterOffset = glm::mix(centerOffset, m_currentCenterOffset, 0.97f);
+    m_currentCenterOffset = glm::mix(centerOffset, m_currentCenterOffset, 0.91f);
     
     m_eye = glm::vec3(glm::mix(m_eye.xy(), position.xy(), 0.5f), position.z);
     m_center = m_eye + m_currentCenterOffset;

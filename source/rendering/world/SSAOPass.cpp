@@ -152,14 +152,9 @@ void SSAOPass::setProjectionUniform(const glm::mat4 & projection)
     m_ssaoPass.setUniform("projection", projection);
 }
 
-void SSAOPass::setInverseProjectionUniform(const glm::mat4 & invProjection)
+void SSAOPass::setInverseProjectionUniform(const glm::mat4 & inverseProjection)
 {
-    m_ssaoPass.setUniform("invProjection", invProjection);
-}
-
-void SSAOPass::setNormalMatrixUniform(const glm::mat3 & normalMatrix)
-{
-    m_ssaoPass.setUniform("normalMatrix", normalMatrix);
+    m_ssaoPass.setUniform("inverseProjection", inverseProjection);
 }
 
 void SSAOPass::setFarPlaneUniform(float farPlane)

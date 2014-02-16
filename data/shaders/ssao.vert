@@ -1,6 +1,6 @@
 #version 410
 
-uniform mat4 invProjection;
+uniform mat4 inverseProjection;
 uniform vec2 viewport;
 uniform int noiseTexSize;
 
@@ -13,7 +13,7 @@ layout (location = 0) in vec2 a_vertex;
 
 void main()
 {
-    vec4 vertex_vs = invProjection * vec4(a_vertex, 1.0, 1.0);
+    vec4 vertex_vs = inverseProjection * vec4(a_vertex, 1.0, 1.0);
     v_viewRay = vertex_vs.xyz / vertex_vs.w;    
     
     v_uv = a_vertex * 0.5 + 0.5;
