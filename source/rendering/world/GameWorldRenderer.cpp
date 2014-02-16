@@ -108,7 +108,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->unbind();
     PerfCounter::end("blit");
     glFinish();
-    qDebug() << PerfCounter::getString();
+    qDebug() << qPrintable(PerfCounter::generateString());
 }
 
 void GameWorldRenderer::initialize()

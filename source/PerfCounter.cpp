@@ -10,19 +10,19 @@
 namespace
 {
     static QMap<QString, double> map;
-    static QMap<QString, QElapsedTimer*> timerMap;
+    static QMap<QString, QElapsedTimer *> timerMap;
     static QVector<QString> orderedNames;
     static const float smoothingFactor = 0.95f;
 }
 
-void PerfCounter::begin(QString name)
+void PerfCounter::begin(const QString & name)
 {
     assert(!timerMap.contains(name));
     timerMap[name] = new QElapsedTimer();
     timerMap[name]->restart();
 }
 
-void PerfCounter::end(QString name)
+void PerfCounter::end(const QString & name)
 {
     assert(timerMap.contains(name));
 
@@ -33,13 +33,12 @@ void PerfCounter::end(QString name)
     if (!map.contains(name)) {
         map[name] = elapsedTime;
         orderedNames << name;
-    }
-    else {
+    } else {
         map[name] = elapsedTime * (1 - smoothingFactor) + map[name] * smoothingFactor;
     }
 }
 
-QString PerfCounter::getString()
+QString PerfCounter::generateString()
 {
     QString result;
     for (QString name : orderedNames)
