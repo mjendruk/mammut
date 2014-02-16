@@ -1,6 +1,5 @@
 #include "GameMechanics.h"
 
-#include <QDebug>
 #include <QKeyEvent>
 
 #include <sound/SoundManager.h>
@@ -38,11 +37,11 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::update(float seconds)
 {
-    PerfCounter::begin("game");
     if (m_gameOver) {
         emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
         return;
     }
+    PerfCounter::begin("game");
     
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
