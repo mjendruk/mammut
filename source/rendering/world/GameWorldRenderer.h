@@ -78,7 +78,7 @@ protected:
     
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     MotionBlurPass m_motionBlurPass;
-    SSAOPass m_ssaoPostProc;
+    SSAOPass m_ssaoPass;
 
     glm::mat4 m_previousViewProjection;
     

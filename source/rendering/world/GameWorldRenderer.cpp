@@ -76,7 +76,8 @@ void GameWorldRenderer::drawGeometry()
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
     });
-    //cave does not move at the moment, so model and prevModel are the same [motionBlur]
+    
+    // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
     glFinish();
@@ -86,11 +87,11 @@ void GameWorldRenderer::drawGeometry()
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     PerfCounter::begin("ssao");
-    m_ssaoPostProc.setProjectionUniform(m_camera.projection());
-    m_ssaoPostProc.setInverseProjectionUniform(m_camera.projectionInverted());
-    m_ssaoPostProc.setFarPlaneUniform(s_farPlane);
+    m_ssaoPass.setProjectionUniform(m_camera.projection());
+    m_ssaoPass.setInverseProjectionUniform(m_camera.projectionInverted());
+    m_ssaoPass.setFarPlaneUniform(s_farPlane);
 
-    m_ssaoPostProc.apply();
+    m_ssaoPass.apply();
     glFinish();
     PerfCounter::end("ssao");
 
@@ -144,17 +145,17 @@ void GameWorldRenderer::initializeGBuffers()
 
 void GameWorldRenderer::initializePostProcPasses()
 {
-    //SSAO
-    m_ssaoOutput = m_ssaoPostProc.outputTexture();
-    m_ssaoPostProc.setInputTextures({ { "color", m_gBufferColor },
+    // SSAO
+    m_ssaoOutput = m_ssaoPass.outputTexture();
+    m_ssaoPass.setInputTextures({ { "color", m_gBufferColor },
                                       { "normal_depth", m_gBufferNormalDepth } });
 
-    //motionBlur
+    // Motion Blur
     m_motionBlurOutput = m_motionBlurPass.outputTexture();
     m_motionBlurPass.setInputTextures({ { "color", m_ssaoOutput },
                                         { "depth", m_gBufferDepth },
                                         { "velocity", m_gBufferVelocity } });
-    //set texture that will be rendered on screen
+    // set texture that will be rendered on screen
     m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(nullptr, m_motionBlurOutput);
 }
 
@@ -167,7 +168,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
-    m_ssaoPostProc.resize(width, height);
+    m_ssaoPass.resize(width, height);
     m_motionBlurPass.resize(width, height);
 }
 
