@@ -20,8 +20,8 @@
 #include "Util.h"
 #include "PerfCounter.h"
 
-const float GameWorldRenderer::nearPlane = 0.01f;
-const float GameWorldRenderer::farPlane = 700.0f;
+const float GameWorldRenderer::s_nearPlane = 0.01f;
+const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 : m_hud(m_camera, *this)
@@ -65,8 +65,13 @@ void GameWorldRenderer::drawGeometry()
 {
     PerfCounter::begin("geom");
     m_gBufferFBO->bind();
-
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    // set the default view space depth to - s_farPlane
+    m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
+    
+    
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
@@ -83,7 +88,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     PerfCounter::begin("ssao");
     m_ssaoPostProc.setProjectionUniform(m_camera.projection());
     m_ssaoPostProc.setInverseProjectionUniform(m_camera.projectionInverted());
-    m_ssaoPostProc.setFarPlaneUniform(farPlane);
+    m_ssaoPostProc.setFarPlaneUniform(s_farPlane);
 
     m_ssaoPostProc.apply();
     glFinish();
@@ -112,8 +117,8 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
 void GameWorldRenderer::initialize()
 {
     m_camera.setFovy(80.0);
-    m_camera.setZNear(nearPlane);
-    m_camera.setZFar(farPlane);
+    m_camera.setZNear(s_nearPlane);
+    m_camera.setZFar(s_farPlane);
 
     initializeGBuffers();
     initializePostProcPasses();
@@ -177,12 +182,12 @@ void GameWorldRenderer::updatePainters()
 {
     m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
-    m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
+    m_painter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
     m_painter.setEyeUniform(m_camera.eye());
 
     m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
-    m_cavePainter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
+    m_cavePainter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
     m_cavePainter.setEyeUniform(m_camera.eye());
 }
 

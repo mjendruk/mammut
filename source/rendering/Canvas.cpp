@@ -80,7 +80,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
     initializeScreenshotFbo();
     
-    glClearColor(0.0f, 0.0f, 0.0f, -10000.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void Canvas::initializeScreenshotFbo()

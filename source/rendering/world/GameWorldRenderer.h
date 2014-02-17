@@ -55,8 +55,8 @@ protected:
     void applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio);
 
 protected:
-    static const float nearPlane;
-    static const float farPlane;
+    static const float s_nearPlane;
+    static const float s_farPlane;
     
     Painter m_painter;
     CavePainter m_cavePainter;
