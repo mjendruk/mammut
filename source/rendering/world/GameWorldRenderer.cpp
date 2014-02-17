@@ -157,10 +157,10 @@ void GameWorldRenderer::resize(int width, int height)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     
-    m_gBufferNormalDepth->storage2D(1, GL_RGBA32F, width, height);
-    m_gBufferColor->storage2D(1, GL_RGBA32F, width, height);
-    m_gBufferVelocity->storage2D(1, GL_RG16F, width, height);
-    m_gBufferDepth->storage2D(1, GL_DEPTH_COMPONENT24, width, height);
+    m_gBufferNormalDepth->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
     m_ssaoPostProc.resize(width, height);
     m_motionBlurPass.resize(width, height);

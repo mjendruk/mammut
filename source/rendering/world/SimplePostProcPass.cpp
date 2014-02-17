@@ -101,5 +101,5 @@ glow::Texture * SimplePostProcPass::outputTexture()
 
 void SimplePostProcPass::resize(int width, int height)
 {
-    m_outputTexture->storage2D(1, m_textureFormat, width, height);
+    m_outputTexture->image2D(0, m_textureFormat, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 }
