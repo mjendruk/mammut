@@ -155,8 +155,9 @@ void GameWorldRenderer::initializePostProcPasses()
     m_motionBlurPass.setInputTextures({ { "color", m_ssaoOutput },
                                         { "depth", m_gBufferDepth },
                                         { "velocity", m_gBufferVelocity } });
+    
     // set texture that will be rendered on screen
-    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(nullptr, m_motionBlurOutput);
+    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_motionBlurOutput);
 }
 
 void GameWorldRenderer::resize(int width, int height)
