@@ -2,8 +2,9 @@
 
 #include <QKeyEvent>
 
-#include "Cuboid.h"
 #include <sound/SoundManager.h>
+#include "Cuboid.h"
+#include <PerfCounter.h>
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
@@ -40,6 +41,7 @@ void GameMechanics::update(float seconds)
         emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
         return;
     }
+    PerfCounter::begin("game");
     
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
@@ -56,8 +58,8 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
-
     updateSound();
+    PerfCounter::end("game");
 }
 
 void GameMechanics::updateSound()

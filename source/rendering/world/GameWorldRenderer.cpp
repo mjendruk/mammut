@@ -5,6 +5,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include <QMap>
+#include <QDebug>
 
 #include <glow/Texture.h>
 #include <glow/Program.h>
@@ -17,6 +18,7 @@
 #include <logic/world/GameCamera.h>
 
 #include "Util.h"
+#include "PerfCounter.h"
 
 const float GameWorldRenderer::nearPlane = 0.01f;
 const float GameWorldRenderer::farPlane = 700.0f;
@@ -63,6 +65,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
 void GameWorldRenderer::drawGeometry()
 {
+    PerfCounter::begin("geom");
     m_gBufferFBO->bind();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,22 +77,28 @@ void GameWorldRenderer::drawGeometry()
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
 
     m_gBufferFBO->unbind();
+    glFinish();
+    PerfCounter::end("geom");
 }
 
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
-    //SSAO pass
+    PerfCounter::begin("ssao");
     m_ssaoPostProc.setProjectionUniform(m_camera.projection());
     m_ssaoPostProc.setInverseProjectionUniform(glm::inverse(m_camera.projection()));
     m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
 
     m_ssaoPostProc.apply();
+    glFinish();
+    PerfCounter::end("ssao");
 
-    //motion blur pass
+    PerfCounter::begin("mb");
     m_motionBlurPostProc.setFPSUniform(fps() / 60.f);
     m_motionBlurPostProc.apply();
+    glFinish();
+    PerfCounter::end("mb");
 
-    //copy final texture to screen
+    PerfCounter::begin("blit");
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
@@ -98,6 +107,9 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->bind();
     m_renderOnScreenQuad->draw();
     fbo->unbind();
+    glFinish();
+    PerfCounter::end("blit");
+    qDebug() << qPrintable(PerfCounter::generateString());
 }
 
 void GameWorldRenderer::initialize()
