@@ -9,7 +9,6 @@ smooth out vec3 v_viewRay;
 
 layout (location = 0) in vec2 a_vertex;
 
-
 void main()
 {
     vec4 vertex_vs = inverseProjection * vec4(a_vertex, 1.0, 1.0);

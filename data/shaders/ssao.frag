@@ -13,7 +13,7 @@ uniform float farPlane;
 
 uniform mat4 projection;
 
-const int MAX_KERNEL_SIZE = 128;
+const int MAX_KERNEL_SIZE = 32;
 uniform int kernelSize;
 uniform vec3 kernel[MAX_KERNEL_SIZE];
 

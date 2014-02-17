@@ -6,14 +6,14 @@
 
 #include <rendering/Renderer.h>
 
+#include <rendering/world/postprocessing/MotionBlurPass.h>
+#include <rendering/world/postprocessing/SSAOPass.h>
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
-#include "MotionBlurPass.h"
-#include "SSAOPass.h"
 
 namespace glow
 {

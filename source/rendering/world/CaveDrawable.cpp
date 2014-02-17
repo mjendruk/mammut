@@ -47,8 +47,8 @@ void CaveDrawable::initialize()
     m_vertexBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
     m_normalBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
 
-    m_vertexBuffer->setData(m_duplicatedVertices, GL_STATIC_DRAW);
-    m_normalBuffer->setData(m_normals, GL_STATIC_DRAW);
+    m_vertexBuffer->setData(m_duplicatedVertices, GL_DYNAMIC_DRAW);
+    m_normalBuffer->setData(m_normals, GL_DYNAMIC_DRAW);
 
     m_vao->bind();
 
@@ -104,7 +104,6 @@ void CaveDrawable::draw()
         return;
     m_vao->bind();
     int size = s_verticesPerRing * s_numRings*2 * 3;
-    glPointSize(5);
     m_vao->drawArrays(GL_TRIANGLES, 0, size);
     m_vao->unbind();
 }

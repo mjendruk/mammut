@@ -289,8 +289,6 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
-    ${source_path}/rendering/world/AbstractPostProcPass.cpp
-    ${source_path}/rendering/world/AbstractPostProcPass.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
@@ -302,17 +300,21 @@ set(sources
     ${source_path}/rendering/world/HUD.cpp
     ${source_path}/rendering/world/HUD.h
     ${source_path}/rendering/world/DrawableInterface.h
-    ${source_path}/rendering/world/MotionBlurPass.cpp
-    ${source_path}/rendering/world/MotionBlurPass.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
-    ${source_path}/rendering/world/SimplePostProcPass.cpp
-    ${source_path}/rendering/world/SimplePostProcPass.hpp
-    ${source_path}/rendering/world/SimplePostProcPass.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
-    ${source_path}/rendering/world/SSAOPass.cpp
-    ${source_path}/rendering/world/SSAOPass.h
+
+    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.cpp
+    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
+    ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp
+    ${source_path}/rendering/world/postprocessing/MotionBlurPass.h
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.cpp
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.hpp
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.h
+    ${source_path}/rendering/world/postprocessing/SSAOPass.cpp
+    ${source_path}/rendering/world/postprocessing/SSAOPass.h
+
 
     ${source_path}/sound/SoundManager.cpp
     ${source_path}/sound/SoundManager.h
@@ -334,20 +336,22 @@ source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$"
 
 set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
-    ${shader_path}/blur.frag
     ${shader_path}/cuboid.vert
     ${shader_path}/cuboid.frag
     ${shader_path}/motionBlur.frag
     ${shader_path}/motionBlurNM.frag
     ${shader_path}/motionBlurTM_horizontal.frag
     ${shader_path}/motionBlurTM_vertical.frag
-    ${shader_path}/quad.frag
     ${shader_path}/screenshot_background.vert
     ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert
     ${shader_path}/ssao.frag
     ${shader_path}/string_drawer.vert
     ${shader_path}/string_drawer.frag
+    ${shader_path}/horizontal_blur.vert
+    ${shader_path}/horizontal_blur.frag
+    ${shader_path}/vertical_blur.vert
+    ${shader_path}/vertical_blur.frag
 )
 
 set(MAMMUT_SHADER_GROUP "Shader Files")
