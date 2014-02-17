@@ -28,7 +28,8 @@ public:
 
 protected:
     void initialize();
-    void pointsOnSphere(const unsigned int minN, std::vector<glm::vec3> & points);
+    void initializeKernel();
+    void initializeNoise();
 
 protected:
     static const int s_kernelSize;

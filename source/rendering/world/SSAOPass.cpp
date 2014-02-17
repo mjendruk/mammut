@@ -25,29 +25,6 @@ SSAOPass::~SSAOPass()
 {
 }
 
-/** This method returns at least minN uniformly distributed vectors located on a z-oriented hemisphere */
-void SSAOPass::pointsOnSphere(const unsigned int minN, std::vector<glm::vec3> & points)
-{
-    //get vectors uniformly distributed on a sphere
-    auto v = glowutils::Icosahedron::vertices();
-    auto i = glowutils::Icosahedron::indices();
-
-    std::vector<glm::vec3> vertices(v.begin(), v.end());
-    std::vector<glm::lowp_uvec3> indices(i.begin(), i.end());
-
-    int r = static_cast<int>(ceil(log(static_cast<float>(minN * 2 / 12.f)) / log(4.f))); // N = 12 * 4 ^ r
-    glowutils::Icosahedron::refine(vertices, indices, r);
-
-    //remove lower hemisphere
-    const int size(static_cast<int>(vertices.size()));
-    for (int i = 0; i < size; ++i)
-    if (vertices[i].z > 0.3f)
-        points.push_back(vertices[i]);
-
-    std::shuffle(points.begin(), points.end(), rng);
-}
-
-
 void SSAOPass::apply()
 {
     // first SSAO Pass
@@ -92,10 +69,14 @@ void SSAOPass::initialize()
     m_ssaoTexture = m_ssaoPass.outputTexture();
     m_horizontalBlurTexture = m_horizontalBlurPass.outputTexture();
     m_verticalBlurTexture = m_verticalBlurPass.outputTexture();
-    
-    m_noiseTexture = Util::create2DTexture(GL_LINEAR, GL_REPEAT);
 
-    //init noise texture and ssao kernel
+
+    initializeKernel();
+    initializeNoise();
+}
+
+void SSAOPass::initializeKernel()
+{
     std::vector<glm::vec3> kernel;
     int numSamples = 0;
     
@@ -104,9 +85,9 @@ void SSAOPass::initialize()
                                                     glm::linearRand(-1.0f, 1.0f),
                                                     glm::linearRand(0.0f, 1.0f)));
         
-        
         float scale = float(numSamples) / float(s_kernelSize);
         scale = glm::mix(0.1f, 1.0f, scale * scale);
+
         sample *= scale;
         
         if (glm::dot(sample, glm::vec3(0.0f, 0.0f, 1.0f)) < 0.01f)
@@ -115,34 +96,26 @@ void SSAOPass::initialize()
         ++numSamples;
         kernel.push_back(sample);
     }
-//
-//    std::vector<glm::vec3> kernel = std::vector<glm::vec3>();
-//    std::vector<glm::vec3> hemisphere;
-//    pointsOnSphere(s_kernelSize, hemisphere);
-//    
-//    for (int i = 0; i < s_kernelSize; ++i) {
-//        kernel.push_back(hemisphere[i]);
-//        
-//        float scale = glm::linearRand(0.0f, 1.0f);
-//        scale = glm::mix(0.1f, 1.0f, scale * scale);
-//        kernel[i] *= scale;
-//    }
-    
-
-    const int noiseBufferSize = s_noiseSize * s_noiseSize;
-    std::vector<glm::vec3> noise = std::vector<glm::vec3>();
-    for (int i = 0; i < noiseBufferSize; ++i) {
-        noise.push_back(glm::normalize(glm::vec3(
-            glm::linearRand(-1.0f, 1.0f),
-            glm::linearRand(-1.0f, 1.0f),
-            0.0f)
-            ));
-    }
-
-    m_noiseTexture->image2D(0, GL_RGB32F, s_noiseSize, s_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
 
     m_ssaoPass.setUniform("kernelSize", s_kernelSize);
     m_ssaoPass.setUniform("kernel", kernel);
+}
+
+void SSAOPass::initializeNoise()
+{
+    std::vector<glm::vec3> noise;
+    const int noiseBufferSize = s_noiseSize * s_noiseSize;
+
+    for (int i = 0; i < noiseBufferSize; ++i) {
+        glm::vec3 sample = glm::normalize(glm::vec3(glm::linearRand(-1.0f, 1.0f),
+                                                    glm::linearRand(-1.0f, 1.0f),
+                                                    0.0f));
+
+        noise.push_back(sample);
+    }
+
+    m_noiseTexture = Util::create2DTexture(GL_LINEAR, GL_REPEAT);
+    m_noiseTexture->image2D(0, GL_RGB32F, s_noiseSize, s_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
 }
 
 void SSAOPass::resize(int width, int height)
