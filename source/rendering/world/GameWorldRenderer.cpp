@@ -74,6 +74,7 @@ void GameWorldRenderer::drawGeometry()
     //cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
+    glFinish();
     PerfCounter::end("geom");
 }
 
@@ -103,9 +104,9 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->bind();
     m_renderOnScreenQuad->draw();
     fbo->unbind();
-    PerfCounter::end("blit");
     glFinish();
-    qDebug() << PerfCounter::getString();
+    PerfCounter::end("blit");
+    qDebug() << qPrintable(PerfCounter::generateString());
 }
 
 void GameWorldRenderer::initialize()
