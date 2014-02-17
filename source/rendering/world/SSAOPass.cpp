@@ -10,7 +10,7 @@
 #include "Util.h"
 
 const int SSAOPass::s_kernelSize = 24;
-const int SSAOPass::s_noiseSize = 4;
+const int SSAOPass::s_noiseSize = 7;
 const QList<QString> SSAOPass::s_requiredSamplers = { "normal_depth", "color" };
 
 SSAOPass::SSAOPass()
@@ -93,21 +93,29 @@ void SSAOPass::initialize()
     m_horizontalBlurTexture = m_horizontalBlurPass.outputTexture();
     m_verticalBlurTexture = m_verticalBlurPass.outputTexture();
     
-    m_noiseTexture = Util::create2DTexture();
+    m_noiseTexture = Util::create2DTexture(GL_LINEAR, GL_REPEAT);
 
     //init noise texture and ssao kernel
     std::vector<glm::vec3> kernel;
+    int numSamples = 0;
     
-    for (int i = 0; i < s_kernelSize; ++i) {
-        glm::vec3 sample = glm::vec3(glm::linearRand(-1.0f, 1.0f),
-                                     glm::linearRand(-1.0f, 1.0f),
-                                     glm::linearRand(0.0f, 1.0f));
+    while (numSamples < s_kernelSize) {
+        glm::vec3 sample = glm::normalize(glm::vec3(glm::linearRand(-1.0f, 1.0f),
+                                                    glm::linearRand(-1.0f, 1.0f),
+                                                    glm::linearRand(0.0f, 1.0f)));
         
-        sample *= glm::linearRand(0.0f, 1.0f);
         
+        float scale = float(numSamples) / float(s_kernelSize);
+        scale = glm::mix(0.1f, 1.0f, scale * scale);
+        sample *= scale;
+        
+        if (glm::dot(sample, glm::vec3(0.0f, 0.0f, 1.0f)) < 0.01f)
+            break;
+        
+        ++numSamples;
         kernel.push_back(sample);
     }
-    
+//
 //    std::vector<glm::vec3> kernel = std::vector<glm::vec3>();
 //    std::vector<glm::vec3> hemisphere;
 //    pointsOnSphere(s_kernelSize, hemisphere);
@@ -133,14 +141,13 @@ void SSAOPass::initialize()
 
     m_noiseTexture->image2D(0, GL_RGB32F, s_noiseSize, s_noiseSize, 0, GL_RGB, GL_FLOAT, &noise[0]);
 
-    m_ssaoPass.setUniform("noiseTexSize", s_noiseSize);
     m_ssaoPass.setUniform("kernelSize", s_kernelSize);
     m_ssaoPass.setUniform("kernel", kernel);
 }
 
 void SSAOPass::resize(int width, int height)
 {
-    m_ssaoPass.setUniform("viewport", glm::vec2(width, height));
+    m_ssaoPass.setUniform("noiseScale", glm::vec2(width, height) / glm::vec2(s_noiseSize));
 
     m_ssaoPass.resize(width, height);
     m_horizontalBlurPass.resize(width, height);

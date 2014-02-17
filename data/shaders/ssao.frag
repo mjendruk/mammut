@@ -59,9 +59,9 @@ void main()
 
     //get view space normal:
     vec3 normal = normalize(texture(normal_depth, v_uv).rgb);
-        
+
     //construct kernel basis matrix:
-    vec3 rvec = texture(noise, v_noiseUv).rgb * 2.0 - 1.0;
+    vec3 rvec = normalize(texture(noise, v_noiseUv).rgb);
     vec3 tangent = normalize(rvec - normal * dot(rvec, normal));
     vec3 bitangent = cross(tangent, normal);
     mat3 kernelBasis = mat3(tangent, bitangent, normal);

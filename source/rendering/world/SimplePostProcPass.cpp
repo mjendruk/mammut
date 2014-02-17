@@ -51,7 +51,7 @@ SimplePostProcPass::~SimplePostProcPass()
 
 void SimplePostProcPass::initializeFbo()
 {
-    m_outputTexture = Util::create2DTexture();
+    m_outputTexture = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
     
     m_fbo = new glow::FrameBufferObject();
     m_fbo->setDrawBuffer(GL_COLOR_ATTACHMENT0);

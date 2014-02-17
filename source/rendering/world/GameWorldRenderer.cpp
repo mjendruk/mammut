@@ -122,10 +122,10 @@ void GameWorldRenderer::initializeGBuffers()
 {
     m_gBufferFBO = new glow::FrameBufferObject();
 
-    m_gBufferColor = Util::create2DTexture();
-    m_gBufferNormalDepth = Util::create2DTexture();
-    m_gBufferDepth = Util::create2DTexture();
-    m_gBufferVelocity = Util::create2DTexture();
+    m_gBufferColor = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferNormalDepth = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferDepth = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferVelocity = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
 
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormalDepth);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT1, m_gBufferColor);

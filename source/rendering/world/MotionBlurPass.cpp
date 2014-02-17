@@ -80,7 +80,7 @@ void MotionBlurPass::initialize()
         randBuffer.push_back(float(glm::linearRand(0.0, 1.0)));
     }
 
-    m_randomTexture = Util::create2DTexture();
+    m_randomTexture = Util::create2DTexture(GL_LINEAR, GL_REPEAT);
     m_randomTexture->image2D(0, GL_RED, s_randomBufferSize, s_randomBufferSize, 0, GL_RED, GL_FLOAT, &randBuffer[0]);
 
     //static Uniforms
