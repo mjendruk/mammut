@@ -77,6 +77,7 @@ void GameWorldRenderer::drawGeometry()
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
 
     m_gBufferFBO->unbind();
+    glFinish();
     PerfCounter::end("geom");
 }
 
@@ -106,8 +107,8 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->bind();
     m_renderOnScreenQuad->draw();
     fbo->unbind();
-    PerfCounter::end("blit");
     glFinish();
+    PerfCounter::end("blit");
     qDebug() << qPrintable(PerfCounter::generateString());
 }
 
