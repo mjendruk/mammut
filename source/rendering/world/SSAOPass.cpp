@@ -121,6 +121,9 @@ void SSAOPass::initializeNoise()
 void SSAOPass::resize(int width, int height)
 {
     m_ssaoPass.setUniform("noiseScale", glm::vec2(width, height) / glm::vec2(s_noiseSize));
+    
+    m_horizontalBlurPass.setUniform("texelSize", 1.0f / glm::vec2(width, height));
+    m_verticalBlurPass.setUniform("texelSize", 1.0f / glm::vec2(width, height));
 
     m_ssaoPass.resize(width, height);
     m_horizontalBlurPass.resize(width, height);

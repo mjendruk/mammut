@@ -25,7 +25,6 @@ void main()
         sampleCount += considerSample;
     }
 
-
     fragColor = blurred / sampleCount;
 }
 
