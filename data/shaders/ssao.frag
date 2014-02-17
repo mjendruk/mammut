@@ -17,7 +17,7 @@ const int MAX_KERNEL_SIZE = 128;
 uniform int kernelSize;
 uniform vec3 kernel[MAX_KERNEL_SIZE];
 
-layout (location = 0) out vec4 fragColor;
+layout (location = 0) out float fragColor;
 
 smooth in vec2 v_uv;
 smooth in vec2 v_noiseUv;
@@ -66,5 +66,5 @@ void main()
     vec3 bitangent = cross(tangent, normal);
     mat3 kernelBasis = mat3(tangent, bitangent, normal);
     
-    fragColor = vec4(ssao(kernelBasis, originPos, sqrt(originDepth) * radius), vec3(0.0));
+    fragColor = ssao(kernelBasis, originPos, sqrt(originDepth) * radius);
 }

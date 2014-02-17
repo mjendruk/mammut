@@ -3,7 +3,7 @@
 uniform sampler2D ssao;
 uniform sampler2D normal_depth;
 
-layout (location = 0) out vec4 fragColor;
+layout (location = 0) out float fragColor;
 
 in vec2 v_uv;
 
@@ -28,7 +28,7 @@ void main()
     }
 
 
-    fragColor = vec4(blurred / sampleCount, vec3(0.0));
+    fragColor = blurred / sampleCount;
 }
 
 
