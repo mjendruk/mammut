@@ -103,10 +103,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     glFinish();
     PerfCounter::end("mb");
 
-    glEnable(GL_DEPTH_TEST);
-
     PerfCounter::begin("blit");
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
@@ -116,7 +113,10 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->unbind();
     glFinish();
     PerfCounter::end("blit");
+
     qDebug() << qPrintable(PerfCounter::generateString());
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void GameWorldRenderer::initialize()
