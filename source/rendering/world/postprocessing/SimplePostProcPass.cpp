@@ -69,18 +69,11 @@ void SimplePostProcPass::bindTextures()
 
 void SimplePostProcPass::apply()
 {
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_FALSE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     bindTextures();
 
     m_fbo->bind();
     m_quad->draw();
     m_fbo->unbind();
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
 }
 
 void SimplePostProcPass::setInputTextures(const QMap<QString, glow::Texture *> & input)

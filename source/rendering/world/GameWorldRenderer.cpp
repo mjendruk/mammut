@@ -86,6 +86,8 @@ void GameWorldRenderer::drawGeometry()
 
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
+    glDisable(GL_DEPTH_TEST);
+
     PerfCounter::begin("ssao");
     m_ssaoPass.setProjectionUniform(m_camera.projection());
     m_ssaoPass.setInverseProjectionUniform(m_camera.projectionInverted());
@@ -100,6 +102,8 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_motionBlurPass.apply();
     glFinish();
     PerfCounter::end("mb");
+
+    glEnable(GL_DEPTH_TEST);
 
     PerfCounter::begin("blit");
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
