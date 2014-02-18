@@ -4,7 +4,7 @@ uniform sampler2D horizontalBlur;
 uniform sampler2D normal_depth;
 uniform sampler2D color;
 
-layout (location = 0) out vec4 fragColor;
+layout (location = 0) out vec3 fragColor;
 
 const int blurSize = 7;
 
@@ -29,5 +29,5 @@ void main()
 
 
     float ssaoFactor = blurred / sampleCount;
-    fragColor = vec4(texture(color, v_uv).rgb * ssaoFactor, 1.0);
+    fragColor = vec3(texture(color, v_uv).rgb * ssaoFactor);
 }

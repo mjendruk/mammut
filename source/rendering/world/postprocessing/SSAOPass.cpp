@@ -14,9 +14,9 @@ const int SSAOPass::s_noiseSize = 7;
 const QList<QString> SSAOPass::s_requiredSamplers = { "normal_depth", "color" };
 
 SSAOPass::SSAOPass()
-:   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_R32F)
-,   m_horizontalBlurPass("data/shaders/horizontal_blur.vert", "data/shaders/horizontal_blur.frag", GL_R32F)
-,   m_verticalBlurPass("data/shaders/vertical_blur.vert", "data/shaders/vertical_blur.frag", GL_RGBA32F)
+:   m_ssaoPass("data/shaders/ssao.vert", "data/shaders/ssao.frag", GL_R8)
+,   m_horizontalBlurPass("data/shaders/horizontal_blur.vert", "data/shaders/horizontal_blur.frag", GL_R8)
+,   m_verticalBlurPass("data/shaders/vertical_blur.vert", "data/shaders/vertical_blur.frag", GL_RGB32F)
 {
     initialize();
 }
