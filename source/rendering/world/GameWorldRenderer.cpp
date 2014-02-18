@@ -169,7 +169,7 @@ void GameWorldRenderer::resize(int width, int height)
     m_camera.setViewport(glm::ivec2(width, height));
     
     m_gBufferNormalDepth->image2D(0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_gBufferColor->image2D(0, GL_RGB32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferColor->image2D(0, GL_RGB8, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
