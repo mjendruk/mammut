@@ -78,22 +78,16 @@ void SSAOPass::initialize()
 void SSAOPass::initializeKernel()
 {
     std::vector<glm::vec3> kernel;
-    int numSamples = 0;
     
-    while (numSamples < s_kernelSize) {
+    for (int i = 0; i < s_kernelSize; ++i) {
         glm::vec3 sample = glm::normalize(glm::vec3(glm::linearRand(-1.0f, 1.0f),
                                                     glm::linearRand(-1.0f, 1.0f),
-                                                    glm::linearRand(0.0f, 1.0f)));
+                                                    glm::linearRand(0.2f, 1.0f)));
         
-        float scale = float(numSamples) / float(s_kernelSize);
+        float scale = float(i) / float(s_kernelSize);
         scale = glm::mix(0.1f, 1.0f, scale * scale);
-
         sample *= scale;
         
-        if (glm::dot(sample, glm::vec3(0.0f, 0.0f, 1.0f)) < 0.01f)
-            break;
-        
-        ++numSamples;
         kernel.push_back(sample);
     }
 
