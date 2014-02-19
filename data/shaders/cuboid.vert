@@ -56,7 +56,6 @@ void main()
 
     vec4 vertexInVS = view * worldVertex;
     v_depthInES = vertexInVS.z / vertexInVS.w;
-    // v_depthInES = - (depthInVS / nearFar.y);
 
     v_currentPositionInWS = worldVertex;
     v_previousPositionInWS = prevModel * vec4(a_vertex, 1.0);
