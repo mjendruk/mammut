@@ -17,12 +17,14 @@ public:
     Painter();
     virtual ~Painter();
     
-    virtual void paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix);
+    virtual void paint(DrawableInterface & drawable,
+                       const glm::mat4 & modelMatrix,
+                       const glm::mat4 & prevModelMatrix);
 
-    void setNearFarUniform(const glm::vec2 & nearFar);
-    void setViewProjectionUniforms(const glm::mat4 & viewProjection, const glm::mat4 & prevViewProjection);
+    void setViewProjectionUniforms(const glm::mat4 & viewProjection,
+                                   const glm::mat4 & prevViewProjection);
+    
     void setViewUniform(const glm::mat4 & view);
-    void setEyeUniform(const glm::vec3 & eye);
 
 protected:
     virtual void initialize();

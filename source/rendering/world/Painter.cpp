@@ -28,11 +28,6 @@ void Painter::initialize()
     m_program->link();
 }
 
-void Painter::setNearFarUniform(const glm::vec2 & nearFar)
-{
-    m_program->setUniform("nearFar", nearFar);
-}
-
 void Painter::setViewProjectionUniforms(const glm::mat4 & viewProjection, const glm::mat4 & prevViewProjection)
 {
     m_program->setUniform("viewProjection", viewProjection);
@@ -42,11 +37,6 @@ void Painter::setViewProjectionUniforms(const glm::mat4 & viewProjection, const 
 void Painter::setViewUniform(const glm::mat4 & view)
 {
     m_program->setUniform("view", view);
-}
-
-void Painter::setEyeUniform(const glm::vec3 & eye)
-{
-    m_program->setUniform("eye", eye);
 }
 
 void Painter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
