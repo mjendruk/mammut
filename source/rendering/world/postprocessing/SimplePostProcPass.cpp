@@ -28,8 +28,6 @@ SimplePostProcPass::SimplePostProcPass(
                     glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderSource.toStdString()));
     
     m_quad = new glowutils::ScreenAlignedQuad(program);
-    
-    CheckGLError();
 }
 
 SimplePostProcPass::SimplePostProcPass(
@@ -41,8 +39,6 @@ SimplePostProcPass::SimplePostProcPass(
 
     m_quad = new glowutils::ScreenAlignedQuad(
         glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderSource.toStdString()));
-    
-    CheckGLError();
 }
 
 SimplePostProcPass::~SimplePostProcPass()

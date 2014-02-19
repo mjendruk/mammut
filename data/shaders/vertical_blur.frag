@@ -4,14 +4,14 @@ uniform sampler2D horizontalBlur;
 uniform sampler2D normal_depth;
 uniform sampler2D color;
 uniform float farPlane;
+uniform vec2 texelSize;
 
 layout (location = 0) out vec3 fragColor;
 
 const int blurSize = 7;
+const int offset = int(- blurSize * 0.5 + 0.5);
 
 in vec2 v_uv;
-in vec2 v_sampleUvs[blurSize];
-
 
 void main()
 {
@@ -21,10 +21,11 @@ void main()
 
     for (int i = 0; i < blurSize; ++i)
     {   
-        vec3 sampleNormal = texture(normal_depth, v_sampleUvs[i]).xyz;
+        vec2 sampleUv = v_uv + vec2(0.0, (i + offset) * texelSize.y);
+        vec3 sampleNormal = texture(normal_depth, sampleUv).xyz;
 
         int considerSample = int(fragNormalDepth.xyz == sampleNormal);
-        blurred += considerSample * texture(horizontalBlur, v_sampleUvs[i]).x;
+        blurred += considerSample * texture(horizontalBlur, sampleUv).x;
         sampleCount += considerSample;
     }
 

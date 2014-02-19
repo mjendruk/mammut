@@ -23,8 +23,8 @@ smooth in vec2 v_uv;
 smooth in vec2 v_noiseUv;
 smooth in vec3 v_viewRay;
 
-float radius = 10.0;
-float uPower = 5.0;
+float radius = 8.0;
+float occlusionPower = 3.0;
 
 float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius) 
 {
@@ -47,7 +47,7 @@ float ssao(in mat3 kernelBasis, in vec3 originPos, in float radius)
         occlusion += step(samplePos.z, sampleDepth);
     }
     occlusion = 1 - (occlusion / float(kernelSize));
-    return pow(occlusion, uPower);
+    return pow(occlusion, occlusionPower);
 }
 
 void main() 
