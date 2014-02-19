@@ -153,7 +153,7 @@ void GameWorldRenderer::initializePostProcPasses()
     // SSAO
     m_ssaoOutput = m_ssaoPass.outputTexture();
     m_ssaoPass.setInputTextures({ { "color", m_gBufferColor },
-                                      { "normal_depth", m_gBufferNormalDepth } });
+                                  { "normal_depth", m_gBufferNormalDepth } });
 
     // Motion Blur
     m_motionBlurOutput = m_motionBlurPass.outputTexture();
@@ -189,13 +189,9 @@ void GameWorldRenderer::updatePainters()
 {
     m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
-    m_painter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
-    m_painter.setEyeUniform(m_camera.eye());
 
     m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
-    m_cavePainter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
-    m_cavePainter.setEyeUniform(m_camera.eye());
 }
 
 int GameWorldRenderer::fps() const

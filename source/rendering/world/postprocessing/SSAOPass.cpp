@@ -137,4 +137,5 @@ void SSAOPass::setInverseProjectionUniform(const glm::mat4 & inverseProjection)
 void SSAOPass::setFarPlaneUniform(float farPlane)
 {
     m_ssaoPass.setUniform("farPlane", farPlane);
+    m_verticalBlurPass.setUniform("farPlane", farPlane);
 }

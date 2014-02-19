@@ -4,10 +4,7 @@ uniform mat4 viewProjection;
 uniform mat4 prevViewProjection;
 uniform mat4 model;
 uniform mat4 prevModel;
-
 uniform mat4 view;
-uniform vec3 eye;
-uniform vec2 nearFar;
 
 in vec3 a_vertex;
 in vec3 a_normal;
@@ -15,7 +12,6 @@ in vec3 a_normal;
 flat out vec3 v_normal;
 flat out vec4 v_color;
 smooth out float v_depthInES;
-smooth out float v_eyeDistance;
 
 smooth out vec4 v_currentPositionInWS;
 smooth out vec4 v_previousPositionInWS;
@@ -50,13 +46,10 @@ void main()
 
     vec4 worldVertex = model * vec4(a_vertex, 1.0);
 
-    v_eyeDistance = clamp(distance(eye, worldVertex.xyz / worldVertex.w) / 800, 0.0, 1.0);
-
     v_normal = vec3(view * model * vec4(a_normal, 0.0));
 
     vec4 vertexInVS = view * worldVertex;
     v_depthInES = vertexInVS.z / vertexInVS.w;
-    // v_depthInES = - (depthInVS / nearFar.y);
 
     v_currentPositionInWS = worldVertex;
     v_previousPositionInWS = prevModel * vec4(a_vertex, 1.0);
