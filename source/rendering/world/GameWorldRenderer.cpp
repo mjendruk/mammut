@@ -18,7 +18,7 @@
 #include <logic/world/GameCamera.h>
 
 #include "Util.h"
-// #include "PerfCounter.h"
+#include "PerfCounter.h"
 
 const float GameWorldRenderer::s_nearPlane = 0.01f;
 const float GameWorldRenderer::s_farPlane = 700.0f;
@@ -63,7 +63,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
 void GameWorldRenderer::drawGeometry()
 {
-    // PerfCounter::begin("geom");
+    PerfCounter::begin("geom");
     m_gBufferFBO->bind();
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -80,30 +80,30 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
-    // glFinish();
-    // PerfCounter::end("geom");
+    glFinish();
+    PerfCounter::end("geom");
 }
 
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     glDisable(GL_DEPTH_TEST);
 
-    // PerfCounter::begin("ssao");
+    PerfCounter::begin("ssao");
     m_ssaoPass.setProjectionUniform(m_camera.projection());
     m_ssaoPass.setInverseProjectionUniform(m_camera.projectionInverted());
     m_ssaoPass.setFarPlaneUniform(s_farPlane);
 
     m_ssaoPass.apply();
-    // glFinish();
-    // PerfCounter::end("ssao");
+    glFinish();
+    PerfCounter::end("ssao");
 
-    // PerfCounter::begin("mb");
+    PerfCounter::begin("mb");
     m_motionBlurPass.setFPSUniform(fps() / 60.f);
     m_motionBlurPass.apply();
-    // glFinish();
-    // PerfCounter::end("mb");
+    glFinish();
+    PerfCounter::end("mb");
 
-    // PerfCounter::begin("blit");
+    PerfCounter::begin("blit");
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
@@ -111,10 +111,10 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->bind();
     m_renderOnScreenQuad->draw();
     fbo->unbind();
-    // glFinish();
-    // PerfCounter::end("blit");
+    glFinish();
+    PerfCounter::end("blit");
 
-    // qDebug() << qPrintable(PerfCounter::generateString());
+    qDebug() << qPrintable(PerfCounter::generateString());
 
     glEnable(GL_DEPTH_TEST);
 }
