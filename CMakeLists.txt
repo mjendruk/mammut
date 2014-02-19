@@ -348,9 +348,7 @@ set(shaders
     ${shader_path}/ssao.frag
     ${shader_path}/string_drawer.vert
     ${shader_path}/string_drawer.frag
-    ${shader_path}/horizontal_blur.vert
     ${shader_path}/horizontal_blur.frag
-    ${shader_path}/vertical_blur.vert
     ${shader_path}/vertical_blur.frag
 )
 
