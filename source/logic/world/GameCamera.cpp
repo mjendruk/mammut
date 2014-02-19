@@ -5,7 +5,6 @@
 #include <QDebug>
 
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include <Util.h>
 
