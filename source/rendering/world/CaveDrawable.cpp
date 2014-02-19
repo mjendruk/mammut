@@ -77,22 +77,22 @@ void CaveDrawable::initializeIndices()
             index += vertex;
             
             if (ring % 2 == 0) {
-                m_indices.push_back(index);
+                m_indices.push_back(index + s_verticesPerRing);
                 m_indices.push_back(index + ((vertex == 0) ? s_verticesPerRing * 2 - 1 : s_verticesPerRing - 1));
-                m_indices.push_back(index + s_verticesPerRing);
-
                 m_indices.push_back(index);
-                m_indices.push_back(index + s_verticesPerRing);
+
                 m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1));
+                m_indices.push_back(index + s_verticesPerRing);
+                m_indices.push_back(index);
             }
             else {
-                m_indices.push_back(index);
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
                 m_indices.push_back(index + s_verticesPerRing);
-                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
-
                 m_indices.push_back(index);
-                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
+
                 m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? -s_verticesPerRing + 1 : 1));
+                m_indices.push_back(index + ((vertex == (s_verticesPerRing - 1)) ? 1 : s_verticesPerRing + 1));
+                m_indices.push_back(index);
             }
         }
     }
@@ -166,10 +166,10 @@ void CaveDrawable::buildNormals()
     m_normals.clear();
     for (int i = 0; i < m_duplicatedVertices.size(); i += 3) {
 
-        glm::vec3 a = m_duplicatedVertices.at(i) - m_duplicatedVertices.at(i + 1);
-        glm::vec3 b = m_duplicatedVertices.at(i + 2) - m_duplicatedVertices.at(i + 1);
+        glm::vec3 ab = m_duplicatedVertices.at(i + 1) - m_duplicatedVertices.at(i);
+        glm::vec3 ac = m_duplicatedVertices.at(i + 2) - m_duplicatedVertices.at(i);
 
-        glm::vec3 normal = glm::normalize(glm::cross(a, b));
+        glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
 
         m_normals.push_back(normal);
         m_normals.push_back(normal);
