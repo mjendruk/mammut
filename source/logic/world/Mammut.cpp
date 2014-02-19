@@ -90,7 +90,7 @@ MammutPhysics * Mammut::physics()
 void Mammut::slowDownDrifting()
 {
     glm::vec3 rotatedVelocity = m_gravityTransform * m_physics.velocity();
-    rotatedVelocity = glm::vec3(rotatedVelocity.x * 0.95f, rotatedVelocity.yz());
+    rotatedVelocity = glm::vec3(rotatedVelocity.x * 0.9f, rotatedVelocity.yz());
     m_physics.setVelocity(glm::inverse(m_gravityTransform) * rotatedVelocity);
 }
 

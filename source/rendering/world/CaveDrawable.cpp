@@ -104,7 +104,6 @@ void CaveDrawable::draw()
         return;
     m_vao->bind();
     int size = s_verticesPerRing * s_numRings*2 * 3;
-    glPointSize(5);
     m_vao->drawArrays(GL_TRIANGLES, 0, size);
     m_vao->unbind();
 }

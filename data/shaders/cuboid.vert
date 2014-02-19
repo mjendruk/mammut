@@ -52,10 +52,10 @@ void main()
 
     v_eyeDistance = clamp(distance(eye, worldVertex.xyz / worldVertex.w) / 800, 0.0, 1.0);
 
-    v_normal = normalToWorldSpace(a_normal);
+    v_normal = vec3(view * model * vec4(a_normal, 0.0));
 
-    vec4 vertexInES = view * worldVertex;
-    v_depthInES = - (vertexInES.z - nearFar.x)/(nearFar.y-nearFar.x);
+    vec4 vertexInVS = view * worldVertex;
+    v_depthInES = vertexInVS.z / vertexInVS.w;
 
     v_currentPositionInWS = worldVertex;
     v_previousPositionInWS = prevModel * vec4(a_vertex, 1.0);

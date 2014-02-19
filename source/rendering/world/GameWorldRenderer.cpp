@@ -20,16 +20,14 @@
 #include "Util.h"
 #include "PerfCounter.h"
 
-const float GameWorldRenderer::nearPlane = 0.01f;
-const float GameWorldRenderer::farPlane = 700.0f;
+const float GameWorldRenderer::s_nearPlane = 0.01f;
+const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 : m_hud(m_camera, *this)
 , m_lastFrame(QTime::currentTime())
 , m_gameMechanics(nullptr)
 , m_avgTimeSinceLastFrame(0.f)
-, m_ssaoPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
-, m_motionBlurPostProc( { GL_RGBA32F, GL_RGBA, GL_FLOAT } )
 {
     initialize();
 }
@@ -67,15 +65,21 @@ void GameWorldRenderer::drawGeometry()
 {
     PerfCounter::begin("geom");
     m_gBufferFBO->bind();
-
+    
+    glEnable(GL_CULL_FACE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    // set the default view space depth to - s_farPlane
+    m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
+    
+    
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
     });
-    //cave does not move at the moment, so model and prevModel are the same [motionBlur]
+    
+    // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
-
     m_gBufferFBO->unbind();
     glFinish();
     PerfCounter::end("geom");
@@ -83,23 +87,24 @@ void GameWorldRenderer::drawGeometry()
 
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
-    PerfCounter::begin("ssao");
-    m_ssaoPostProc.setProjectionUniform(m_camera.projection());
-    m_ssaoPostProc.setInverseProjectionUniform(glm::inverse(m_camera.projection()));
-    m_ssaoPostProc.setNormalMatrixUniform(m_camera.normal());
+    glDisable(GL_DEPTH_TEST);
 
-    m_ssaoPostProc.apply();
+    PerfCounter::begin("ssao");
+    m_ssaoPass.setProjectionUniform(m_camera.projection());
+    m_ssaoPass.setInverseProjectionUniform(m_camera.projectionInverted());
+    m_ssaoPass.setFarPlaneUniform(s_farPlane);
+
+    m_ssaoPass.apply();
     glFinish();
     PerfCounter::end("ssao");
 
     PerfCounter::begin("mb");
-    m_motionBlurPostProc.setFPSUniform(fps() / 60.f);
-    m_motionBlurPostProc.apply();
+    m_motionBlurPass.setFPSUniform(fps() / 60.f);
+    m_motionBlurPass.apply();
     glFinish();
     PerfCounter::end("mb");
 
     PerfCounter::begin("blit");
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
         m_camera.viewport().y * devicePixelRatio);
@@ -109,14 +114,17 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     fbo->unbind();
     glFinish();
     PerfCounter::end("blit");
+
     qDebug() << qPrintable(PerfCounter::generateString());
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void GameWorldRenderer::initialize()
 {
     m_camera.setFovy(80.0);
-    m_camera.setZNear(nearPlane);
-    m_camera.setZFar(farPlane);
+    m_camera.setZNear(s_nearPlane);
+    m_camera.setZFar(s_farPlane);
 
     initializeGBuffers();
     initializePostProcPasses();
@@ -126,12 +134,12 @@ void GameWorldRenderer::initializeGBuffers()
 {
     m_gBufferFBO = new glow::FrameBufferObject();
 
-    m_gBufferColor = Util::create2DTexture();
-    m_gBufferNormals = Util::create2DTexture();
-    m_gBufferDepth = Util::create2DTexture();
-    m_gBufferVelocity = Util::create2DTexture();
+    m_gBufferColor = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferNormalDepth = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferDepth = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_gBufferVelocity = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
 
-    m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormals);
+    m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT0, m_gBufferNormalDepth);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT1, m_gBufferColor);
     m_gBufferFBO->attachTexture2D(GL_COLOR_ATTACHMENT2, m_gBufferVelocity);
     m_gBufferFBO->attachTexture2D(GL_DEPTH_ATTACHMENT, m_gBufferDepth);
@@ -142,34 +150,32 @@ void GameWorldRenderer::initializeGBuffers()
 
 void GameWorldRenderer::initializePostProcPasses()
 {
-    //SSAO
-    m_ssaoOutput = m_ssaoPostProc.outputTexture();
-    m_ssaoPostProc.setInputTextures({ { "color", m_gBufferColor },
-                                      { "normal", m_gBufferNormals },
-                                      { "depth", m_gBufferDepth }
-                                    });
+    // SSAO
+    m_ssaoOutput = m_ssaoPass.outputTexture();
+    m_ssaoPass.setInputTextures({ { "color", m_gBufferColor },
+                                      { "normal_depth", m_gBufferNormalDepth } });
 
-    //motionBlur
-    m_motionBlurOutput = m_motionBlurPostProc.outputTexture();
-    m_motionBlurPostProc.setInputTextures({ { "color", m_ssaoOutput },
-                                            { "depth", m_gBufferDepth },
-                                            { "velocity", m_gBufferVelocity }
-                                          });
-    //set texture that will be rendered on screen
-    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(nullptr, m_motionBlurOutput);
+    // Motion Blur
+    m_motionBlurOutput = m_motionBlurPass.outputTexture();
+    m_motionBlurPass.setInputTextures({ { "color", m_ssaoOutput },
+                                        { "depth", m_gBufferDepth },
+                                        { "velocity", m_gBufferVelocity } });
+    
+    // set texture that will be rendered on screen
+    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_motionBlurOutput);
 }
 
 void GameWorldRenderer::resize(int width, int height)
 {
     m_camera.setViewport(glm::ivec2(width, height));
     
-    m_gBufferNormals->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_gBufferColor->image2D(0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
-    m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, nullptr);
+    m_gBufferNormalDepth->image2D(0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferColor->image2D(0, GL_RGB8, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+    m_gBufferVelocity->image2D(0, GL_RG16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     m_gBufferDepth->image2D(0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
-    m_ssaoPostProc.resize(width, height);
-    m_motionBlurPostProc.resize(width, height);
+    m_ssaoPass.resize(width, height);
+    m_motionBlurPass.resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()
@@ -183,12 +189,12 @@ void GameWorldRenderer::updatePainters()
 {
     m_painter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_painter.setViewUniform(m_camera.view());
-    m_painter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
+    m_painter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
     m_painter.setEyeUniform(m_camera.eye());
 
     m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
-    m_cavePainter.setNearFarUniform(glm::vec2(nearPlane, farPlane));
+    m_cavePainter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
     m_cavePainter.setEyeUniform(m_camera.eye());
 }
 

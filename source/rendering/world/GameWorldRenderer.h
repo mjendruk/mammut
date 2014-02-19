@@ -6,14 +6,14 @@
 
 #include <rendering/Renderer.h>
 
+#include <rendering/world/postprocessing/MotionBlurPass.h>
+#include <rendering/world/postprocessing/SSAOPass.h>
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "CavePainter.h"
 #include "RenderCamera.h"
 #include "HUD.h"
-#include "MotionBlurPostProc.h"
-#include "SSAOPostProc.h"
 
 namespace glow
 {
@@ -55,8 +55,8 @@ protected:
     void applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio);
 
 protected:
-    static const float nearPlane;
-    static const float farPlane;
+    static const float s_nearPlane;
+    static const float s_farPlane;
     
     Painter m_painter;
     CavePainter m_cavePainter;
@@ -69,7 +69,7 @@ protected:
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
 
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
-    glow::ref_ptr<glow::Texture> m_gBufferNormals;
+    glow::ref_ptr<glow::Texture> m_gBufferNormalDepth;
     glow::ref_ptr<glow::Texture> m_gBufferColor;
     glow::ref_ptr<glow::Texture> m_gBufferVelocity;
 
@@ -77,8 +77,8 @@ protected:
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
     
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
-    MotionBlurPostProc m_motionBlurPostProc;
-    SSAOPostProc m_ssaoPostProc;
+    MotionBlurPass m_motionBlurPass;
+    SSAOPass m_ssaoPass;
 
     glm::mat4 m_previousViewProjection;
     

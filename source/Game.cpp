@@ -44,33 +44,24 @@ void Game::run()
 {
     m_loop = true;
 
-    long double delta = 1 / 60.0f * std::nano::den;
-    long double nextTime = m_timer.elapsed();
+    long double lastTime = m_timer.elapsed();
+    long double currentTime;
+    long double frameTime;
     
-    while(m_loop) 
-    {
-        if (m_timer.elapsed() < nextTime)
-        {
-            unsigned long sleepTime =
-            static_cast<unsigned long>((nextTime - m_timer.elapsed()) / std::nano::den *
-                                                                        std::milli::den);
-            
-            if (sleepTime > 0)
-                QThread::msleep(sleepTime);
-        }
-        
+    while(m_loop)
+    {   
+        currentTime = m_timer.elapsed();
+        frameTime = currentTime - lastTime;
+        lastTime = currentTime;
+
         SoundManager::instance().updateSoundSystem();
         QCoreApplication::processEvents();
         
-        nextTime += delta;
         if (!m_paused)
-            m_activeMechanics->update(delta / std::nano::den);
-        
-        if (m_timer.elapsed() < nextTime)
-        {
-            if(!m_window.isMinimized())
-                m_canvas->render();
-        }
+            m_activeMechanics->update(frameTime / std::nano::den);
+
+        if(!m_window.isMinimized())
+            m_canvas->render();
     }
 }
 
@@ -242,7 +233,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
 
-    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::AltModifier)
+    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::ControlModifier)
     {
         glowutils::File::reloadAll();
         qDebug() << "reload shaders"; 

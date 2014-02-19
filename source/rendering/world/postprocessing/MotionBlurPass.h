@@ -1,19 +1,23 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include "SimplePostProcPass.h"
 
-class MotionBlurPostProc : public AbstractPostProc
+
+class MotionBlurPass : public AbstractPostProcPass
 {
 public:
-    MotionBlurPostProc(TextureFormat outputFormat);
-    ~MotionBlurPostProc();
+    MotionBlurPass();
+    ~MotionBlurPass();
 
-    virtual void apply();
-    virtual void resize(int width, int height);
-    virtual void setInputTextures(const QMap<QString, glow::Texture*> & input);
-    virtual glow::Texture* outputTexture();
+    void apply() override;
+    void resize(int width, int height) override;
+    
+    void setInputTextures(const QMap<QString, glow::Texture*> & input) override;
+    glow::Texture * outputTexture() override;
 
-    void setFPSUniform(float current_targetFPS);
+    void setFPSUniform(float currentTargetFPS);
 
 protected:
 	void initialize();
