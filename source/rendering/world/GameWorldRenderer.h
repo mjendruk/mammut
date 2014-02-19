@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <QTime>
 
 #include <glow/ref_ptr.h>
@@ -64,7 +66,7 @@ protected:
     HUD m_hud;
 
     CuboidDrawable m_cuboidDrawable;
-    CaveDrawable m_caveDrawable;
+    std::unique_ptr<CaveDrawable> m_caveDrawable;
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
 
