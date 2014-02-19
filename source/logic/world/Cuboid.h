@@ -21,7 +21,7 @@ public:
          
     virtual ~Cuboid();
 
-    glm::mat4 modelTransform() const;
+    const glm::mat4 & modelTransform() const;
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
     
@@ -29,11 +29,13 @@ public:
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
-    
+    void initializeModelTransform();
+
+protected:
     std::unique_ptr<btCollisionShape> m_collisionShape;
     std::unique_ptr<btMotionState> m_motionState;
     std::unique_ptr<btRigidBody> m_rigidBody;
-    glm::mat4 m_previousModelTransform;
-    
+
+    glm::mat4 m_modelTransform;
     glm::vec3 m_size;
 };
