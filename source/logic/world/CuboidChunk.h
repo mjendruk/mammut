@@ -12,6 +12,7 @@ public:
     ~CuboidChunk();
 
     void add(Cuboid * cuboid);
+    void remove(int index);
     
     const QList<Cuboid *> & cuboids() const;
     const glowutils::AxisAlignedBoundingBox boundingBox() const;

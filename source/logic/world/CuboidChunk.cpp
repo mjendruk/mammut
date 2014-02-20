@@ -18,6 +18,12 @@ void CuboidChunk::add(Cuboid * cuboid)
     m_boundingBox.extend(cuboid->boundingBox().urb());
 }
 
+
+void CuboidChunk::remove(int index)
+{
+    m_cuboids.removeAt(index);
+}
+
 const QList<Cuboid *> & CuboidChunk::cuboids() const
 {
     return m_cuboids;

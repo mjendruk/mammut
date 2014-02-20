@@ -20,5 +20,6 @@ public:
 protected:
     std::mt19937 m_generator;
     glm::vec3 m_nextTranslation;
+    double m_zDistance;
 
 };
