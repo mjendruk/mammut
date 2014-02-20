@@ -33,17 +33,20 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         return chunk;
     }
 
-    std::normal_distribution<> sizeXYDistribution(10, 4); // too big is alwas a problem?
-    std::uniform_real_distribution<> sizeZDistribution(40.0f, 60.0f);
-    std::uniform_real_distribution<> positionXYDistribution(-35.0f, 35.0f);
-    std::uniform_real_distribution<> positionZDistribution(0.0f, 30.0f);
-    
-    int numCuboids = glm::smoothstep(200.0, 5000.0, m_zDistance) * 40.0 + 10.0 ;
+    int numCuboids = glm::smoothstep(200.0, 3000.0, m_zDistance) * 46.0 + 4.0; // [5, 50]
+    float xyDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 15 + 20; // [20, 35]
+    int maxOverlaps = int(glm::smoothstep(200.0, 3000.0, m_zDistance) * 18.0); //[0 , 18]
+    float minSizeZDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 20; // [0, 20]
 
     qDebug() << "----------------------";
-    qDebug() << "num Cuboids" << numCuboids;
+    qDebug() << "num Cuboids: " << numCuboids << "   num of max. allowed overlaps: " << maxOverlaps;
 
-    for (int i = 0; i < /*numCuboids*/50; ++i)
+    std::normal_distribution<> sizeXYDistribution(10, 4); // too big is no fun
+    std::uniform_real_distribution<> sizeZDistribution(50.0f - minSizeZDistribution, 60.0f); //30 60 is difficult with 50 cuboids + 18 overlap + -35->35||
+    std::uniform_real_distribution<> positionXYDistribution(-xyDistribution, xyDistribution);//-35->35+ 50 60 is easy to middle + 5 cubs + 0 overlap 
+    std::uniform_real_distribution<> positionZDistribution(0.0f, 30.0f);
+
+    for (int i = 0; i < numCuboids; ++i)
     {
         float xSize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
         float ySize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
@@ -57,8 +60,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         
         chunk->add(new Cuboid(size, position + m_nextTranslation));
     }
-
-    int maxOverlaps = 15;//int(glm::smoothstep(200.0, 1000.0, m_zDistance) * 15.0); //[0 , 15]
+    
     int numOverlaps = 0;
     int numDeletions = 0;
 
@@ -82,11 +84,20 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 
             float minDeltaX = std::min(glm::abs(c1URB.x - c2URB.x), glm::abs(c1LLF.x - c2LLF.x));
             float minDeltaY = std::min(glm::abs(c1URB.y - c2URB.y), glm::abs(c1LLF.y - c2LLF.y));
-            if (numOverlaps > maxOverlaps)
-                qDebug() << "too much overlaps";
-            if (minDeltaX < minOverlap || minDeltaY < minOverlap || numOverlaps > maxOverlaps)
-                removeIndexList << i; ++numDeletions; break;
+            if ((minDeltaX < minOverlap || minDeltaY < minOverlap) && !(numOverlaps > maxOverlaps))
+                qDebug() << "   " << "too small overlap -> delete cuboid";
+            if ((numOverlaps > maxOverlaps) && !(minDeltaX < minOverlap || minDeltaY < minOverlap))
+                qDebug() << "   " << "too many overlaps -> delete cuboid";
+            if ((numOverlaps > maxOverlaps) && (minDeltaX < minOverlap || minDeltaY < minOverlap))
+                qDebug() << "   " << "too many overlaps & too small overlap -> delete cuboid";
 
+            if ((minDeltaX < minOverlap) || (minDeltaY < minOverlap) || (numOverlaps > maxOverlaps)) {
+                removeIndexList << i;
+                ++numDeletions;
+                break;
+            }
+            else
+                qDebug() << "   " << "overlap but no deletion";
         }
     }
 
