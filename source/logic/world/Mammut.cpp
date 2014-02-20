@@ -4,6 +4,7 @@
 
 #include <Util.h>
 #include <sound/Sound.h>
+#include "GameMechanics.h"
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 
@@ -12,7 +13,6 @@ Mammut::Mammut(const glm::vec3 & translation)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
 {
-    const glm::vec3 size(0.1f);
 }
 
 Mammut::~Mammut()
@@ -21,8 +21,8 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
-    if (!m_isOnObject)
-        return;
+    if (collidesWithCave())
+        crash();
 
     if (!isStillOnObject()) {
         m_isOnObject = false;
@@ -54,12 +54,14 @@ void Mammut::collisionEvent(const PhysicsObject & object,
             m_isOnObject = true;
             break;
         case Util::kZAxis:
-            if (!m_isCrashed) {
-                Sound sound(Sound::kImpact);
-                emit crashed();
-                m_isCrashed = true;
-            }
+            crash();
+            break;
     }
+}
+
+float Mammut::caveDistanceRatio() const
+{
+    return glm::length(m_physics.position().xy()) / GameMechanics::s_caveRadius;
 }
 
 glm::mat4 Mammut::modelTransform() const
@@ -94,10 +96,28 @@ void Mammut::slowDownDrifting()
     m_physics.setVelocity(glm::inverse(m_gravityTransform) * rotatedVelocity);
 }
 
+void Mammut::crash()
+{
+    if (m_isCrashed)
+        return;
+
+    Sound sound(Sound::kImpact);
+    emit crashed();
+    m_isCrashed = true;
+}
+
 bool Mammut::isStillOnObject() const
 {
+    if (!m_isOnObject)
+        return false;
+
     const float epsilon = 0.01f;
     
     glm::vec3 velocity = m_gravityTransform * m_physics.velocity();
     return fabs(velocity.y) < epsilon;
+}
+
+bool Mammut::collidesWithCave() const
+{
+    return glm::length(m_physics.position().xy()) >= GameMechanics::s_caveRadius;
 }

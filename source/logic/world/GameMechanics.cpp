@@ -6,9 +6,12 @@
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
+
+const float GameMechanics::s_caveRadius = 150.0f;
+
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
-,   m_mammut(glm::vec3(-2.2f, 7.6f, 15.0f))
+,   m_mammut(glm::vec3(-2.2f, 7.6f, -15.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
 {
@@ -63,7 +66,7 @@ void GameMechanics::update(float seconds)
 void GameMechanics::tickUpdate(float seconds)
 {
     m_mammut.update();
-    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds);
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds, m_mammut.caveDistanceRatio());
 }
 
 void GameMechanics::updateSound()

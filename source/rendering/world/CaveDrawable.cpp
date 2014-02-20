@@ -6,9 +6,10 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
+#include <logic/world/GameMechanics.h>
+
 
 const int CaveDrawable::s_verticesPerRing = 20;
-const float CaveDrawable::s_radius = 200.f;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
 const int CaveDrawable::s_numRings = 30;
 
@@ -21,10 +22,10 @@ CaveDrawable::CaveDrawable()
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
         float angle = (3.14159265359f * 2 / s_verticesPerRing) * i;
-        dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * s_radius);
+        dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
 
         float angleOffset = (3.14159265359f * 2 / s_verticesPerRing) * (i + 0.5f);
-        dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * s_radius);
+        dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
     }
 
     initialize();
@@ -132,8 +133,8 @@ void CaveDrawable::update(glm::vec3 camPosition)
 glm::vec3 getRandomOffset()
 {
     return glm::vec3(
-        glm::linearRand(0.0f, 20.0f),
-        glm::linearRand(0.0f, 20.0f),
+        glm::linearRand(0.0f, 30.0f),
+        glm::linearRand(0.0f, 30.0f),
         glm::linearRand(0.0f, 40.0f));
 }
 

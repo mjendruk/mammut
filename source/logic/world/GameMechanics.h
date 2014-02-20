@@ -19,6 +19,9 @@ class GameMechanics : public Mechanics
     Q_OBJECT
 
 public:
+    static const float s_caveRadius;
+
+public:
     GameMechanics();
     virtual ~GameMechanics();
 

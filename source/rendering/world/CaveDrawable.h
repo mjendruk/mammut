@@ -29,7 +29,6 @@ protected:
     void buildNormals();
 
     static const int s_verticesPerRing;
-    static const float s_radius;
     static const glm::vec3 s_maxShift;
     static const int s_numRings;
 
