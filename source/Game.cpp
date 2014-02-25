@@ -7,6 +7,8 @@
 
 #include <glowutils/File.h>
 
+#include <PerfCounter.h>
+
 #include <rendering/menu/MenuRenderer.h>
 #include <rendering/world/GameWorldRenderer.h>
 #include <rendering/menu/BlankBackground.h>
@@ -50,6 +52,7 @@ void Game::run()
     
     while(m_loop)
     {   
+        PerfCounter::begin("total");
         currentTime = m_timer.elapsed();
         frameTime = currentTime - lastTime;
         lastTime = currentTime;
@@ -62,6 +65,7 @@ void Game::run()
 
         if(!m_window.isMinimized())
             m_canvas->render();
+        PerfCounter::end("total");
     }
 }
 
