@@ -77,9 +77,11 @@ protected:
 
     glow::ref_ptr<glow::Texture> m_ssaoOutput;
     glow::ref_ptr<glow::Texture> m_motionBlurOutput;
+    glow::ref_ptr<glow::Texture> m_FxaaOutput;
     
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     MotionBlurPass m_motionBlurPass;
+    SimplePostProcPass m_FxaaPass;
     SSAOPass m_ssaoPass;
 
     glm::mat4 m_previousViewProjection;

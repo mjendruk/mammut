@@ -28,6 +28,7 @@ GameWorldRenderer::GameWorldRenderer()
 ,   m_lastFrame(QTime::currentTime())
 ,   m_gameMechanics(nullptr)
 ,   m_avgTimeSinceLastFrame(0.f)
+,   m_FxaaPass("data/shaders/fxaa.frag", GL_RGB8)
 {
     initialize();
 }
@@ -101,6 +102,10 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_motionBlurPass.apply();
     PerfCounter::endGL("mb");
 
+    PerfCounter::beginGL("fxaa");
+    m_FxaaPass.apply();
+    PerfCounter::endGL("fxaa");
+
     PerfCounter::beginGL("blit");
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
@@ -155,8 +160,12 @@ void GameWorldRenderer::initializePostProcPasses()
                                         { "depth", m_gBufferDepth },
                                         { "velocity", m_gBufferVelocity } });
     
+    // FXAA
+    m_FxaaOutput = m_FxaaPass.outputTexture();
+    m_FxaaPass.setInputTextures({ { "buf0", m_motionBlurOutput } });
+
     // set texture that will be rendered on screen
-    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_motionBlurOutput);
+    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_FxaaOutput);
 }
 
 void GameWorldRenderer::resize(int width, int height)
@@ -170,6 +179,7 @@ void GameWorldRenderer::resize(int width, int height)
 
     m_ssaoPass.resize(width, height);
     m_motionBlurPass.resize(width, height);
+    m_FxaaPass.resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()
