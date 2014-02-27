@@ -20,11 +20,11 @@ void main( void ) {
         float FXAA_REDUCE_MUL = 1.0/8.0;
         float FXAA_REDUCE_MIN = 1.0/128.0;
 
-        vec3 rgbNW=texture(buf0,v_uv+(vec2(-1.0,-1.0)/frameBufSize)).xyz;
-        vec3 rgbNE=texture(buf0,v_uv+(vec2(1.0,-1.0)/frameBufSize)).xyz;
-        vec3 rgbSW=texture(buf0,v_uv+(vec2(-1.0,1.0)/frameBufSize)).xyz;
-        vec3 rgbSE=texture(buf0,v_uv+(vec2(1.0,1.0)/frameBufSize)).xyz;
-        vec3 rgbM=texture(buf0,v_uv).xyz;
+        vec3 rgbNW=texelFetch(buf0,ivec2(gl_FragCoord.xy)+ivec2(-1,-1), 0).xyz;
+        vec3 rgbNE=texelFetch(buf0,ivec2(gl_FragCoord.xy)+ivec2(1,-1), 0).xyz;
+        vec3 rgbSW=texelFetch(buf0,ivec2(gl_FragCoord.xy)+ivec2(-1,1), 0).xyz;
+        vec3 rgbSE=texelFetch(buf0,ivec2(gl_FragCoord.xy)+ivec2(1,1), 0).xyz;
+        vec3 rgbM=texelFetch(buf0,ivec2(gl_FragCoord.xy), 0).xyz;
         
         vec3 luma=vec3(0.299, 0.587, 0.114);
         float lumaNW = dot(rgbNW, luma);
