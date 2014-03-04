@@ -9,6 +9,8 @@
 #include <QMap>
 #include <QVector>
 
+#include <glow/Query.h>
+
 namespace
 {
     static QMap<QString, double> map;
@@ -16,7 +18,7 @@ namespace
     static QVector<QString> orderedNames;
     static const float smoothingFactor = 0.95f;
 
-    static QMap<QString, GLuint> glTimerMap;
+    static QMap<QString, glow::Query *> glTimerMap;
     static QString runningGLQuery("");
 }
 
@@ -45,19 +47,12 @@ void PerfCounter::beginGL(const QString & name)
     assert(runningGLQuery == QString(""));
     runningGLQuery = name;
 
-    GLuint queryID;
-    if (!glTimerMap.contains(name)) {
-        glGenQueries(1, &queryID);
-        glTimerMap[name] = queryID;
-    } else {
-        queryID = glTimerMap[name];
-        GLuint elapsedTimeNs;
-        glGetQueryObjectuiv(queryID, GL_QUERY_RESULT, &elapsedTimeNs);
+    if (!glTimerMap.contains(name))
+        glTimerMap[name] = new glow::Query(GL_TIME_ELAPSED);
+    else
+        addMeasurement(name, glTimerMap[name]->get());
 
-        addMeasurement(name, elapsedTimeNs);
-    }
-
-    glBeginQuery(GL_TIME_ELAPSED, queryID);
+    glTimerMap[name]->begin();
 }
 
 void PerfCounter::endGL(const QString & name)
@@ -68,7 +63,8 @@ void PerfCounter::endGL(const QString & name)
     addNameToOrderedNames(name);
 
     runningGLQuery = "";
-    glEndQuery(GL_TIME_ELAPSED);
+
+    glTimerMap[name]->end();
 }
 
 QString PerfCounter::generateString()
