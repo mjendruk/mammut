@@ -66,6 +66,9 @@ void Game::run()
         if(!m_window.isMinimized())
             m_canvas->render();
         PerfCounter::end("total");
+
+        if (m_activeMechanics == m_gameMechanics)
+            qDebug() << qPrintable(PerfCounter::generateString());
     }
 }
 

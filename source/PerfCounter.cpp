@@ -44,7 +44,7 @@ void PerfCounter::end(const QString & name)
 
 void PerfCounter::beginGL(const QString & name)
 {
-    assert(runningGLQuery == QString(""));
+    assert(runningGLQuery == "");
     runningGLQuery = name;
 
     if (!glTimerMap.contains(name))
