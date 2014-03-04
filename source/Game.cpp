@@ -57,6 +57,8 @@ void Game::run()
         frameTime = currentTime - lastTime;
         lastTime = currentTime;
 
+        frameTime = (frameTime < 6000000.0f) ? 6000000.0f : frameTime;
+
         SoundManager::instance().updateSoundSystem();
         QCoreApplication::processEvents();
         
@@ -66,6 +68,9 @@ void Game::run()
         if(!m_window.isMinimized())
             m_canvas->render();
         PerfCounter::end("total");
+
+        if (m_activeMechanics == m_gameMechanics)
+            qDebug() << qPrintable(PerfCounter::generateString());
     }
 }
 

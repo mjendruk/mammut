@@ -5,7 +5,6 @@
 #include <glm/gtx/transform.hpp>
 
 #include <QMap>
-#include <QDebug>
 
 #include <glow/Texture.h>
 #include <glow/Program.h>
@@ -110,8 +109,6 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_renderOnScreenQuad->draw();
     fbo->unbind();
     PerfCounter::endGL("blit");
-
-    qDebug() << qPrintable(PerfCounter::generateString());
 
     glEnable(GL_DEPTH_TEST);
 }
