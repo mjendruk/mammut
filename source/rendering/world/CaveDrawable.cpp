@@ -1,5 +1,7 @@
 #include "CaveDrawable.h"
 
+#include <cmath>
+
 #include <glm/gtx/random.hpp>
 
 #include <glow/VertexArrayObject.h>
@@ -21,11 +23,11 @@ CaveDrawable::CaveDrawable()
 ,   m_activeRingPosition(0.f)
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
-        float angle = (3.14159265359f * 2 / s_verticesPerRing) * i;
-        dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
+        float angle = (M_PI * 2 / s_verticesPerRing) * i;
+        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
 
-        float angleOffset = (3.14159265359f * 2 / s_verticesPerRing) * (i + 0.5f);
-        dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
+        float angleOffset = (M_PI * 2 / s_verticesPerRing) * (i + 0.5f);
+        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
     }
 
     initialize();
@@ -139,17 +141,17 @@ glm::vec3 getRandomOffset()
 }
 
 void CaveDrawable::addRings(int numRings)
-{       
-    int size = m_vertices.size();
+{
     for (int i = m_activeRingPosition + s_numRings - numRings; i < m_activeRingPosition + s_numRings; i++) {
-        for (glm::vec3 v : dummyArray){
-            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride) + getRandomOffset());
+        for (const glm::vec3 & v : m_dummyArray) {
+            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, i * m_ringZStride) + getRandomOffset());
         }
 
-        for (glm::vec3 v : dummyArrayOffset){
+        for (const glm::vec3 & v : m_dummyArrayOffset) {
             m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride) + getRandomOffset());
         }
     }
+    
     buildDuplicatedVertices();
     buildNormals();
 }

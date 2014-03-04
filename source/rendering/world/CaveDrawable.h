@@ -42,7 +42,7 @@ protected:
     glow::Buffer * m_vertexBuffer;
     glow::Buffer * m_normalBuffer;
     
-    std::vector<glm::vec3> dummyArray;
-    std::vector<glm::vec3> dummyArrayOffset;
+    std::vector<glm::vec3> m_dummyArray;
+    std::vector<glm::vec3> m_dummyArrayOffset;
 
 };
