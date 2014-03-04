@@ -57,6 +57,8 @@ void Game::run()
         frameTime = currentTime - lastTime;
         lastTime = currentTime;
 
+        frameTime = (frameTime < 6000000.0f) ? 6000000.0f : frameTime;
+
         SoundManager::instance().updateSoundSystem();
         QCoreApplication::processEvents();
         
