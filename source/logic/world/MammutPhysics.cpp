@@ -4,6 +4,7 @@
 
 #include <glm/gtx/transform.hpp>
 #include <btBulletDynamicsCommon.h>
+
 #include <Util.h>
 #include "Mammut.h"
 
@@ -25,11 +26,6 @@ void MammutPhysics::collisionEvent(const PhysicsObject & object,
     m_mammut->collisionEvent(object, Util::toGlmVec3(collisionNormal));
 }
 
-btRigidBody * MammutPhysics::rigidBody() const
-{
-    return m_rigidBody.get();
-}
-
 void MammutPhysics::clearForcesAndApplyGravity()
 {
     m_rigidBody->clearForces();
@@ -44,27 +40,6 @@ void MammutPhysics::applyForce(const glm::vec3 & force)
 void MammutPhysics::setVelocity(const glm::vec3 & velocity)
 {
     m_rigidBody->setLinearVelocity(Util::toBtVec3(velocity));
-}
-
-glm::vec3 MammutPhysics::position() const
-{
-    btTransform transform;
-    m_motionState->getWorldTransform(transform);
-    
-    return Util::toGlmVec3(transform.getOrigin());
-}
-
-glm::mat4 MammutPhysics::rotation() const
-{
-    btTransform transform;
-    m_motionState->getWorldTransform(transform);
-    
-    return Util::toGlmMat4(transform.getRotation());
-}
-
-glm::vec3 MammutPhysics::velocity() const
-{
-    return Util::toGlmVec3(m_rigidBody->getLinearVelocity());
 }
 
 void MammutPhysics::initializeRigidBody(const glm::vec3 & size,

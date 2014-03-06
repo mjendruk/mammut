@@ -35,11 +35,6 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
     return boundingBox;
 }
 
-btRigidBody * Cuboid::rigidBody() const
-{
-    return m_rigidBody.get();
-}
-
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)
 {
     m_collisionShape.reset(new btBoxShape(Util::toBtVec3(size / 2.0f)));
