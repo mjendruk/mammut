@@ -7,9 +7,6 @@
 #include <PerfCounter.h>
 
 
-const float GameMechanics::s_caveRadius = 150.0f;
-const float GameMechanics::s_caveDeathDistance = 5.0f;
-
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 0.0f))
@@ -76,12 +73,12 @@ void GameMechanics::tickUpdate(float seconds)
 
 float GameMechanics::normalizedMammutCaveDistance()
 {
-    return glm::length(m_mammut.position().xy()) / (s_caveRadius - s_caveDeathDistance);
+    return glm::length(m_mammut.position().xy()) / (Cave::s_caveRadius - Cave::s_caveDeathDistance);
 }
 
 bool GameMechanics::mammutCollidesWithCave()
 {
-    return glm::length(m_mammut.position().xy()) >= s_caveRadius - s_caveDeathDistance;
+    return glm::length(m_mammut.position().xy()) >= (Cave::s_caveRadius - Cave::s_caveDeathDistance);
 }
 
 void GameMechanics::updateSound()
@@ -126,6 +123,11 @@ const GameCamera & GameMechanics::camera() const
 const Mammut & GameMechanics::mammut() const
 {
     return m_mammut;
+}
+
+const Cave & GameMechanics::cave() const
+{
+    return m_cave;
 }
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)

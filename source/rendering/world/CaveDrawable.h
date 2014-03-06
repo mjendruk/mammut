@@ -12,10 +12,12 @@ namespace glow
     class VertexArrayObject;
 }
 
+class Cave;
+
 class CaveDrawable : public DrawableInterface
 {
 public:
-    CaveDrawable();
+    CaveDrawable(const Cave & cave);
     ~CaveDrawable();
 
     void draw() override;
@@ -39,6 +41,7 @@ protected:
     static const int s_numRings;
     static const int s_numSafetyMarginRings;
 
+    const Cave & m_cave;
     int m_lastRingIndex;
     std::vector<glm::vec3> m_vertices;
     std::vector<glm::vec3> m_duplicatedVertices;

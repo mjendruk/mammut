@@ -245,6 +245,8 @@ set(sources
     ${source_path}/logic/menu/items/MenuText.cpp
     ${source_path}/logic/menu/items/MenuText.h
 
+    ${source_path}/logic/world/Cave.cpp
+    ${source_path}/logic/world/Cave.h
     ${source_path}/logic/world/ChunkGenerator.cpp
     ${source_path}/logic/world/ChunkGenerator.h
     ${source_path}/logic/world/Cuboid.cpp

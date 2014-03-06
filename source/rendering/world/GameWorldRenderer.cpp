@@ -26,7 +26,7 @@ const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
-,   m_caveDrawable(new CaveDrawable())
+,   m_caveDrawable(nullptr)
 ,   m_lastFrame(QTime::currentTime())
 ,   m_avgTimeSinceLastFrame(0.0f)
 ,   m_gameMechanics(nullptr)
@@ -210,6 +210,6 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
-    m_caveDrawable.reset(new CaveDrawable());
+    m_caveDrawable.reset(new CaveDrawable(mechanics->cave()));
 }
 
