@@ -7,10 +7,29 @@
 #include <QDebug>
 #include <QResizeEvent>
 
+#include <glow/global.h>
+#include <glow/logging.h>
+#include <glow/Version.h>
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
+#include <Util.h>
 #include "Renderer.h"
+
+namespace
+{
+    
+void checkVersion()
+{
+    glow::info("Version %;", glow::version().toString());
+    glow::info("Vendor: %;", glow::vendor());
+    glow::info("Renderer %;", glow::renderer());
+    glow::info("Core profile: %;", glow::isCoreProfile() ? "true" : "false");
+    glow::info("GLSL version: %;", glow::getString(GL_SHADING_LANGUAGE_VERSION));
+    glow::info("GL Versionstring: %;\n", glow::versionString());
+}
+    
+} // namespace
 
 Canvas::Canvas(const QSurfaceFormat & format)
 :   QWindow((QScreen*)nullptr)
@@ -73,25 +92,12 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
     m_context.makeCurrent(this);
 
-    glewExperimental = GL_TRUE;
-    if (!(glewInit() == GLEW_OK))
+    if (!glow::init(true))
     {
-        qCritical() << "Initializing GLEW failed.";
         return;
     }
 
-    // print some hardware information
-
-    qDebug();
-    qDebug().nospace() << "GPU: "
-        << qPrintable(querys(GL_RENDERER)) << " ("
-        << qPrintable(querys(GL_VENDOR)) << ", "
-        << qPrintable(querys(GL_VERSION)) << ")";
-    qDebug().nospace() << "GL Version: "
-        << qPrintable(QString::number(queryi(GL_MAJOR_VERSION))) << "."
-        << qPrintable(QString::number(queryi(GL_MINOR_VERSION))) << " "
-        << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
-    qDebug();
+    checkVersion();
 
     initializeScreenshotFbo();
 
@@ -101,14 +107,7 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 void Canvas::initializeScreenshotFbo()
 {
     m_screenshotFbo = new glow::FrameBufferObject();
-
-    m_screenshotDepthAttachment = new glow::Texture(GL_TEXTURE_2D);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
+    m_screenshotDepthAttachment = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
     m_screenshotFbo->attachTexture2D(GL_DEPTH_ATTACHMENT, m_screenshotDepthAttachment);
 }
 
@@ -150,17 +149,11 @@ glow::Texture * Canvas::screenshot()
 {
     assert(m_renderer != nullptr);
 
-    glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);
-    texture->image2D(0, GL_RGBA32F,
+    glow::Texture * texture = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    texture->image2D(0, GL_RGBA8,
                      width() * devicePixelRatio(),
                      height() * devicePixelRatio(),
                      0, GL_RGBA, GL_FLOAT, nullptr);
-
-    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     m_screenshotFbo->attachTexture2D(GL_COLOR_ATTACHMENT0, texture);
     m_screenshotFbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });

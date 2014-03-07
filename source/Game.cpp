@@ -2,6 +2,7 @@
 
 #include <QTimer>
 #include <QDebug>
+#include <QKeyEvent>
 
 #include <glowutils/File.h>
 
