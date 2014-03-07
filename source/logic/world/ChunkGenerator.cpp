@@ -12,7 +12,6 @@
 
 ChunkGenerator::ChunkGenerator(int seed)
 :   m_generator(std::chrono::system_clock::now().time_since_epoch().count())
-,   m_nextTranslation(0.0f, 0.0f, 0.0f)
 ,   m_zDistance(0.0)
 {
 
@@ -28,22 +27,24 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
     //distance from last cuboid to wall: 200
     
-    if (m_nextTranslation.z >= -240.f) {
-        chunk->add(new Cuboid(glm::vec3(20.f, 10.f, 80.f), glm::vec3(0.f, -2.f, -20.f) + m_nextTranslation));
-        m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
+    if (m_zDistance == 0.f) {
+        chunk->add(new Cuboid(glm::vec3(20.f, 10.f, 80.f), glm::vec3(0.f, -2.f, -20.f - m_zDistance)));
+        m_zDistance += 70.f;
         return chunk;
     }
-    else if (m_nextTranslation.z < -440.f) {
-        createWall(*chunk.data(), true);
+    if (1000 - (int(m_zDistance) % 1000) <= 70.f) {
+        createWall(*chunk.data(), (m_zDistance > 2000 ? false : true));
         return chunk;
     }
-    else
-        m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
-
+        
+    createOrdinaryLevel(*chunk.data());
     return chunk;
     
-        
-    /*
+    
+}
+
+void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
+{
     int numCuboids = glm::smoothstep(200.0, 3000.0, m_zDistance) * 46.0 + 4.0; // [5, 50]
     float xyDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 15 + 20; // [20, 35]
     int maxOverlaps = int(glm::smoothstep(200.0, 3000.0, m_zDistance) * 18.0); //[0 , 18]
@@ -62,23 +63,23 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         float xSize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
         float ySize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
         const glm::vec3 size(xSize,
-                             ySize,
-                             sizeZDistribution(m_generator));
-        
+            ySize,
+            sizeZDistribution(m_generator));
+
         const glm::vec3 position(positionXYDistribution(m_generator),
-                                 positionXYDistribution(m_generator),
-                                 -positionZDistribution(m_generator));
-        
-        chunk->add(new Cuboid(size, position + m_nextTranslation));
+            positionXYDistribution(m_generator),
+            -positionZDistribution(m_generator));
+
+        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance)));
     }
-    
+
     int numOverlaps = 0;
     int numDeletions = 0;
 
-    QList<Cuboid *> cuboidList = chunk->cuboids();
+    QList<Cuboid *> cuboidList = chunk.cuboids();
     QList<int> removeIndexList;
 
-    for (int i = 0; i < cuboidList.size()-1; i++)
+    for (int i = 0; i < cuboidList.size() - 1; i++)
     for (int j = i + 1; j < cuboidList.size(); j++)
     {
         glm::vec2 c1URB = cuboidList.at(i)->boundingBox().urb().xy;
@@ -89,7 +90,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 
         bool overlapped = !(c1LLF.x > c2URB.x || c2LLF.x > c1URB.x || c2LLF.y > c1URB.y || c1LLF.y > c2URB.y);
 
-        if(overlapped) {
+        if (overlapped) {
             ++numOverlaps;
             float minOverlap = 1.f;
 
@@ -113,16 +114,13 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     }
 
     for (int i = removeIndexList.size() - 1; i >= 0; --i)
-        chunk->remove(removeIndexList.at(i));
+        chunk.remove(removeIndexList.at(i));
 
     qDebug() << "num overlaps" << numOverlaps;
     qDebug() << "num deletions" << numDeletions;
-        
-    m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
+
+    //m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
     m_zDistance += 70.0;
-    return chunk;
-    */
-    
 }
 
 void ChunkGenerator::createWall(CuboidChunk & chunk, bool createStripe)
@@ -138,14 +136,13 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, bool createStripe)
     float offsetX = float(offsetDistribution(m_generator));
     float offsetY = float(offsetDistribution(m_generator));
 
-    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(-(wallSize + sizeX) / 2.f + offsetX, offsetY, m_nextTranslation.z)));
-    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3( (wallSize + sizeX) / 2.f + offsetX, offsetY, m_nextTranslation.z)));
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(-(wallSize + sizeX) / 2.f + offsetX, offsetY, -(m_zDistance + 40.f))));
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3( (wallSize + sizeX) / 2.f + offsetX, offsetY, -(m_zDistance + 40.f))));
 
     if (!createStripe)
     {
-        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, -(wallSize + sizeY) / 2.f + offsetY, m_nextTranslation.z)));
-        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, (wallSize + sizeY) / 2.f + offsetY, m_nextTranslation.z)));
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, -(wallSize + sizeY) / 2.f + offsetY, -(m_zDistance + 40.f))));
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX,  (wallSize + sizeY) / 2.f + offsetY, -(m_zDistance + 40.f))));
     }
-
-    m_nextTranslation += glm::vec3(0.0f, 0.0f, -140.0f);
+    m_zDistance += 70.f;
 }

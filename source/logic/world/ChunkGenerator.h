@@ -18,11 +18,11 @@ public:
     QSharedPointer<CuboidChunk> nextChunk();
 
 protected: 
+    void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk);
     void createWall(CuboidChunk & chunk, bool createStripe);
 
 protected:
     std::mt19937 m_generator;
-    glm::vec3 m_nextTranslation;
     double m_zDistance;
 
 };
