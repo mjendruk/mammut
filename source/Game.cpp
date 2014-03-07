@@ -238,7 +238,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
                 else
                     m_window.showFullScreen();
                 return;
-            case Qt::Key_Space:
+            case Qt::Key_P:
                 m_paused = !m_paused;
                 return;
             case Qt::Key_R:
