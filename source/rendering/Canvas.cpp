@@ -2,7 +2,9 @@
 
 #include <cassert>
 
+#include <QApplication>
 #include <QDebug>
+#include <QDesktopWidget>
 #include <QResizeEvent>
 
 #include <glow/Texture.h>
@@ -16,11 +18,13 @@ Canvas::Canvas(const QSurfaceFormat & format)
 ,   m_swapInterval(VerticalSyncronization)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
+,   m_isFullscreen(false)
 {
     setSurfaceType(OpenGLSurface); 
     create();
 
     initializeGL(format);
+    showWindowed();
 }
 
 Canvas::~Canvas()
@@ -231,4 +235,37 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
     default:
         return QString();
     }
+}
+
+void Canvas::showFullscreen()
+{
+    setFlags(Qt::CustomizeWindowHint |
+             Qt::FramelessWindowHint |
+             Qt::WindowStaysOnTopHint );
+    
+    m_windowedRect = geometry();
+    QRect rect = QApplication::desktop()->screenGeometry(QApplication::desktop()->primaryScreen());
+    setGeometry(rect);
+    
+    m_isFullscreen = true;
+}
+
+void Canvas::showWindowed()
+{
+    if (isFullscreen())
+        setGeometry(m_windowedRect);
+    
+    setFlags(Qt::Window);
+    
+    m_isFullscreen = false;
+}
+
+void Canvas::toggleFullscreen()
+{
+    isFullscreen() ? showWindowed() : showFullscreen();
+}
+
+bool Canvas::isFullscreen() const
+{
+    return m_isFullscreen;
 }

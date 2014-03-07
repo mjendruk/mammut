@@ -2,6 +2,8 @@
 
 #include <QTimer>
 #include <QThread>
+#include <QDesktopWidget>
+#include <QMainWindow>
 #include <QDebug>
 #include <QMouseEvent>
 
@@ -63,7 +65,7 @@ void Game::run()
         if (!m_paused)
             m_activeMechanics->update(frameTime / std::nano::den);
 
-        if(!m_window.isMinimized())
+        if(!(m_canvas->visibility() == QWindow::Minimized))
             m_canvas->render();
         PerfCounter::end("total");
 
@@ -83,13 +85,9 @@ void Game::initializeWindow()
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
     
-    QWidget * canvasWidget = QWidget::createWindowContainer(m_canvas);
+    m_canvas->resize(800, 600);
     
-    m_window.setCentralWidget(canvasWidget);
-    m_window.setMinimumSize(800, 600);
-    m_window.setFocusProxy(canvasWidget);
-    m_window.setFocus();
-    m_window.show();
+    m_canvas->show();
 }
 
 void Game::initializeRendering()
@@ -229,14 +227,9 @@ void Game::keyPressed(QKeyEvent * keyEvent)
         return;
     
     if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier) {
-        if (m_window.isFullScreen())
-            m_window.showNormal();
-        else
-            m_window.showFullScreen();
-        
-        return;
+        m_canvas->toggleFullscreen();
     }
-
+    
     if (keyEvent->key() == Qt::Key_Space)
         m_paused = !m_paused;
 

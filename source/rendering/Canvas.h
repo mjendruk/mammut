@@ -40,6 +40,12 @@ public:
     glow::Texture * screenshot();
 
     void setRenderer(Renderer * renderer);
+    
+    void showFullscreen();
+    void showWindowed();
+    void toggleFullscreen();
+    
+    bool isFullscreen() const;
 
 public slots:
     void toggleSwapInterval();
@@ -63,4 +69,7 @@ protected:
     SwapInterval m_swapInterval;    ///< required for toggle
     long double m_swapts;
     unsigned int m_swaps;
+    
+    bool m_isFullscreen;
+    QRect m_windowedRect;
 };
