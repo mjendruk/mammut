@@ -66,7 +66,21 @@ void GameMechanics::update(float seconds)
 void GameMechanics::tickUpdate(float seconds)
 {
     m_mammut.update();
-    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds, m_mammut.caveDistanceRatio());
+    
+    if (mammutCollidesWithCave())
+        m_mammut.caveCollisionEvent();
+    
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), seconds, normalizedMammutCaveDistance());
+}
+
+float GameMechanics::normalizedMammutCaveDistance()
+{
+    return glm::length(m_mammut.position().xy()) / s_caveRadius;
+}
+
+bool GameMechanics::mammutCollidesWithCave()
+{
+    return glm::length(m_mammut.position().xy()) >= s_caveRadius;
 }
 
 void GameMechanics::updateSound()

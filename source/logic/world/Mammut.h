@@ -19,7 +19,7 @@ public:
     void collisionEvent(const PhysicsObject & object,
                         const glm::vec3 & collisionNormal);
     
-    float caveDistanceRatio() const;
+    void caveCollisionEvent();
 
     glm::mat4 modelTransform() const;
     
@@ -38,8 +38,6 @@ protected:
     void crash();
 
     bool isStillOnObject() const;
-    bool collidesWithCave() const;
-
     
 protected:
     static const glm::vec3 s_size;

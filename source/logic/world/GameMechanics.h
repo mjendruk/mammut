@@ -45,6 +45,9 @@ protected:
     void connectSignals();
     void updateSound();
     
+    float normalizedMammutCaveDistance();
+    bool mammutCollidesWithCave();
+    
 protected:
     PhysicsWorld m_physicsWorld;
     

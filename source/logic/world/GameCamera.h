@@ -25,7 +25,7 @@ protected:
     void updateRotationProgress(float seconds);
     void updateLookAt(const glm::vec3 & position,
                       const glm::vec3 & direction,
-                      float caveDistanceRatio);
+                      float normalizedCaveDistance);
 
     static const float s_rotationDuration;
 

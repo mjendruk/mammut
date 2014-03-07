@@ -4,7 +4,6 @@
 
 #include <Util.h>
 #include <sound/Sound.h>
-#include "GameMechanics.h"
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 
@@ -21,9 +20,6 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
-    if (collidesWithCave())
-        crash();
-
     if (!isStillOnObject()) {
         m_isOnObject = false;
         return;
@@ -59,9 +55,9 @@ void Mammut::collisionEvent(const PhysicsObject & object,
     }
 }
 
-float Mammut::caveDistanceRatio() const
+void Mammut::caveCollisionEvent()
 {
-    return glm::length(m_physics.position().xy()) / GameMechanics::s_caveRadius;
+    crash();
 }
 
 glm::mat4 Mammut::modelTransform() const
@@ -115,9 +111,4 @@ bool Mammut::isStillOnObject() const
     
     glm::vec3 velocity = m_gravityTransform * m_physics.velocity();
     return fabs(velocity.y) < epsilon;
-}
-
-bool Mammut::collidesWithCave() const
-{
-    return glm::length(m_physics.position().xy()) >= GameMechanics::s_caveRadius;
 }
