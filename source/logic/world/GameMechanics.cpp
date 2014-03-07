@@ -11,7 +11,7 @@ const float GameMechanics::s_caveRadius = 150.0f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
-,   m_mammut(glm::vec3(-2.2f, 7.6f, -15.0f))
+,   m_mammut(glm::vec3(-2.2f, 7.6f, 0.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
 {
