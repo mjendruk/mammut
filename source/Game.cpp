@@ -1,11 +1,7 @@
 #include "Game.h"
 
 #include <QTimer>
-#include <QThread>
-#include <QDesktopWidget>
-#include <QMainWindow>
 #include <QDebug>
-#include <QMouseEvent>
 
 #include <glowutils/File.h>
 
@@ -55,6 +51,7 @@ void Game::run()
     while(m_loop)
     {   
         PerfCounter::begin("total");
+        
         currentTime = m_timer.elapsed();
         frameTime = currentTime - lastTime;
         lastTime = currentTime;
@@ -64,9 +61,9 @@ void Game::run()
         
         if (!m_paused)
             m_activeMechanics->update(frameTime / std::nano::den);
-
-        if(!(m_canvas->visibility() == QWindow::Minimized))
-            m_canvas->render();
+        
+        m_canvas->render();
+        
         PerfCounter::end("total");
 
         if (m_activeMechanics == m_gameMechanics)
@@ -84,9 +81,6 @@ void Game::initializeWindow()
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-    
-    m_canvas->resize(800, 600);
-    
     m_canvas->show();
 }
 
@@ -228,6 +222,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
     
     if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier) {
         m_canvas->toggleFullscreen();
+        return;
     }
     
     if (keyEvent->key() == Qt::Key_Space)

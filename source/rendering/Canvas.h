@@ -35,16 +35,16 @@ public:
 
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
-    
+
     void render();
     glow::Texture * screenshot();
 
     void setRenderer(Renderer * renderer);
-    
+
     void showFullscreen();
     void showWindowed();
     void toggleFullscreen();
-    
+
     bool isFullscreen() const;
 
 public slots:
@@ -54,6 +54,7 @@ protected:
     const QString querys(const GLenum penum);
     const GLint queryi(const GLenum penum);
 
+    void initializeAppearance();
     void initializeGL(const QSurfaceFormat & format);
     void initializeScreenshotFbo();
 
@@ -66,10 +67,10 @@ protected:
     glow::ref_ptr<glow::FrameBufferObject> m_screenshotFbo;
     glow::ref_ptr<glow::Texture> m_screenshotDepthAttachment;
 
-    SwapInterval m_swapInterval;    ///< required for toggle
-    long double m_swapts;
-    unsigned int m_swaps;
-    
+    SwapInterval m_swapInterval;
+
     bool m_isFullscreen;
-    QRect m_windowedRect;
+    Qt::WindowFlags m_windowedFlags;
+    QRect m_windowedGeometry;
+
 };
