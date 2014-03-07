@@ -29,7 +29,6 @@ protected:
     void buildNormals();
 
     static const int s_verticesPerRing;
-    static const float s_radius;
     static const glm::vec3 s_maxShift;
     static const int s_numRings;
 
@@ -43,7 +42,7 @@ protected:
     glow::Buffer * m_vertexBuffer;
     glow::Buffer * m_normalBuffer;
     
-    std::vector<glm::vec3> dummyArray;
-    std::vector<glm::vec3> dummyArrayOffset;
+    std::vector<glm::vec3> m_dummyArray;
+    std::vector<glm::vec3> m_dummyArrayOffset;
 
 };

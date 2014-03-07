@@ -19,6 +19,8 @@ public:
     void collisionEvent(const PhysicsObject & object,
                         const glm::vec3 & collisionNormal);
     
+    void caveCollisionEvent();
+
     glm::mat4 modelTransform() const;
     
     glm::vec3 position() const;
@@ -33,6 +35,8 @@ signals:
 
 protected:
     void slowDownDrifting();
+    void crash();
+
     bool isStillOnObject() const;
     
 protected:

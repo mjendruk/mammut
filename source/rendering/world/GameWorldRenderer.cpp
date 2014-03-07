@@ -23,10 +23,11 @@ const float GameWorldRenderer::s_nearPlane = 0.01f;
 const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
-: m_hud(m_camera, *this)
-, m_lastFrame(QTime::currentTime())
-, m_gameMechanics(nullptr)
-, m_avgTimeSinceLastFrame(0.f)
+:   m_hud(m_camera, *this)
+,   m_caveDrawable(new CaveDrawable())
+,   m_lastFrame(QTime::currentTime())
+,   m_gameMechanics(nullptr)
+,   m_avgTimeSinceLastFrame(0.f)
 {
     initialize();
 }
@@ -42,7 +43,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
    
     m_camera.update(m_gameMechanics->camera());
-    m_caveDrawable.update(m_camera.eye());
+    m_caveDrawable->update(m_camera.eye());
 
     updateFPS();
     updatePainters();
@@ -78,7 +79,7 @@ void GameWorldRenderer::drawGeometry()
     });
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
-    m_cavePainter.paint(m_caveDrawable, glm::mat4(), glm::mat4());
+    m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
 }
@@ -196,5 +197,6 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
+    m_caveDrawable.reset(new CaveDrawable());
 }
 

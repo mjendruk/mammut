@@ -1,14 +1,17 @@
 #include "CaveDrawable.h"
 
+#include <cmath>
+
 #include <glm/gtx/random.hpp>
 
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
+#include <logic/world/GameMechanics.h>
+
 
 const int CaveDrawable::s_verticesPerRing = 20;
-const float CaveDrawable::s_radius = 200.f;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
 const int CaveDrawable::s_numRings = 30;
 
@@ -20,11 +23,11 @@ CaveDrawable::CaveDrawable()
 ,   m_activeRingPosition(0.f)
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
-        float angle = (3.14159265359f * 2 / s_verticesPerRing) * i;
-        dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * s_radius);
+        float angle = (M_PI * 2 / s_verticesPerRing) * i;
+        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
 
-        float angleOffset = (3.14159265359f * 2 / s_verticesPerRing) * (i + 0.5f);
-        dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * s_radius);
+        float angleOffset = (M_PI * 2 / s_verticesPerRing) * (i + 0.5f);
+        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
     }
 
     initialize();
@@ -132,23 +135,23 @@ void CaveDrawable::update(glm::vec3 camPosition)
 glm::vec3 getRandomOffset()
 {
     return glm::vec3(
-        glm::linearRand(0.0f, 20.0f),
-        glm::linearRand(0.0f, 20.0f),
+        glm::linearRand(0.0f, 30.0f),
+        glm::linearRand(0.0f, 30.0f),
         glm::linearRand(0.0f, 40.0f));
 }
 
 void CaveDrawable::addRings(int numRings)
-{       
-    int size = m_vertices.size();
+{
     for (int i = m_activeRingPosition + s_numRings - numRings; i < m_activeRingPosition + s_numRings; i++) {
-        for (glm::vec3 v : dummyArray){
-            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i)* m_ringZStride) + getRandomOffset());
+        for (const glm::vec3 & v : m_dummyArray) {
+            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, i * m_ringZStride) + getRandomOffset());
         }
 
-        for (glm::vec3 v : dummyArrayOffset){
+        for (const glm::vec3 & v : m_dummyArrayOffset) {
             m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride) + getRandomOffset());
         }
     }
+    
     buildDuplicatedVertices();
     buildNormals();
 }

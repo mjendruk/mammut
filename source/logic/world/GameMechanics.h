@@ -19,6 +19,9 @@ class GameMechanics : public Mechanics
     Q_OBJECT
 
 public:
+    static const float s_caveRadius;
+
+public:
     GameMechanics();
     virtual ~GameMechanics();
 
@@ -41,6 +44,9 @@ signals:
 protected:
     void connectSignals();
     void updateSound();
+    
+    float normalizedMammutCaveDistance();
+    bool mammutCollidesWithCave();
     
 protected:
     PhysicsWorld m_physicsWorld;

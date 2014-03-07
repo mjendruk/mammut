@@ -12,7 +12,8 @@ public:
 
     void update(const glm::vec3 & position,
                 const glm::vec3 & direction,
-                float seconds);
+                float seconds,
+                float normalizedCaveDistance);
     
     void gravityChangeEvent(const glm::mat3 & rotation);
 
@@ -23,7 +24,8 @@ public:
 protected:
     void updateRotationProgress(float seconds);
     void updateLookAt(const glm::vec3 & position,
-                      const glm::vec3 & direction);
+                      const glm::vec3 & direction,
+                      float normalizedCaveDistance);
 
     static const float s_rotationDuration;
 
