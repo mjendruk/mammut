@@ -17,6 +17,9 @@ public:
 
     QSharedPointer<CuboidChunk> nextChunk();
 
+protected: 
+    void createWall(CuboidChunk & chunk, bool createStripe);
+
 protected:
     std::mt19937 m_generator;
     glm::vec3 m_nextTranslation;

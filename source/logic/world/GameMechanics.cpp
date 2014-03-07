@@ -8,7 +8,7 @@
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(0)
-,   m_mammut(glm::vec3(-2.2f, 7.6f, -2.0f))
+,   m_mammut(glm::vec3(0.f, 7.6f, -2.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
 {

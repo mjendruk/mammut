@@ -26,13 +26,24 @@ ChunkGenerator::~ChunkGenerator()
 QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 {
     QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
+    //distance from last cuboid to wall: 200
     
-    if (m_nextTranslation.z == 0.f) {
-        chunk->add(new Cuboid(glm::vec3(20.f, 10.f, 80.f), glm::vec3(0.f, -2.f, -20.f)));
+    if (m_nextTranslation.z >= -240.f) {
+        chunk->add(new Cuboid(glm::vec3(20.f, 10.f, 80.f), glm::vec3(0.f, -2.f, -20.f) + m_nextTranslation));
         m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
         return chunk;
     }
+    else if (m_nextTranslation.z < -440.f) {
+        createWall(*chunk.data(), true);
+        return chunk;
+    }
+    else
+        m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
 
+    return chunk;
+    
+        
+    /*
     int numCuboids = glm::smoothstep(200.0, 3000.0, m_zDistance) * 46.0 + 4.0; // [5, 50]
     float xyDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 15 + 20; // [20, 35]
     int maxOverlaps = int(glm::smoothstep(200.0, 3000.0, m_zDistance) * 18.0); //[0 , 18]
@@ -110,4 +121,31 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
     m_zDistance += 70.0;
     return chunk;
+    */
+    
+}
+
+void ChunkGenerator::createWall(CuboidChunk & chunk, bool createStripe)
+{
+    const float wallSize = 450.f;
+
+    std::uniform_real_distribution<> offsetDistribution(-60.0f, 60.0f);
+    std::normal_distribution<> sizeDistribution(25.0f, 4.0f);
+
+    float sizeX = std::max(1.f, float(sizeDistribution(m_generator)));
+    float sizeY = std::max(1.f, float(sizeDistribution(m_generator)));
+
+    float offsetX = float(offsetDistribution(m_generator));
+    float offsetY = float(offsetDistribution(m_generator));
+
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(-(wallSize + sizeX) / 2.f + offsetX, offsetY, m_nextTranslation.z)));
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3( (wallSize + sizeX) / 2.f + offsetX, offsetY, m_nextTranslation.z)));
+
+    if (!createStripe)
+    {
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, -(wallSize + sizeY) / 2.f + offsetY, m_nextTranslation.z)));
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, (wallSize + sizeY) / 2.f + offsetY, m_nextTranslation.z)));
+    }
+
+    m_nextTranslation += glm::vec3(0.0f, 0.0f, -140.0f);
 }
