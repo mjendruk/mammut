@@ -13,7 +13,7 @@ public:
     void update(const glm::vec3 & position,
                 const glm::vec3 & direction,
                 float seconds,
-                float caveDistanceRatio);
+                float normalizedCaveDistance);
     
     void gravityChangeEvent(const glm::mat3 & rotation);
 

@@ -24,10 +24,10 @@ void GameCamera::update(
     const glm::vec3 & position,
     const glm::vec3 & direction,
     float seconds,
-    float caveDistanceRatio)
+    float normalizedCaveDistance)
 {
     updateRotationProgress(seconds);
-    updateLookAt(position, direction, caveDistanceRatio);
+    updateLookAt(position, direction, normalizedCaveDistance);
 }
 
 void GameCamera::gravityChangeEvent(const glm::mat3 & rotation)
