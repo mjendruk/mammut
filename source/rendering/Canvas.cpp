@@ -246,6 +246,7 @@ void Canvas::showFullscreen()
     m_windowedRect = geometry();
     QRect rect = QApplication::desktop()->screenGeometry(QApplication::desktop()->primaryScreen());
     setGeometry(rect);
+    requestActivate();
     
     m_isFullscreen = true;
 }
@@ -257,6 +258,7 @@ void Canvas::showWindowed()
     
     setFlags(Qt::Window);
     
+    requestActivate();
     m_isFullscreen = false;
 }
 
