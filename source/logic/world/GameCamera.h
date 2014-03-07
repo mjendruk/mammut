@@ -34,7 +34,6 @@ protected:
     glm::vec3 m_up;
     
     glm::vec3 m_currentCenterOffset;
-    float m_currentShakiness;
 
     glm::mat3 m_initialRotation;
     glm::mat3 m_targetRotation;

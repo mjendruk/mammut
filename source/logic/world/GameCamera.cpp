@@ -13,7 +13,6 @@ const float GameCamera::s_rotationDuration = 0.25f;
 
 GameCamera::GameCamera()
 :   m_currentCenterOffset(0.0f)
-,   m_currentShakiness(0.0f)
 {
 }
 
@@ -58,8 +57,7 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
     const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     const glm::vec3 realDirection = (glm::length(direction) == 0.0f) ? glm::vec3(0.0f, 0.0f, -1.0f) : direction;
     
-    float shakiness = glm::smoothstep(0.35f, 0.5f, caveDistanceRatio);
-    m_currentShakiness = glm::mix(shakiness, m_currentShakiness, 0.5f);
+    float shakiness = glm::smoothstep(0.35f, 0.95f, caveDistanceRatio);
     
     glm::vec3 shakeLookAt = glm::normalize(glm::vec3(glm::gaussRand(0.0f, 8.0f),
                                                      glm::gaussRand(0.0f, 8.0f),
