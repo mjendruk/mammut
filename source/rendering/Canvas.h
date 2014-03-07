@@ -20,12 +20,7 @@ class Canvas : public QWindow
     Q_OBJECT
 
 public:
-    enum SwapInterval
-    {
-        NoVerticalSyncronization        =  0
-    ,   VerticalSyncronization          =  1 ///< WGL_EXT_swap_control, GLX_EXT_swap_control, GLX_SGI_video_sync
-    ,   AdaptiveVerticalSyncronization  = -1 ///< requires EXT_swap_control_tear
-    };
+    enum SwapInterval { NoVerticalSyncronization = 0, VerticalSyncronization = 1 };
 
 public:
     Canvas(const QSurfaceFormat & format);
@@ -35,7 +30,7 @@ public:
 
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
-    
+
     void render();
     glow::Texture * screenshot();
 
