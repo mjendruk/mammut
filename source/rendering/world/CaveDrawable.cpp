@@ -12,7 +12,7 @@
 
 
 const int CaveDrawable::s_verticesPerRing = 20;
-const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
+const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(15.0f, 15.0f, 20.0f); //glm::vec3(1.f, 1.f, 1.f);
 const int CaveDrawable::s_numRings = 30;
 
 CaveDrawable::CaveDrawable()
@@ -132,12 +132,12 @@ void CaveDrawable::update(glm::vec3 camPosition)
     }
 }
 
-glm::vec3 getRandomOffset()
+glm::vec3 CaveDrawable::getRandomOffset()
 {
     return glm::vec3(
-        glm::linearRand(0.0f, 30.0f),
-        glm::linearRand(0.0f, 30.0f),
-        glm::linearRand(0.0f, 40.0f));
+        glm::linearRand(-s_maxShift.x, s_maxShift.x),
+        glm::linearRand(-s_maxShift.y, s_maxShift.y),
+        glm::linearRand(-s_maxShift.z, s_maxShift.z));
 }
 
 void CaveDrawable::addRings(int numRings)

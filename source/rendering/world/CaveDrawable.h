@@ -24,10 +24,12 @@ public:
 protected:
     void initialize() override;
     void initializeIndices();
+    glm::vec3 getRandomOffset();
     void addRings(int numRings);
     void buildDuplicatedVertices();
     void buildNormals();
 
+protected:
     static const int s_verticesPerRing;
     static const glm::vec3 s_maxShift;
     static const int s_numRings;
