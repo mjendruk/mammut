@@ -43,6 +43,7 @@ signals:
 protected:
     void connectSignals();
     void updateSound();
+    void zReset();
     
     float normalizedMammutCaveDistance();
     bool mammutCollidesWithCave();

@@ -17,16 +17,13 @@ public:
          
     virtual ~Cuboid();
 
-    const glm::mat4 & modelTransform() const;
+    glm::mat4 modelTransform() const;
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
-    void initializeModelTransform();
 
 protected:
-
-    glm::mat4 m_modelTransform;
     glm::vec3 m_size;
 };

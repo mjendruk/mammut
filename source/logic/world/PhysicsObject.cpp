@@ -26,6 +26,20 @@ glm::vec3 PhysicsObject::position() const
     return Util::toGlmVec3(transform.getOrigin());
 }
 
+void PhysicsObject::addZShift(float zShift)
+{
+    btTransform transform;
+    m_motionState->getWorldTransform(transform);
+    transform.setOrigin(transform.getOrigin() + btVector3(0.0f, 0.0f, zShift));
+    m_motionState->setWorldTransform(transform);
+
+    transform = m_rigidBody->getCenterOfMassTransform();
+    transform.setOrigin(transform.getOrigin() + btVector3(0.0f, 0.0f, zShift));
+
+    m_rigidBody->setCenterOfMassTransform(transform);
+
+}
+
 glm::mat4 PhysicsObject::rotation() const
 {
     btTransform transform;

@@ -29,9 +29,10 @@ protected:
     void initializeIndices();
 
     glm::vec3 getRandomOffset();
+    glm::vec3 getZShiftVector();
     void addTwoRings();
     void rebuildGPUData();
-    void buildDuplicatedVertices();
+    void buildGPUVertices();
     void buildNormals();
 
 protected:
@@ -44,7 +45,7 @@ protected:
     const Cave & m_cave;
     int m_lastRingIndex;
     std::vector<glm::vec3> m_vertices;
-    std::vector<glm::vec3> m_duplicatedVertices;
+    std::vector<glm::vec3> m_GPUVertices;
     std::vector<glm::vec3> m_normals;
     std::vector<unsigned int> m_indices;
     glow::VertexArrayObject * m_vao;

@@ -57,6 +57,7 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
+    zReset();
     updateSound();
     PerfCounter::end("game");
 }
@@ -86,6 +87,14 @@ void GameMechanics::updateSound()
     glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
     glm::vec3 velocity = glm::vec3(0.0, 0.0, m_mammut.velocity().z);
     SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
+}
+
+void GameMechanics::zReset()
+{
+    float zShift = -m_mammut.position().z;
+    m_mammut.addZShift(zShift);
+    m_cave.addZShift(zShift);
+    forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
