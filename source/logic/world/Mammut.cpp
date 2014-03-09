@@ -101,7 +101,7 @@ int Mammut::boosts() const
 void Mammut::addBoost()
 {
     if (m_collectedBoosts < s_maxBoosts)
-        ++m_boosts;
+        ++m_collectedBoosts;
 }
 
 void Mammut::slowDownDrifting()
