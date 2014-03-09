@@ -23,6 +23,8 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
+    applyBoost();
+
     if (!isStillOnObject()) {
         m_isOnObject = false;
         return;
@@ -47,19 +49,19 @@ void Mammut::collisionEvent(const PhysicsObject & object,
     
     switch (Util::maxAxis(rotatedAbsoluteNormal))
     {
-        case Util::kXAxis:
-            break;
-        case Util::kYAxis:
-            if (object.containsBoost()) 
-            {
-                object.collectBoost();
-                addBoost();
-            }
-            m_isOnObject = true;
-            break;
-        case Util::kZAxis:
-            crash();
-            break;
+    case Util::kXAxis:
+        break;
+    case Util::kYAxis:
+        if (object.containsBoost()) 
+        {
+            object.collectBoost();
+            addBoost();
+        }
+        m_isOnObject = true;
+        break;
+    case Util::kZAxis:
+        crash();
+        break;
     }
 }
 
@@ -93,7 +95,7 @@ MammutPhysics * Mammut::physics()
     return &m_physics;
 }
 
-int Mammut::boosts() const
+int Mammut::collectedBoosts() const
 {
     return m_collectedBoosts;
 }
@@ -102,6 +104,37 @@ void Mammut::addBoost()
 {
     if (m_collectedBoosts < s_maxBoosts)
         ++m_collectedBoosts;
+}
+
+void Mammut::applyBoost(BoostDirection direction)
+{
+    float magnitude = 500.f;
+    glm::vec3 boostForce;
+
+    switch (direction)
+    {
+    case BoostDirection::kUp:
+        boostForce = glm::vec3(0.f, magnitude, 0.f);
+        break;
+    case BoostDirection::kRight:
+        boostForce = glm::vec3(magnitude, 0.f, 0.f);
+        break;
+    case BoostDirection::kDown:
+        boostForce = glm::vec3(0.f, -magnitude, 0.f);
+        break;
+    case BoostDirection::kLeft:
+        boostForce = glm::vec3(-magnitude, 0.f, 0.f);
+        break;
+    }
+
+    m_boostVector = boostForce;
+    --m_collectedBoosts;
+}
+
+void Mammut::applyBoost()
+{
+    m_physics.applyForce(glm::inverse(m_gravityTransform) * m_boostVector);
+    m_boostVector *= glm::vec3(0.75f, 0.75f, 0.f);
 }
 
 void Mammut::slowDownDrifting()

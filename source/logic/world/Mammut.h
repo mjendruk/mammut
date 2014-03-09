@@ -10,6 +10,8 @@ class Mammut : public QObject
     Q_OBJECT
     
 public:
+    enum class BoostDirection{kUp, kRight, kDown, kLeft};
+
     Mammut(const glm::vec3 & translation);
     ~Mammut();
     
@@ -30,7 +32,8 @@ public:
     
     MammutPhysics * physics();
 
-    int boosts() const;
+    int collectedBoosts() const;
+    void applyBoost(BoostDirection direction);
     
 signals:
     void crashed();
@@ -42,6 +45,7 @@ protected:
     bool isStillOnObject() const;
 
     void addBoost();
+    void applyBoost();
     
 protected:
     static const glm::vec3 s_size;
@@ -55,4 +59,5 @@ protected:
 
     int m_collectedBoosts;
     
+    glm::vec3 m_boostVector;
 };

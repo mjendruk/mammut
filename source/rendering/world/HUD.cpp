@@ -23,7 +23,7 @@ void HUD::paint(const Mammut & mammut)
 {
     QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(-mammut.velocity().z)));
     QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-mammut.position().z)));
-    QString boostString = QString("O").repeated(mammut.boosts());
+    QString boostString = QString("O").repeated(mammut.collectedBoosts());
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
     const glm::mat4 aspectRatioTransform = glm::scale(1.0f / m_camera.aspectRatio(), 1.0f, 1.0f);

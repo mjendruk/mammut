@@ -110,6 +110,18 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     case Qt::Key_D:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityRight);
         break;
+    case Qt::Key_Left:
+        m_mammut.applyBoost(Mammut::BoostDirection::kLeft);
+        break;
+    case Qt::Key_Up:
+        m_mammut.applyBoost(Mammut::BoostDirection::kUp);
+        break;
+    case Qt::Key_Right:
+        m_mammut.applyBoost(Mammut::BoostDirection::kRight);
+        break;
+    case Qt::Key_Down:
+        m_mammut.applyBoost(Mammut::BoostDirection::kDown);
+        break;
     }
 }
 
