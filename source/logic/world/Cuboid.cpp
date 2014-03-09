@@ -7,8 +7,9 @@
 #include <Util.h>
 
 
-Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
+Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation, bool containsBoost)
 :   m_size(size)
+,   m_containsBoost(containsBoost)
 {    
     initializeRigidBody(size, translation);
     initializeModelTransform();
@@ -38,6 +39,17 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
 btRigidBody * Cuboid::rigidBody() const
 {
     return m_rigidBody.get();
+}
+
+bool Cuboid::containsBoost() const
+{
+    return m_containsBoost;
+}
+
+void Cuboid::collectBoost() const
+{
+    assert(containsBoost());
+    m_containsBoost = false;
 }
 
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)

@@ -29,6 +29,8 @@ public:
     glm::mat4 rotation() const;
     
     MammutPhysics * physics();
+
+    int boosts() const;
     
 signals:
     void crashed();
@@ -38,14 +40,19 @@ protected:
     void crash();
 
     bool isStillOnObject() const;
+
+    void addBoost();
     
 protected:
     static const glm::vec3 s_size;
+    static const int s_maxBoosts;
     
     MammutPhysics m_physics;
     
     glm::mat3 m_gravityTransform;
     bool m_isOnObject;
     bool m_isCrashed;
+
+    int m_collectedBoosts;
     
 };

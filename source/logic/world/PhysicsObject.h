@@ -14,4 +14,6 @@ public:
 
     virtual btRigidBody * rigidBody() const = 0;
 
+    virtual bool containsBoost() const;
+    virtual void collectBoost() const;
 };

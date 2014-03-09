@@ -4,13 +4,16 @@
 
 #include <Util.h>
 #include <sound/Sound.h>
+#include "Cuboid.h"
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
+const int Mammut::s_maxBoosts = 5;
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
+,   m_collectedBoosts(0)
 {
 }
 
@@ -47,6 +50,11 @@ void Mammut::collisionEvent(const PhysicsObject & object,
         case Util::kXAxis:
             break;
         case Util::kYAxis:
+            if (object.containsBoost()) 
+            {
+                object.collectBoost();
+                addBoost();
+            }
             m_isOnObject = true;
             break;
         case Util::kZAxis:
@@ -83,6 +91,17 @@ glm::mat4 Mammut::rotation() const
 MammutPhysics * Mammut::physics()
 {
     return &m_physics;
+}
+
+int Mammut::boosts() const
+{
+    return m_collectedBoosts;
+}
+
+void Mammut::addBoost()
+{
+    if (m_collectedBoosts < s_maxBoosts)
+        ++m_boosts;
 }
 
 void Mammut::slowDownDrifting()

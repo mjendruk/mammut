@@ -74,7 +74,7 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
             positionXYDistribution(m_generator),
             -positionZDistribution(m_generator));
 
-        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance)));
+        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance), true));
     }
 
     int numOverlaps = 0;
