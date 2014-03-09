@@ -32,8 +32,12 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         m_zDistance += 70.f;
         return chunk;
     }
-    if (1000 - (int(m_zDistance) % 1000) <= 70.f) {
-        createWall(*chunk.data(), (m_zDistance > 2000 ? false : true));
+    
+    const int wallStep = 1000;
+
+    float distanceToNextThousand = wallStep - int(m_zDistance) % wallStep;
+    if (distanceToNextThousand <= 70.f) {
+        createWall(*chunk.data(), distanceToNextThousand, (m_zDistance > 2 * wallStep ? false : true));
         return chunk;
     }
         
@@ -45,7 +49,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 
 void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
 {
-    int numCuboids = glm::smoothstep(200.0, 3000.0, m_zDistance) * 46.0 + 4.0; // [5, 50]
+    int numCuboids = glm::smoothstep(200.0, 3000.0, m_zDistance) * 46.0 + 4.0; // [4, 50]
     float xyDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 15 + 20; // [20, 35]
     int maxOverlaps = int(glm::smoothstep(200.0, 3000.0, m_zDistance) * 18.0); //[0 , 18]
     float minSizeZDistribution = glm::smoothstep(200.0, 3000.0, m_zDistance) * 20; // [0, 20]
@@ -119,30 +123,39 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
     qDebug() << "num overlaps" << numOverlaps;
     qDebug() << "num deletions" << numDeletions;
 
-    //m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
     m_zDistance += 70.0;
 }
 
-void ChunkGenerator::createWall(CuboidChunk & chunk, bool createStripe)
+void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe)
 {
-    const float wallSize = 450.f;
+    const float wallSize = 500.f;
+    const float thickness = 5.f;
 
-    std::uniform_real_distribution<> offsetDistribution(-60.0f, 60.0f);
-    std::normal_distribution<> sizeDistribution(25.0f, 4.0f);
+    const float zPosition = -(m_zDistance + distanceToNextThousand + thickness / 2.f);
 
-    float sizeX = std::max(1.f, float(sizeDistribution(m_generator)));
-    float sizeY = std::max(1.f, float(sizeDistribution(m_generator)));
+    std::uniform_real_distribution<> offsetDistribution(-30.0f, 30.0f);
+    std::normal_distribution<> sizeDistribution(15.0f, 4.0f);
+
+    float sizeX = std::max(3.f, float(sizeDistribution(m_generator)));
+    float sizeY = std::max(3.f, float(sizeDistribution(m_generator)));
 
     float offsetX = float(offsetDistribution(m_generator));
     float offsetY = float(offsetDistribution(m_generator));
 
-    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(-(wallSize + sizeX) / 2.f + offsetX, offsetY, -(m_zDistance + 40.f))));
-    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3( (wallSize + sizeX) / 2.f + offsetX, offsetY, -(m_zDistance + 40.f))));
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(-(wallSize + sizeX) / 2.f + offsetX, offsetY, zPosition)));
+    chunk.add(new Cuboid(glm::vec3(wallSize, wallSize, 5.0f), glm::vec3(+(wallSize + sizeX) / 2.f + offsetX, offsetY, zPosition)));
 
     if (!createStripe)
     {
-        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, -(wallSize + sizeY) / 2.f + offsetY, -(m_zDistance + 40.f))));
-        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX,  (wallSize + sizeY) / 2.f + offsetY, -(m_zDistance + 40.f))));
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, -(wallSize + sizeY) / 2.f + offsetY, zPosition)));
+        chunk.add(new Cuboid(glm::vec3(sizeX, wallSize, 5.0f), glm::vec3(offsetX, +(wallSize + sizeY) / 2.f + offsetY, zPosition)));
     }
-    m_zDistance += 70.f;
+
+    qDebug() << "----------------------";
+    qDebug() << "wall " << (createStripe ? "(stripe)" : "(no stripe)");
+    qDebug() << "size: " << sizeX << " x " << sizeY;
+    qDebug() << "offset: " << offsetX << " x " << offsetY;
+    qDebug() << "distance: " << m_zDistance + distanceToNextThousand << "     distance to last chunk: " << distanceToNextThousand;
+
+    m_zDistance += distanceToNextThousand <= 35.f ? 70.f : 140.f;
 }

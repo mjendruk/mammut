@@ -19,7 +19,7 @@ public:
 
 protected: 
     void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk);
-    void createWall(CuboidChunk & chunk, bool createStripe);
+    void createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe);
 
 protected:
     std::mt19937 m_generator;
