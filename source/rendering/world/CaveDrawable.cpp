@@ -14,7 +14,7 @@
 const int CaveDrawable::s_verticesPerRing = 20;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(15.0f, 15.0f, 20.0f);
 const float CaveDrawable::s_ringZStride = -50.0f;
-const int CaveDrawable::s_numRings = 15;
+const int CaveDrawable::s_numRings = 30;
 const int CaveDrawable::s_numSafetyMarginRings = 3;
 
 CaveDrawable::CaveDrawable()
@@ -34,7 +34,7 @@ void CaveDrawable::initialize()
 {
     initializeDummyArrays();
     initializeIndices();
-    for (int i = 0; i < s_numRings; i++)
+    for (int i = 0; i < s_numRings / 2; i++)
         addTwoRings();
 
     const GLuint vertexAttribLocation = 0;
@@ -79,7 +79,7 @@ void CaveDrawable::initializeIndices()
 {
     int ring = 0;
 
-    for (int ring = 0; ring < s_numRings; ring++) {
+    for (int ring = 0; ring < s_numRings / 2; ring++) {
         for (int vertex = 0; vertex < s_verticesPerRing; vertex++) {
             int index = ring * s_verticesPerRing;
             index += vertex;
