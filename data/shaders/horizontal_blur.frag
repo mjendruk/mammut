@@ -9,21 +9,21 @@ layout (location = 0) out float fragColor;
 const int blurSize = 7;
 const int offset = int(- blurSize * 0.5 + 0.5);
 
-in vec2 v_uv;
+ivec2 v_uv = ivec2(gl_FragCoord.xy);
 
 void main()
 {
-    vec3 normal = texture(normal_depth, v_uv).xyz;
+    vec3 normal = texelFetch(normal_depth, v_uv, 0).xyz;
     float blurred = 0;
     int sampleCount = 0;
     
     for (int i = 0; i < blurSize; ++i)
     {
-        vec2 sampleUv = v_uv + vec2((i + offset) * texelSize.x, 0.0);
-        vec3 sampleNormal = texture(normal_depth, sampleUv).xyz;
+        ivec2 sampleUv = v_uv + ivec2((i + offset), 0);
+        vec3 sampleNormal = texelFetch(normal_depth, sampleUv, 0).xyz;
 
         int considerSample = int(normal == sampleNormal);
-        blurred += considerSample * texture(ssao, sampleUv).x;
+        blurred += considerSample * texelFetch(ssao, sampleUv, 0).x;
         sampleCount += considerSample;
     }
 
