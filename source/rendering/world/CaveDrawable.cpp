@@ -118,7 +118,7 @@ void CaveDrawable::draw()
 
 void CaveDrawable::update(glm::vec3 camPosition)
 {
-    while (camPosition.z < (m_lastRingIndex - s_numRings + s_numSafetyMarginRings) * s_ringZStride) {
+    while (camPosition.z - m_cave.zShift() < (m_lastRingIndex - s_numRings + s_numSafetyMarginRings) * s_ringZStride) {
         m_vertices.erase(m_vertices.begin(), m_vertices.begin() + 2 * s_verticesPerRing);
         addTwoRings();
     }
@@ -132,11 +132,6 @@ glm::vec3 CaveDrawable::getRandomOffset()
         glm::linearRand(-s_maxShift.x, s_maxShift.x),
         glm::linearRand(-s_maxShift.y, s_maxShift.y),
         glm::linearRand(-s_maxShift.z, s_maxShift.z));
-}
-
-glm::vec3 CaveDrawable::getZShiftVector()
-{
-    return glm::vec3(0.0f, 0.0f, m_cave.zShift());
 }
 
 void CaveDrawable::addTwoRings()
@@ -164,9 +159,10 @@ void CaveDrawable::rebuildGPUData()
 
 void CaveDrawable::buildGPUVertices()
 {
+    glm::vec3 zShiftVector = glm::vec3(0.0f, 0.0f, m_cave.zShift());
     m_GPUVertices.clear();
     for (int i : m_indices) {
-        m_GPUVertices.push_back(m_vertices[i] + getZShiftVector());
+        m_GPUVertices.push_back(m_vertices[i] + zShiftVector);
     }
 }
 
