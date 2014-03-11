@@ -47,7 +47,7 @@ void GameMechanics::update(float seconds)
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
     
-    if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z) {
+    if (m_chunkList.at(1)->cuboids()[0]->position().z > m_camera.center().z) {
         for (Cuboid * cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
         m_chunkList.removeFirst();
@@ -94,6 +94,7 @@ void GameMechanics::zReset()
     float zShift = -m_mammut.position().z;
     m_mammut.addZShift(zShift);
     m_cave.addZShift(zShift);
+    m_chunkGenerator.addZShift(zShift);
     forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
 }
 
