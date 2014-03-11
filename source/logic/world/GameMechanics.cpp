@@ -12,6 +12,7 @@ GameMechanics::GameMechanics()
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 0.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
+,   m_zShift(0.0f)
 {
     connectSignals();
     
@@ -39,7 +40,7 @@ GameMechanics::~GameMechanics()
 void GameMechanics::update(float seconds)
 {
     if (m_gameOver) {
-        emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
+        emit gameOver(score());
         return;
     }
     PerfCounter::begin("game");
@@ -96,6 +97,8 @@ void GameMechanics::zReset()
     m_cave.addZShift(zShift);
     m_chunkGenerator.addZShift(zShift);
     forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
+
+    m_zShift += zShift;
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -138,6 +141,11 @@ const Mammut & GameMechanics::mammut() const
 const Cave & GameMechanics::cave() const
 {
     return m_cave;
+}
+
+int GameMechanics::score() const
+{
+    return int(m_zShift);
 }
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)
