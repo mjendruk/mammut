@@ -12,7 +12,8 @@ GameMechanics::GameMechanics()
 ,   m_mammut(glm::vec3(-2.2f, 7.6f, 0.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
-,   m_zShift(0.0f)
+,   m_totalZShift(0.0f)
+,   m_lastZShift(0.0f)
 {
     connectSignals();
     
@@ -98,7 +99,8 @@ void GameMechanics::zReset()
     m_chunkGenerator.addZShift(zShift);
     forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
 
-    m_zShift += zShift;
+    m_totalZShift += zShift;
+    m_lastZShift = zShift;
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -145,7 +147,12 @@ const Cave & GameMechanics::cave() const
 
 int GameMechanics::score() const
 {
-    return int(m_zShift);
+    return int(m_totalZShift);
+}
+
+float GameMechanics::lastZShift() const
+{
+    return m_lastZShift;
 }
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)

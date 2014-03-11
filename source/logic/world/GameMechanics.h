@@ -33,6 +33,7 @@ public:
     const Mammut & mammut() const;
     const Cave & cave() const;
     int score() const;
+    float lastZShift() const;
     
     void forEachCuboid(const std::function<void(Cuboid *)> & lambda);
     void forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const;
@@ -58,7 +59,8 @@ protected:
     GameCamera m_camera;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
     
-    float m_zShift;
+    float m_totalZShift;
+    float m_lastZShift;
     bool m_gameOver;
 
     Sound m_backgroundLoop;
