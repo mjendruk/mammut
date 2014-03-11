@@ -81,7 +81,7 @@ protected:
     
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     MotionBlurPass m_motionBlurPass;
-    SimplePostProcPass m_FxaaPass;
+    std::unique_ptr<SimplePostProcPass> m_FxaaPass;
     SSAOPass m_ssaoPass;
 
     glm::mat4 m_previousViewProjection;
