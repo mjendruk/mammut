@@ -2,6 +2,12 @@
 
 #include <cassert>
 
+#ifdef __APPLE__
+
+#include <OpenGL/OpenGL.h>
+
+#endif
+
 #include <QDebug>
 #include <QResizeEvent>
 
@@ -17,7 +23,7 @@ Canvas::Canvas(const QSurfaceFormat & format)
 ,   m_swapts(0.0)
 ,   m_swaps(0)
 {
-    setSurfaceType(OpenGLSurface); 
+    setSurfaceType(OpenGLSurface);
     create();
 
     initializeGL(format);
@@ -32,7 +38,7 @@ QSurfaceFormat Canvas::format() const
     return m_context.format();
 }
 
-const QString Canvas::querys(const GLenum penum) 
+const QString Canvas::querys(const GLenum penum)
 {
     const QString result = reinterpret_cast<const char*>(glGetString(penum));
 
@@ -57,18 +63,18 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
     }
 
     m_context.makeCurrent(this);
-    
+
     glewExperimental = GL_TRUE;
     if (!(glewInit() == GLEW_OK))
     {
         qCritical() << "Initializing GLEW failed.";
         return;
     }
-    
+
     // print some hardware information
 
     qDebug();
-    qDebug().nospace() << "GPU: " 
+    qDebug().nospace() << "GPU: "
         << qPrintable(querys(GL_RENDERER)) << " ("
         << qPrintable(querys(GL_VENDOR)) << ", "
         << qPrintable(querys(GL_VERSION)) << ")";
@@ -180,7 +186,14 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
 
 #elif __APPLE__
 
-    qWarning("ToDo: Setting swap interval is currently not implemented for __APPLE__");
+    CGLContextObj contextObj;
+    GLint swapIntervalParam = swapInterval;
+    
+    m_context.makeCurrent(this);
+    contextObj = CGLGetCurrentContext();
+
+    CGLError error = CGLSetParameter(contextObj, kCGLCPSwapInterval, &swapIntervalParam);
+    result = (error == kCGLNoError);
 
 #else
     // ToDo: C++11 - type aliases
@@ -210,9 +223,6 @@ void Canvas::toggleSwapInterval()
         setSwapInterval(VerticalSyncronization);
         break;
     case VerticalSyncronization:
-        setSwapInterval(AdaptiveVerticalSyncronization);
-        break;
-    case AdaptiveVerticalSyncronization:
         setSwapInterval(NoVerticalSyncronization);
         break;
     }
@@ -226,8 +236,6 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
         return QString("NoVerticalSyncronization");
     case VerticalSyncronization:
         return QString("VerticalSyncronization");
-    case AdaptiveVerticalSyncronization:
-        return QString("AdaptiveVerticalSyncronization");
     default:
         return QString();
     }
