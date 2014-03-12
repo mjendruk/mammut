@@ -13,11 +13,15 @@ const float GameCamera::s_rotationDuration = 0.25f;
 
 GameCamera::GameCamera()
 :   m_currentCenterOffset(0.0f)
+,   m_noise(Sound::kDeepNoise, true)
 {
+    m_noise.setVolume(0.0f);
+    m_noise.setPaused(false);
 }
 
 GameCamera::~GameCamera()
 {
+    m_noise.setPaused(true);
 }
 
 void GameCamera::update(
@@ -58,6 +62,8 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
     const glm::vec3 realDirection = (glm::length(direction) == 0.0f) ? glm::vec3(0.0f, 0.0f, -1.0f) : direction;
     
     float shakiness = glm::smoothstep(0.35f, 0.95f, normalizedCaveDistance);
+
+    m_noise.setVolume(shakiness * 0.9);
     
     glm::vec3 shakeLookAt = glm::normalize(glm::vec3(glm::gaussRand(0.0f, 8.0f),
                                                      glm::gaussRand(0.0f, 8.0f),
