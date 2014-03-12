@@ -227,17 +227,20 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 {
     if (keyEvent->isAutoRepeat())
         return;
-    
+
+    if (keyEvent->modifiers() == Qt::AltModifier && keyEvent->key() == Qt::Key_Return)
+    {
+        if (m_window.isFullScreen())
+            m_window.showNormal();
+        else
+            m_window.showFullScreen();
+        return;
+    }
+
     if (keyEvent->modifiers() == Qt::ControlModifier)
     {
         switch (keyEvent->key())
         {
-            case Qt::Key_Return:
-                if (m_window.isFullScreen())
-                    m_window.showNormal();
-                else
-                    m_window.showFullScreen();
-                return;
             case Qt::Key_P:
                 m_paused = !m_paused;
                 return;
