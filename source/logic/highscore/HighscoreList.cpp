@@ -3,11 +3,17 @@
 #include <cassert>
 
 #include <QMutableListIterator>
+#include <QFile>
+#include <QDataStream>
+#include <QString>
+
 #include "HighscoreEntry.h"
+
+const QString HighscoreList::s_filename = "highscores.mh";
 
 HighscoreList::HighscoreList()
 {
-    addScore("Mum", 1000);
+    readHighscoresFromFile();
 }
 
 HighscoreList::~HighscoreList()
@@ -17,12 +23,6 @@ HighscoreList::~HighscoreList()
 void HighscoreList::addScore(const QString & name, unsigned int score)
 {
     assert(isHighscore(score));
-
-    if (m_list.isEmpty())
-    {
-        m_list.append(HighscoreEntry(name, score));
-        return;
-    }
 
     if (m_list.size() >= s_limit)
     {
@@ -43,7 +43,7 @@ void HighscoreList::addScore(const QString & name, unsigned int score)
     
     it.insert(HighscoreEntry(name, score));
 
-    return;
+    writeHighscoresToFile();
 }
 
 bool HighscoreList::isHighscore(unsigned int score) const
@@ -54,4 +54,32 @@ bool HighscoreList::isHighscore(unsigned int score) const
 const QList<HighscoreEntry> & HighscoreList::scores() const
 {
     return m_list;
+}
+
+void HighscoreList::readHighscoresFromFile()
+{
+    QFile file(s_filename);
+    file.open(QIODevice::ReadOnly);
+
+    QDataStream in(&file);
+
+    while (!in.atEnd()) {
+        QString name;
+        unsigned int score;
+        in >> name >> score;
+
+        m_list.append(HighscoreEntry(name, score));
+    }
+}
+
+void HighscoreList::writeHighscoresToFile() const
+{
+    QFile file(s_filename);
+    file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+
+    QDataStream out(&file);
+
+    for (HighscoreEntry entry : m_list) {
+        out << entry.name() << entry.score();
+    }
 }

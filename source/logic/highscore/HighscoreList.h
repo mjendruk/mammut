@@ -3,6 +3,7 @@
 #include <QList>
 
 class HighscoreEntry;
+class QString;
 
 class HighscoreList
 {
@@ -16,6 +17,10 @@ public:
     const QList<HighscoreEntry> & scores() const;
 
 protected:
+    void readHighscoresFromFile();
+    void writeHighscoresToFile() const;
+    
+    static const QString s_filename;
     static const int s_limit = 10;
 
 protected:
