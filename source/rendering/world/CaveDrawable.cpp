@@ -16,11 +16,11 @@ const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f,
 const int CaveDrawable::s_numRings = 30;
 
 CaveDrawable::CaveDrawable()
-:   m_vertexBuffer(nullptr)
-,   m_normalBuffer(nullptr)
+:   m_ringZStride(-100.0f)
+,   m_activeRingPosition(0.0f)
 ,   m_vao(nullptr)
-,   m_ringZStride(-100.f)
-,   m_activeRingPosition(0.f)
+,   m_vertexBuffer(nullptr)
+,   m_normalBuffer(nullptr)
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
         float angle = (M_PI * 2 / s_verticesPerRing) * i;
@@ -72,8 +72,6 @@ void CaveDrawable::initialize()
 
 void CaveDrawable::initializeIndices()
 {
-    int ring = 0;
-
     for (int ring = 0; ring < s_numRings; ring++) {
         for (int vertex = 0; vertex < s_verticesPerRing; vertex++) {
             int index = ring * s_verticesPerRing;
