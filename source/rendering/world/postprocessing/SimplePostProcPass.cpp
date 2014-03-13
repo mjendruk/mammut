@@ -17,10 +17,11 @@
 SimplePostProcPass::SimplePostProcPass(
     const QString & vertexShaderSource,
     const QString & fragmentShaderSource,
-    GLenum outputTextureFormat)
+    GLenum outputTextureFormat,
+    GLenum outputTextureFiltering)
 :   m_textureFormat(outputTextureFormat)
 {
-    initializeFbo();
+    initializeFbo(outputTextureFiltering);
 
     glow::ref_ptr<glow::Program> program = new glow::Program();
     
@@ -32,10 +33,11 @@ SimplePostProcPass::SimplePostProcPass(
 
 SimplePostProcPass::SimplePostProcPass(
     const QString & fragmentShaderSource,
-    GLenum outputTextureFormat)
+    GLenum outputTextureFormat,
+    GLenum outputTextureFiltering)
 :   m_textureFormat(outputTextureFormat)
 {
-    initializeFbo();
+    initializeFbo(outputTextureFiltering);
 
     m_quad = new glowutils::ScreenAlignedQuad(
         glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderSource.toStdString()));
@@ -45,9 +47,9 @@ SimplePostProcPass::~SimplePostProcPass()
 {
 }
 
-void SimplePostProcPass::initializeFbo()
+void SimplePostProcPass::initializeFbo(GLenum outputTextureFiltering)
 {
-    m_outputTexture = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    m_outputTexture = Util::create2DTexture(outputTextureFiltering, GL_CLAMP_TO_EDGE);
     
     m_fbo = new glow::FrameBufferObject();
     m_fbo->setDrawBuffer(GL_COLOR_ATTACHMENT0);

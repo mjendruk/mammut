@@ -6,9 +6,11 @@
 
 #include <QMap>
 
+#include <glow/global.h>
 #include <glow/Texture.h>
 #include <glow/Program.h>
 #include <glow/FrameBufferobject.h>
+#include <glowutils/File.h>
 #include <glowutils/ScreenAlignedQuad.h>
 
 #include <logic/world/Cuboid.h>
@@ -29,6 +31,8 @@ GameWorldRenderer::GameWorldRenderer()
 ,   m_avgTimeSinceLastFrame(0.0f)
 ,   m_gameMechanics(nullptr)
 {
+    glow::createNamedString("/Fxaa3_11.h", new glowutils::File("data/shaders/Fxaa3_11.h"));
+    m_FxaaPass.reset(new SimplePostProcPass("data/shaders/fxaa.frag", GL_RGB8));
     initialize();
 }
 
@@ -101,6 +105,10 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_motionBlurPass.apply();
     PerfCounter::endGL("mb");
 
+    PerfCounter::beginGL("fxaa");
+    m_FxaaPass->apply();
+    PerfCounter::endGL("fxaa");
+
     PerfCounter::beginGL("blit");
     glViewport(0, 0,
         m_camera.viewport().x * devicePixelRatio,
@@ -155,8 +163,12 @@ void GameWorldRenderer::initializePostProcPasses()
                                         { "depth", m_gBufferDepth },
                                         { "velocity", m_gBufferVelocity } });
     
+    // FXAA
+    m_FxaaOutput = m_FxaaPass->outputTexture();
+    m_FxaaPass->setInputTextures({ { "buf0", m_motionBlurOutput } });
+
     // set texture that will be rendered on screen
-    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_motionBlurOutput);
+    m_renderOnScreenQuad = new glowutils::ScreenAlignedQuad(m_FxaaOutput);
 }
 
 void GameWorldRenderer::resize(int width, int height)
@@ -170,6 +182,7 @@ void GameWorldRenderer::resize(int width, int height)
 
     m_ssaoPass.resize(width, height);
     m_motionBlurPass.resize(width, height);
+    m_FxaaPass->resize(width, height);
 }
 
 void GameWorldRenderer::updateFPS()
