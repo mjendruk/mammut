@@ -26,8 +26,8 @@ GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
 ,   m_caveDrawable(new CaveDrawable())
 ,   m_lastFrame(QTime::currentTime())
+,   m_avgTimeSinceLastFrame(0.0f)
 ,   m_gameMechanics(nullptr)
-,   m_avgTimeSinceLastFrame(0.f)
 {
     initialize();
 }

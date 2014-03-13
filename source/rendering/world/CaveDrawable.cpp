@@ -18,10 +18,10 @@ const int CaveDrawable::s_numRings = 30;
 const int CaveDrawable::s_numSafetyMarginRings = 3;
 
 CaveDrawable::CaveDrawable()
-:   m_vertexBuffer(nullptr)
-,   m_normalBuffer(nullptr)
+:   m_lastRingIndex(-s_numSafetyMarginRings)
 ,   m_vao(nullptr)
-,   m_lastRingIndex(-s_numSafetyMarginRings)
+,   m_vertexBuffer(nullptr)
+,   m_normalBuffer(nullptr)
 {
     initialize();
 }
@@ -77,8 +77,6 @@ void CaveDrawable::initializeDummyArrays()
 
 void CaveDrawable::initializeIndices()
 {
-    int ring = 0;
-
     for (int ring = 0; ring < s_numRings / 2; ring++) {
         for (int vertex = 0; vertex < s_verticesPerRing; vertex++) {
             int index = ring * s_verticesPerRing;
