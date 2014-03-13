@@ -98,7 +98,6 @@ void main()
     {
         fragColor = vec4(resultColor, 1.0);
         fragColor.w = dot(fragColor.rgb, vec3(0.299, 0.587, 0.114));
-        //fragColor = vec4(0.1, 0.2, 0.3, 1.0);
         return;
     }
     // veclocity and its length (radius) of current pixel (sample center)
