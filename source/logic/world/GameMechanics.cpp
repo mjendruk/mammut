@@ -8,6 +8,7 @@
 
 
 const float GameMechanics::s_caveRadius = 150.0f;
+const float GameMechanics::s_caveDeathDistance = 5.0f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
@@ -75,12 +76,12 @@ void GameMechanics::tickUpdate(float seconds)
 
 float GameMechanics::normalizedMammutCaveDistance()
 {
-    return glm::length(m_mammut.position().xy()) / s_caveRadius;
+    return glm::length(m_mammut.position().xy()) / (s_caveRadius - s_caveDeathDistance);
 }
 
 bool GameMechanics::mammutCollidesWithCave()
 {
-    return glm::length(m_mammut.position().xy()) >= s_caveRadius;
+    return glm::length(m_mammut.position().xy()) >= s_caveRadius - s_caveDeathDistance;
 }
 
 void GameMechanics::updateSound()

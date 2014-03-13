@@ -20,6 +20,7 @@ class GameMechanics : public Mechanics
 
 public:
     static const float s_caveRadius;
+    static const float s_caveDeathDistance;
 
 public:
     GameMechanics();
