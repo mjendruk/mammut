@@ -14,8 +14,8 @@
 const int CaveDrawable::s_verticesPerRing = 20;
 const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(15.0f, 15.0f, 20.0f);
 const float CaveDrawable::s_ringZStride = -50.0f;
-const int CaveDrawable::s_numRings = 30;
-const int CaveDrawable::s_numSafetyMarginRings = 3;
+const int CaveDrawable::s_numRings = 35;
+const int CaveDrawable::s_numSafetyMarginRings = 7;
 
 CaveDrawable::CaveDrawable()
 :   m_lastRingIndex(-s_numSafetyMarginRings)
