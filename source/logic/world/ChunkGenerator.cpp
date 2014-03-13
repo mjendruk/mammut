@@ -10,11 +10,17 @@
 
 #include "Cuboid.h"
 
+const int ChunkGenerator::s_chunksPerBoostDistribution = 10;
+
 ChunkGenerator::ChunkGenerator(int seed)
 :   m_generator(std::chrono::system_clock::now().time_since_epoch().count())
 ,   m_zDistance(0.0)
+,   m_numUsedBoostDistributions(0)
 {
+    for (int i = 0; i < s_chunksPerBoostDistribution; ++i)
+        m_boostDistribution[i] = 0;
 
+    createBoostDistribution();
 }
 
 ChunkGenerator::~ChunkGenerator()
@@ -41,6 +47,9 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         return chunk;
     }
         
+    if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
+        createBoostDistribution();
+
     createOrdinaryLevel(*chunk.data());
     return chunk;
     
@@ -74,7 +83,7 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
             positionXYDistribution(m_generator),
             -positionZDistribution(m_generator));
 
-        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance), true));
+        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance)));
     }
 
     int numOverlaps = 0;
@@ -120,8 +129,20 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
     for (int i = removeIndexList.size() - 1; i >= 0; --i)
         chunk.remove(removeIndexList.at(i));
 
+    assert(m_boostDistribution[m_numUsedBoostDistributions] <= 3);
+
+    int numBoosts = std::min(m_boostDistribution[m_numUsedBoostDistributions], chunk.cuboids().size());
+    
+    int step = numBoosts > 0 ? chunk.cuboids().size() / numBoosts : 1;
+
+    for (int i = 0; i < numBoosts; i += step)
+        chunk.cuboids().at(i)->setBoost();
+
+    ++m_numUsedBoostDistributions;
+
     qDebug() << "num overlaps" << numOverlaps;
     qDebug() << "num deletions" << numDeletions;
+    qDebug() << "num boosts " << numBoosts;
 
     m_zDistance += 70.0;
 }
@@ -158,4 +179,31 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
     qDebug() << "distance: " << m_zDistance + distanceToNextThousand << "     distance to last chunk: " << distanceToNextThousand;
 
     m_zDistance += distanceToNextThousand <= 35.f ? 70.f : 140.f;
+}
+
+void ChunkGenerator::createBoostDistribution()
+{
+    m_numUsedBoostDistributions = 0;
+    int numBoosts = 6; // <> distance
+    std::uniform_int_distribution<> dist(0, 2);
+
+    for (int i = 0; i < s_chunksPerBoostDistribution; ++i)
+        m_boostDistribution[i] = 0;
+
+    for (int i = 0; i < s_chunksPerBoostDistribution - 1; i++)
+    {
+        if (numBoosts > 0)
+        {
+            int count = std::min(dist(m_generator), numBoosts);
+
+            numBoosts -= count;
+
+            m_boostDistribution[i] = count;
+        }
+        else
+            break;
+
+    }
+
+    m_boostDistribution[s_chunksPerBoostDistribution - 1] = std::min(numBoosts, 2);
 }

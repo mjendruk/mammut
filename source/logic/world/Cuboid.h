@@ -17,8 +17,7 @@ class Cuboid : public PhysicsObject
 {
 public:
     Cuboid(const glm::vec3 & size,
-           const glm::vec3 & translation,
-           bool containsBoost = false);
+           const glm::vec3 & translation);
          
     virtual ~Cuboid();
 
@@ -28,6 +27,7 @@ public:
     
     btRigidBody * rigidBody() const override;
 
+    void setBoost();
     bool containsBoost() const override;
     void collectBoost() const override;
 

@@ -67,8 +67,8 @@ void Game::run()
             m_canvas->render();
         PerfCounter::end("total");
 
-        if (m_activeMechanics == m_gameMechanics)
-            qDebug() << qPrintable(PerfCounter::generateString());
+        //if (m_activeMechanics == m_gameMechanics)
+        //    qDebug() << qPrintable(PerfCounter::generateString());
     }
 }
 

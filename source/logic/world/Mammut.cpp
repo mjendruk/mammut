@@ -1,6 +1,10 @@
 #include "Mammut.h"
 
+#include <QDebug>
+
 #include <glm/gtx/transform.hpp>
+
+#include <btBulletDynamicsCommon.h>
 
 #include <Util.h>
 #include <sound/Sound.h>
@@ -13,7 +17,7 @@ Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
-,   m_collectedBoosts(0)
+,   m_collectedBoosts(1)
 {
 }
 
@@ -23,9 +27,8 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
-    applyBoost();
-
     if (!isStillOnObject()) {
+        applyBoost();
         m_isOnObject = false;
         return;
     }
@@ -33,6 +36,8 @@ void Mammut::update()
     m_physics.clearForcesAndApplyGravity();
     slowDownDrifting();
     
+    applyBoost();
+
     const glm::vec3 forwardForce = glm::vec3(0.0f, 0.0f, -27.0f);
     m_physics.applyForce(forwardForce);
 }
@@ -108,8 +113,8 @@ void Mammut::addBoost()
 
 void Mammut::applyBoost(BoostDirection direction)
 {
-    float magnitude = 500.f;
-    glm::vec3 boostForce;
+    float magnitude = 500.f; //different magnitude in gravity direction? or in -gravity
+    glm::vec3 boostForce;   // magnitude <> speed?
 
     switch (direction)
     {
@@ -127,6 +132,10 @@ void Mammut::applyBoost(BoostDirection direction)
         break;
     }
 
+
+    //boostForce = glm::inverse(m_gravityTransform) * boostForce;
+    //m_physics.rigidBody()->applyImpulse(btVector3(boostForce.x, boostForce.y, boostForce.z), btVector3(0.0, 0.0, 0.0));
+
     m_boostVector = boostForce;
     --m_collectedBoosts;
 }
@@ -135,6 +144,8 @@ void Mammut::applyBoost()
 {
     m_physics.applyForce(glm::inverse(m_gravityTransform) * m_boostVector);
     m_boostVector *= glm::vec3(0.75f, 0.75f, 0.f);
+    if (m_boostVector.x > 10 || m_boostVector.y > 10)
+        qDebug() << "apply Boost";
 }
 
 void Mammut::slowDownDrifting()

@@ -75,7 +75,7 @@ void GameWorldRenderer::drawGeometry()
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
     });
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]

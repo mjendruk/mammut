@@ -40,9 +40,10 @@ void CavePainter::setViewUniform(const glm::mat4 & view)
     m_program->setUniform("view", view);
 }
 
-void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
+void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix, bool containsBoost)
 {
     m_program->setUniform("model", modelMatrix);
     m_program->setUniform("prevModel", prevModelMatrix);
+    m_program->setUniform("containsBoost", containsBoost);
     drawable.draw();
 }
