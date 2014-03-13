@@ -2,7 +2,6 @@
 
 uniform sampler2D ssao;
 uniform sampler2D normal_depth;
-uniform vec2 texelSize;
 
 layout (location = 0) out float fragColor;
 

@@ -4,7 +4,6 @@ uniform sampler2D horizontalBlur;
 uniform sampler2D normal_depth;
 uniform sampler2D color;
 uniform float farPlane;
-uniform vec2 texelSize;
 
 layout (location = 0) out vec3 fragColor;
 
