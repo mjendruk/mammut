@@ -303,7 +303,6 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
 
-    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.cpp
     ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.h
