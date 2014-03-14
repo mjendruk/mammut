@@ -262,7 +262,7 @@ void Canvas::showFullscreen()
     
     requestActivate();
 #else
-    showFullscreen();
+    showFullScreen();
 #endif
     
     m_isFullscreen = true;
