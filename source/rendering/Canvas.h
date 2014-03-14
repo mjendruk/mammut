@@ -70,7 +70,10 @@ protected:
     SwapInterval m_swapInterval;
 
     bool m_isFullscreen;
+    
+#ifdef __APPLE__
     Qt::WindowFlags m_windowedFlags;
     QRect m_windowedGeometry;
+#endif
 
 };

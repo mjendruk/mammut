@@ -245,22 +245,24 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
 
 void Canvas::showFullscreen()
 {
+#ifdef __APPLE__
     m_windowedFlags = flags();
     m_windowedGeometry = geometry();
     
     setFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-
     setGeometry(screen()->geometry());
     
-    setMouseGrabEnabled(true);
-    setKeyboardGrabEnabled(true);
-    
     requestActivate();
+#else
+    showFullscreen();
+#endif
+    
     m_isFullscreen = true;
 }
 
 void Canvas::showWindowed()
 {
+#ifdef __APPLE__
     setFlags(Qt::Window);
     
     if (isFullscreen())
@@ -269,10 +271,11 @@ void Canvas::showWindowed()
         setGeometry(m_windowedGeometry);
     }
     
-    setMouseGrabEnabled(false);
-    setKeyboardGrabEnabled(false);
-    
     requestActivate();
+#else
+    showNormal();
+#endif
+    
     m_isFullscreen = false;
 }
 
