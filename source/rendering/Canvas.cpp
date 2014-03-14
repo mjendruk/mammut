@@ -248,11 +248,12 @@ void Canvas::showFullscreen()
     m_windowedFlags = flags();
     m_windowedGeometry = geometry();
     
-    setFlags(Qt::CustomizeWindowHint |
-             Qt::FramelessWindowHint |
-             Qt::WindowStaysOnTopHint );
+    setFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
-    setGeometry(screen()->virtualGeometry());
+    setGeometry(screen()->geometry());
+    
+    setMouseGrabEnabled(true);
+    setKeyboardGrabEnabled(true);
     
     requestActivate();
     m_isFullscreen = true;
@@ -267,6 +268,9 @@ void Canvas::showWindowed()
         setFlags(m_windowedFlags);
         setGeometry(m_windowedGeometry);
     }
+    
+    setMouseGrabEnabled(false);
+    setKeyboardGrabEnabled(false);
     
     requestActivate();
     m_isFullscreen = false;
