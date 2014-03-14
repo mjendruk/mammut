@@ -11,6 +11,7 @@
 #include "HighscoreEntry.h"
 
 const QString HighscoreList::s_filename = "highscores.mh";
+const int HighscoreList::s_magicNumber = 326244764;
 const int HighscoreList::s_limit = 10;
 
 HighscoreList::HighscoreList()
@@ -70,10 +71,13 @@ void HighscoreList::readFromFile()
 
     QDataStream in(&file);
 
+    int magicNumber;
+    in >> magicNumber;
+
     int numHighscores;
     in >> numHighscores;
 
-    if (numHighscores > s_limit) {
+    if (magicNumber != s_magicNumber || numHighscores > s_limit) {
         handleCorruptFile();
         return;
     }
@@ -94,7 +98,7 @@ void HighscoreList::readFromFile()
 void HighscoreList::handleCorruptFile()
 {
     m_list.clear();
-    qWarning() << "Corrupt highscore file, ignoring it";
+    qWarning() << "Invalid highscore file, ignoring it";
 }
 
 void HighscoreList::writeToFile() const
@@ -104,6 +108,7 @@ void HighscoreList::writeToFile() const
 
     QDataStream out(&file);
 
+    out << s_magicNumber;
     out << m_list.size();
 
     for (HighscoreEntry entry : m_list) {
