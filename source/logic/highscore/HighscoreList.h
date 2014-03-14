@@ -17,8 +17,9 @@ public:
     const QList<HighscoreEntry> & scores() const;
 
 protected:
-    void readHighscoresFromFile();
-    void writeHighscoresToFile() const;
+    void readFromFile();
+    void handleCorruptFile();
+    void writeToFile() const;
     
     static const QString s_filename;
     static const int s_limit;

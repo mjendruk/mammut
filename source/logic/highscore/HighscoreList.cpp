@@ -15,7 +15,7 @@ const int HighscoreList::s_limit = 10;
 
 HighscoreList::HighscoreList()
 {
-    readHighscoresFromFile();
+    readFromFile();
 }
 
 HighscoreList::~HighscoreList()
@@ -45,7 +45,7 @@ void HighscoreList::addScore(const QString & name, unsigned int score)
     
     it.insert(HighscoreEntry(name, score));
 
-    writeHighscoresToFile();
+    writeToFile();
 }
 
 bool HighscoreList::isHighscore(unsigned int score) const
@@ -58,18 +58,25 @@ const QList<HighscoreEntry> & HighscoreList::scores() const
     return m_list;
 }
 
-void HighscoreList::readHighscoresFromFile()
+void HighscoreList::readFromFile()
 {
     QFile file(s_filename);
     file.open(QIODevice::ReadOnly);
 
-    if (!file.exists())
+    if (!file.exists()) {
+        qDebug() << "No highscore file found. A new one will be created.";
         return;
+    }
 
     QDataStream in(&file);
 
     int numHighscores;
     in >> numHighscores;
+
+    if (numHighscores > s_limit) {
+        handleCorruptFile();
+        return;
+    }
 
     for (int i = 0; i < numHighscores; i++) {
         QString name;
@@ -80,12 +87,17 @@ void HighscoreList::readHighscoresFromFile()
     }
 
     if (in.status() == QDataStream::ReadPastEnd || !in.atEnd() || numHighscores > s_limit) {
-        m_list.clear();
-        qDebug() << "Warning: Corrupt highscore file, ignoring it";
+        handleCorruptFile();
     }
 }
 
-void HighscoreList::writeHighscoresToFile() const
+void HighscoreList::handleCorruptFile()
+{
+    m_list.clear();
+    qWarning() << "Corrupt highscore file, ignoring it";
+}
+
+void HighscoreList::writeToFile() const
 {
     QFile file(s_filename);
     file.open(QIODevice::WriteOnly | QIODevice::Truncate);
