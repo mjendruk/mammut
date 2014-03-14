@@ -220,21 +220,30 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 {
     if (keyEvent->isAutoRepeat())
         return;
-    
-    if (keyEvent->key() == Qt::Key_Return && keyEvent->modifiers() == Qt::AltModifier) {
+
+    if (keyEvent->modifiers() == Qt::AltModifier && keyEvent->key() == Qt::Key_Return)
+    {
         m_canvas->toggleFullscreen();
         return;
     }
-    
-    if (keyEvent->key() == Qt::Key_Space)
-        m_paused = !m_paused;
 
-    if (keyEvent->key() == Qt::Key_R && keyEvent->modifiers() == Qt::ControlModifier)
+    if (keyEvent->modifiers() == Qt::ControlModifier)
     {
-        glowutils::File::reloadAll();
-        qDebug() << "reload shaders"; 
-
-        return;
+        switch (keyEvent->key())
+        {
+            case Qt::Key_P:
+                m_paused = !m_paused;
+                return;
+            case Qt::Key_R:
+                glowutils::File::reloadAll();
+                qDebug() << "Reload shaders.";
+                return;
+            case Qt::Key_I:
+                m_canvas->toggleSwapInterval();
+                return;
+            default:
+                break;
+        }
     }
     
     m_activeMechanics->keyPressed(keyEvent);

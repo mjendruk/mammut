@@ -29,10 +29,12 @@ class SimplePostProcPass : public AbstractPostProcPass
 public:
     SimplePostProcPass(const QString & vertexShaderSource,
                        const QString & fragmentShaderSource,
-                       GLenum outputTextureFormat);
+                       GLenum outputTextureFormat,
+                       GLenum outputTextureFiltering = GL_NEAREST);
     
     SimplePostProcPass(const QString & fragmentShaderSource,
-                       GLenum outputTextureFormat);
+                       GLenum outputTextureFormat,
+                       GLenum outputTextureFiltering = GL_NEAREST);
     
     virtual ~SimplePostProcPass();
 
@@ -45,7 +47,7 @@ public:
     void setUniform(const QString & name, const T & value);
     
 protected:
-    void initializeFbo();
+    void initializeFbo(GLenum outputTextureFiltering);
     void bindTextures();
 
 protected:

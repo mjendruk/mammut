@@ -2,10 +2,14 @@
 
 #include <cassert>
 
-#include <QScreen>
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#endif
+
 #include <QCursor>
 #include <QDebug>
 #include <QResizeEvent>
+#include <QScreen>
 
 #include <glow/global.h>
 #include <glow/logging.h>
@@ -35,7 +39,9 @@ Canvas::Canvas(const QSurfaceFormat & format)
 :   QWindow((QScreen*)nullptr)
 ,   m_renderer(nullptr)
 ,   m_swapInterval(VerticalSyncronization)
+#ifdef __APPLE__
 ,   m_isFullscreen(false)
+#endif
 {
     setSurfaceType(OpenGLSurface);
     create();
@@ -190,7 +196,14 @@ void Canvas::setSwapInterval(SwapInterval swapInterval)
 
 #elif __APPLE__
 
-    qWarning("ToDo: Setting swap interval is currently not implemented for __APPLE__");
+    CGLContextObj contextObj;
+    GLint swapIntervalParam = swapInterval;
+    
+    m_context.makeCurrent(this);
+    contextObj = CGLGetCurrentContext();
+
+    CGLError error = CGLSetParameter(contextObj, kCGLCPSwapInterval, &swapIntervalParam);
+    result = (error == kCGLNoError);
 
 #else
     // ToDo: C++11 - type aliases
@@ -220,9 +233,6 @@ void Canvas::toggleSwapInterval()
         setSwapInterval(VerticalSyncronization);
         break;
     case VerticalSyncronization:
-        setSwapInterval(AdaptiveVerticalSyncronization);
-        break;
-    case AdaptiveVerticalSyncronization:
         setSwapInterval(NoVerticalSyncronization);
         break;
     }
@@ -236,8 +246,6 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
         return QString("NoVerticalSyncronization");
     case VerticalSyncronization:
         return QString("VerticalSyncronization");
-    case AdaptiveVerticalSyncronization:
-        return QString("AdaptiveVerticalSyncronization");
     default:
         return QString();
     }
