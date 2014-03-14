@@ -17,6 +17,7 @@ Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
+,   m_boostIsActive(false)
 ,   m_collectedBoosts(1)
 {
 }
@@ -27,16 +28,19 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
+    // in air
     if (!isStillOnObject()) {
-        applyBoost();
+        updateBoost(false);
         m_isOnObject = false;
         return;
     }
     
+    //on cuboid
     m_physics.clearForcesAndApplyGravity();
-    slowDownDrifting();
+    if (!m_boostIsActive)
+        slowDownDrifting();
     
-    applyBoost();
+    updateBoost(true);
 
     const glm::vec3 forwardForce = glm::vec3(0.0f, 0.0f, -27.0f);
     m_physics.applyForce(forwardForce);
@@ -113,39 +117,65 @@ void Mammut::addBoost()
 
 void Mammut::applyBoost(BoostDirection direction)
 {
-    float magnitude = 500.f; //different magnitude in gravity direction? or in -gravity
+    if (m_collectedBoosts < 1)
+        return;
+
+    float magnitude = 800.f; //different magnitude in gravity direction? or in -gravity
     glm::vec3 boostForce;   // magnitude <> speed?
+    float gravity = 27.f;
+    float factor = 1.f;
+
+    if (!isStillOnObject() && (direction == BoostDirection::kUp || direction == BoostDirection::kDown)) {
+        glm::vec3 velocity = Util::toGlmVec3(m_physics.rigidBody()->getLinearVelocity());
+        velocity = m_gravityTransform * velocity;
+        gravity = velocity.y;
+    }
 
     switch (direction)
     {
     case BoostDirection::kUp:
-        boostForce = glm::vec3(0.f, magnitude, 0.f);
+        factor = isStillOnObject() ? 1.3 : glm::abs(gravity / 27.f) * 2.f;
+        boostForce = glm::vec3(0.f, magnitude * factor, 0.f);
         break;
     case BoostDirection::kRight:
         boostForce = glm::vec3(magnitude, 0.f, 0.f);
         break;
     case BoostDirection::kDown:
-        boostForce = glm::vec3(0.f, -magnitude, 0.f);
+        factor = glm::abs(27.f / gravity);
+        boostForce = glm::vec3(0.f, -magnitude * factor, 0.f);
         break;
     case BoostDirection::kLeft:
         boostForce = glm::vec3(-magnitude, 0.f, 0.f);
         break;
     }
 
-
-    //boostForce = glm::inverse(m_gravityTransform) * boostForce;
-    //m_physics.rigidBody()->applyImpulse(btVector3(boostForce.x, boostForce.y, boostForce.z), btVector3(0.0, 0.0, 0.0));
-
     m_boostVector = boostForce;
     --m_collectedBoosts;
+    m_boostIsActive = true;
+    
+    qDebug() << "start Boost: " << m_boostVector.x << " | " << m_boostVector.y;
+
+    updateBoost(true);
 }
 
-void Mammut::applyBoost()
+void Mammut::updateBoost(bool applyPhysicalForce)
 {
-    m_physics.applyForce(glm::inverse(m_gravityTransform) * m_boostVector);
-    m_boostVector *= glm::vec3(0.75f, 0.75f, 0.f);
-    if (m_boostVector.x > 10 || m_boostVector.y > 10)
-        qDebug() << "apply Boost";
+    if (!m_boostIsActive)
+        return;
+
+    if (m_boostIsActive && glm::abs(m_boostVector.x) < 10.f && glm::abs(m_boostVector.y) < 10.f){
+        qDebug() << "end boost";
+        m_boostIsActive = false;
+        m_boostVector = glm::vec3(0.f);
+        return;
+    }
+
+    if (applyPhysicalForce) //apply Boost again, all forces were cleared
+        m_physics.applyForce(glm::inverse(m_gravityTransform) * m_boostVector);
+
+    m_boostVector *= glm::vec3(0.8f, 0.8f, 0.f);
+
+    qDebug() << "apply Boost: " << m_boostVector.x << " | " << m_boostVector.y;
 }
 
 void Mammut::slowDownDrifting()

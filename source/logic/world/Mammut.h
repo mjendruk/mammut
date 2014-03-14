@@ -45,7 +45,7 @@ protected:
     bool isStillOnObject() const;
 
     void addBoost();
-    void applyBoost();
+    void updateBoost(bool applyPhysicalForce);
     
 protected:
     static const glm::vec3 s_size;
@@ -57,7 +57,7 @@ protected:
     bool m_isOnObject;
     bool m_isCrashed;
 
-    int m_collectedBoosts;
-    
+    bool m_boostIsActive;
+    unsigned int m_collectedBoosts;
     glm::vec3 m_boostVector;
 };
