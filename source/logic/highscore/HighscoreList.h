@@ -21,7 +21,7 @@ protected:
     void writeHighscoresToFile() const;
     
     static const QString s_filename;
-    static const int s_limit = 10;
+    static const int s_limit;
 
 protected:
     QList<HighscoreEntry> m_list;
