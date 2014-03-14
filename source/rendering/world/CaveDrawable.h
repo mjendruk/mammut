@@ -23,17 +23,23 @@ public:
 
 protected:
     void initialize() override;
+    void initializeDummyArrays();
     void initializeIndices();
-    void addRings(int numRings);
+
+    glm::vec3 getRandomOffset();
+    void addTwoRings();
+    void rebuildGPUData();
     void buildDuplicatedVertices();
     void buildNormals();
 
+protected:
     static const int s_verticesPerRing;
     static const glm::vec3 s_maxShift;
+    static const float s_ringZStride;
     static const int s_numRings;
+    static const int s_numSafetyMarginRings;
 
-    float m_ringZStride;
-    float m_activeRingPosition; //ring count
+    int m_lastRingIndex;
     std::vector<glm::vec3> m_vertices;
     std::vector<glm::vec3> m_duplicatedVertices;
     std::vector<glm::vec3> m_normals;
