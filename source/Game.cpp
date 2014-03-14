@@ -1,9 +1,8 @@
 #include "Game.h"
 
 #include <QTimer>
-#include <QThread>
 #include <QDebug>
-#include <QMouseEvent>
+#include <QKeyEvent>
 
 #include <glowutils/File.h>
 
@@ -53,6 +52,7 @@ void Game::run()
     while(m_loop)
     {   
         PerfCounter::begin("total");
+        
         currentTime = m_timer.elapsed();
         frameTime = currentTime - lastTime;
         lastTime = currentTime;
@@ -62,9 +62,9 @@ void Game::run()
         
         if (!m_paused)
             m_activeMechanics->update(frameTime / std::nano::den);
-
-        if(!m_window.isMinimized())
-            m_canvas->render();
+        
+        m_canvas->render();
+        
         PerfCounter::end("total");
 
         if (m_activeMechanics == m_gameMechanics)
@@ -82,14 +82,7 @@ void Game::initializeWindow()
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
     m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
-    
-    QWidget * canvasWidget = QWidget::createWindowContainer(m_canvas);
-    
-    m_window.setCentralWidget(canvasWidget);
-    m_window.setMinimumSize(800, 600);
-    m_window.setFocusProxy(canvasWidget);
-    m_window.setFocus();
-    m_window.show();
+    m_canvas->show();
 }
 
 void Game::initializeRendering()
@@ -230,10 +223,7 @@ void Game::keyPressed(QKeyEvent * keyEvent)
 
     if (keyEvent->modifiers() == Qt::AltModifier && keyEvent->key() == Qt::Key_Return)
     {
-        if (m_window.isFullScreen())
-            m_window.showNormal();
-        else
-            m_window.showFullScreen();
+        m_canvas->toggleFullscreen();
         return;
     }
 
