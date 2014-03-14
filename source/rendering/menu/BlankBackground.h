@@ -8,7 +8,5 @@ public:
     BlankBackground();
     virtual ~BlankBackground();
 
-    void resize(int width, int height);
-    void render(float devicePixelRatio);
-
+    void render(float devicePixelRatio) override;
 };

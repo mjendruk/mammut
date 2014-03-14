@@ -21,10 +21,6 @@ void ScreenshotBackground::initialize()
         glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, "data/shaders/screenshot_background.frag"));
 }
 
-void ScreenshotBackground::resize(int width, int height)
-{
-}
-
 void ScreenshotBackground::render(float devicePixelRatio)
 {
     assert(m_screenshot.get() != nullptr);

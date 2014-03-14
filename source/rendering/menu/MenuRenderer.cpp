@@ -34,7 +34,6 @@ void MenuRenderer::resize(int width, int height)
     assert(m_background != nullptr);
     
     m_viewport = glm::ivec2(width, height);
-    m_background->resize(width, height);
 }
 
 void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)

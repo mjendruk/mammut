@@ -20,7 +20,6 @@ public:
     ScreenshotBackground();
     virtual ~ScreenshotBackground();
 
-    void resize(int width, int height) override;
     void render(float devicePixelRatio) override;
 
     void setScreenshot(glow::Texture * screenshot);
