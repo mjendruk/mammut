@@ -7,7 +7,6 @@
 namespace glow
 {
     class Texture;
-    class Program;
 }
 
 namespace glowutils
@@ -31,7 +30,5 @@ protected:
 
 protected:
     glow::ref_ptr<glow::Texture> m_screenshot;
-    glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_quad;
-
 };

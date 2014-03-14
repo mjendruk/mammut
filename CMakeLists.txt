@@ -340,7 +340,6 @@ set(shaders
     ${shader_path}/motionBlurNM.frag
     ${shader_path}/motionBlurTM_horizontal.frag
     ${shader_path}/motionBlurTM_vertical.frag
-    ${shader_path}/screenshot_background.vert
     ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert
     ${shader_path}/ssao.frag
