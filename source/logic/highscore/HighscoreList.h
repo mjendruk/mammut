@@ -21,10 +21,10 @@ protected:
     void handleCorruptFile();
     void writeToFile() const;
     
+protected:
     static const QString s_filename;
+    static const int s_magicNumber;
     static const int s_limit;
 
-protected:
     QList<HighscoreEntry> m_list;
-
 };
