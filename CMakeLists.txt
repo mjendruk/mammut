@@ -203,8 +203,6 @@ set(sources
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/MessageHandler.cpp
-    ${source_path}/MessageHandler.h
     ${source_path}/PerfCounter.cpp
     ${source_path}/PerfCounter.h
     ${source_path}/Util.cpp
