@@ -173,6 +173,7 @@ find_package(Qt5Gui     REQUIRED)
 find_package(Qt5Widgets REQUIRED) # this is important in order to get uic working 
 find_package(Qt5OpenGL  REQUIRED)
 
+set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 # Include directories
 include_directories(
@@ -186,12 +187,11 @@ include_directories(
 
     ${BULLET_INCLUDE_DIRS}
     ${FMOD_INCLUDE_DIR}
+
+    ${source_path}
 )
 
-message(STATUS ${BULLET_INCLUDE_DIRS})
-message(STATUS ${BULLET_LIBRARIES})
 
-set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 # Generate meta-header
 configure_file(${source_path}/mammut-version.h.in mammut-version.h)
@@ -201,47 +201,125 @@ set(sources
 
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
-    ${source_path}/AbstractPainter.cpp
-    ${source_path}/AbstractPainter.h
-    ${source_path}/Canvas.cpp
-    ${source_path}/Canvas.h
-    ${source_path}/ChunkGenerator.cpp
-    ${source_path}/ChunkGenerator.h
-    ${source_path}/Commons.h
-    ${source_path}/Conversions.cpp
-    ${source_path}/Conversions.h
-    ${source_path}/Cuboid.cpp
-    ${source_path}/Cuboid.h
-    ${source_path}/CuboidChunk.cpp
-    ${source_path}/CuboidChunk.h
-    ${source_path}/Drawable.cpp
-    ${source_path}/Drawable.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/GameCamera.cpp
-    ${source_path}/GameCamera.h
-    ${source_path}/GameLogic.cpp
-    ${source_path}/GameLogic.h
-    ${source_path}/GameObject.cpp
-    ${source_path}/GameObject.h
-    ${source_path}/Mammut.cpp
-    ${source_path}/Mammut.h
-    ${source_path}/MammutMotionState.cpp
-    ${source_path}/MammutMotionState.h
-    ${source_path}/Renderer.cpp
-    ${source_path}/Renderer.h
-    ${source_path}/FileAssociatedAsset.cpp
-    ${source_path}/FileAssociatedAsset.h
-    ${source_path}/FileAssociatedShader.cpp
-    ${source_path}/FileAssociatedShader.h
     ${source_path}/MessageHandler.cpp
     ${source_path}/MessageHandler.h
-    ${source_path}/Painter.cpp
-    ${source_path}/Painter.h
-    ${source_path}/RenderCamera.cpp
-    ${source_path}/RenderCamera.h
-    ${source_path}/SSAO.cpp
-    ${source_path}/SSAO.h
+    ${source_path}/PerfCounter.cpp
+    ${source_path}/PerfCounter.h
+    ${source_path}/Util.cpp
+    ${source_path}/Util.hpp
+    ${source_path}/Util.h
+
+    ${source_path}/logic/Mechanics.cpp
+    ${source_path}/logic/Mechanics.h
+
+    ${source_path}/logic/highscore/HighscoreList.cpp
+    ${source_path}/logic/highscore/HighscoreList.h
+    ${source_path}/logic/highscore/HighscoreEntry.cpp
+    ${source_path}/logic/highscore/HighscoreEntry.h
+
+    ${source_path}/logic/menu/GameOverMenu.cpp
+    ${source_path}/logic/menu/GameOverMenu.h
+    ${source_path}/logic/menu/HighscoreMenu.cpp
+    ${source_path}/logic/menu/HighscoreMenu.h
+    ${source_path}/logic/menu/MainMenu.cpp
+    ${source_path}/logic/menu/MainMenu.h
+    ${source_path}/logic/menu/Menu.cpp
+    ${source_path}/logic/menu/Menu.h
+    ${source_path}/logic/menu/PauseMenu.cpp
+    ${source_path}/logic/menu/PauseMenu.h
+    ${source_path}/logic/menu/NewHighscoreMenu.cpp
+    ${source_path}/logic/menu/NewHighscoreMenu.h
+    
+    ${source_path}/logic/menu/items/MenuItem.cpp
+    ${source_path}/logic/menu/items/MenuItem.h
+    ${source_path}/logic/menu/items/HighscoreListItem.cpp
+    ${source_path}/logic/menu/items/HighscoreListItem.h
+    ${source_path}/logic/menu/items/MenuButton.cpp
+    ${source_path}/logic/menu/items/MenuButton.h    
+    ${source_path}/logic/menu/items/MenuInput.cpp
+    ${source_path}/logic/menu/items/MenuInput.h
+    ${source_path}/logic/menu/items/MenuLogo.cpp
+    ${source_path}/logic/menu/items/MenuLogo.h
+    ${source_path}/logic/menu/items/MenuText.cpp
+    ${source_path}/logic/menu/items/MenuText.h
+
+    ${source_path}/logic/world/ChunkGenerator.cpp
+    ${source_path}/logic/world/ChunkGenerator.h
+    ${source_path}/logic/world/Cuboid.cpp
+    ${source_path}/logic/world/Cuboid.h
+    ${source_path}/logic/world/CuboidChunk.cpp
+    ${source_path}/logic/world/CuboidChunk.h
+    ${source_path}/logic/world/GameCamera.cpp
+    ${source_path}/logic/world/GameCamera.h
+    ${source_path}/logic/world/GameMechanics.cpp
+    ${source_path}/logic/world/GameMechanics.h
+    ${source_path}/logic/world/Mammut.cpp
+    ${source_path}/logic/world/Mammut.h
+    ${source_path}/logic/world/MammutPhysics.cpp
+    ${source_path}/logic/world/MammutPhysics.h
+    ${source_path}/logic/world/PhysicsObject.cpp
+    ${source_path}/logic/world/PhysicsObject.h
+    ${source_path}/logic/world/PhysicsWorld.cpp
+    ${source_path}/logic/world/PhysicsWorld.h
+
+    ${source_path}/rendering/Canvas.cpp
+    ${source_path}/rendering/Canvas.h
+    ${source_path}/rendering/RawFile.cpp
+    ${source_path}/rendering/RawFile.h
+    ${source_path}/rendering/Renderer.cpp
+    ${source_path}/rendering/Renderer.h
+
+    ${source_path}/rendering/menu/AbstractBackground.cpp
+    ${source_path}/rendering/menu/AbstractBackground.h
+    ${source_path}/rendering/menu/BlankBackground.cpp
+    ${source_path}/rendering/menu/BlankBackground.h
+    ${source_path}/rendering/menu/MenuRenderer.cpp
+    ${source_path}/rendering/menu/MenuRenderer.h
+    ${source_path}/rendering/menu/ScreenshotBackground.cpp
+    ${source_path}/rendering/menu/ScreenshotBackground.h
+
+    ${source_path}/rendering/text/CharacterDrawable.cpp
+    ${source_path}/rendering/text/CharacterDrawable.h
+    ${source_path}/rendering/text/StringComposer.cpp
+    ${source_path}/rendering/text/StringComposer.h
+    ${source_path}/rendering/text/TextRenderer.cpp
+    ${source_path}/rendering/text/TextRenderer.h
+    
+    ${source_path}/rendering/world/AbstractPainter.cpp
+    ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/CaveDrawable.cpp
+    ${source_path}/rendering/world/CaveDrawable.h
+    ${source_path}/rendering/world/CavePainter.cpp
+    ${source_path}/rendering/world/CavePainter.h
+    ${source_path}/rendering/world/CuboidDrawable.cpp
+    ${source_path}/rendering/world/CuboidDrawable.h
+    ${source_path}/rendering/world/GameWorldRenderer.cpp
+    ${source_path}/rendering/world/GameWorldRenderer.h
+    ${source_path}/rendering/world/HUD.cpp
+    ${source_path}/rendering/world/HUD.h
+    ${source_path}/rendering/world/DrawableInterface.h
+    ${source_path}/rendering/world/Painter.cpp
+    ${source_path}/rendering/world/Painter.h
+    ${source_path}/rendering/world/RenderCamera.cpp
+    ${source_path}/rendering/world/RenderCamera.h
+
+    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.cpp
+    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
+    ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp
+    ${source_path}/rendering/world/postprocessing/MotionBlurPass.h
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.cpp
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.hpp
+    ${source_path}/rendering/world/postprocessing/SimplePostProcPass.h
+    ${source_path}/rendering/world/postprocessing/SSAOPass.cpp
+    ${source_path}/rendering/world/postprocessing/SSAOPass.h
+
+
+    ${source_path}/sound/SoundManager.cpp
+    ${source_path}/sound/SoundManager.h
+    ${source_path}/sound/Sound.cpp
+    ${source_path}/sound/Sound.h
 )
 
 # Group source files
@@ -256,9 +334,30 @@ qt5_wrap_ui(uihs ${uis})
 source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
     ${MAMMUT_SOURCE_GROUP} ${uihs})
 
+set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
+set(shaders
+    ${shader_path}/cuboid.vert
+    ${shader_path}/cuboid.frag
+    ${shader_path}/motionBlur.frag
+    ${shader_path}/motionBlurNM.frag
+    ${shader_path}/motionBlurTM_horizontal.frag
+    ${shader_path}/motionBlurTM_vertical.frag
+    ${shader_path}/screenshot_background.vert
+    ${shader_path}/screenshot_background.frag
+    ${shader_path}/ssao.vert
+    ${shader_path}/ssao.frag
+    ${shader_path}/string_drawer.vert
+    ${shader_path}/string_drawer.frag
+    ${shader_path}/horizontal_blur.frag
+    ${shader_path}/vertical_blur.frag
+)
+
+set(MAMMUT_SHADER_GROUP "Shader Files")
+source_group_by_path(${shader_path} "\\\\.vert$|\\\\.frag$" 
+    ${MAMMUT_SHADER_GROUP} ${shaders})
 
 # Build library
-add_executable(${target} ${sources} ${uihs})
+add_executable(${target} ${sources} ${shaders} ${uihs})
 
 qt5_use_modules(${target} OpenGL Gui Widgets)
 
@@ -284,6 +383,7 @@ set_target_properties(${target}
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
 add_definitions("-DGLM_SWIZZLE")
+add_definitions("-D_USE_MATH_DEFINES")
 
 # Deployment
 install(TARGETS ${target}
