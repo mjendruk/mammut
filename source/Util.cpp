@@ -43,6 +43,53 @@ btMatrix3x3 toBtMat3(const glm::mat3 & mat3)
                        toBtVec3(glm::row(mat3, 2)));
 }
 
+glm::vec3 center(const QVector<glm::vec3> & vecs)
+{
+    glm::vec3 center;
+    for (glm::vec3 curr : vecs)
+        center += curr;
+    center /= vecs.size();
+    return center;
+}
+
+glm::vec3 normalOfTriangle(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2)
+{
+    glm::vec3 ab = v1 - v0;
+    glm::vec3 ac = v2 - v0;
+    return glm::normalize(glm::cross(ab, ac));
+}
+
+glm::vec3 normalOfTriangle(const QVector<glm::vec3> & triangle)
+{
+    assert(triangle.size() == 3);
+    return normalOfTriangle(triangle[0], triangle[1], triangle[2]);
+}
+
+void generateNormals(const std::vector<glm::vec3> & triangles, std::vector<glm::vec3> & normals)
+{
+    assert(triangles.size() % 3 == 0);
+    assert(normals.empty());
+    for (int i = 0; i < triangles.size(); i += 3) {
+        glm::vec3 normal = normalOfTriangle(triangles[i], triangles[i + 1], triangles[i + 2]);
+        normals.push_back(normal);
+        normals.push_back(normal);
+        normals.push_back(normal);
+    }
+}
+
+QVector<glm::vec3> generateNormals(const QVector<glm::vec3> & triangles)
+{
+    assert(triangles.size() % 3 == 0);
+    QVector<glm::vec3> normals;
+    for (int i = 0; i < triangles.size(); i += 3) {
+        glm::vec3 normal = normalOfTriangle(triangles[i], triangles[i + 1], triangles[i + 2]);
+        normals.push_back(normal);
+        normals.push_back(normal);
+        normals.push_back(normal);
+    }
+    return normals;
+}
+
 glow::Texture * create2DTexture(GLint filter, GLint wrapMode)
 {
     glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);

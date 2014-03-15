@@ -198,7 +198,6 @@ configure_file(${source_path}/mammut-version.h.in mammut-version.h)
 
 set(sources
     ${source_path}/main.cpp
-
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
@@ -211,6 +210,10 @@ set(sources
 
     ${source_path}/logic/Mechanics.cpp
     ${source_path}/logic/Mechanics.h
+    
+    ${source_path}/3rdparty/tetgen/predicates.cxx
+    ${source_path}/3rdparty/tetgen/tetgen.cxx
+    ${source_path}/3rdparty/tetgen/tetgen.h
 
     ${source_path}/logic/highscore/HighscoreList.cpp
     ${source_path}/logic/highscore/HighscoreList.h
@@ -265,6 +268,13 @@ set(sources
     ${source_path}/logic/world/PhysicsObject.h
     ${source_path}/logic/world/PhysicsWorld.cpp
     ${source_path}/logic/world/PhysicsWorld.h
+
+    ${source_path}/logic/world/tets/TetGenerator.cpp
+    ${source_path}/logic/world/tets/TetGenerator.h
+    ${source_path}/logic/world/tets/Tet.cpp
+    ${source_path}/logic/world/tets/Tet.h
+    ${source_path}/logic/world/tets/BunchOfTets.cpp
+    ${source_path}/logic/world/tets/BunchOfTets.h
 
     ${source_path}/rendering/Canvas.cpp
     ${source_path}/rendering/Canvas.h
@@ -324,7 +334,7 @@ set(sources
 
 # Group source files
 set(MAMMUT_SOURCE_GROUP "Source Files")
-source_group_by_path(${source_path} "\\\\.h$|\\\\.hpp$|\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
+source_group_by_path(${source_path} "\\\\.h$|\\\\.hpp$|\\\\.cpp$|\\\\.cxx$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
     ${MAMMUT_SOURCE_GROUP} ${sources})
 
 # wrap ui files and group wrap headers

@@ -13,6 +13,7 @@
 #include "Mammut.h"
 #include "Cave.h"
 #include "GameCamera.h"
+#include "tets/BunchOfTets.h"
 
 
 class GameMechanics : public Mechanics
@@ -59,6 +60,7 @@ protected:
     Cave m_cave;
     GameCamera m_camera;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    BunchOfTets m_bunch;
     
     float m_totalZShift;
     float m_lastZShift;

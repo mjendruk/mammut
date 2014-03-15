@@ -4,6 +4,8 @@
 #include <glowutils/AxisAlignedBoundingBox.h>
 #include <btBulletDynamicsCommon.h>
 
+#include "tets/Tet.h"
+#include "tets/TetGenerator.h"
 #include <Util.h>
 
 
@@ -16,6 +18,11 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 
 Cuboid::~Cuboid()
 {
+}
+
+QVector<Tet *> * Cuboid::splitIntoTets()
+{
+    return TetGenerator::splitBox(boundingBox());
 }
 
 glm::mat4 Cuboid::modelTransform() const

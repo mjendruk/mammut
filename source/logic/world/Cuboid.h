@@ -2,7 +2,11 @@
 
 #include <glm/glm.hpp>
 
+#include <QVector>
+
 #include "PhysicsObject.h"
+
+class Tet;
 
 namespace glowutils
 {
@@ -16,6 +20,8 @@ public:
            const glm::vec3 & translation);
          
     virtual ~Cuboid();
+
+    QVector<Tet *> * splitIntoTets();
 
     glm::mat4 modelTransform() const;
 

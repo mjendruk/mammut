@@ -23,6 +23,14 @@ GameMechanics::GameMechanics()
     for (int i = 0; i < 10; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
+
+        if (i == 1) {
+            m_bunch.add(m_chunkList.last()->cuboids()[0]->splitIntoTets());
+            //m_chunkList.last()->cuboids().pop_front();
+            //for (btRigidBody * body : m_bunch.rigidBodies())
+            //    m_physicsWorld.addBody(body);
+        }
+
         for (Cuboid * cuboid : m_chunkList.last()->cuboids())
             m_physicsWorld.addObject(cuboid);
     }
