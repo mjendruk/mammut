@@ -17,7 +17,7 @@ GameMechanics::GameMechanics()
 {
     connectSignals();
     
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
         for (Cuboid * cuboid : m_chunkList.last()->cuboids())
