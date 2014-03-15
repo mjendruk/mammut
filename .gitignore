@@ -4,3 +4,5 @@ build/
 _configure.bat
 _open-project.bat
 _start-cmake-gui.bat
+
+highscores.mh
