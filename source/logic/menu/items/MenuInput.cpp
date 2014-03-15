@@ -6,9 +6,9 @@
 #include <rendering/menu/MenuRenderer.h>
 #include <sound/Sound.h>
 
-MenuInput::MenuInput(const QString & label, const QString & placeholder)
+MenuInput::MenuInput(const QString & label, const QString & initialText)
 :   m_label(label)
-,   m_placeholder(placeholder)
+,   m_text(initialText)
 {
 }
 
@@ -62,8 +62,5 @@ const QString & MenuInput::label() const
 
 const QString & MenuInput::text() const
 {
-    if (m_text.isNull()) 
-        return m_placeholder;
-
     return m_text;
 }
