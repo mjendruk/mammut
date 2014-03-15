@@ -3,30 +3,52 @@
 #include <cassert>
 
 #ifdef __APPLE__
-
 #include <OpenGL/OpenGL.h>
-
 #endif
 
+#include <QCursor>
 #include <QDebug>
 #include <QResizeEvent>
+#include <QScreen>
 
+#include <glow/global.h>
+#include <glow/logging.h>
+#include <glow/Version.h>
 #include <glow/Texture.h>
 #include <glow/FrameBufferObject.h>
 
+#include <Util.h>
 #include "Renderer.h"
+
+namespace
+{
+    
+void checkVersion()
+{
+    glow::info("Version %;", glow::version().toString());
+    glow::info("Vendor: %;", glow::vendor());
+    glow::info("Renderer %;", glow::renderer());
+    glow::info("Core profile: %;", glow::isCoreProfile() ? "true" : "false");
+    glow::info("GLSL version: %;", glow::getString(GL_SHADING_LANGUAGE_VERSION));
+    glow::info("GL Versionstring: %;\n", glow::versionString());
+}
+    
+} // namespace
 
 Canvas::Canvas(const QSurfaceFormat & format)
 :   QWindow((QScreen*)nullptr)
 ,   m_renderer(nullptr)
 ,   m_swapInterval(VerticalSyncronization)
-,   m_swapts(0.0)
-,   m_swaps(0)
+#ifdef __APPLE__
+,   m_isFullscreen(false)
+#endif
 {
     setSurfaceType(OpenGLSurface);
     create();
 
     initializeGL(format);
+    initializeAppearance();
+    showWindowed();
 }
 
 Canvas::~Canvas()
@@ -53,6 +75,18 @@ const GLint Canvas::queryi(const GLenum penum)
     return result;
 }
 
+void Canvas::initializeAppearance()
+{
+    resize(QSize(800, 600));
+    setMinimumSize(size());
+    
+    QSize position = screen()->virtualSize();
+    position = position / 2 - size() / 2;
+    setFramePosition(QPoint(position.width(), position.height()));
+    
+    setCursor(QCursor(Qt::BlankCursor));
+}
+
 void Canvas::initializeGL(const QSurfaceFormat & format)
 {
     m_context.setFormat(format);
@@ -64,42 +98,22 @@ void Canvas::initializeGL(const QSurfaceFormat & format)
 
     m_context.makeCurrent(this);
 
-    glewExperimental = GL_TRUE;
-    if (!(glewInit() == GLEW_OK))
+    if (!glow::init(true))
     {
-        qCritical() << "Initializing GLEW failed.";
         return;
     }
 
-    // print some hardware information
-
-    qDebug();
-    qDebug().nospace() << "GPU: "
-        << qPrintable(querys(GL_RENDERER)) << " ("
-        << qPrintable(querys(GL_VENDOR)) << ", "
-        << qPrintable(querys(GL_VERSION)) << ")";
-    qDebug().nospace() << "GL Version: "
-        << qPrintable(QString::number(queryi(GL_MAJOR_VERSION))) << "."
-        << qPrintable(QString::number(queryi(GL_MINOR_VERSION))) << " "
-        << (queryi(GL_CONTEXT_CORE_PROFILE_BIT) ? "Core" : "Compatibility");
-    qDebug();
+    checkVersion();
 
     initializeScreenshotFbo();
-    
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void Canvas::initializeScreenshotFbo()
 {
     m_screenshotFbo = new glow::FrameBufferObject();
-    
-    m_screenshotDepthAttachment = new glow::Texture(GL_TEXTURE_2D);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    m_screenshotDepthAttachment->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    
+    m_screenshotDepthAttachment = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
     m_screenshotFbo->attachTexture2D(GL_DEPTH_ATTACHMENT, m_screenshotDepthAttachment);
 }
 
@@ -107,13 +121,15 @@ void Canvas::resizeEvent(QResizeEvent * event)
 {
     const int width = event->size().width();
     const int height = event->size().height();
-    
+
     if(m_renderer != nullptr)
         m_renderer->resize(width, height);
 
-    m_screenshotDepthAttachment->image2D(0, GL_DEPTH_COMPONENT24, width * devicePixelRatio(), height * devicePixelRatio(), 0,
+    m_screenshotDepthAttachment->image2D(0, GL_DEPTH_COMPONENT24,
+                                         width * devicePixelRatio(),
+                                         height * devicePixelRatio(), 0,
                                          GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-    
+
     if (isExposed())
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -127,44 +143,38 @@ void Canvas::render()
     
     if (!isExposed() || Hidden == visibility() || Minimized == visibility())
         return;
-    
+
     m_context.makeCurrent(this);
-    
+
     m_renderer->render(glow::FrameBufferObject::defaultFBO(), devicePixelRatio());
-    
+
     m_context.swapBuffers(this);
 }
 
 glow::Texture * Canvas::screenshot()
 {
     assert(m_renderer != nullptr);
-    
-    glow::Texture * texture = new glow::Texture(GL_TEXTURE_2D);
-    texture->image2D(0, GL_RGBA32F,
+
+    glow::Texture * texture = Util::create2DTexture(GL_NEAREST, GL_CLAMP_TO_EDGE);
+    texture->image2D(0, GL_RGBA8,
                      width() * devicePixelRatio(),
                      height() * devicePixelRatio(),
                      0, GL_RGBA, GL_FLOAT, nullptr);
-    
-    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    texture->setParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    texture->setParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    
+
     m_screenshotFbo->attachTexture2D(GL_COLOR_ATTACHMENT0, texture);
     m_screenshotFbo->setDrawBuffers({ GL_COLOR_ATTACHMENT0 });
-    
+
     m_renderer->render(m_screenshotFbo, devicePixelRatio());
-    
+
     return texture;
 }
 
 void Canvas::setRenderer(Renderer * renderer)
 {
     assert(renderer != nullptr);
-    
+
     renderer->resize(width(), height());
-    
+
     m_renderer = renderer;
 }
 
@@ -239,4 +249,50 @@ const QString Canvas::swapIntervalToString(SwapInterval swapInterval)
     default:
         return QString();
     }
+}
+
+void Canvas::showFullscreen()
+{
+#ifdef __APPLE__
+    m_windowedFlags = flags();
+    m_windowedGeometry = geometry();
+    
+    setFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setGeometry(screen()->geometry());
+    
+    requestActivate();
+#else
+    showFullScreen();
+#endif
+    
+    m_isFullscreen = true;
+}
+
+void Canvas::showWindowed()
+{
+#ifdef __APPLE__
+    setFlags(Qt::Window);
+    
+    if (isFullscreen())
+    {
+        setFlags(m_windowedFlags);
+        setGeometry(m_windowedGeometry);
+    }
+    
+    requestActivate();
+#else
+    showNormal();
+#endif
+    
+    m_isFullscreen = false;
+}
+
+void Canvas::toggleFullscreen()
+{
+    isFullscreen() ? showWindowed() : showFullscreen();
+}
+
+bool Canvas::isFullscreen() const
+{
+    return m_isFullscreen;
 }
