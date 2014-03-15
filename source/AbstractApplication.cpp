@@ -1,10 +1,8 @@
 #include "AbstractApplication.h"
 
 #include <QFileInfo>
-#include <QStringList>
 
 #include "mammut-version.h"
-#include "MessageHandler.h"
 
 AbstractApplication::AbstractApplication(
     int & argc
@@ -21,8 +19,6 @@ AbstractApplication::AbstractApplication(
 
     QApplication::setOrganizationName(MAMMUT_AUTHOR_ORGANIZATION);
     QApplication::setOrganizationDomain(MAMMUT_AUTHOR_DOMAIN);
-
-    qInstallMessageHandler(globalMessageHandler);
 
     qDebug("%s on Qt-%s\n", qPrintable(title()), qPrintable(qVersion()));
 }
