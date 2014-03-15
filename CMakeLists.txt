@@ -269,7 +269,6 @@ set(sources
     ${source_path}/rendering/Renderer.cpp
     ${source_path}/rendering/Renderer.h
 
-    ${source_path}/rendering/menu/AbstractBackground.cpp
     ${source_path}/rendering/menu/AbstractBackground.h
     ${source_path}/rendering/menu/BlankBackground.cpp
     ${source_path}/rendering/menu/BlankBackground.h
