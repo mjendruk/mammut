@@ -51,6 +51,7 @@ protected:
     bool mammutCollidesWithCave();
     
 protected:
+    static const float s_zResetDistance;
     PhysicsWorld m_physicsWorld;
     
     ChunkGenerator m_chunkGenerator;

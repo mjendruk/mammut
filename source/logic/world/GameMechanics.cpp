@@ -6,6 +6,7 @@
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
+const float GameMechanics::s_zResetDistance = 800.f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(1337)
@@ -59,7 +60,10 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
-    zReset();
+
+    if (m_mammut.position().z > s_zResetDistance)
+        zReset();
+
     updateSound();
     PerfCounter::end("game");
 }
