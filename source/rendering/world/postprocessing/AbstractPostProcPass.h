@@ -20,5 +20,5 @@ public:
     virtual void setInputTextures(const QMap<QString, glow::Texture *> & input) = 0;
     virtual glow::Texture * outputTexture() = 0;
 
-    virtual void resize(int width, int height);
+    virtual void resize(int width, int height) = 0;
 };

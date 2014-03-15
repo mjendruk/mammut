@@ -203,8 +203,6 @@ set(sources
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
     ${source_path}/Game.h
-    ${source_path}/MessageHandler.cpp
-    ${source_path}/MessageHandler.h
     ${source_path}/PerfCounter.cpp
     ${source_path}/PerfCounter.h
     ${source_path}/Util.cpp
@@ -271,7 +269,6 @@ set(sources
     ${source_path}/rendering/Renderer.cpp
     ${source_path}/rendering/Renderer.h
 
-    ${source_path}/rendering/menu/AbstractBackground.cpp
     ${source_path}/rendering/menu/AbstractBackground.h
     ${source_path}/rendering/menu/BlankBackground.cpp
     ${source_path}/rendering/menu/BlankBackground.h
@@ -305,7 +302,6 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
 
-    ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.cpp
     ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.h
@@ -342,7 +338,6 @@ set(shaders
     ${shader_path}/motionBlurNM.frag
     ${shader_path}/motionBlurTM_horizontal.frag
     ${shader_path}/motionBlurTM_vertical.frag
-    ${shader_path}/screenshot_background.vert
     ${shader_path}/screenshot_background.frag
     ${shader_path}/ssao.vert
     ${shader_path}/ssao.frag
