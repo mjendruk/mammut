@@ -4,8 +4,8 @@ class Cave
 {
 
 public:
-	Cave();
-    virtual ~Cave();
+    Cave();
+    ~Cave();
 
     float zShift() const;
     void addZShift(float zShift) const;
