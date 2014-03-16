@@ -9,7 +9,7 @@
 
 #include "Cuboid.h"
 
-const int ChunkGenerator::s_numGrammarChunks = 1;
+const int ChunkGenerator::s_numGrammarChunks = 5;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
 const double ChunkGenerator::s_startIncreasingSeverity = 200.0;
@@ -30,12 +30,12 @@ ChunkGenerator::ChunkGenerator(long long seed)
 
 QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 {
-    QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
-
     if (m_grammarChunkGenerator.hasNextChunk()) {
         m_zDistance += s_chunkLength;
         return m_grammarChunkGenerator.nextChunk();
     }
+
+    QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
 
     float distanceToNextThousand = s_wallStep - int(m_zDistance) % s_wallStep;
     if (distanceToNextThousand <= s_chunkLength) {

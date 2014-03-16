@@ -13,7 +13,7 @@ class CuboidChunk;
 class ChunkGenerator
 {
 public:
-    ChunkGenerator(long long seed = std::chrono::system_clock::now().time_since_epoch().count());
+    ChunkGenerator(long long seed = 2156);
 
     QSharedPointer<CuboidChunk> nextChunk();
 

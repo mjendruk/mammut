@@ -19,26 +19,37 @@ public:
     QSharedPointer<CuboidChunk> nextChunk();
 
 protected: 
-    enum class Layout { parallel, displaced };
+    enum class Layout { parallel, displaced, count };
     enum class Rotation{ noRotation, rotate90, rotate180, rotate270, count };
-    enum class Length{ sameLength, differenLength, count };
 
     struct chunkCombination
     {
         Layout layout;
         Rotation rotation;
-        Length length;
     };
-    // create A, B
+
+
+    static glm::mat3 rotate(Rotation rot);
     void createStartChunk(CuboidChunk & chunk);
-    void createChunk(CuboidChunk & chunk, chunkCombination);
+    void createSLChunk(CuboidChunk & chunk);
+    void createDLChunk(CuboidChunk & chunk);
+
+    void createSLParallelChunk(CuboidChunk & chunk, Rotation rot);
+    void createSLDisplacedChunk(CuboidChunk & chunk, Rotation rot);
+
+    void createDLParallelChunk(CuboidChunk & chunk, Rotation rot);
+    void createDLDisplacedChunk(CuboidChunk & chunk, Rotation rot);
 
 protected:
-    QList<chunkCombination> m_chunkCombination;
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
 
     std::mt19937 m_generator;
+    std::uniform_int_distribution<> m_layoutDistribution;
+    std::uniform_int_distribution<> m_rotationDistribution;
   
     float m_chunkLength;
     float m_zDistance;
+
+    chunkCombination m_lastSLCombination;
+    chunkCombination m_lastDLCombination;
 };
