@@ -32,11 +32,11 @@ protected:
     static glm::mat3 rotate(Rotation rot);
 
     void createStartChunk(CuboidChunk & chunk);
-    void createSLChunk(CuboidChunk & chunk);
+    void createChunk(CuboidChunk & chunk);
 
-    void createSLSingleChunk(CuboidChunk & chunk, Rotation rot);
-    void createSLParallelChunk(CuboidChunk & chunk, Rotation rot);
-    void createSLDisplacedChunk(CuboidChunk & chunk, Rotation rot);
+    void createSingleChunk(CuboidChunk & chunk, Rotation rot);
+    void createParallelChunk(CuboidChunk & chunk, Rotation rot);
+    void createDisplacedChunk(CuboidChunk & chunk, Rotation rot);
 
 protected:
     static const float s_minSmallSize;

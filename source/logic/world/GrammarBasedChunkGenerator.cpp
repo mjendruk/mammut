@@ -1,8 +1,7 @@
 #include "GrammarBasedChunkGenerator.h"
 
 #include <algorithm>
-
-#include <QDebug>
+#include <cassert>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -32,7 +31,7 @@ GrammarBasedChunkGenerator::GrammarBasedChunkGenerator(int seed, float chunkLeng
     createStartChunk(*m_chunkList.first().data());
 
     for (int i = 1; i < numChunks; ++i) {
-        createSLChunk(*m_chunkList.at(i).data());
+        createChunk(*m_chunkList.at(i).data());
     }
 }
 
@@ -61,7 +60,7 @@ void GrammarBasedChunkGenerator::createStartChunk(CuboidChunk & chunk)
     m_zDistance += m_chunkLength;
 }
 
-void GrammarBasedChunkGenerator::createSLChunk(CuboidChunk & chunk)
+void GrammarBasedChunkGenerator::createChunk(CuboidChunk & chunk)
 {
     Layout layout = Layout(m_layoutDistribution(m_generator));
     Rotation rot = Rotation(m_rotationDistribution(m_generator));
@@ -74,20 +73,20 @@ void GrammarBasedChunkGenerator::createSLChunk(CuboidChunk & chunk)
     switch (layout)
     {
     case Layout::single:
-        createSLSingleChunk(chunk, rot);
+        createSingleChunk(chunk, rot);
         break;
     case Layout::parallel:
-        createSLParallelChunk(chunk, rot);
+        createParallelChunk(chunk, rot);
         break;
     case Layout::displaced:
-        createSLDisplacedChunk(chunk, rot);
+        createDisplacedChunk(chunk, rot);
         break;
     }
 
     m_zDistance += m_chunkLength;
 }
 
-void GrammarBasedChunkGenerator::createSLSingleChunk(CuboidChunk & chunk, Rotation rot)
+void GrammarBasedChunkGenerator::createSingleChunk(CuboidChunk & chunk, Rotation rot)
 {
     float xSize = std::max(s_minSmallSize, float(largeSizeDistribution(m_generator)));
     float ySize = std::max(s_minLargeSize, float(smallSizeDistribution(m_generator)));
@@ -102,7 +101,7 @@ void GrammarBasedChunkGenerator::createSLSingleChunk(CuboidChunk & chunk, Rotati
         rotation * glm::vec3(xPos, yPos, -30.f - m_zDistance)));
 }
 
-void GrammarBasedChunkGenerator::createSLParallelChunk(CuboidChunk & chunk, Rotation rot)
+void GrammarBasedChunkGenerator::createParallelChunk(CuboidChunk & chunk, Rotation rot)
 {
     float xSizeRight = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
     float ySizeRight = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
@@ -127,7 +126,7 @@ void GrammarBasedChunkGenerator::createSLParallelChunk(CuboidChunk & chunk, Rota
         rotation * glm::vec3(xPosLeft, yPosLeft, -30.f - m_zDistance)));
 }
 
-void GrammarBasedChunkGenerator::createSLDisplacedChunk(CuboidChunk & chunk, Rotation rot)
+void GrammarBasedChunkGenerator::createDisplacedChunk(CuboidChunk & chunk, Rotation rot)
 {
     float xSizeTop = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
     float ySizeTop = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
