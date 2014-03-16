@@ -255,6 +255,8 @@ set(sources
     ${source_path}/logic/world/GameCamera.h
     ${source_path}/logic/world/GameMechanics.cpp
     ${source_path}/logic/world/GameMechanics.h
+    ${source_path}/logic/world/GrammarBasedChunkGenerator.cpp
+    ${source_path}/logic/world/GrammarBasedChunkGenerator.h
     ${source_path}/logic/world/Mammut.cpp
     ${source_path}/logic/world/Mammut.h
     ${source_path}/logic/world/MammutPhysics.cpp

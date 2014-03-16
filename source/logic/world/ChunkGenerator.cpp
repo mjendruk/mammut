@@ -1,7 +1,6 @@
 #include "ChunkGenerator.h"
 
 #include <algorithm>
-#include <chrono>
 #include <cassert>
 
 #include <QDebug>
@@ -9,6 +8,8 @@
 #include <glm/glm.hpp>
 
 #include "Cuboid.h"
+
+const int ChunkGenerator::s_numGrammarChunks = 1;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
 const double ChunkGenerator::s_startIncreasingSeverity = 200.0;
@@ -20,27 +21,20 @@ const int ChunkGenerator::s_wallStep = 1000;
 const float ChunkGenerator::s_wallSize = 500.f;
 const float ChunkGenerator::s_wallThickness = 5.f;
 
-ChunkGenerator::ChunkGenerator(int seed)
-:   m_generator(std::chrono::system_clock::now().time_since_epoch().count())
+ChunkGenerator::ChunkGenerator(long long seed)
+:   m_grammarChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
+,   m_generator(seed)
 ,   m_zDistance(0.0)
-{
-}
-
-ChunkGenerator::~ChunkGenerator()
 {
 }
 
 QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 {
     QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
-    
-    if (m_zDistance == 0.f) {
-        chunk->add(new Cuboid(
-            glm::vec3(20.f, 10.f, 80.f), 
-            glm::vec3(0.f, -2.f, -20.f - m_zDistance)));
 
+    if (m_grammarChunkGenerator.hasNextChunk()) {
         m_zDistance += s_chunkLength;
-        return chunk;
+        return m_grammarChunkGenerator.nextChunk();
     }
 
     float distanceToNextThousand = s_wallStep - int(m_zDistance) % s_wallStep;

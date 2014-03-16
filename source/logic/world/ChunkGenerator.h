@@ -1,19 +1,19 @@
 #pragma once
 
 #include <random>
+#include <chrono>
 
 #include <QSharedPointer>
 #include <glm/glm.hpp>
 
-#include "CuboidChunk.h"
+#include "GrammarBasedChunkGenerator.h"
 
-class btDiscreteDynamicsWorld;
+class CuboidChunk;
 
 class ChunkGenerator
 {
 public:
-    ChunkGenerator(int seed);
-    ~ChunkGenerator();
+    ChunkGenerator(long long seed = std::chrono::system_clock::now().time_since_epoch().count());
 
     QSharedPointer<CuboidChunk> nextChunk();
 
@@ -25,6 +25,8 @@ protected:
     void createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe);
 
 protected:
+    static const int s_numGrammarChunks;
+
     static const float s_chunkLength;
     static const double s_startIncreasingSeverity;
     static const double s_stopIncreasingSeverity;
@@ -35,7 +37,8 @@ protected:
     static const float s_wallSize;
     static const float s_wallThickness;
 
+    GrammarBasedChunkGenerator m_grammarChunkGenerator;
+
     std::mt19937 m_generator;
     double m_zDistance;
-
 };
