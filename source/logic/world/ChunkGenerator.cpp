@@ -12,8 +12,8 @@
 const int ChunkGenerator::s_numGrammarChunks = 5;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
-const double ChunkGenerator::s_startIncreasingSeverity = 200.0;
-const double ChunkGenerator::s_stopIncreasingSeverity = 3000.0;
+const double ChunkGenerator::s_startIncreasingSeverity = 500.0;
+const double ChunkGenerator::s_stopIncreasingSeverity = 3500.0;
 
 const float ChunkGenerator::s_minCuboidOverlapSize = 1.f;
 

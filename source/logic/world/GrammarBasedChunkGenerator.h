@@ -4,6 +4,7 @@
 
 #include <QSharedPointer>
 #include <QList>
+#include <QMap>
 
 #include <glm/glm.hpp>
 
@@ -19,7 +20,7 @@ public:
     QSharedPointer<CuboidChunk> nextChunk();
 
 protected: 
-    enum class Layout { parallel, displaced, count };
+    enum class Layout { single, parallel, displaced, count };
     enum class Rotation{ noRotation, rotate90, rotate180, rotate270, count };
 
     struct chunkCombination
@@ -28,17 +29,14 @@ protected:
         Rotation rotation;
     };
 
-
     static glm::mat3 rotate(Rotation rot);
+
     void createStartChunk(CuboidChunk & chunk);
     void createSLChunk(CuboidChunk & chunk);
-    void createDLChunk(CuboidChunk & chunk);
 
+    void createSLSingleChunk(CuboidChunk & chunk, Rotation rot);
     void createSLParallelChunk(CuboidChunk & chunk, Rotation rot);
     void createSLDisplacedChunk(CuboidChunk & chunk, Rotation rot);
-
-    void createDLParallelChunk(CuboidChunk & chunk, Rotation rot);
-    void createDLDisplacedChunk(CuboidChunk & chunk, Rotation rot);
 
 protected:
     QList<QSharedPointer<CuboidChunk>> m_chunkList;
@@ -51,5 +49,4 @@ protected:
     float m_zDistance;
 
     chunkCombination m_lastSLCombination;
-    chunkCombination m_lastDLCombination;
 };
