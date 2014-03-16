@@ -16,6 +16,14 @@ NewHighscoreMenu::~NewHighscoreMenu()
 {
 }
 
+void NewHighscoreMenu::validateEnteredName(const QString & name)
+{
+    if (name.length() > 0)
+    {
+        emit nameEntered(name);
+    }
+}
+
 QList<MenuItem *> NewHighscoreMenu::initializeMenuItems(const QString & cachedName, int score)
 {
     MenuText * congratsText = new MenuText(QString("Congratulations!"));
@@ -27,5 +35,5 @@ QList<MenuItem *> NewHighscoreMenu::initializeMenuItems(const QString & cachedNa
 
 void NewHighscoreMenu::connectSignals()
 {
-    connect(m_input, &MenuInput::enterPressed, this, &NewHighscoreMenu::nameEntered);
+    connect(m_input, &MenuInput::enterPressed, this, &NewHighscoreMenu::validateEnteredName);
 }

@@ -16,6 +16,9 @@ public:
     NewHighscoreMenu(const QString & cachedName, int score);
     virtual ~NewHighscoreMenu();
 
+public slots:
+    void validateEnteredName(const QString & name);
+    
 signals:
     void nameEntered(const QString & name);
 
