@@ -8,19 +8,20 @@
 
 #include "Cuboid.h"
 
-const float GrammarBasedChunkGenerator::s_minSmallSize = 5.f;
+const float GrammarBasedChunkGenerator::s_minSmallSize = 3.f;
 const float GrammarBasedChunkGenerator::s_minLargeSize = 10.f;
 
 GrammarBasedChunkGenerator::GrammarBasedChunkGenerator(int seed, float chunkLength, int numChunks)
 :   m_generator(seed)
 ,   m_layoutDistribution(0, int(Layout::count)-1)
 ,   m_rotationDistribution(0, int(Rotation::count) - 1)
-,   smallSizeDistribution(8.f, 4.f)
+,   smallSizeDistribution(7.f, 4.f)
 ,   largeSizeDistribution(20.f, 4.f)
 ,   smallShuffleDistribution(-2.f, 2.f)
 ,   largeShiftDistribution(10.f, 15.f)
 ,   m_chunkLength(chunkLength)
 ,   m_zDistance(0.f)
+,   m_cuboidLength(chunkLength - 10.f)
 ,   m_lastSLCombination({ Layout::count, Rotation::count })
 {
     assert(chunkLength > 0);
@@ -94,11 +95,13 @@ void GrammarBasedChunkGenerator::createSingleChunk(CuboidChunk & chunk, Rotation
     float xPos = smallShuffleDistribution(m_generator);
     float yPos = largeShiftDistribution(m_generator);
 
+    float zShuffle = smallShuffleDistribution(m_generator);
+
     glm::mat3 rotation = rotate(rot);
 
     chunk.add(new Cuboid(
-        glm::abs(rotation * glm::vec3(xSize, ySize, 60.f)),
-        rotation * glm::vec3(xPos, yPos, -30.f - m_zDistance)));
+        glm::abs(rotation * glm::vec3(xSize, ySize, m_cuboidLength)),
+        rotation * glm::vec3(xPos, yPos, -(m_cuboidLength / 2.f) - m_zDistance + zShuffle)));
 }
 
 void GrammarBasedChunkGenerator::createParallelChunk(CuboidChunk & chunk, Rotation rot)
@@ -115,15 +118,18 @@ void GrammarBasedChunkGenerator::createParallelChunk(CuboidChunk & chunk, Rotati
     float xPosLeft = -largeShiftDistribution(m_generator);
     float yPosLeft = smallShuffleDistribution(m_generator);
 
+    float zShuffleLeft = smallShuffleDistribution(m_generator);
+    float zShuffleRight = smallShuffleDistribution(m_generator);
+
     glm::mat3 rotation = rotate(rot);
 
     chunk.add(new Cuboid(
-        glm::abs(rotation * glm::vec3(xSizeRight, ySizeRight, 60.f)),
-        rotation * glm::vec3(xPosRight, yPosRight, -30.f - m_zDistance)));
+        glm::abs(rotation * glm::vec3(xSizeRight, ySizeRight, m_cuboidLength)),
+        rotation * glm::vec3(xPosRight, yPosRight, -(m_cuboidLength / 2.f) - m_zDistance + zShuffleRight)));
 
     chunk.add(new Cuboid(
-        glm::abs(rotation * glm::vec3(xSizeLeft, ySizeLeft, 60.f)),
-        rotation * glm::vec3(xPosLeft, yPosLeft, -30.f - m_zDistance)));
+        glm::abs(rotation * glm::vec3(xSizeLeft, ySizeLeft, m_cuboidLength)),
+        rotation * glm::vec3(xPosLeft, yPosLeft, -(m_cuboidLength / 2.f) - m_zDistance + zShuffleLeft)));
 }
 
 void GrammarBasedChunkGenerator::createDisplacedChunk(CuboidChunk & chunk, Rotation rot)
@@ -140,15 +146,18 @@ void GrammarBasedChunkGenerator::createDisplacedChunk(CuboidChunk & chunk, Rotat
     float xPosLeft = -largeShiftDistribution(m_generator);
     float yPosLeft = smallShuffleDistribution(m_generator);
 
+    float zShuffleTop = smallShuffleDistribution(m_generator);
+    float zShuffleLeft = smallShuffleDistribution(m_generator);
+
     glm::mat3 rotation = rotate(rot);
 
     chunk.add(new Cuboid(
-        glm::abs(rotation * glm::vec3(xSizeTop, ySizeTop, 60.f)),
-        rotation * glm::vec3(xPosTop, yPosTop, -30.f - m_zDistance)));
+        glm::abs(rotation * glm::vec3(xSizeTop, ySizeTop, m_cuboidLength)),
+        rotation * glm::vec3(xPosTop, yPosTop, -(m_cuboidLength / 2.f) - m_zDistance + zShuffleTop)));
 
     chunk.add(new Cuboid(
-        glm::abs(rotation * glm::vec3(xSizeLeft, ySizeLeft, 60.f)),
-        rotation * glm::vec3(xPosLeft, yPosLeft, -30.f - m_zDistance)));
+        glm::abs(rotation * glm::vec3(xSizeLeft, ySizeLeft, m_cuboidLength)),
+        rotation * glm::vec3(xPosLeft, yPosLeft, -(m_cuboidLength / 2.f) - m_zDistance + zShuffleLeft)));
 }
 
 glm::mat3 GrammarBasedChunkGenerator::rotate(Rotation rot)

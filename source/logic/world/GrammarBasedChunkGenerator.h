@@ -55,6 +55,7 @@ protected:
   
     float m_chunkLength;
     float m_zDistance;
+    float m_cuboidLength;
 
     chunkCombination m_lastSLCombination;
 };
