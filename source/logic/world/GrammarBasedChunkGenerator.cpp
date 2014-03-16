@@ -9,18 +9,22 @@
 
 #include "Cuboid.h"
 
+const float GrammarBasedChunkGenerator::s_minSmallSize = 5.f;
+const float GrammarBasedChunkGenerator::s_minLargeSize = 10.f;
 
 GrammarBasedChunkGenerator::GrammarBasedChunkGenerator(int seed, float chunkLength, int numChunks)
 :   m_generator(seed)
 ,   m_layoutDistribution(0, int(Layout::count)-1)
 ,   m_rotationDistribution(0, int(Rotation::count) - 1)
+,   smallSizeDistribution(8.f, 4.f)
+,   largeSizeDistribution(20.f, 4.f)
+,   smallShuffleDistribution(-2.f, 2.f)
+,   largeShiftDistribution(10.f, 15.f)
 ,   m_chunkLength(chunkLength)
 ,   m_zDistance(0.f)
 ,   m_lastSLCombination({ Layout::count, Rotation::count })
 {
     assert(chunkLength > 0);
-
-    //in init auslagern?
 
     for (int i = 0; i < numChunks; ++i)
         m_chunkList << QSharedPointer<CuboidChunk>(new CuboidChunk());
@@ -85,16 +89,11 @@ void GrammarBasedChunkGenerator::createSLChunk(CuboidChunk & chunk)
 
 void GrammarBasedChunkGenerator::createSLSingleChunk(CuboidChunk & chunk, Rotation rot)
 {
-    std::normal_distribution<> sizeXDistribution(10, 4);
-    std::normal_distribution<> sizeYDistribution(20, 2);
-    std::uniform_real_distribution<> positionXDistribution(-2.f, 2.f);
-    std::uniform_real_distribution<> positionYDistribution(10.f, 15.f);
+    float xSize = std::max(s_minSmallSize, float(largeSizeDistribution(m_generator)));
+    float ySize = std::max(s_minLargeSize, float(smallSizeDistribution(m_generator)));
 
-    float xSize = std::max(10.f, float(sizeXDistribution(m_generator)));
-    float ySize = std::max(5.f, float(sizeYDistribution(m_generator)));
-
-    float xPos = positionXDistribution(m_generator);
-    float yPos = positionYDistribution(m_generator);
+    float xPos = smallShuffleDistribution(m_generator);
+    float yPos = largeShiftDistribution(m_generator);
 
     glm::mat3 rotation = rotate(rot);
 
@@ -105,22 +104,17 @@ void GrammarBasedChunkGenerator::createSLSingleChunk(CuboidChunk & chunk, Rotati
 
 void GrammarBasedChunkGenerator::createSLParallelChunk(CuboidChunk & chunk, Rotation rot)
 {
-    std::normal_distribution<> sizeXDistribution(10, 4);
-    std::normal_distribution<> sizeYDistribution(20, 2);
-    std::uniform_real_distribution<> positionXDistribution(10.f, 15.f);
-    std::uniform_real_distribution<> positionYDistribution(-2.f, 2.f);
+    float xSizeRight = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
+    float ySizeRight = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
 
-    float xSizeRight = std::max(10.f, float(sizeXDistribution(m_generator)));
-    float ySizeRight = std::max(5.f, float(sizeYDistribution(m_generator)));
+    float xSizeLeft = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
+    float ySizeLeft = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
 
-    float xSizeLeft = std::max(10.f, float(sizeXDistribution(m_generator)));
-    float ySizeLeft = std::max(5.f, float(sizeYDistribution(m_generator)));
+    float xPosRight = largeShiftDistribution(m_generator);
+    float yPosRight = smallShuffleDistribution(m_generator);
 
-    float xPosRight = positionXDistribution(m_generator);
-    float yPosRight = positionYDistribution(m_generator);
-
-    float xPosLeft = -positionXDistribution(m_generator);
-    float yPosLeft = positionYDistribution(m_generator);
+    float xPosLeft = -largeShiftDistribution(m_generator);
+    float yPosLeft = smallShuffleDistribution(m_generator);
 
     glm::mat3 rotation = rotate(rot);
 
@@ -135,26 +129,17 @@ void GrammarBasedChunkGenerator::createSLParallelChunk(CuboidChunk & chunk, Rota
 
 void GrammarBasedChunkGenerator::createSLDisplacedChunk(CuboidChunk & chunk, Rotation rot)
 {
-    std::normal_distribution<> sizeLargeDistribution(20, 2);
-    std::normal_distribution<> sizeSmallDistribution(10, 4);
+    float xSizeTop = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
+    float ySizeTop = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
 
-    std::uniform_real_distribution<> positionTopXDistribution(-2.f, 2.f);
-    std::uniform_real_distribution<> positionTopYDistribution(10.f, 15.f);
+    float xSizeLeft = std::max(s_minSmallSize, float(smallSizeDistribution(m_generator)));
+    float ySizeLeft = std::max(s_minLargeSize, float(largeSizeDistribution(m_generator)));
 
-    std::uniform_real_distribution<> positionLeftXDistribution(-15.f, -10.f);
-    std::uniform_real_distribution<> positionLeftYDistribution(-2.f, 2.f);
+    float xPosTop = smallShuffleDistribution(m_generator);
+    float yPosTop = largeShiftDistribution(m_generator);
 
-    float xSizeTop = std::max(10.f, float(sizeLargeDistribution(m_generator)));
-    float ySizeTop = std::max(5.f, float(sizeSmallDistribution(m_generator)));
-
-    float xSizeLeft = std::max(5.f, float(sizeSmallDistribution(m_generator)));
-    float ySizeLeft = std::max(10.f, float(sizeLargeDistribution(m_generator)));
-
-    float xPosTop = positionTopXDistribution(m_generator);
-    float yPosTop = positionTopYDistribution(m_generator);
-
-    float xPosLeft = positionLeftXDistribution(m_generator);
-    float yPosLeft = positionLeftYDistribution(m_generator);
+    float xPosLeft = -largeShiftDistribution(m_generator);
+    float yPosLeft = smallShuffleDistribution(m_generator);
 
     glm::mat3 rotation = rotate(rot);
 
