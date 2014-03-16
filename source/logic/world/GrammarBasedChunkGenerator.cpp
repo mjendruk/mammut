@@ -22,7 +22,7 @@ GrammarBasedChunkGenerator::GrammarBasedChunkGenerator(int seed, float chunkLeng
 ,   m_chunkLength(chunkLength)
 ,   m_zDistance(0.f)
 ,   m_cuboidLength(chunkLength - 10.f)
-,   m_lastSLCombination({ Layout::count, Rotation::count })
+,   m_lastCombination({ Layout::count, Rotation::count })
 {
     assert(chunkLength > 0);
 
@@ -66,10 +66,10 @@ void GrammarBasedChunkGenerator::createChunk(CuboidChunk & chunk)
     Layout layout = Layout(m_layoutDistribution(m_generator));
     Rotation rot = Rotation(m_rotationDistribution(m_generator));
 
-    if (layout == m_lastSLCombination.layout && rot == m_lastSLCombination.rotation)
+    if (layout == m_lastCombination.layout && rot == m_lastCombination.rotation)
         rot = Rotation((int(rot) + 1 ) % int(Rotation::count));
 
-    m_lastSLCombination = {layout, rot};
+    m_lastCombination = {layout, rot};
 
     switch (layout)
     {

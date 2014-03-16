@@ -57,5 +57,5 @@ protected:
     float m_zDistance;
     float m_cuboidLength;
 
-    chunkCombination m_lastSLCombination;
+    chunkCombination m_lastCombination;
 };
