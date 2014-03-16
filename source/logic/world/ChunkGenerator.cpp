@@ -9,6 +9,7 @@
 
 #include "Cuboid.h"
 
+
 const int ChunkGenerator::s_numGrammarChunks = 5;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
@@ -145,7 +146,7 @@ void ChunkGenerator::removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps)
 
 void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe)
 {
-    const float zPosition = -(m_zDistance + distanceToNextThousand + s_wallThickness / 2.f);
+    const float zPosition = -(m_zDistance + distanceToNextThousand + s_wallThickness / 2.f + 1);
     const float minStripeSize = 5.f;
 
     std::uniform_real_distribution<> offsetDistribution(-30.0f, 30.0f);
