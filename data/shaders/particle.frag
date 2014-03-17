@@ -10,6 +10,6 @@ in float g_depth_vs;
 void main()
 {
     normalOut = vec4(g_normal, g_depth_vs);
-    colorOut = vec3(1.0);
+    colorOut = vec3(0.0);
     velocityOut = vec2(0.0);
 }

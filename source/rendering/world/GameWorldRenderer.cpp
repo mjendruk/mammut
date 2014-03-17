@@ -145,10 +145,10 @@ void GameWorldRenderer::initialize()
     initializeGBuffers();
     initializePostProcPasses();
     
-    for (int i = 0; i < 200000; ++i)
+    for (int i = 0; i < 1000000; ++i)
     {
-        m_particlePositions.push_back(glm::linearRand(glm::vec3(-100.0f, -100.0f, 0.0f), 
-                                              glm::vec3(100.0f, 100.0f, -300.0f)));
+        m_particlePositions.push_back(glm::linearRand(glm::vec3(-70.0f, -70.0f, 0.0f), 
+                                              glm::vec3(70.0f, 70.0f, -500.0f)));
     }
     
     m_particlesBuffer = new glow::Buffer(GL_ARRAY_BUFFER);

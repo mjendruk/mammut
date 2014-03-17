@@ -16,7 +16,7 @@ void main()
     vec3 position = gl_in[0].gl_Position.xyz;
 
     vec3 zAxis = vec3(0.0, 0.0, -1.0) * 10.0;
-    vec3 xyAxis = normalize(cross(eye - position, zAxis));
+    vec3 xyAxis = normalize(cross(eye - position, zAxis)) * 0.1;
 
     g_normal = normalize(eye - position);
 
