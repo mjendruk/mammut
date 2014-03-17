@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <QTime>
 
@@ -83,6 +84,11 @@ protected:
     MotionBlurPass m_motionBlurPass;
     std::unique_ptr<SimplePostProcPass> m_FxaaPass;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
+    
+    std::vector<glm::vec3> m_particlePositions;
+    glow::ref_ptr<glow::Buffer> m_particlesBuffer;
+    glow::ref_ptr<glow::VertexArrayObject> m_particlesVbo;
+    glow::ref_ptr<glow::Program> m_particlesProgram;
 
     glm::mat4 m_previousViewProjection;
     

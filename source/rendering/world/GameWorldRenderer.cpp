@@ -2,16 +2,22 @@
 
 #include <cassert>
 
-#include <glm/gtx/transform.hpp>
-
 #include <QMap>
+#include <QDebug>
+
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/random.hpp>
 
 #include <glow/global.h>
+#include <glow/Buffer.h>
+#include <glow/VertexArrayObject.h>
+#include <glow/VertexAttributeBinding.h>
 #include <glow/Texture.h>
 #include <glow/Program.h>
 #include <glow/FrameBufferobject.h>
 #include <glowutils/File.h>
 #include <glowutils/ScreenAlignedQuad.h>
+#include <glowutils/global.h>
 
 #include <logic/world/Cuboid.h>
 #include <logic/world/Mammut.h>
@@ -31,8 +37,6 @@ GameWorldRenderer::GameWorldRenderer()
 ,   m_avgTimeSinceLastFrame(0.0f)
 ,   m_gameMechanics(nullptr)
 {
-    glow::createNamedString("/Fxaa3_11.h", new glowutils::File("data/shaders/Fxaa3_11.h"));
-    m_FxaaPass.reset(new SimplePostProcPass("data/shaders/fxaa.frag", GL_RGB8));
     initialize();
 }
 
@@ -52,6 +56,10 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     updateFPS();
     updatePainters();
     
+    m_particlesProgram->setUniform("projection", m_camera.projection());
+    m_particlesProgram->setUniform("view", m_camera.view());
+    m_particlesProgram->setUniform("eye", m_camera.eye());
+    
     // render
     drawGeometry();
     applyPostproc(fbo, devicePixelRatio);
@@ -70,12 +78,15 @@ void GameWorldRenderer::drawGeometry()
     PerfCounter::beginGL("geom");
     m_gBufferFBO->bind();
     
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_CULL_FACE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
     
+    m_particlesVbo->bind();
+    m_particlesVbo->drawArrays(GL_POINTS, 0, m_particlePositions.size());
+    m_particlesVbo->unbind();
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
@@ -84,6 +95,9 @@ void GameWorldRenderer::drawGeometry()
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
+    
+    
+    
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
 }
@@ -130,6 +144,28 @@ void GameWorldRenderer::initialize()
 
     initializeGBuffers();
     initializePostProcPasses();
+    
+    for (int i = 0; i < 200000; ++i)
+    {
+        m_particlePositions.push_back(glm::linearRand(glm::vec3(-100.0f, -100.0f, 0.0f), 
+                                              glm::vec3(100.0f, 100.0f, -300.0f)));
+    }
+    
+    m_particlesBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
+    m_particlesBuffer->setData(m_particlePositions);
+    
+    m_particlesVbo = new glow::VertexArrayObject();
+    auto binding = m_particlesVbo->binding(0);
+    binding->setAttribute(0);
+    binding->setBuffer(m_particlesBuffer, 0, sizeof(glm::vec3));
+    binding->setFormat(3, GL_FLOAT);
+    m_particlesVbo->enable(0);
+    
+    m_particlesProgram = new glow::Program();
+    m_particlesProgram->attach(glowutils::createShaderFromFile(GL_VERTEX_SHADER, "data/shaders/particle.vert"),
+                               glowutils::createShaderFromFile(GL_GEOMETRY_SHADER, "data/shaders/particle.geom"),
+                               glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, "data/shaders/particle.frag"));
+    m_particlesProgram->link();
 }
 
 void GameWorldRenderer::initializeGBuffers()
@@ -164,6 +200,9 @@ void GameWorldRenderer::initializePostProcPasses()
                                         { "velocity", m_gBufferVelocity } });
     
     // FXAA
+    glow::createNamedString("/Fxaa3_11.h", new glowutils::File("data/shaders/Fxaa3_11.h"));
+    m_FxaaPass.reset(new SimplePostProcPass("data/shaders/fxaa.frag", GL_RGB8));
+
     m_FxaaOutput = m_FxaaPass->outputTexture();
     m_FxaaPass->setInputTextures({ { "buf0", m_motionBlurOutput } });
 

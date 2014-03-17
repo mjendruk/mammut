@@ -86,7 +86,16 @@ bool GameMechanics::mammutCollidesWithCave()
 
 void GameMechanics::updateSound()
 {
-    glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
+    glm::vec3 forward;
+    if (m_camera.center() - m_camera.eye() == glm::vec3(0.0))
+    {
+        forward = glm::vec3(0.0);
+    }
+    else
+    {
+        forward = glm::normalize(m_camera.center() - m_camera.eye());
+    }
+//    glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
     glm::vec3 velocity = glm::vec3(0.0, 0.0, m_mammut.velocity().z);
     SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
 }
