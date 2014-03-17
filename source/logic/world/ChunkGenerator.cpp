@@ -37,14 +37,23 @@ ChunkGenerator::ChunkGenerator(long long seed)
 
 QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 {
+    // recalculate boostDistribution if neccessary
+    if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
+        createBoostDistribution();
+
     if (m_grammarChunkGenerator.hasNextChunk()) {
+
+        QSharedPointer<CuboidChunk> chunk = m_grammarChunkGenerator.nextChunk();
+        distributeBoosts(*chunk.data());
         m_zDistance += s_chunkLength;
-        return m_grammarChunkGenerator.nextChunk();
+
+        return chunk;
     }
 
     QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
 
     float distanceToNextThousand = s_wallStep - int(m_zDistance) % s_wallStep;
+
     if (distanceToNextThousand <= s_chunkLength) {
         createWall(
             *chunk.data(), 
@@ -52,9 +61,6 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
             m_zDistance > 2.f * s_wallStep ? false : true);
         return chunk;
     }
-        
-    if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
-        createBoostDistribution();
 
     createOrdinaryLevel(*chunk.data());
     return chunk;
@@ -71,6 +77,8 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
     createRawChunk(chunk, numCuboids);
 
     removeOverlaps(chunk, maxNumOverlaps);
+
+    distributeBoosts(chunk);
 
     m_zDistance += s_chunkLength;
 }
@@ -149,10 +157,18 @@ void ChunkGenerator::removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps)
     for (int i = removeIndexList.size() - 1; i >= 0; --i)
         chunk.remove(removeIndexList.at(i));
 
+    qDebug() << "num overlaps" << numOverlaps;
+    qDebug() << "num deletions" << numDeletions;
+}
+
+void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
+{
     assert(m_boostDistribution[m_numUsedBoostDistributions] <= 3);
 
-    int numBoosts = std::min(m_boostDistribution[m_numUsedBoostDistributions], chunk.cuboids().size());
-    
+    int halfNumCuboids = chunk.cuboids().size() / 2;
+
+    int numBoosts = std::min(m_boostDistribution[m_numUsedBoostDistributions], halfNumCuboids);
+
     int step = numBoosts > 0 ? chunk.cuboids().size() / numBoosts : 1;
 
     for (int i = 0; i < numBoosts; i += step)
@@ -160,8 +176,6 @@ void ChunkGenerator::removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps)
 
     ++m_numUsedBoostDistributions;
 
-    qDebug() << "num overlaps" << numOverlaps;
-    qDebug() << "num deletions" << numDeletions;
     qDebug() << "num boosts " << numBoosts;
 }
 
