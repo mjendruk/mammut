@@ -300,6 +300,8 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/BunchOfTetsDrawable.cpp
+    ${source_path}/rendering/world/BunchOfTetsDrawable.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp

@@ -74,8 +74,8 @@ void LevelStartChunkGenerator::createChunk(CuboidChunk & chunk)
     switch (layout)
     {
     case Layout::single:
-        createSingleChunk(chunk, rot);
-        break;
+        //createSingleChunk(chunk, rot);
+        //break;
     case Layout::parallel:
         createParallelChunk(chunk, rot);
         break;

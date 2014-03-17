@@ -25,7 +25,7 @@ GameMechanics::GameMechanics()
         m_chunkList << m_chunkGenerator.nextChunk();
 
         if (i == 1) {
-            m_bunch.add(m_chunkList.last()->cuboids()[0]->splitIntoTets());
+            m_bunch.add(m_chunkList.last()->cuboids().takeFirst()->splitIntoTets());
             //m_chunkList.last()->cuboids().pop_front();
             //for (btRigidBody * body : m_bunch.rigidBodies())
             //    m_physicsWorld.addBody(body);
@@ -175,6 +175,11 @@ const Mammut & GameMechanics::mammut() const
 const Cave & GameMechanics::cave() const
 {
     return m_cave;
+}
+
+const BunchOfTets & GameMechanics::bunchOfTets() const
+{
+    return m_bunch;
 }
 
 int GameMechanics::score() const

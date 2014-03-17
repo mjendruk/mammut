@@ -16,13 +16,12 @@ void CuboidChunk::add(Cuboid * cuboid)
     m_cuboids << cuboid;
 }
 
-
 void CuboidChunk::remove(int index)
 {
     m_cuboids.removeAt(index);
 }
 
-const QList<Cuboid *> & CuboidChunk::cuboids() const
+QList<Cuboid *> & CuboidChunk::cuboids()
 {
     return m_cuboids;
 }

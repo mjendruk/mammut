@@ -33,6 +33,7 @@ public:
     const GameCamera & camera() const;
     const Mammut & mammut() const;
     const Cave & cave() const;
+    const BunchOfTets & bunchOfTets() const;
     int score() const;
     float lastZShift() const;
     

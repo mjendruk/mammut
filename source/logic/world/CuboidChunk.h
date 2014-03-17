@@ -14,7 +14,7 @@ public:
     void add(Cuboid * cuboid);
     void remove(int index);
     
-    const QList<Cuboid *> & cuboids() const;
+    QList<Cuboid *> & cuboids();
 
 protected:
     QList<Cuboid *> m_cuboids;

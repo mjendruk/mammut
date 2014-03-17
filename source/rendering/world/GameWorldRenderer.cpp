@@ -18,6 +18,7 @@
 #include <logic/world/GameMechanics.h>
 #include <logic/world/GameCamera.h>
 
+#include "BunchOfTetsDrawable.h"
 #include "Util.h"
 #include "PerfCounter.h"
 
@@ -84,10 +85,23 @@ void GameWorldRenderer::drawGeometry()
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
     });
+
+
+
+    BunchOfTetsDrawable tetsDrawable(m_gameMechanics->bunchOfTets());
+    glm::mat4x4 tetsMat(glm::mat4(1.0));
+    tetsDrawable.setViewProjectionUniform(m_camera.viewProjection());
+    tetsDrawable.setViewUniform(m_camera.view());
+    tetsDrawable.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
+    tetsDrawable.setEyeUniform(m_camera.eye());
+    tetsDrawable.paint(tetsMat);
+
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
+
+
     PerfCounter::endGL("geom");
 }
 

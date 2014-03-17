@@ -17,9 +17,9 @@ public:
     void add(Tet & tet);
     void add(const QVector<Tet *> * tets);
 
-    std::vector<glm::vec3> * collectVertices() const;
-    std::vector<glm::vec3> * collectNormals() const;
-    std::vector<glm::mat4> * collectMatrices() const;
+    void collectVertices(std::vector<glm::vec3> & vertices) const;
+    void collectNormals(std::vector<glm::vec3> & vertices) const;
+    void collectMatrices(std::vector<glm::mat4> & vertices) const;
 
 protected:
     QVector<Tet *> m_tets;

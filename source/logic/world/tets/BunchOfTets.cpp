@@ -24,31 +24,28 @@ void BunchOfTets::add(const QVector<Tet *> * tets)
 }
 
 
-std::vector<glm::vec3> * BunchOfTets::collectVertices() const
+void BunchOfTets::collectVertices(std::vector<glm::vec3> & vertices) const
 {
-    std::vector<glm::vec3> * vertices = new std::vector<glm::vec3>();
+    assert(vertices.size() == 0);
     for (Tet * tet: m_tets) {
         for (glm::vec3 vec : tet->duplicatedVertices())
-            vertices->push_back(vec);
+            vertices.push_back(vec);
     }
-    return vertices;
 }
 
-std::vector<glm::vec3> * BunchOfTets::collectNormals() const
+void BunchOfTets::collectNormals(std::vector<glm::vec3> & normals) const
 {
-    std::vector<glm::vec3> * normals = new std::vector<glm::vec3>();
+    assert(normals.size() == 0);
     for (Tet * tet : m_tets) {
         for (glm::vec3 vec : tet->normals())
-            normals->push_back(vec);
+            normals.push_back(vec);
     }
-    return normals;
 }
 
-std::vector<glm::mat4> * BunchOfTets::collectMatrices() const
+void BunchOfTets::collectMatrices(std::vector<glm::mat4> & matrices) const
 {
-    std::vector<glm::mat4> * matrices = new std::vector<glm::mat4>();
+    assert(matrices.size() == 0);
     for (Tet * tet : m_tets) {
-        matrices->push_back(tet->modelMatrix());
+        matrices.push_back(tet->modelMatrix());
     }
-    return matrices;
 }
