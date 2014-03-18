@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 
 #include <sound/SoundManager.h>
+#include "tets/Tet.h"
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
@@ -25,10 +26,10 @@ GameMechanics::GameMechanics()
         m_chunkList << m_chunkGenerator.nextChunk();
 
         if (i == 1) {
-            m_bunch.add(m_chunkList.last()->cuboids().takeFirst()->splitIntoTets());
-            //m_chunkList.last()->cuboids().pop_front();
-            //for (btRigidBody * body : m_bunch.rigidBodies())
-            //    m_physicsWorld.addBody(body);
+            QVector<Tet *> * tets = m_chunkList.last()->cuboids().takeFirst()->splitIntoTets();
+            m_bunch.add(tets);
+            for (Tet * tet: *tets)
+                m_physicsWorld.addObject(tet);
         }
 
         for (Cuboid * cuboid : m_chunkList.last()->cuboids())

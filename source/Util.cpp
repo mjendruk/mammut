@@ -52,6 +52,13 @@ glm::vec3 center(const QVector<glm::vec3> & vecs)
     return center;
 }
 
+QVector<glm::vec3> centerVertices(QVector<glm::vec3> & vecs, const glm::vec3 & center)
+{
+    for (int i = 0; i < vecs.size(); i++)
+        vecs[i] = vecs[i] - center;
+    return vecs;
+}
+
 glm::vec3 normalOfTriangle(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2)
 {
     glm::vec3 ab = v1 - v0;
