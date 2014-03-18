@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QTime>
 #include <glm/glm.hpp>
 
 #include "MammutPhysics.h"
@@ -64,7 +63,5 @@ protected:
     unsigned int m_collectedBoosts;
 
     glm::vec3 m_boostDirection;
-    glm::vec3 m_boostStartPosition; //verbleibend
-    int numBoostSteps;
-    QTime m_timeBoostApplied;
+    int m_numBoostSteps;
 };

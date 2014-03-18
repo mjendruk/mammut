@@ -30,7 +30,7 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
-    // updateBoost();
+    updateBoost();
 
     // in air
     if (!isStillOnObject()) {
@@ -124,10 +124,6 @@ void Mammut::applyBoost(BoostDirection direction)
     if (m_collectedBoosts < 1)
         return;
 
-   // m_timeBoostApplied = QTime::currentTime();
-    m_timeBoostApplied.start();
-   // m_boostStartPosition = Util::toGlmVec3(m_physics.rigidBody()->getCenterOfMassPosition());
-
     float magnitude = 1.f; //different magnitude in gravity direction? or in -gravity
     glm::vec3 boostForce;   // magnitude <> speed?
 
@@ -150,12 +146,12 @@ void Mammut::applyBoost(BoostDirection direction)
     }
 
     m_boostDirection = boostForce;
-    m_boostStartPosition = Util::toGlmVec3(m_physics.rigidBody()->getCenterOfMassTransform().getOrigin());
     m_boostIsActive = true;
     --m_collectedBoosts;
-    //set mammut position
+
     qDebug() << "start Boost: " << m_boostDirection.x << " | " << m_boostDirection.y;
-    numBoostSteps = 10;
+
+    m_numBoostSteps = 20;
     updateBoost();
 }
 
@@ -164,12 +160,14 @@ void Mammut::updateBoost()
     if (!m_boostIsActive)
         return;
 
-    int timeSinceBoostAppliedMS = m_timeBoostApplied.elapsed();
-    float timeSinceBoostAppliedS = timeSinceBoostAppliedMS / 1000.f;
+    if (m_numBoostSteps <= 0){
+        m_boostIsActive = false;
+        return;
+    } 
 
     btTransform mammutTransform = m_physics.rigidBody()->getCenterOfMassTransform();
 
-    float currentLength = 10.f; //std::min(s_boostDistance, timeSinceBoostAppliedS * s_boostVelocity); //s(m) = t(s) * vel (m/s)
+    float currentLength = 0.7f; //s(m) = t(s) * vel (m/s)
     glm::vec3 shiftVector = (glm::inverse(m_gravityTransform) * m_boostDirection) * currentLength;
 
     glm::vec3 position = Util::toGlmVec3(m_physics.rigidBody()->getCenterOfMassTransform().getOrigin());
@@ -177,18 +175,8 @@ void Mammut::updateBoost()
 
     mammutTransform.setOrigin(newPosition);
     m_physics.rigidBody()->setCenterOfMassTransform(mammutTransform);
-/*
-    btTransform transform = body->getCenterOfMassTransform();
-    transform.setOrigin(new_position);
-    body->setCenterOfMassTransform(transform);*/
 
-   // m_currentBoostDistance -= currentLength;
-
-    if (currentLength >= s_boostDistance) {
-        m_boostIsActive = false;
-        m_boostDirection = glm::vec3(0.f);
-        m_boostStartPosition = glm::vec3(0.f);
-    }
+    --m_numBoostSteps;
 
     qDebug() << "apply Boost: " << shiftVector.x << " | " << shiftVector.y;
 }
