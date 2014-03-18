@@ -21,7 +21,11 @@ public:
     void collectNormals(std::vector<glm::vec3> & vertices) const;
     void collectMatrices(std::vector<glm::mat4> & vertices) const;
 
+    void addZShift(float zShift);
+    float zShift() const;
+
 protected:
     QVector<Tet *> m_tets;
     
+    float m_zShift;
 };

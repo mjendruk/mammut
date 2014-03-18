@@ -3,6 +3,7 @@
 #include "Tet.h"
 
 BunchOfTets::BunchOfTets()
+:   m_zShift(0.0f)
 {
 
 }
@@ -48,4 +49,14 @@ void BunchOfTets::collectMatrices(std::vector<glm::mat4> & matrices) const
     for (Tet * tet : m_tets) {
         matrices.push_back(tet->modelMatrix());
     }
+}
+
+void BunchOfTets::addZShift(float zShift)
+{
+    m_zShift += zShift;
+}
+
+float BunchOfTets::zShift() const
+{
+    return m_zShift;
 }

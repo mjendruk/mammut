@@ -121,6 +121,8 @@ void GameMechanics::zReset()
 
     m_totalZShift += zShift;
     m_lastZShift = zShift;
+
+    m_bunch.addZShift(zShift);
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)

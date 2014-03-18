@@ -27,7 +27,7 @@ public:
     void setEyeUniform(const glm::vec3 & eye);
 
     void initialize();
-    void paint(const glm::mat4 & model);
+    void paint();
 
 protected:
     const BunchOfTets & m_bunchOfTets;

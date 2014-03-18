@@ -89,12 +89,11 @@ void GameWorldRenderer::drawGeometry()
 
 
     BunchOfTetsDrawable tetsDrawable(m_gameMechanics->bunchOfTets());
-    glm::mat4x4 tetsMat(glm::mat4(1.0));
     tetsDrawable.setViewProjectionUniform(m_camera.viewProjection());
     tetsDrawable.setViewUniform(m_camera.view());
     tetsDrawable.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
     tetsDrawable.setEyeUniform(m_camera.eye());
-    tetsDrawable.paint(tetsMat);
+    tetsDrawable.paint();
 
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]

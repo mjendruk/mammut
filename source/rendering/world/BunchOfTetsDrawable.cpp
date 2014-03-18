@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include <glm/gtx/transform.hpp>
+
 #include <glow/Texture.h>
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
@@ -89,7 +91,7 @@ void BunchOfTetsDrawable::initialize()
     m_matrixTexture->texBuffer(GL_RGBA32F, m_matrixBuffer);
 }
 
-void BunchOfTetsDrawable::paint(const glm::mat4 & modelMatrix)
+void BunchOfTetsDrawable::paint()
 {
     std::vector<glm::vec3> vertices;
     m_bunchOfTets.collectVertices(vertices);
@@ -112,7 +114,7 @@ void BunchOfTetsDrawable::paint(const glm::mat4 & modelMatrix)
     m_program->setUniform("vertices", 0);
     m_program->setUniform("normals", 1);
     m_program->setUniform("matrices", 2);
-    m_program->setUniform("model", modelMatrix);
+    m_program->setUniform("model", glm::translate(0.0f, 0.0f, m_bunchOfTets.zShift()));
 
     m_vao->bind();
     m_vao->drawArraysInstanced(GL_TRIANGLES, 0, 3, vertices.size() / 3);
