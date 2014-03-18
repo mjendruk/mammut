@@ -63,7 +63,7 @@ float linearstep(float edge0, float edge1, float x)
 
 float calculateShakiness(float normalizedCaveDistance)
 {
-    return linearstep(0.35f, 1.0f, normalizedCaveDistance);
+    return glm::pow(linearstep(0.3f, 0.9f, normalizedCaveDistance), 2.0f);
 }
 
 void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & direction, float normalizedCaveDistance)
@@ -73,7 +73,7 @@ void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & dire
     
     float shakiness = calculateShakiness(normalizedCaveDistance);
 
-    m_noise.setVolume(shakiness * 0.9);
+    m_noise.setVolume(shakiness * 0.95);
     
     glm::vec3 shakeLookAt = glm::normalize(glm::vec3(glm::gaussRand(0.0f, 8.0f),
                                                      glm::gaussRand(0.0f, 8.0f),
