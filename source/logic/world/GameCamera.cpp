@@ -13,11 +13,15 @@ const float GameCamera::s_rotationDuration = 0.25f;
 
 GameCamera::GameCamera()
 :   m_currentCenterOffset(0.0f)
+,   m_noise(Sound::kDeepNoise, true)
 {
+    m_noise.setVolume(0.0f);
+    m_noise.setPaused(false);
 }
 
 GameCamera::~GameCamera()
 {
+    m_noise.setPaused(true);
 }
 
 void GameCamera::update(
@@ -52,12 +56,24 @@ void GameCamera::updateRotationProgress(float seconds)
     m_currentRotation = glm::mat3_cast(glm::slerp(from, to, glm::smoothstep(0.0f, 1.0f, m_rotationProgress / s_rotationDuration)));
 }
 
+float linearstep(float edge0, float edge1, float x)
+{
+    return (glm::clamp(x, edge0, edge1) - edge0) / (edge1 - edge0);
+}
+
+float calculateShakiness(float normalizedCaveDistance)
+{
+    return glm::pow(linearstep(0.3f, 0.9f, normalizedCaveDistance), 2.0f);
+}
+
 void GameCamera::updateLookAt(const glm::vec3 & position, const glm::vec3 & direction, float normalizedCaveDistance)
 {
     const glm::vec3 defaultLookAt(0.0f, 0.0f, -1.0f);
     const glm::vec3 realDirection = (glm::length(direction) == 0.0f) ? glm::vec3(0.0f, 0.0f, -1.0f) : direction;
     
-    float shakiness = glm::smoothstep(0.35f, 0.95f, normalizedCaveDistance);
+    float shakiness = calculateShakiness(normalizedCaveDistance);
+
+    m_noise.setVolume(shakiness * 0.95);
     
     glm::vec3 shakeLookAt = glm::normalize(glm::vec3(glm::gaussRand(0.0f, 8.0f),
                                                      glm::gaussRand(0.0f, 8.0f),
