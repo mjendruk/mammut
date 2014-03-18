@@ -85,6 +85,11 @@ MammutPhysics * Mammut::physics()
     return &m_physics;
 }
 
+void Mammut::addZShift(float zShift)
+{
+    m_physics.addZShift(zShift);
+}
+
 void Mammut::slowDownDrifting()
 {
     glm::vec3 rotatedVelocity = m_gravityTransform * m_physics.velocity();

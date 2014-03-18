@@ -2,7 +2,6 @@
 
 #include <rendering/text/TextRenderer.h>
 
-class Mammut;
 class RenderCamera;
 class GameWorldRenderer;
 
@@ -13,7 +12,7 @@ public:
         const GameWorldRenderer & renderer);
     ~HUD();
 
-    void paint(const Mammut & mammut);
+    void paint(int velocity, int score);
 
 protected:
     TextRenderer m_textRenderer;

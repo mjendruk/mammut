@@ -8,7 +8,7 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
-#include <logic/world/GameMechanics.h>
+#include <logic/world/Cave.h>
 
 
 const int CaveDrawable::s_verticesPerRing = 20;
@@ -17,12 +17,14 @@ const float CaveDrawable::s_ringZStride = -50.0f;
 const int CaveDrawable::s_numRings = 35;
 const int CaveDrawable::s_numSafetyMarginRings = 7;
 
-CaveDrawable::CaveDrawable()
+CaveDrawable::CaveDrawable(const Cave & cave)
 :   m_lastRingIndex(-s_numSafetyMarginRings)
+,   m_cave(cave)
 ,   m_vao(nullptr)
 ,   m_vertexBuffer(nullptr)
 ,   m_normalBuffer(nullptr)
 {
+
     initialize();
 }
 
@@ -68,10 +70,10 @@ void CaveDrawable::initializeDummyArrays()
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
         float angle = (M_PI * 2 / s_verticesPerRing) * i;
-        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
+        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * Cave::s_caveRadius);
 
         float angleOffset = (M_PI * 2 / s_verticesPerRing) * (i + 0.5f);
-        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
+        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * Cave::s_caveRadius);
     }
 }
 
@@ -116,10 +118,11 @@ void CaveDrawable::draw()
 
 void CaveDrawable::update(glm::vec3 camPosition)
 {
-    while (camPosition.z < (m_lastRingIndex - s_numRings + s_numSafetyMarginRings) * s_ringZStride) {
+    while (camPosition.z - m_cave.zShift() < (m_lastRingIndex - s_numRings + s_numSafetyMarginRings) * s_ringZStride) {
         m_vertices.erase(m_vertices.begin(), m_vertices.begin() + 2 * s_verticesPerRing);
         addTwoRings();
     }
+
     rebuildGPUData();
 }
 
@@ -133,7 +136,6 @@ glm::vec3 CaveDrawable::getRandomOffset()
 
 void CaveDrawable::addTwoRings()
 {
-
     float firstRingPosition = (m_lastRingIndex + 1) * s_ringZStride;
     float secondRingPosition = (m_lastRingIndex + 2) * s_ringZStride;
 
@@ -148,28 +150,29 @@ void CaveDrawable::addTwoRings()
 
 void CaveDrawable::rebuildGPUData()
 {
-    buildDuplicatedVertices();
+    buildGPUVertices();
     buildNormals();
 
-    m_vertexBuffer->setData(m_duplicatedVertices);
+    m_vertexBuffer->setData(m_GPUVertices);
     m_normalBuffer->setData(m_normals);
 }
 
-void CaveDrawable::buildDuplicatedVertices()
+void CaveDrawable::buildGPUVertices()
 {
-    m_duplicatedVertices.clear();
+    glm::vec3 zShiftVector = glm::vec3(0.0f, 0.0f, m_cave.zShift());
+    m_GPUVertices.clear();
     for (int i : m_indices) {
-        m_duplicatedVertices.push_back(m_vertices[i]);
+        m_GPUVertices.push_back(m_vertices[i] + zShiftVector);
     }
 }
 
 void CaveDrawable::buildNormals()
 {
     m_normals.clear();
-    for (int i = 0; i < m_duplicatedVertices.size(); i += 3) {
+    for (int i = 0; i < m_GPUVertices.size(); i += 3) {
 
-        glm::vec3 ab = m_duplicatedVertices.at(i + 1) - m_duplicatedVertices.at(i);
-        glm::vec3 ac = m_duplicatedVertices.at(i + 2) - m_duplicatedVertices.at(i);
+        glm::vec3 ab = m_GPUVertices.at(i + 1) - m_GPUVertices.at(i);
+        glm::vec3 ac = m_GPUVertices.at(i + 2) - m_GPUVertices.at(i);
 
         glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
 

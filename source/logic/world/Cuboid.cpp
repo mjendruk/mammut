@@ -11,16 +11,15 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
 {    
     initializeRigidBody(size, translation);
-    initializeModelTransform();
 }
 
 Cuboid::~Cuboid()
 {
 }
 
-const glm::mat4 & Cuboid::modelTransform() const
+glm::mat4 Cuboid::modelTransform() const
 {
-    return m_modelTransform;   
+    return glm::translate(position()) * glm::scale(m_size);
 }
 
 glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
@@ -33,11 +32,6 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
     boundingBox.extend(Util::toGlmVec3(urb));
     
     return boundingBox;
-}
-
-btRigidBody * Cuboid::rigidBody() const
-{
-    return m_rigidBody.get();
 }
 
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)
@@ -53,13 +47,4 @@ void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & trans
     
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
-}
-
-void Cuboid::initializeModelTransform()
-{
-    btTransform transform;
-    m_rigidBody->getMotionState()->getWorldTransform(transform);
-    
-    glm::vec3 translation = Util::toGlmVec3(transform.getOrigin());
-    m_modelTransform = glm::translate(translation) * glm::scale(m_size);
 }
