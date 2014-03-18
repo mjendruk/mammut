@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTime>
 #include <glm/glm.hpp>
 
 #include "MammutPhysics.h"
@@ -45,11 +46,13 @@ protected:
     bool isStillOnObject() const;
 
     void addBoost();
-    void updateBoost(bool applyPhysicalForce);
+    void updateBoost();
     
 protected:
     static const glm::vec3 s_size;
     static const int s_maxBoosts;
+    static const float s_boostVelocity;
+    static const float s_boostDistance;
     
     MammutPhysics m_physics;
     
@@ -59,5 +62,9 @@ protected:
 
     bool m_boostIsActive;
     unsigned int m_collectedBoosts;
-    glm::vec3 m_boostVector;
+
+    glm::vec3 m_boostDirection;
+    glm::vec3 m_boostStartPosition; //verbleibend
+    int numBoostSteps;
+    QTime m_timeBoostApplied;
 };
