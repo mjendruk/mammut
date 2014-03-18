@@ -3,6 +3,7 @@
 #include <glm/gtx/transform.hpp>
 
 #include <Util.h>
+#include "MammutPhysics.h"
 #include "PhysicsObject.h"
 
 namespace
@@ -22,6 +23,10 @@ void forwardPostTickCallback(btDynamicsWorld * world, btScalar timeStep)
 
 } // namespace
 
+
+const glm::vec3 PhysicsWorld::s_mammutGravity(0.0f, -40.0f, 0.0f);
+const glm::vec3 PhysicsWorld::s_defaultGravity(0.0f, 0.0f, 40.0f);
+
 PhysicsWorld::PhysicsWorld()
 :   m_dispatcher(&m_collisionConfiguration)
 ,   m_dynamicsWorld(&m_dispatcher, 
@@ -37,7 +42,7 @@ PhysicsWorld::PhysicsWorld()
     m_dynamicsWorld.setInternalTickCallback(forwardPreTickCallback, this, true);
     m_dynamicsWorld.setInternalTickCallback(forwardPostTickCallback, this, false);
     
-    changeGravity(kGravityDown);
+    m_dynamicsWorld.setGravity(Util::toBtVec3(s_defaultGravity));
 }
 
 PhysicsWorld::~PhysicsWorld()
@@ -54,14 +59,12 @@ void PhysicsWorld::stepSimulation(float seconds)
 
 void PhysicsWorld::changeGravity(GravityDirection direction)
 {
-    const glm::vec3 gravityAcceleration(0.0f, -40.0f, 0.0f);
-    
     m_gravity = static_cast<GravityDirection>((m_gravity + direction) % 4);
     
     const float angle = 90.0f * m_gravity;
     const glm::mat3 rotation = glm::mat3(glm::rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f)));
     
-    m_dynamicsWorld.setGravity(Util::toBtVec3(rotation * gravityAcceleration));
+    m_mammutPhysics->rigidBody()->setGravity(Util::toBtVec3(rotation * s_mammutGravity));
     
     emit gravityChanged(rotation);
 }
@@ -74,6 +77,11 @@ void PhysicsWorld::addObject(PhysicsObject * object)
 void PhysicsWorld::removeObject(PhysicsObject * object)
 {
     m_dynamicsWorld.removeRigidBody(object->rigidBody());
+}
+
+void PhysicsWorld::setMammutPhysics(MammutPhysics * mammutPhysics)
+{
+    m_mammutPhysics = mammutPhysics;
 }
 
 void PhysicsWorld::preTickCallback(float timeStep)

@@ -37,6 +37,7 @@ GameMechanics::GameMechanics()
     }
     
     m_physicsWorld.addObject(m_mammut.physics());
+    m_physicsWorld.setMammutPhysics(m_mammut.physics());
     m_physicsWorld.changeGravity(PhysicsWorld::kGravityDown);
 }
 

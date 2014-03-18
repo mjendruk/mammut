@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 
 class PhysicsObject;
+class MammutPhysics;
 
 class PhysicsWorld : public QObject
 {
@@ -18,6 +19,7 @@ public:
 
     void addObject(PhysicsObject * object);
     void removeObject(PhysicsObject * object);
+    void setMammutPhysics(MammutPhysics * mammutPhysics);
     
     void changeGravity(GravityDirection direction);
 
@@ -30,6 +32,8 @@ signals:
     void gravityChanged(const glm::mat3 & rotation);
 
 protected:
+    static const glm::vec3 s_defaultGravity;
+    static const glm::vec3 s_mammutGravity;
     btDbvtBroadphase m_broadphase;
     btDefaultCollisionConfiguration m_collisionConfiguration;
     btCollisionDispatcher m_dispatcher;
@@ -38,4 +42,5 @@ protected:
     
     GravityDirection m_gravity;
 
+    MammutPhysics * m_mammutPhysics;
 };
