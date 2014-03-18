@@ -33,11 +33,7 @@ void PhysicsObject::addZShift(float zShift)
     transform.setOrigin(transform.getOrigin() + btVector3(0.0f, 0.0f, zShift));
     m_motionState->setWorldTransform(transform);
 
-    transform = m_rigidBody->getCenterOfMassTransform();
-    transform.setOrigin(transform.getOrigin() + btVector3(0.0f, 0.0f, zShift));
-
-    m_rigidBody->setCenterOfMassTransform(transform);
-
+    m_rigidBody->translate(btVector3(0.0f, 0.0f, zShift));
 }
 
 glm::mat4 PhysicsObject::rotation() const

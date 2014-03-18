@@ -46,6 +46,8 @@ void GameMechanics::update(float seconds)
         return;
     }
     PerfCounter::begin("game");
+
+    m_lastZShift = 0.0f;
     
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
@@ -61,7 +63,7 @@ void GameMechanics::update(float seconds)
         }
     }
 
-    if (m_mammut.position().z > s_zResetDistance)
+    if (m_mammut.position().z < -s_zResetDistance)
         zReset();
 
     updateSound();
@@ -102,6 +104,8 @@ void GameMechanics::zReset()
     m_cave.addZShift(zShift);
     m_chunkGenerator.addZShift(zShift);
     forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
+
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), 0.0f, normalizedMammutCaveDistance());
 
     m_totalZShift += zShift;
     m_lastZShift = zShift;
@@ -151,7 +155,7 @@ const Cave & GameMechanics::cave() const
 
 int GameMechanics::score() const
 {
-    return int(m_totalZShift);
+    return int(m_totalZShift + -m_mammut.position().z);
 }
 
 float GameMechanics::lastZShift() const

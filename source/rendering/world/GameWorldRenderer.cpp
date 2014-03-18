@@ -44,7 +44,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 {
     assert(m_gameMechanics != nullptr);
 
-    m_previousViewProjection *= glm::translate(0.0f, 0.0f, m_gameMechanics->lastZShift());
+    m_previousViewProjection *= glm::translate(0.0f, 0.0f, -m_gameMechanics->lastZShift());
     
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
    
