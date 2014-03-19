@@ -25,8 +25,9 @@ public:
     
     glm::vec3 position() const;
     glm::vec3 velocity() const;
-    
     glm::mat4 rotation() const;
+
+    void addZShift(float zShift);
     
     MammutPhysics * physics();
     

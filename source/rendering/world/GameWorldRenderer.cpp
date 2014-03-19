@@ -26,7 +26,7 @@ const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
 :   m_hud(m_camera, *this)
-,   m_caveDrawable(new CaveDrawable())
+,   m_caveDrawable(nullptr)
 ,   m_lastFrame(QTime::currentTime())
 ,   m_avgTimeSinceLastFrame(0.0f)
 ,   m_gameMechanics(nullptr)
@@ -43,6 +43,8 @@ GameWorldRenderer::~GameWorldRenderer()
 void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     assert(m_gameMechanics != nullptr);
+
+    m_previousViewProjection *= glm::translate(0.0f, 0.0f, -m_gameMechanics->lastZShift());
     
     glViewport(0, 0, m_camera.viewport().x, m_camera.viewport().y);
    
@@ -58,7 +60,8 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     
     //paint HUD over
     fbo->bind();
-    m_hud.paint(m_gameMechanics->mammut());
+    int velocity = int(-m_gameMechanics->mammut().velocity().z);
+    m_hud.paint(velocity, m_gameMechanics->score());
     fbo->unbind();
 
     // update previous view projection matrix for next frame
@@ -210,6 +213,6 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
 {
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
-    m_caveDrawable.reset(new CaveDrawable());
+    m_caveDrawable.reset(new CaveDrawable(mechanics->cave()));
 }
 

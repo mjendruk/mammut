@@ -41,3 +41,8 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
     m_nextTranslation += glm::vec3(0.0f, 0.0f, -70.0f);
     return chunk;
 }
+
+void ChunkGenerator::addZShift(float zShift)
+{
+    m_nextTranslation = m_nextTranslation + glm::vec3(0.0f, 0.0f, zShift);
+}
