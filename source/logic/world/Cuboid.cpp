@@ -12,17 +12,17 @@
 Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
 ,   m_containsBoost(false)
+,   m_tets(nullptr)
 {    
     initializeRigidBody(size, translation);
+    TetGenerator::instance().processCuboidAsync(this);
 }
 
 Cuboid::~Cuboid()
 {
-}
-
-QVector<Tet *> * Cuboid::splitIntoTets()
-{
-    return TetGenerator::splitBox(boundingBox());
+    if (m_tets != nullptr)
+        qDeleteAll(*m_tets);
+    delete m_tets;
 }
 
 glm::mat4 Cuboid::modelTransform() const
@@ -56,6 +56,21 @@ void Cuboid::collectBoost() const
 {
     assert(containsBoost());
     m_containsBoost = false;
+}
+
+QVector<Tet *> * Cuboid::tets()
+{
+    return m_tets;
+}
+
+void Cuboid::setTets(QVector<Tet *> * tets)
+{
+    m_tets = tets;
+}
+
+bool Cuboid::tetsReady()
+{
+    return m_tets != nullptr;
 }
 
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)

@@ -3983,9 +3983,9 @@ void tetgenmesh::memorypool::poolinit(int bytecount,int itemcount,int wordsize,
   //   pointer (to point to the next block) are allocated, as well as space
   //   to ensure alignment of the items. 
   firstblock = (void **) malloc(itemsperblock * itembytes + sizeof(void *)
-                                + alignbytes); 
-  printf("%d", itemsperblock * itembytes + sizeof(void *)
-	  +alignbytes);
+                                + alignbytes);
+  //printf("%d", itemsperblock * itembytes + sizeof(void *)
+	//  +alignbytes);
   if (firstblock == (void **) NULL) {
     terminatetetgen(NULL, 1);
   }

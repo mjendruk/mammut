@@ -43,6 +43,9 @@ public:
 signals:
     void pause();
     void gameOver(int score);
+
+protected slots:
+    void splitOneCuboid();
     
 protected:
     void connectSignals();

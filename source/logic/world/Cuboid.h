@@ -21,7 +21,6 @@ public:
          
     virtual ~Cuboid();
 
-    QVector<Tet *> * splitIntoTets();
 
     glm::mat4 modelTransform() const;
 
@@ -30,6 +29,10 @@ public:
     void addBoost();
     bool containsBoost() const override;
     void collectBoost() const override;
+    
+    QVector<Tet *> * tets();
+    void setTets(QVector<Tet *> * tets);
+    bool tetsReady();
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
@@ -38,4 +41,5 @@ protected:
     glm::vec3 m_size;
 
     bool mutable m_containsBoost;
+    QVector<Tet *> * m_tets;
 };

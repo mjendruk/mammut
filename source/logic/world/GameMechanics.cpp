@@ -3,9 +3,11 @@
 #include <chrono>
 
 #include <QKeyEvent>
+#include <QTimer>
 
 #include <sound/SoundManager.h>
 #include "tets/Tet.h"
+#include "tets/TetGenerator.h"
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
@@ -20,17 +22,12 @@ GameMechanics::GameMechanics()
 ,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
-    
-    for (int i = 0; i < 10; ++i)
+
+    QTimer::singleShot(3000, this, SLOT(splitOneCuboid()));
+
+	for (int i = 0; i < 10; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
-
-        if (i == 1) {
-            QVector<Tet *> * tets = m_chunkList.last()->cuboids().takeFirst()->splitIntoTets();
-            m_bunch.add(tets);
-            for (Tet * tet: *tets)
-                m_physicsWorld.addObject(tet);
-        }
 
         for (Cuboid * cuboid : m_chunkList.last()->cuboids())
             m_physicsWorld.addObject(cuboid);
@@ -49,6 +46,15 @@ GameMechanics::~GameMechanics()
     
     m_physicsWorld.removeObject(m_mammut.physics());
     m_backgroundLoop.stop();
+}
+
+void GameMechanics::splitOneCuboid()
+{
+    QVector<Tet *> * tets = m_chunkList[1]->cuboids().takeFirst()->tets();
+
+    m_bunch.add(tets);
+    for (Tet * tet: *tets)
+        m_physicsWorld.addObject(tet);
 }
 
 void GameMechanics::update(float seconds)

@@ -7,7 +7,28 @@
 #include <glowutils/AxisAlignedBoundingBox.h>
 
 #include <3rdparty/tetgen/tetgen.h>
+#include "../Cuboid.h"
+#include "Tet.h"
 
+TetGenerator::TetGenerator()
+{
+    moveToThread(&m_thread);
+    connect(this, &TetGenerator::gotANewCuboid, this, &TetGenerator::processCuboid);
+
+    m_thread.start();
+}
+
+TetGenerator::~TetGenerator()
+{
+    m_thread.exit();
+    m_thread.wait();
+}
+
+TetGenerator & TetGenerator::instance()
+{
+    static TetGenerator instance;
+    return instance;
+}
 
 static glm::vec3 getRandomOffset()
 {
@@ -17,12 +38,16 @@ static glm::vec3 getRandomOffset()
         glm::linearRand(0.0f, 0.1f));
 }
 
-QVector<Tet *> * TetGenerator::splitBox(const glowutils::AxisAlignedBoundingBox & box)
+void TetGenerator::processCuboidAsync(Cuboid * cuboid)
 {
-    tetgenio * split = tetcall_main(box);
+    emit gotANewCuboid(cuboid);
+}
+
+void TetGenerator::processCuboid(Cuboid * cuboid)
+{
+    tetgenio * split = tetcall_main(cuboid->boundingBox());
 
     QVector<Tet *> * tets = new QVector<Tet *>();
-
     QVector<glm::vec3> vertices;
     for (int i = 0; i < split->numberofpoints; i++)
         vertices << glm::vec3(split->pointlist[i * 3 + 0], split->pointlist[i * 3 + 1], split->pointlist[i * 3 + 2]);
@@ -37,7 +62,9 @@ QVector<Tet *> * TetGenerator::splitBox(const glowutils::AxisAlignedBoundingBox 
         tets->append(new Tet(tetVertices));
     }
 
-    return tets;
+    cuboid->setTets(tets);
+
+    delete split;
 }
 
 
@@ -179,12 +206,13 @@ tetgenio * TetGenerator::tetcall_main(const glowutils::AxisAlignedBoundingBox & 
     double maxVolume = volume / 20;
     // Tetrahedralize the PLC. Switches are chosen to read a PLC (p),
     //   do quality mesh generation (q) with a specified quality bound
-    //   (1.414), and apply a maximum volume constraint (a0.1). And do it
-    //   with zero-based indices (z) because that's what normal people do.
+    //   (1.414), and apply a maximum volume constraint (a0.1). Do it 
+    //   quietly (Q). And do it with zero-based indices (z) because
+    //   that's what normal people do.
     tetgenbehavior b;
     std::string options = "pq1.414a";
     options += std::to_string(maxVolume);
-    options += "z";
+    options += "zQ";
     b.parse_commandline(const_cast<char *>(options.data()));
 
     tetrahedralize(&b, &in, out);
