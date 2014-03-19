@@ -2,18 +2,17 @@
 
 class Cave
 {
-
 public:
     Cave();
     ~Cave();
 
     float zShift() const;
-    void addZShift(float zShift) const;
+    void addZShift(float zShift);
 
 public:
     static const float s_caveRadius;
     static const float s_caveDeathDistance;
 
 protected:
-    mutable float m_zShift;
+    float m_zShift;
 };

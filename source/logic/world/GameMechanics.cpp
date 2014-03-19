@@ -103,7 +103,9 @@ void GameMechanics::zReset()
     m_mammut.addZShift(zShift);
     m_cave.addZShift(zShift);
     m_chunkGenerator.addZShift(zShift);
-    forEachCuboid([zShift](Cuboid * cuboid) {cuboid->addZShift(zShift);});
+    forEachCuboid([zShift] (Cuboid * cuboid) {
+        cuboid->addZShift(zShift);
+    });
 
     m_camera.update(m_mammut.position(), m_mammut.velocity(), 0.0f, normalizedMammutCaveDistance());
 
