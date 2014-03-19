@@ -57,7 +57,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     updatePainters();
     
     m_viewProjectionStack.append(m_camera.view());
-    if (m_viewProjectionStack.count() > 3)
+    if (m_viewProjectionStack.count() > 2)
         m_viewProjectionStack.removeFirst();
     
     for (int i = 0; i < 100; ++i)
@@ -68,8 +68,9 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     std::vector<glm::vec3> newPositions;
     for (int i = 0; i < m_particlePositions.size(); ++i)
     {
-        if (m_particlePositions[i].z < m_camera.eye().z)
+        if (m_particlePositions[i].z < m_camera.eye().z + 10 && glm::distance(m_particlePositions[i].xy(), m_camera.eye().xy()) > 2.0f)
             newPositions.push_back(m_particlePositions[i]);
+        
     }
     
     m_particlePositions = newPositions;
@@ -79,7 +80,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     m_particlesProgram->setUniform("projection", m_camera.projection());
     m_particlesProgram->setUniform("view", m_viewProjectionStack.last());
     m_particlesProgram->setUniform("previousView", m_viewProjectionStack.first());
-    m_particlesProgram->setUniform("lookAt", m_camera.center() - m_camera.eye());
+    m_particlesProgram->setUniform("eye", m_camera.eye());
 
     
     // render
@@ -104,9 +105,7 @@ void GameWorldRenderer::drawGeometry()
     m_gBufferFBO->bind();
     
     glEnable(GL_CULL_FACE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-   
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   
     
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
@@ -119,11 +118,15 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
     m_particlesProgram->use();
     m_particlesVbo->bind();
     m_particlesVbo->drawArrays(GL_POINTS, 0, m_particlePositions.size());
     m_particlesVbo->unbind();
     m_particlesProgram->release();
+    glDisable(GL_BLEND);
     
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
