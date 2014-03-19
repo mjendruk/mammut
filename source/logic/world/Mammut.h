@@ -61,7 +61,8 @@ protected:
 
     bool m_boostIsActive;
     unsigned int m_collectedBoosts;
+    int physicSteps;
+    BoostDirection m_boostDirection;
 
-    glm::vec3 m_boostDirection;
-    int m_numBoostSteps;
+    float maxLength;
 };
