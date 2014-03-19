@@ -69,10 +69,10 @@ void CaveDrawable::initialize()
 void CaveDrawable::initializeDummyArrays()
 {
     for (int i = 0; i < s_verticesPerRing; i++) {
-        float angle = (M_PI * 2 / s_verticesPerRing) * i;
+        float angle = (float(M_PI) * 2 / s_verticesPerRing) * i;
         m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * Cave::s_caveRadius);
 
-        float angleOffset = (M_PI * 2 / s_verticesPerRing) * (i + 0.5f);
+        float angleOffset = (float(M_PI) * 2 / s_verticesPerRing) * (i + 0.5f);
         m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * Cave::s_caveRadius);
     }
 }

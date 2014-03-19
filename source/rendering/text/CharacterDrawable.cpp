@@ -72,8 +72,8 @@ void CharacterDrawable::draw(unsigned int instancesCount,
     const QVector<glm::mat4> & vertexTransforms,
     const QVector<glm::mat4> & textureCoordTransforms)
 {
-    assert(vertexTransforms.size() >= instancesCount);
-    assert(textureCoordTransforms.size() >= instancesCount);
+    assert(vertexTransforms.size() >= int(instancesCount));
+    assert(textureCoordTransforms.size() >= int(instancesCount));
     
     m_vertexTransformBuffer->setData(instancesCount * sizeof(glm::mat4),
                                      vertexTransforms.data(),
