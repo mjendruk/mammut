@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QTime>
+#include <QList>
 
 #include <glow/ref_ptr.h>
 
@@ -85,6 +86,7 @@ protected:
     std::unique_ptr<SimplePostProcPass> m_FxaaPass;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     
+    QList<glm::mat4> m_viewProjectionStack;
     std::vector<glm::vec3> m_particlePositions;
     glow::ref_ptr<glow::Buffer> m_particlesBuffer;
     glow::ref_ptr<glow::VertexArrayObject> m_particlesVbo;

@@ -56,9 +56,31 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     updateFPS();
     updatePainters();
     
+    m_viewProjectionStack.append(m_camera.view());
+    if (m_viewProjectionStack.count() > 3)
+        m_viewProjectionStack.removeFirst();
+    
+    for (int i = 0; i < 100; ++i)
+    {
+        m_particlePositions.push_back(glm::gaussRand(m_camera.eye(), glm::vec3(2.0f)));
+    }
+    
+    std::vector<glm::vec3> newPositions;
+    for (int i = 0; i < m_particlePositions.size(); ++i)
+    {
+        if (m_particlePositions[i].z < m_camera.eye().z)
+            newPositions.push_back(m_particlePositions[i]);
+    }
+    
+    m_particlePositions = newPositions;
+    
+    m_particlesBuffer->setData(m_particlePositions);
+    
     m_particlesProgram->setUniform("projection", m_camera.projection());
-    m_particlesProgram->setUniform("view", m_camera.view());
-    m_particlesProgram->setUniform("eye", m_camera.eye());
+    m_particlesProgram->setUniform("view", m_viewProjectionStack.last());
+    m_particlesProgram->setUniform("previousView", m_viewProjectionStack.first());
+    m_particlesProgram->setUniform("lookAt", m_camera.center() - m_camera.eye());
+
     
     // render
     drawGeometry();
@@ -75,18 +97,19 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
 
 void GameWorldRenderer::drawGeometry()
 {
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    
     PerfCounter::beginGL("geom");
     m_gBufferFBO->bind();
     
-//    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+   
     
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
-    
-    m_particlesVbo->bind();
-    m_particlesVbo->drawArrays(GL_POINTS, 0, m_particlePositions.size());
-    m_particlesVbo->unbind();
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
@@ -96,7 +119,11 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     
-    
+    m_particlesProgram->use();
+    m_particlesVbo->bind();
+    m_particlesVbo->drawArrays(GL_POINTS, 0, m_particlePositions.size());
+    m_particlesVbo->unbind();
+    m_particlesProgram->release();
     
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
@@ -105,6 +132,7 @@ void GameWorldRenderer::drawGeometry()
 void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devicePixelRatio)
 {
     glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
 
     PerfCounter::beginGL("ssao");
     m_ssaoPass.setProjectionUniform(m_camera.projection());
@@ -113,7 +141,7 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
 
     m_ssaoPass.apply();
     PerfCounter::endGL("ssao");
-
+    
     PerfCounter::beginGL("mb");
     m_motionBlurPass.setFPSUniform(fps() / 60.f);
     m_motionBlurPass.apply();
@@ -132,8 +160,6 @@ void GameWorldRenderer::applyPostproc(glow::FrameBufferObject * fbo, float devic
     m_renderOnScreenQuad->draw();
     fbo->unbind();
     PerfCounter::endGL("blit");
-
-    glEnable(GL_DEPTH_TEST);
 }
 
 void GameWorldRenderer::initialize()
@@ -144,15 +170,9 @@ void GameWorldRenderer::initialize()
 
     initializeGBuffers();
     initializePostProcPasses();
-    
-    for (int i = 0; i < 1000000; ++i)
-    {
-        m_particlePositions.push_back(glm::linearRand(glm::vec3(-70.0f, -70.0f, 0.0f), 
-                                              glm::vec3(70.0f, 70.0f, -500.0f)));
-    }
+
     
     m_particlesBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
-    m_particlesBuffer->setData(m_particlePositions);
     
     m_particlesVbo = new glow::VertexArrayObject();
     auto binding = m_particlesVbo->binding(0);

@@ -2,43 +2,39 @@
 
 uniform mat4 projection;
 uniform mat4 view;
-uniform vec3 eye;
+uniform mat4 previousView;
+uniform vec3 lookAt;
 
 layout (points) in;
-layout (triangle_strip, max_vertices = 4) out;
-
-flat out vec3 g_normal;
-smooth out float g_depth_vs;
+layout (line_strip, max_vertices = 2) out;
 
 void main()
 {
-    float scale = 0.1;
-    vec3 position = gl_in[0].gl_Position.xyz;
+    vec4 position = gl_in[0].gl_Position;
 
-    vec3 zAxis = vec3(0.0, 0.0, -1.0) * 10.0;
-    vec3 xyAxis = normalize(cross(eye - position, zAxis)) * 0.1;
+    vec4 first_position_ss_homo = previousView * position;
+    vec4 second_position_ss_homo = view * position;
 
-    g_normal = normalize(eye - position);
+    vec3 first_position_ss = first_position_ss_homo.xyz / first_position_ss_homo.w;
+    vec3 second_position_ss = second_position_ss_homo.xyz / second_position_ss_homo.w;
 
-    vec4 position_vs = vec4(0.0);
-
-    position_vs = view * vec4(position + (xyAxis + zAxis) * scale, 1.0);
-    g_depth_vs = position_vs.z / position_vs.w;
-    gl_Position = projection * position_vs;
+    gl_Position = projection * first_position_ss_homo;
     EmitVertex();
 
-    position_vs = view * vec4(position + (- xyAxis + zAxis) * scale, 1.0);
-    g_depth_vs = position_vs.z / position_vs.w;
-    gl_Position = projection * position_vs;
+    gl_Position = projection * second_position_ss_homo;
     EmitVertex();
 
-    position_vs = view * vec4(position + (xyAxis - zAxis) * scale, 1.0);
-    g_depth_vs = position_vs.z / position_vs.w;
-    gl_Position = projection * position_vs;
-    EmitVertex();
+    // vec3 widthAxis = normalize(cross(lookAt, second_position_ss - first_position_ss)) + 1.0;
 
-    position_vs = view * vec4(position + (- xyAxis - zAxis) * scale, 1.0);
-    g_depth_vs = position_vs.z / position_vs.w;
-    gl_Position = projection * position_vs;
-    EmitVertex();
+    // gl_Position = projection * vec4(first_position_ss + widthAxis, 1.0);
+    // EmitVertex();
+
+    // gl_Position = projection * vec4(second_position_ss + widthAxis, 1.0);
+    // EmitVertex();
+
+    // gl_Position = projection * vec4(first_position_ss - widthAxis, 1.0);
+    // EmitVertex();
+
+    // gl_Position = projection * vec4(second_position_ss - widthAxis, 1.0);
+    // EmitVertex();
 }
