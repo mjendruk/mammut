@@ -222,7 +222,7 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
 void ChunkGenerator::createBoostDistribution()
 {
     m_numUsedBoostDistributions = 0;
-    int numRemainingBoosts = 6; // <> distance
+    int numRemainingBoosts = glm::smoothstep(s_startIncreasingSeverity, s_stopIncreasingSeverity, m_zDistance) * 5.f + 5.f; // [5, 10]
     std::uniform_int_distribution<> dist(0, 2);
 
     for (int i = 0; i < s_chunksPerBoostDistribution - 1; ++i)
