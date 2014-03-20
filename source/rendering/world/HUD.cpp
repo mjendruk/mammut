@@ -1,10 +1,7 @@
 #include "HUD.h"
 
-#include <algorithm>
-
 #include <glm/gtx/transform.hpp>
 
-#include <logic/world/Mammut.h>
 #include "RenderCamera.h"
 
 #include "GameWorldRenderer.h"
@@ -19,10 +16,10 @@ HUD::~HUD()
 {
 }
 
-void HUD::paint(const Mammut & mammut)
+void HUD::paint(int velocity, int score)
 {
-    QString velocityString = QString("Speed: %1").arg(std::max(0, static_cast<int>(-mammut.velocity().z)));
-    QString scoreString = QString("Score: %1").arg(std::max(0, static_cast<int>(-mammut.position().z)));
+    QString velocityString = QString("Speed: %1").arg(velocity);
+    QString scoreString = QString("Score: %1").arg(score);
     QString boostString = QString("O").repeated(mammut.collectedBoosts());
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     

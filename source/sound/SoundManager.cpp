@@ -9,6 +9,7 @@ const QVector<SoundManager::SoundInfo> SoundManager::s_soundInfos = {
     { "data/sounds/impact.wav", false, false },
     { "data/sounds/typewriter.wav", false, false },
     { "data/sounds/loop.wav", false, true },
+    { "data/sounds/deep_noise.wav", false, true } };
     { "data/sounds/beam.wav", false, false } };
 
 

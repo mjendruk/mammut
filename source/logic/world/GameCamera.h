@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <sound/Sound.h>
 
 #include <glm/glm.hpp>
 
@@ -40,4 +41,5 @@ protected:
     glm::mat3 m_currentRotation;
     float m_rotationProgress;
 
+    Sound m_noise;
 };

@@ -2,13 +2,15 @@
 
 #include <memory>
 
-#include <QMainWindow>
+#include <QWidget>
 
 #include <glowutils/Timer.h>
 
 #include <logic/highscore/HighscoreList.h>
 #include "AbstractApplication.h"
 
+
+class QMainWindow;
 
 class Mechanics;
 class GameMechanics;
@@ -52,7 +54,10 @@ protected:
     bool eventFilter(QObject * obj, QEvent * event) override;
     void keyPressed(QKeyEvent * keyEvent);
     void keyReleased(QKeyEvent * keyEvent);
-
+    
+    void makeWindowFullscreen();
+    void makeWindowNormal();
+    
 protected:
     std::shared_ptr<GameMechanics> m_gameMechanics;
     std::shared_ptr<Mechanics> m_activeMechanics;
@@ -64,7 +69,6 @@ protected:
     
     HighscoreList m_highscoreList;
     
-    QMainWindow m_window;
     Canvas * m_canvas;
     
     glowutils::Timer m_timer;

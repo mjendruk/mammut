@@ -6,14 +6,15 @@
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
-
-const float GameMechanics::s_caveRadius = 150.0f;
+const float GameMechanics::s_zResetDistance = 800.f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(std::chrono::system_clock::now().time_since_epoch().count())
 ,   m_mammut(glm::vec3(0.f, 0.05f, 0.0f))
 ,   m_gameOver(false)
 ,   m_backgroundLoop(Sound::kLoop, true)
+,   m_totalZShift(0.0f)
+,   m_lastZShift(0.0f)
 {
     connectSignals();
     
@@ -41,15 +42,17 @@ GameMechanics::~GameMechanics()
 void GameMechanics::update(float seconds)
 {
     if (m_gameOver) {
-        emit gameOver(std::max(0, static_cast<int>(-m_mammut.position().z)));
+        emit gameOver(score());
         return;
     }
     PerfCounter::begin("game");
+
+    m_lastZShift = 0.0f;
     
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
     
-    if (m_chunkList.at(1)->boundingBox().llf().z > m_camera.center().z) {
+    if (m_chunkList.at(1)->cuboids()[0]->position().z > m_camera.center().z) {
         for (Cuboid * cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
         m_chunkList.removeFirst();
@@ -59,6 +62,10 @@ void GameMechanics::update(float seconds)
             m_physicsWorld.addObject(cuboid);
         }
     }
+
+    if (m_mammut.position().z < -s_zResetDistance)
+        zReset();
+
     updateSound();
     PerfCounter::end("game");
 }
@@ -75,12 +82,12 @@ void GameMechanics::tickUpdate(float seconds)
 
 float GameMechanics::normalizedMammutCaveDistance()
 {
-    return glm::length(m_mammut.position().xy()) / s_caveRadius;
+    return glm::length(m_mammut.position().xy()) / (Cave::s_caveRadius - Cave::s_caveDeathDistance);
 }
 
 bool GameMechanics::mammutCollidesWithCave()
 {
-    return glm::length(m_mammut.position().xy()) >= s_caveRadius;
+    return glm::length(m_mammut.position().xy()) >= (Cave::s_caveRadius - Cave::s_caveDeathDistance);
 }
 
 void GameMechanics::updateSound()
@@ -88,6 +95,22 @@ void GameMechanics::updateSound()
     glm::vec3 forward =  glm::normalize(m_camera.center() - m_camera.eye());
     glm::vec3 velocity = glm::vec3(0.0, 0.0, m_mammut.velocity().z);
     SoundManager::instance().setListenerAttributes(m_mammut.position(), forward, m_camera.up(), velocity);
+}
+
+void GameMechanics::zReset()
+{
+    float zShift = -m_mammut.position().z;
+    m_mammut.addZShift(zShift);
+    m_cave.addZShift(zShift);
+    m_chunkGenerator.addZShift(zShift);
+    forEachCuboid([zShift] (Cuboid * cuboid) {
+        cuboid->addZShift(zShift);
+    });
+
+    m_camera.update(m_mammut.position(), m_mammut.velocity(), 0.0f, normalizedMammutCaveDistance());
+
+    m_totalZShift += zShift;
+    m_lastZShift = zShift;
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -137,6 +160,21 @@ const GameCamera & GameMechanics::camera() const
 const Mammut & GameMechanics::mammut() const
 {
     return m_mammut;
+}
+
+const Cave & GameMechanics::cave() const
+{
+    return m_cave;
+}
+
+int GameMechanics::score() const
+{
+    return int(m_totalZShift + -m_mammut.position().z);
+}
+
+float GameMechanics::lastZShift() const
+{
+    return m_lastZShift;
 }
 
 void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)

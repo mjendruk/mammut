@@ -8,27 +8,22 @@
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
 
-#include <logic/world/GameMechanics.h>
+#include <logic/world/Cave.h>
 
 
 const int CaveDrawable::s_verticesPerRing = 20;
-const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(0.f); //glm::vec3(1.f, 1.f, 1.f);
-const int CaveDrawable::s_numRings = 30;
+const glm::vec3 CaveDrawable::s_maxShift = glm::vec3(15.0f, 15.0f, 20.0f);
+const float CaveDrawable::s_ringZStride = -50.0f;
+const int CaveDrawable::s_numRings = 35;
+const int CaveDrawable::s_numSafetyMarginRings = 7;
 
-CaveDrawable::CaveDrawable()
-:   m_vertexBuffer(nullptr)
-,   m_normalBuffer(nullptr)
+CaveDrawable::CaveDrawable(const Cave & cave)
+:   m_lastRingIndex(-s_numSafetyMarginRings)
+,   m_cave(cave)
 ,   m_vao(nullptr)
-,   m_ringZStride(-100.f)
-,   m_activeRingPosition(0.f)
+,   m_vertexBuffer(nullptr)
+,   m_normalBuffer(nullptr)
 {
-    for (int i = 0; i < s_verticesPerRing; i++) {
-        float angle = (M_PI * 2 / s_verticesPerRing) * i;
-        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * GameMechanics::s_caveRadius);
-
-        float angleOffset = (M_PI * 2 / s_verticesPerRing) * (i + 0.5f);
-        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * GameMechanics::s_caveRadius);
-    }
 
     initialize();
 }
@@ -39,8 +34,10 @@ CaveDrawable::~CaveDrawable()
 
 void CaveDrawable::initialize()
 {
+    initializeDummyArrays();
     initializeIndices();
-    addRings(s_numRings);
+    for (int i = 0; i < s_numRings / 2; i++)
+        addTwoRings();
 
     const GLuint vertexAttribLocation = 0;
     const GLuint normalAttribLocation = 1;
@@ -49,9 +46,6 @@ void CaveDrawable::initialize()
 
     m_vertexBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
     m_normalBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
-
-    m_vertexBuffer->setData(m_duplicatedVertices, GL_STATIC_DRAW);
-    m_normalBuffer->setData(m_normals, GL_STATIC_DRAW);
 
     m_vao->bind();
 
@@ -68,13 +62,24 @@ void CaveDrawable::initialize()
     m_vao->enable(1);
 
     m_vao->unbind();
+
+    rebuildGPUData();
+}
+
+void CaveDrawable::initializeDummyArrays()
+{
+    for (int i = 0; i < s_verticesPerRing; i++) {
+        float angle = (float(M_PI) * 2 / s_verticesPerRing) * i;
+        m_dummyArray.push_back(glm::vec3(cos(angle), sin(angle), 0.0) * Cave::s_caveRadius);
+
+        float angleOffset = (float(M_PI) * 2 / s_verticesPerRing) * (i + 0.5f);
+        m_dummyArrayOffset.push_back(glm::vec3(cos(angleOffset), sin(angleOffset), 0.0) * Cave::s_caveRadius);
+    }
 }
 
 void CaveDrawable::initializeIndices()
 {
-    int ring = 0;
-
-    for (int ring = 0; ring < s_numRings; ring++) {
+    for (int ring = 0; ring < s_numRings / 2; ring++) {
         for (int vertex = 0; vertex < s_verticesPerRing; vertex++) {
             int index = ring * s_verticesPerRing;
             index += vertex;
@@ -106,71 +111,68 @@ void CaveDrawable::draw()
     if (m_vao == nullptr)
         return;
     m_vao->bind();
-    int size = s_verticesPerRing * s_numRings*2 * 3;
+    int size = s_verticesPerRing * s_numRings * 3;
     m_vao->drawArrays(GL_TRIANGLES, 0, size);
     m_vao->unbind();
 }
 
 void CaveDrawable::update(glm::vec3 camPosition)
 {
-    int replaceRings = 2;
-    while (camPosition.z < m_activeRingPosition * m_ringZStride + m_ringZStride)
-    {
-        if (replaceRings > 0)
-        {
-            for (int i = 0; i < replaceRings*s_verticesPerRing; i++)
-                m_vertices.erase(m_vertices.begin() + 0);
-
-            m_activeRingPosition += replaceRings / 2;
-
-            addRings(replaceRings / 2);
-
-            m_vertexBuffer->setData(m_duplicatedVertices);
-            m_normalBuffer->setData(m_normals);
-        }
-
+    while (camPosition.z - m_cave.zShift() < (m_lastRingIndex - s_numRings + s_numSafetyMarginRings) * s_ringZStride) {
+        m_vertices.erase(m_vertices.begin(), m_vertices.begin() + 2 * s_verticesPerRing);
+        addTwoRings();
     }
+
+    rebuildGPUData();
 }
 
-glm::vec3 getRandomOffset()
+glm::vec3 CaveDrawable::getRandomOffset()
 {
     return glm::vec3(
-        glm::linearRand(0.0f, 30.0f),
-        glm::linearRand(0.0f, 30.0f),
-        glm::linearRand(0.0f, 40.0f));
+        glm::linearRand(-s_maxShift.x, s_maxShift.x),
+        glm::linearRand(-s_maxShift.y, s_maxShift.y),
+        glm::linearRand(-s_maxShift.z, s_maxShift.z));
 }
 
-void CaveDrawable::addRings(int numRings)
+void CaveDrawable::addTwoRings()
 {
-    for (int i = m_activeRingPosition + s_numRings - numRings; i < m_activeRingPosition + s_numRings; i++) {
-        for (const glm::vec3 & v : m_dummyArray) {
-            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, i * m_ringZStride) + getRandomOffset());
-        }
+    float firstRingPosition = (m_lastRingIndex + 1) * s_ringZStride;
+    float secondRingPosition = (m_lastRingIndex + 2) * s_ringZStride;
 
-        for (const glm::vec3 & v : m_dummyArrayOffset) {
-            m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, (i + 0.5f) * m_ringZStride) + getRandomOffset());
-        }
-    }
-    
-    buildDuplicatedVertices();
+    for (const glm::vec3 & v : m_dummyArray)
+        m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, firstRingPosition) + getRandomOffset());
+
+    for (const glm::vec3 & v : m_dummyArrayOffset)
+        m_vertices.push_back(v + glm::vec3(0.0f, 0.0f, secondRingPosition) + getRandomOffset());
+
+    m_lastRingIndex += 2;
+}
+
+void CaveDrawable::rebuildGPUData()
+{
+    buildGPUVertices();
     buildNormals();
+
+    m_vertexBuffer->setData(m_GPUVertices);
+    m_normalBuffer->setData(m_normals);
 }
 
-void CaveDrawable::buildDuplicatedVertices()
+void CaveDrawable::buildGPUVertices()
 {
-    m_duplicatedVertices.clear();
+    glm::vec3 zShiftVector = glm::vec3(0.0f, 0.0f, m_cave.zShift());
+    m_GPUVertices.clear();
     for (int i : m_indices) {
-        m_duplicatedVertices.push_back(m_vertices[i]);
+        m_GPUVertices.push_back(m_vertices[i] + zShiftVector);
     }
 }
 
 void CaveDrawable::buildNormals()
 {
     m_normals.clear();
-    for (int i = 0; i < m_duplicatedVertices.size(); i += 3) {
+    for (int i = 0; i < m_GPUVertices.size(); i += 3) {
 
-        glm::vec3 ab = m_duplicatedVertices.at(i + 1) - m_duplicatedVertices.at(i);
-        glm::vec3 ac = m_duplicatedVertices.at(i + 2) - m_duplicatedVertices.at(i);
+        glm::vec3 ab = m_GPUVertices.at(i + 1) - m_GPUVertices.at(i);
+        glm::vec3 ac = m_GPUVertices.at(i + 2) - m_GPUVertices.at(i);
 
         glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
 

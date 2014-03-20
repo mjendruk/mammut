@@ -19,6 +19,8 @@ public:
 
     QSharedPointer<CuboidChunk> nextChunk();
 
+    void addZShift(float zShift);
+
 protected: 
     void createOrdinaryLevel(CuboidChunk & chunk);
     void createRawChunk(CuboidChunk & chunk, int numCouboids);

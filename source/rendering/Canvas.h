@@ -20,12 +20,7 @@ class Canvas : public QWindow
     Q_OBJECT
 
 public:
-    enum SwapInterval
-    {
-        NoVerticalSyncronization        =  0
-    ,   VerticalSyncronization          =  1 ///< WGL_EXT_swap_control, GLX_EXT_swap_control, GLX_SGI_video_sync
-    ,   AdaptiveVerticalSyncronization  = -1 ///< requires EXT_swap_control_tear
-    };
+    enum SwapInterval { NoVerticalSyncronization = 0, VerticalSyncronization = 1 };
 
 public:
     Canvas(const QSurfaceFormat & format);
@@ -35,11 +30,17 @@ public:
 
     void setSwapInterval(SwapInterval swapInterval);
     static const QString swapIntervalToString(SwapInterval swapInterval);
-    
+
     void render();
     glow::Texture * screenshot();
 
     void setRenderer(Renderer * renderer);
+
+    void showFullscreen();
+    void showWindowed();
+    void toggleFullscreen();
+
+    bool isFullscreen() const;
 
 public slots:
     void toggleSwapInterval();
@@ -48,6 +49,7 @@ protected:
     const QString querys(const GLenum penum);
     const GLint queryi(const GLenum penum);
 
+    void initializeAppearance();
     void initializeGL(const QSurfaceFormat & format);
     void initializeScreenshotFbo();
 
@@ -60,7 +62,13 @@ protected:
     glow::ref_ptr<glow::FrameBufferObject> m_screenshotFbo;
     glow::ref_ptr<glow::Texture> m_screenshotDepthAttachment;
 
-    SwapInterval m_swapInterval;    ///< required for toggle
-    long double m_swapts;
-    unsigned int m_swaps;
+    SwapInterval m_swapInterval;
+
+    bool m_isFullscreen;
+    
+#ifdef __APPLE__
+    Qt::WindowFlags m_windowedFlags;
+    QRect m_windowedGeometry;
+#endif
+
 };

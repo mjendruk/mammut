@@ -162,6 +162,11 @@ void Mammut::updateBoostState()
         m_boostIsActive = false;
 }
 
+void Mammut::addZShift(float zShift)
+{
+    m_physics.addZShift(zShift);
+}
+
 void Mammut::slowDownDrifting()
 {
     glm::vec3 rotatedVelocity = m_gravityTransform * m_physics.velocity();

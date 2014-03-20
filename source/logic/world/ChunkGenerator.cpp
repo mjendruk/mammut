@@ -261,3 +261,8 @@ void ChunkGenerator::printDebugStream()
 
     m_debugStream.clear();
 }
+
+void ChunkGenerator::addZShift(float zShift)
+{
+    m_nextTranslation = m_nextTranslation + glm::vec3(0.0f, 0.0f, zShift);
+}

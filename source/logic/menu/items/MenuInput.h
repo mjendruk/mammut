@@ -9,7 +9,7 @@ class MenuInput : public MenuItem
 
 public:
     MenuInput(const QString & label,
-              const QString & placeholder);
+              const QString & initialText);
     
     virtual ~MenuInput();
 
@@ -26,7 +26,6 @@ signals:
 
 protected:
     QString m_label;
-    QString m_placeholder;
     QString m_text;
 
 };

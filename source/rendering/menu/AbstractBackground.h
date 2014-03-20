@@ -3,9 +3,7 @@
 class AbstractBackground
 {
 public:
-    virtual ~AbstractBackground();
+    virtual ~AbstractBackground() = default;
 
-    virtual void resize(int width, int height) = 0;
     virtual void render(float devicePixelRatio) = 0;
-
 };
