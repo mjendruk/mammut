@@ -1,7 +1,5 @@
 #include "Mammut.h"
 
-#include <QDebug>
-
 #include <glm/gtx/transform.hpp>
 
 #include <btBulletDynamicsCommon.h>
@@ -11,9 +9,7 @@
 #include "Cuboid.h"
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
-const int Mammut::s_maxBoosts = 5;
-const float Mammut::s_boostVelocity = 1.f;
-const float Mammut::s_boostDistance = 5.f;
+const int Mammut::s_maxNumBoosts = 5;
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
@@ -30,16 +26,15 @@ Mammut::~Mammut()
 
 void Mammut::update()
 {
-    m_physics.clearForcesAndApplyGravity();
     updateBoostState();
 
-    // in air
     if (!isStillOnObject()) {
         m_isOnObject = false;
         return;
     }
-    
-    //on cuboid
+
+    m_physics.clearForcesAndApplyGravity();
+
     if (!m_boostIsActive)
         slowDownDrifting();
     
@@ -60,13 +55,10 @@ void Mammut::collisionEvent(const PhysicsObject & object,
     switch (Util::maxAxis(rotatedAbsoluteNormal))
     {
     case Util::kXAxis:
+        collectBoostFromObject(object);
         break;
     case Util::kYAxis:
-        if (object.containsBoost()) 
-        {
-            object.collectBoost();
-            addBoost();
-        }
+        collectBoostFromObject(object);
         m_isOnObject = true;
         break;
     case Util::kZAxis:
@@ -110,10 +102,14 @@ int Mammut::collectedBoosts() const
     return m_collectedBoosts;
 }
 
-void Mammut::addBoost()
+void Mammut::collectBoostFromObject(const PhysicsObject & object)
 {
-    if (m_collectedBoosts < s_maxBoosts)
-        ++m_collectedBoosts;
+    if (object.containsBoost())
+    {
+        object.collectBoost();
+        if (m_collectedBoosts < s_maxNumBoosts)
+            ++m_collectedBoosts;
+    }
 }
 
 void Mammut::applyBoost(BoostDirection direction)
@@ -121,39 +117,37 @@ void Mammut::applyBoost(BoostDirection direction)
     if (m_collectedBoosts < 1)
         return;
 
-    float magnitude = 15.f; //different magnitude in gravity direction? or in -gravity
-    glm::vec3 boostForce;   // magnitude <> speed?
+    float magnitude = 15.f;
+    glm::vec3 boostVector;
 
     switch (direction)
     {
     case BoostDirection::kUp:
-        boostForce = glm::vec3(0.f, magnitude, 0.f);
+        boostVector = glm::vec3(0.f, magnitude, 0.f);
         break;
     case BoostDirection::kRight:
-        boostForce = glm::vec3(magnitude, 0.f, 0.f);
+        boostVector = glm::vec3(magnitude, 0.f, 0.f);
         break;
     case BoostDirection::kDown:
         if (isStillOnObject())
             return;
-        boostForce = glm::vec3(0.f, -magnitude, 0.f);
+        boostVector = glm::vec3(0.f, -magnitude, 0.f);
         break;
     case BoostDirection::kLeft:
-        boostForce = glm::vec3(-magnitude, 0.f, 0.f);
+        boostVector = glm::vec3(-magnitude, 0.f, 0.f);
         break;
     }
 
-    glm::vec3 velocity = Util::toGlmVec3(m_physics.rigidBody()->getLinearVelocity());
-    glm::vec3 boostWithGravityTransform = glm::inverse(m_gravityTransform) * boostForce;
-    float length = glm::length(velocity) * 0.05f;
-    glm::vec3 resultVelocity = velocity + boostWithGravityTransform * length;
-    m_physics.rigidBody()->setLinearVelocity(Util::toBtVec3(resultVelocity));
+    glm::vec3 mammutVelocity = m_physics.velocity();
+    float length = std::max(glm::length(mammutVelocity), 15.f) * 0.05f;
+    glm::vec3 boostWithGravityTransform = glm::inverse(m_gravityTransform) * boostVector;
+    glm::vec3 resultVelocity = mammutVelocity + boostWithGravityTransform * length;
+    m_physics.setVelocity(resultVelocity);
 
     m_boostIsActive = true;
     --m_collectedBoosts;
     physicSteps = 80;
-
-    qDebug() << "start Boost: " << boostForce.x << " | " << boostForce.y;
-
+    
     Sound sound(Sound::kBeam);
 }
 
@@ -161,6 +155,7 @@ void Mammut::updateBoostState()
 {
     if (!m_boostIsActive)
         return;
+
     --physicSteps;
 
     if (physicSteps <= 0)
