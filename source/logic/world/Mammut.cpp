@@ -154,6 +154,8 @@ void Mammut::applyBoost(BoostDirection direction)
     physicSteps = 80;
 
     qDebug() << "start Boost: " << boostForce.x << " | " << boostForce.y;
+
+    Sound sound(Sound::kBeam);
 }
 
 void Mammut::updateBoostState()
