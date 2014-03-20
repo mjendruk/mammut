@@ -4,6 +4,8 @@
 #include <chrono>
 
 #include <QSharedPointer>
+#include <QStringList>
+
 #include <glm/glm.hpp>
 
 #include "GrammarBasedChunkGenerator.h"
@@ -26,6 +28,8 @@ protected:
     void createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe);
     void createBoostDistribution();
 
+    void printDebugStream();
+
 protected:
     static const int s_numGrammarChunks;
 
@@ -42,10 +46,14 @@ protected:
     static const int s_chunksPerBoostDistribution;
     static const int s_maxBoostsPerChunk;
 
+    static const bool s_printDebug;
+
     GrammarBasedChunkGenerator m_grammarChunkGenerator;
 
     std::mt19937 m_generator;
     double m_zDistance;
     int m_boostDistribution[10];
     int m_numUsedBoostDistributions;
+
+    QStringList m_debugStream;
 };

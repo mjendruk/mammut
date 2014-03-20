@@ -24,6 +24,8 @@ const float ChunkGenerator::s_wallThickness = 5.f;
 const int ChunkGenerator::s_chunksPerBoostDistribution = 10;
 const int ChunkGenerator::s_maxBoostsPerChunk = 2;
 
+const bool ChunkGenerator::s_printDebug = true;
+
 ChunkGenerator::ChunkGenerator(long long seed)
 :   m_grammarChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
 ,   m_generator(seed)
@@ -40,10 +42,12 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         createBoostDistribution();
 
     if (m_grammarChunkGenerator.hasNextChunk()) {
-
+        m_debugStream << "grammar based chunk";
         QSharedPointer<CuboidChunk> chunk = m_grammarChunkGenerator.nextChunk();
         distributeBoosts(*chunk.data());
         m_zDistance += s_chunkLength;
+
+        printDebugStream();
 
         return chunk;
     }
@@ -57,10 +61,16 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
             *chunk.data(), 
             distanceToNextThousand, 
             m_zDistance > 2.f * s_wallStep ? false : true);
+
+        printDebugStream();
+
         return chunk;
     }
 
     createOrdinaryLevel(*chunk.data());
+
+    printDebugStream();
+
     return chunk;
 }
 
@@ -69,8 +79,7 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
     int numCuboids =     glm::smoothstep(s_startIncreasingSeverity, s_stopIncreasingSeverity, m_zDistance) * 46.0 + 4.0; // [4, 50]
     int maxNumOverlaps = glm::smoothstep(s_startIncreasingSeverity, s_stopIncreasingSeverity, m_zDistance) * 18.0; //[0, 18]
 
-    qDebug() << "----------------------";
-    qDebug() << "num Cuboids: " << numCuboids << "   num of max. allowed overlaps: " << maxNumOverlaps;
+    m_debugStream << "num Cuboids: " + QString::number(numCuboids) + "   num of max. allowed overlaps: " + QString::number(maxNumOverlaps);
 
     createRawChunk(chunk, numCuboids);
 
@@ -136,11 +145,11 @@ void ChunkGenerator::removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps)
             float minDeltaY = std::min(glm::abs(c1URB.y - c2URB.y), glm::abs(c1LLF.y - c2LLF.y));
 
             if ((minDeltaX < s_minCuboidOverlapSize || minDeltaY < s_minCuboidOverlapSize) && !(numOverlaps > maxNumOverlaps))
-                qDebug() << "   " << "too small overlap -> delete cuboid";
+                m_debugStream << "   too small overlap -> delete cuboid";
             if ((numOverlaps > maxNumOverlaps) && !(minDeltaX < s_minCuboidOverlapSize || minDeltaY < s_minCuboidOverlapSize))
-                qDebug() << "   " << "too many overlaps -> delete cuboid";
+                m_debugStream << "   too many overlaps -> delete cuboid";
             if ((numOverlaps > maxNumOverlaps) && (minDeltaX < s_minCuboidOverlapSize || minDeltaY < s_minCuboidOverlapSize))
-                qDebug() << "   " << "too many overlaps & too small overlap -> delete cuboid";
+                m_debugStream << "   too many overlaps & too small overlap -> delete cuboid";
 
             if ((minDeltaX < s_minCuboidOverlapSize) || (minDeltaY < s_minCuboidOverlapSize) || (numOverlaps > maxNumOverlaps)) {
                 removeIndexList << i;
@@ -148,15 +157,15 @@ void ChunkGenerator::removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps)
                 break;
             }
             else
-                qDebug() << "   " << "overlap but no deletion";
+                m_debugStream << "    overlap but no deletion";
         }
     }
 
     for (int i = removeIndexList.size() - 1; i >= 0; --i)
         chunk.remove(removeIndexList.at(i));
 
-    qDebug() << "num overlaps" << numOverlaps;
-    qDebug() << "num deletions" << numDeletions;
+    m_debugStream << "num overlaps " + QString::number(numOverlaps);
+    m_debugStream << "num deletions " + QString::number(numDeletions);
 }
 
 void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
@@ -166,7 +175,7 @@ void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
     int halfNumCuboids = chunk.cuboids().size() / 2;
 
     int numBoosts = std::min(m_boostDistribution[m_numUsedBoostDistributions], halfNumCuboids);
-
+    assert(numBoosts >= 0);
     int step = numBoosts > 0 ? chunk.cuboids().size() / numBoosts : 1;
 
     for (int i = 0; i < numBoosts; i += step)
@@ -174,7 +183,7 @@ void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
 
     ++m_numUsedBoostDistributions;
 
-    qDebug() << "num boosts " << numBoosts;
+    m_debugStream << "num boosts " + QString::number(numBoosts);
 }
 
 void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe)
@@ -210,11 +219,10 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
             glm::vec3(offsetX, +(s_wallSize + sizeY) / 2.f + offsetY, zPosition)));
     }
 
-    qDebug() << "----------------------";
-    qDebug() << "wall " << (createStripe ? "(stripe)" : "(no stripe)");
-    qDebug() << "size: " << sizeX << " x " << sizeY;
-    qDebug() << "offset: " << offsetX << " x " << offsetY;
-    qDebug() << "distance: " << m_zDistance + distanceToNextThousand << "     distance to last chunk: " << distanceToNextThousand;
+    m_debugStream << "wall " + QString(createStripe ? "(stripe)" : "(no stripe)");
+    m_debugStream << "size: " + QString::number(sizeX) + " x " + QString::number(sizeY);
+    m_debugStream << "offset: " + QString::number(offsetX) + " x " + QString::number(offsetY);
+    m_debugStream << "distance: " + QString::number(m_zDistance + distanceToNextThousand) + "     distance to last chunk: " + QString::number(distanceToNextThousand);
 
     m_zDistance += distanceToNextThousand <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
 }
@@ -240,4 +248,16 @@ void ChunkGenerator::createBoostDistribution()
     }
 
     m_boostDistribution[s_chunksPerBoostDistribution - 1] = std::min(numRemainingBoosts, 2);
+}
+
+void ChunkGenerator::printDebugStream()
+{
+    if (s_printDebug) 
+    {
+        qDebug() << "----------------------";
+        for (QString s : m_debugStream)
+            qDebug() << s;
+    }
+
+    m_debugStream.clear();
 }
