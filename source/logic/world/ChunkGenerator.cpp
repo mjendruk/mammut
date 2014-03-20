@@ -24,7 +24,7 @@ const float ChunkGenerator::s_wallThickness = 5.f;
 const int ChunkGenerator::s_chunksPerBoostDistribution = 10;
 const int ChunkGenerator::s_maxBoostsPerChunk = 2;
 
-const bool ChunkGenerator::s_printDebug = true;
+const bool ChunkGenerator::s_printDebug = false;
 
 ChunkGenerator::ChunkGenerator(long long seed)
 :   m_grammarChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
