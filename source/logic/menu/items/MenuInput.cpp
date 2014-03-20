@@ -38,15 +38,13 @@ void MenuInput::keyPressed(QKeyEvent * event)
             break;
             }
         default:
-            {
             for (QChar c : event->text()) {
-                if (c.isDigit() || c.isLetter()) {
+                if (c.isPrint()) {
                     m_text.append(c);
                     Sound sound(Sound::kTypewriter);
                 }
             }
             break;
-            }
     }
 }
 
