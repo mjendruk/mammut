@@ -1,5 +1,7 @@
 #include "GameMechanics.h"
 
+#include <chrono>
+
 #include <QKeyEvent>
 
 #include <sound/SoundManager.h>

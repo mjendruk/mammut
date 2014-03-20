@@ -13,7 +13,7 @@
 class LevelStartChunkGenerator
 {
 public:
-    LevelStartChunkGenerator(int seed, float chunkLength, int numChunks = 1);
+    LevelStartChunkGenerator(int seed, float chunkLength, int numChunks);
     ~LevelStartChunkGenerator();
 
     bool hasNextChunk();

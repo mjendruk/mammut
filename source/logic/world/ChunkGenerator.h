@@ -1,7 +1,6 @@
 #pragma once
 
 #include <random>
-#include <chrono>
 
 #include <QSharedPointer>
 #include <QStringList>
@@ -36,8 +35,8 @@ protected:
     static const int s_numGrammarChunks;
 
     static const float s_chunkLength;
-    static const double s_startIncreasingSeverity;
-    static const double s_stopIncreasingSeverity;
+    static const double s_startIncreasingDifficulty;
+    static const double s_stopIncreasingDifficulty;
 
     static const float s_minCuboidOverlapSize;
 
@@ -50,7 +49,7 @@ protected:
 
     static const bool s_printDebug;
 
-    LevelStartChunkGenerator m_grammarChunkGenerator;
+    LevelStartChunkGenerator m_levelStartChunkGenerator;
 
     std::mt19937 m_generator;
     double m_zDistance;
