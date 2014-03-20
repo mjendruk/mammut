@@ -34,24 +34,12 @@ QVector<glm::vec3> Tet::buildDuplicatedVertices(const QVector<glm::vec3> & verti
                 continue;
             tri << vertices[k];
         }
-        correctFaceOrientation(tri, verticesCenter);
+        Util::correctFaceOrientation(tri, verticesCenter);
 
         duplicatedVertices << tri;
     }
 
     return duplicatedVertices;
-}
-
-void Tet::correctFaceOrientation(QVector<glm::vec3> & tri, const glm::vec3 & tetCenter)
-{
-    glm::vec3 triCenter = Util::center(tri);
-
-    //if the normal is pointing in the wrong direction, reverse the vertices order
-    glm::vec3 normal = Util::normalOfTriangle(tri);
-    normal *= 0.0001;
-
-    if (glm::distance(triCenter, tetCenter) > glm::distance(triCenter + normal, tetCenter))
-        std::swap(tri[0], tri[2]);
 }
 
 void Tet::initializeRigidBody()

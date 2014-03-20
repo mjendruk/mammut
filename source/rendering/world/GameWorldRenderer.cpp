@@ -19,6 +19,7 @@
 #include <logic/world/GameCamera.h>
 
 #include "BunchOfTetsDrawable.h"
+#include "TessCuboidDrawable.h"
 #include "Util.h"
 #include "PerfCounter.h"
 
@@ -83,7 +84,13 @@ void GameWorldRenderer::drawGeometry()
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
+        if (!cuboid->tetsReady()) {
+            m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
+        }
+        else {
+            TessCuboidDrawable d(*cuboid);
+            m_painter.paint(d, glm::translate(cuboid->position()), glm::translate(cuboid->position()), cuboid->containsBoost());
+        }
     });
 
 

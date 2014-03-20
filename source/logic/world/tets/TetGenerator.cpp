@@ -1,6 +1,7 @@
 #include "TetGenerator.h"
 
 #include <string>
+#include <vector>
 
 #include <glm/gtx/random.hpp>
 
@@ -9,6 +10,9 @@
 #include <3rdparty/tetgen/tetgen.h>
 #include "../Cuboid.h"
 #include "Tet.h"
+#include <Util.h>
+
+const float TetGenerator::s_maxVertexDisplacement = 1.2f;
 
 TetGenerator::TetGenerator()
 {
@@ -45,23 +49,59 @@ void TetGenerator::processCuboidAsync(Cuboid * cuboid)
 
 void TetGenerator::processCuboid(Cuboid * cuboid)
 {
-    tetgenio * split = tetcall_main(cuboid->boundingBox());
+    glowutils::AxisAlignedBoundingBox aabb = cuboid->boundingBox();
+    glowutils::AxisAlignedBoundingBox centeredAabb(aabb.llf() - aabb.center(), aabb.urb() - aabb.center());
+
+    tetgenio * split = tetcall_main(centeredAabb);
+
+    QVector<glm::vec3> vertices;
+    QVector<glm::vec3> randomizedVertices;
+    for (int i = 0; i < split->numberofpoints; i++) {
+        glm::vec3 vertex = glm::vec3(split->pointlist[i * 3 + 0], split->pointlist[i * 3 + 1], split->pointlist[i * 3 + 2]);
+        glm::vec3 randomizedVertex = vertex;
+        bool currVertexIsOnHull = centeredAabb.outside(vertex * 1.01f);
+        if (currVertexIsOnHull)
+            randomizedVertex -= glm::normalize(randomizedVertex) * glm::linearRand(0.0f, s_maxVertexDisplacement);
+
+        vertices << vertex;
+        randomizedVertices << randomizedVertex;
+    }
 
     QVector<Tet *> * tets = new QVector<Tet *>();
-    QVector<glm::vec3> vertices;
-    for (int i = 0; i < split->numberofpoints; i++)
-        vertices << glm::vec3(split->pointlist[i * 3 + 0], split->pointlist[i * 3 + 1], split->pointlist[i * 3 + 2]);
-
     for (int tetIndex = 0; tetIndex < split->numberoftetrahedra; tetIndex++) {
-        glm::vec3 randomOffset = getRandomOffset();
-
         QVector<glm::vec3> tetVertices;
         for (int j = 0; j < 4; j++)
-            tetVertices << vertices[split->tetrahedronlist[tetIndex * 4 + j]];// +randomOffset;
-
+            tetVertices << randomizedVertices[split->tetrahedronlist[tetIndex * 4 + j]];
         tets->append(new Tet(tetVertices));
     }
 
+    QVector<glm::vec3> * hull = new QVector<glm::vec3>();
+    for (int tetIndex = 0; tetIndex < split->numberoftetrahedra; tetIndex++) {
+        QVector<glm::vec3> tet;
+        for (int j = 0; j < 4; j++)
+            tet << randomizedVertices[split->tetrahedronlist[tetIndex * 4 + j]];
+        glm::vec3 tetCenter = Util::center(tet);
+
+        for (int j = 0; j < 4; j++) {
+            QVector<glm::vec3> tri;
+            QVector<glm::vec3> randomizedTri;
+            for (int k = 0; k < 4; k++) {
+                if (k == j)
+                    continue;
+                int vertexIndex = split->tetrahedronlist[tetIndex * 4 + k];
+                tri << vertices[vertexIndex];
+                randomizedTri << randomizedVertices[vertexIndex];
+            }
+
+            if (centeredAabb.inside(Util::center(tri) * 1.01f))
+                continue;
+
+            Util::correctFaceOrientation(randomizedTri, tetCenter);
+            *hull << randomizedTri;
+        }
+    }
+
+    cuboid->setHullVertices(hull);
     cuboid->setTets(tets);
 
     delete split;
@@ -216,6 +256,7 @@ tetgenio * TetGenerator::tetcall_main(const glowutils::AxisAlignedBoundingBox & 
     b.parse_commandline(const_cast<char *>(options.data()));
 
     tetrahedralize(&b, &in, out);
+
 
     return out;
 }

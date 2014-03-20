@@ -23,7 +23,6 @@ public:
 
 protected:
     static QVector<glm::vec3> buildDuplicatedVertices(const QVector<glm::vec3> & vertices);
-    static void correctFaceOrientation(QVector<glm::vec3> & tri, const glm::vec3 & tetCenter);
     
      void initializeRigidBody();
 

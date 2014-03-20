@@ -24,6 +24,7 @@ public:
     glm::vec3 velocity() const;
 
     void addZShift(float zShift);
+    void translate(const glm::vec3 & translation);
 
     virtual bool containsBoost() const;
     virtual void collectBoost() const;

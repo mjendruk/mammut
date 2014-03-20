@@ -317,6 +317,8 @@ set(sources
     ${source_path}/rendering/world/Painter.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
+    ${source_path}/rendering/world/TessCuboidDrawable.cpp
+    ${source_path}/rendering/world/TessCuboidDrawable.h
 
     ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp

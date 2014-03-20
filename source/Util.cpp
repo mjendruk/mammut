@@ -43,6 +43,11 @@ btMatrix3x3 toBtMat3(const glm::mat3 & mat3)
                        toBtVec3(glm::row(mat3, 2)));
 }
 
+glm::vec3 center(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2)
+{
+    return v0 + v1 + v2 / 3.0f;
+}
+
 glm::vec3 center(const QVector<glm::vec3> & vecs)
 {
     glm::vec3 center;
@@ -57,6 +62,18 @@ QVector<glm::vec3> centerVertices(QVector<glm::vec3> & vecs, const glm::vec3 & c
     for (int i = 0; i < vecs.size(); i++)
         vecs[i] = vecs[i] - center;
     return vecs;
+}
+
+void correctFaceOrientation(QVector<glm::vec3> & tri, const glm::vec3 & tetCenter)
+{
+    glm::vec3 triCenter = Util::center(tri);
+
+    //if the normal is pointing in the wrong direction, reverse the vertices order
+    glm::vec3 normal = Util::normalOfTriangle(tri);
+    normal *= 0.0001;
+
+    if (glm::distance(triCenter, tetCenter) > glm::distance(triCenter + normal, tetCenter))
+        std::swap(tri[0], tri[2]);
 }
 
 glm::vec3 normalOfTriangle(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2)

@@ -50,11 +50,15 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::splitOneCuboid()
 {
-    QVector<Tet *> * tets = m_chunkList[1]->cuboids().takeFirst()->tets();
+    Cuboid * cuboid = m_chunkList[1]->cuboids().takeFirst();
+    m_physicsWorld.removeObject(cuboid);
+    const QVector<Tet *> * tets = cuboid->splitIntoTets();
+    delete cuboid;
 
     m_bunch.add(tets);
     for (Tet * tet: *tets)
         m_physicsWorld.addObject(tet);
+    delete tets;
 }
 
 void GameMechanics::update(float seconds)

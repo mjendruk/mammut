@@ -40,5 +40,7 @@ protected:
     static tetgenio * tetcall_main(const glowutils::AxisAlignedBoundingBox & box);
 
 protected:
+    static const float s_maxVertexDisplacement;
+
     QThread m_thread;
 };

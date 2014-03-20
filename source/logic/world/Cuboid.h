@@ -30,9 +30,11 @@ public:
     bool containsBoost() const override;
     void collectBoost() const override;
     
-    QVector<Tet *> * tets();
+    QVector<Tet *> * splitIntoTets();
     void setTets(QVector<Tet *> * tets);
-    bool tetsReady();
+    const QVector<glm::vec3> * hullVertices() const;
+    void setHullVertices(QVector<glm::vec3> * hullVertices);
+    bool tetsReady() const;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
@@ -42,4 +44,5 @@ protected:
 
     bool mutable m_containsBoost;
     QVector<Tet *> * m_tets;
+    QVector<glm::vec3> * m_hullVertices;
 };

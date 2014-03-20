@@ -29,8 +29,11 @@ glm::mat4 toGlmMat4(const btVector3 & vec3);
 btVector3 toBtVec3(const glm::vec3 & vec3);
 btMatrix3x3 toBtMat3(const glm::mat3 & mat3);
 
+glm::vec3 center(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2);
 glm::vec3 center(const QVector<glm::vec3> & vecs);
 QVector<glm::vec3> centerVertices(QVector<glm::vec3> & vecs, const glm::vec3 & center);
+
+void correctFaceOrientation(QVector<glm::vec3> & tri, const glm::vec3 & tetCenter);
 
 glm::vec3 normalOfTriangle(const glm::vec3 & v0, const glm::vec3 & v1, const glm::vec3 & v2);
 glm::vec3 normalOfTriangle(const QVector<glm::vec3> & triangle);

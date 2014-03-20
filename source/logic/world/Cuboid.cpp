@@ -13,6 +13,7 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
 ,   m_containsBoost(false)
 ,   m_tets(nullptr)
+,   m_hullVertices(nullptr)
 {    
     initializeRigidBody(size, translation);
     TetGenerator::instance().processCuboidAsync(this);
@@ -23,6 +24,7 @@ Cuboid::~Cuboid()
     if (m_tets != nullptr)
         qDeleteAll(*m_tets);
     delete m_tets;
+    delete m_hullVertices;
 }
 
 glm::mat4 Cuboid::modelTransform() const
@@ -32,14 +34,10 @@ glm::mat4 Cuboid::modelTransform() const
 
 glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
 {
-    glowutils::AxisAlignedBoundingBox boundingBox;
     btVector3 llf, urb;
-    
     m_rigidBody->getAabb(llf, urb);
-    boundingBox.extend(Util::toGlmVec3(llf));
-    boundingBox.extend(Util::toGlmVec3(urb));
     
-    return boundingBox;
+    return glowutils::AxisAlignedBoundingBox(Util::toGlmVec3(llf), Util::toGlmVec3(urb));
 }
 
 void Cuboid::addBoost()
@@ -58,9 +56,13 @@ void Cuboid::collectBoost() const
     m_containsBoost = false;
 }
 
-QVector<Tet *> * Cuboid::tets()
+QVector<Tet *> * Cuboid::splitIntoTets()
 {
-    return m_tets;
+    for (Tet * tet : *m_tets)
+        tet->translate(position());
+    QVector<Tet *> * tets = m_tets;
+    m_tets = nullptr;
+    return tets;
 }
 
 void Cuboid::setTets(QVector<Tet *> * tets)
@@ -68,7 +70,17 @@ void Cuboid::setTets(QVector<Tet *> * tets)
     m_tets = tets;
 }
 
-bool Cuboid::tetsReady()
+const QVector<glm::vec3> * Cuboid::hullVertices() const
+{
+    return m_hullVertices;
+}
+
+void Cuboid::setHullVertices(QVector<glm::vec3> * hullVertices)
+{
+    m_hullVertices = hullVertices;
+}
+
+bool Cuboid::tetsReady() const
 {
     return m_tets != nullptr;
 }
