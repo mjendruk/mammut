@@ -15,7 +15,7 @@ uniform float radius;
 uniform int numSamples;
 uniform float currentFPS_targetFPS;
 
-layout (location = 0) out vec4 fragColor;
+layout (location = 0) out vec3 fragColor;
 
 smooth in vec2 v_uv;
 
@@ -96,8 +96,7 @@ void main()
 
     if(radius_neighborhood <= 0.55)
     {
-        fragColor = vec4(resultColor, 1.0);
-        fragColor.w = dot(fragColor.rgb, vec3(0.299, 0.587, 0.114));
+        fragColor = resultColor;
         return;
     }
     // veclocity and its length (radius) of current pixel (sample center)
@@ -158,6 +157,5 @@ void main()
         resultColor += color_sample * coverage_sample;
     }
 
-    fragColor = vec4(resultColor / totalCoverage, 1.0);
-    fragColor.w = dot(fragColor.rgb, vec3(0.299, 0.587, 0.114));
+    fragColor = resultColor / totalCoverage;
 }
