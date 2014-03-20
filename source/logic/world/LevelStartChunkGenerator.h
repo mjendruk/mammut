@@ -10,11 +10,11 @@
 
 #include "CuboidChunk.h"
 
-class GrammarBasedChunkGenerator
+class LevelStartChunkGenerator
 {
 public:
-    GrammarBasedChunkGenerator(int seed, float chunkLength, int numChunks = 1);
-    ~GrammarBasedChunkGenerator();
+    LevelStartChunkGenerator(int seed, float chunkLength, int numChunks = 1);
+    ~LevelStartChunkGenerator();
 
     bool hasNextChunk();
     QSharedPointer<CuboidChunk> nextChunk();

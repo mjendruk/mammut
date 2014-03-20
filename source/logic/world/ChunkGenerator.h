@@ -8,7 +8,7 @@
 
 #include <glm/glm.hpp>
 
-#include "GrammarBasedChunkGenerator.h"
+#include "LevelStartChunkGenerator.h"
 
 class CuboidChunk;
 
@@ -50,7 +50,7 @@ protected:
 
     static const bool s_printDebug;
 
-    GrammarBasedChunkGenerator m_grammarChunkGenerator;
+    LevelStartChunkGenerator m_grammarChunkGenerator;
 
     std::mt19937 m_generator;
     double m_zDistance;
