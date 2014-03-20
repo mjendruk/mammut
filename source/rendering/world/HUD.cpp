@@ -16,11 +16,11 @@ HUD::~HUD()
 {
 }
 
-void HUD::paint(int velocity, int score)
+void HUD::paint(int velocity, int score, int collectedBoosts)
 {
     QString velocityString = QString("Speed: %1").arg(velocity);
     QString scoreString = QString("Score: %1").arg(score);
-    QString boostString = QString("O").repeated(mammut.collectedBoosts());
+    QString boostString = QString("O").repeated(collectedBoosts);
     QString fpsString = QString("%1").arg(m_gameWorldRenderer.fps());
     
     const glm::mat4 aspectRatioTransform = glm::scale(1.0f / m_camera.aspectRatio(), 1.0f, 1.0f);

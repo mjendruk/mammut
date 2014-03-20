@@ -2,8 +2,6 @@
 
 #include <glm/gtx/transform.hpp>
 
-#include <btBulletDynamicsCommon.h>
-
 #include <Util.h>
 #include <sound/Sound.h>
 #include "Cuboid.h"

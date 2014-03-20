@@ -61,7 +61,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     //paint HUD over
     fbo->bind();
     int velocity = int(-m_gameMechanics->mammut().velocity().z);
-    m_hud.paint(velocity, m_gameMechanics->score());
+    m_hud.paint(velocity, m_gameMechanics->score(), m_gameMechanics->mammut().collectedBoosts());
     fbo->unbind();
 
     // update previous view projection matrix for next frame

@@ -30,6 +30,7 @@ ChunkGenerator::ChunkGenerator(long long seed)
 :   m_grammarChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
 ,   m_generator(seed)
 ,   m_zDistance(0.0)
+,   m_zPosition(0.0)
 ,   m_numUsedBoostDistributions(0)
 {
     createBoostDistribution();
@@ -46,6 +47,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         QSharedPointer<CuboidChunk> chunk = m_grammarChunkGenerator.nextChunk();
         distributeBoosts(*chunk.data());
         m_zDistance += s_chunkLength;
+        m_zPosition -= s_chunkLength;
 
         printDebugStream();
 
@@ -88,6 +90,7 @@ void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
     distributeBoosts(chunk);
 
     m_zDistance += s_chunkLength;
+    m_zPosition -= s_chunkLength;
 }
 
 void ChunkGenerator::createRawChunk(CuboidChunk & chunk, int numCuboids)
@@ -115,7 +118,7 @@ void ChunkGenerator::createRawChunk(CuboidChunk & chunk, int numCuboids)
             positionXYDistribution(m_generator),
             -positionZDistribution(m_generator));
 
-        chunk.add(new Cuboid(size, position - glm::vec3(0.f, 0.f, m_zDistance)));
+        chunk.add(new Cuboid(size, position + glm::vec3(0.f, 0.f, m_zPosition)));
     }
 }
 
@@ -188,7 +191,7 @@ void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
 
 void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe)
 {
-    const float zPosition = -(m_zDistance + distanceToNextThousand + s_wallThickness / 2.f + 1);
+    const float zPosition = m_zPosition -(distanceToNextThousand + s_wallThickness / 2.f + 1);
     const float minStripeSize = 5.f;
 
     std::uniform_real_distribution<> offsetDistribution(-30.0f, 30.0f);
@@ -225,6 +228,7 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
     m_debugStream << "distance: " + QString::number(m_zDistance + distanceToNextThousand) + "     distance to last chunk: " + QString::number(distanceToNextThousand);
 
     m_zDistance += distanceToNextThousand <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
+    m_zPosition -= distanceToNextThousand <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
 }
 
 void ChunkGenerator::createBoostDistribution()
@@ -264,5 +268,7 @@ void ChunkGenerator::printDebugStream()
 
 void ChunkGenerator::addZShift(float zShift)
 {
-    m_nextTranslation = m_nextTranslation + glm::vec3(0.0f, 0.0f, zShift);
+    // when addZShift is called and there are GrammarChunks left it will crash
+    assert(s_numGrammarChunks * s_chunkLength < -m_zPosition);
+    m_zPosition += zShift;
 }

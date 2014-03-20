@@ -54,6 +54,7 @@ protected:
 
     std::mt19937 m_generator;
     double m_zDistance;
+    double m_zPosition;
     int m_boostDistribution[10];
     int m_numUsedBoostDistributions;
 

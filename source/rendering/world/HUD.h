@@ -12,7 +12,7 @@ public:
         const GameWorldRenderer & renderer);
     ~HUD();
 
-    void paint(int velocity, int score);
+    void paint(int velocity, int score, int collectedBoosts);
 
 protected:
     TextRenderer m_textRenderer;
