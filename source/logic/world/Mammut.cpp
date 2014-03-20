@@ -8,6 +8,8 @@
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 const int Mammut::s_maxNumBoosts = 5;
+const double Mammut::s_startIncreasingSpeed = 100.f;
+const double Mammut::s_stopIncreasingSpeed = 1500.f;
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
@@ -37,10 +39,7 @@ void Mammut::update()
     if (!m_boostIsActive)
         slowDownDrifting();
 
-    double startIncreasingSpeed = 100.0;
-    double stopIncreasingSpeed = 1500.0;
-
-    float forwardIntensity = glm::smoothstep(startIncreasingSpeed, stopIncreasingSpeed, m_zDistance + m_physics.position().z) * 15.0 + 15.0; // [15, 30] 
+    float forwardIntensity = glm::smoothstep(s_startIncreasingSpeed, s_stopIncreasingSpeed, m_zDistance + m_physics.position().z) * 15.0 + 15.0; // [15, 30] 
     const glm::vec3 forwardForce = glm::vec3(0.0f, 0.0f, -forwardIntensity);
     m_physics.applyForce(forwardForce);
 }

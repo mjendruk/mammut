@@ -56,12 +56,12 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 
     QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
 
-    float distanceToNextThousand = s_wallStep - int(m_zDistance) % s_wallStep;
+    float distanceToNextWall = s_wallStep - int(m_zDistance) % s_wallStep;
 
-    if (distanceToNextThousand <= s_chunkLength) {
+    if (distanceToNextWall <= s_chunkLength) {
         createWall(
             *chunk.data(), 
-            distanceToNextThousand, 
+            distanceToNextWall,
             m_zDistance > 2.f * s_wallStep ? false : true);
 
         printDebugStream();
@@ -182,16 +182,16 @@ void ChunkGenerator::distributeBoosts(CuboidChunk & chunk)
     int step = numBoosts > 0 ? chunk.cuboids().size() / numBoosts : 1;
 
     for (int i = 0; i < numBoosts; i += step)
-        chunk.cuboids().at(i)->setBoost();
+        chunk.cuboids().at(i)->addBoost();
 
     ++m_numUsedBoostDistributions;
 
     m_debugStream << "num boosts " + QString::number(numBoosts);
 }
 
-void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe)
+void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextWall, bool createStripe)
 {
-    const float zPosition = m_zPosition -(distanceToNextThousand + s_wallThickness / 2.f + 1);
+    const float zPosition = m_zPosition -(distanceToNextWall + s_wallThickness / 2.f + 1);
     const float minStripeSize = 5.f;
 
     std::uniform_real_distribution<> offsetDistribution(-30.0f, 30.0f);
@@ -225,10 +225,10 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
     m_debugStream << "wall " + QString(createStripe ? "(stripe)" : "(no stripe)");
     m_debugStream << "size: " + QString::number(sizeX) + " x " + QString::number(sizeY);
     m_debugStream << "offset: " + QString::number(offsetX) + " x " + QString::number(offsetY);
-    m_debugStream << "distance: " + QString::number(m_zDistance + distanceToNextThousand) + "     distance to last chunk: " + QString::number(distanceToNextThousand);
+    m_debugStream << "distance: " + QString::number(m_zDistance + distanceToNextWall) + "     distance to last chunk: " + QString::number(distanceToNextWall);
 
-    m_zDistance += distanceToNextThousand <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
-    m_zPosition -= distanceToNextThousand <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
+    m_zDistance += distanceToNextWall <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
+    m_zPosition -= distanceToNextWall <= (s_chunkLength / 2.f) ? s_chunkLength : 2 * s_chunkLength;
 }
 
 void ChunkGenerator::createBoostDistribution()

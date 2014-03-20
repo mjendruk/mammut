@@ -26,7 +26,7 @@ protected:
     void removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps);
     void distributeBoosts(CuboidChunk & chunk);
 
-    void createWall(CuboidChunk & chunk, float distanceToNextThousand, bool createStripe);
+    void createWall(CuboidChunk & chunk, float distanceToNextWall, bool createStripe);
     void createBoostDistribution();
 
     void printDebugStream();

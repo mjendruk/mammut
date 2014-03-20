@@ -21,7 +21,7 @@ public:
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
 
-    void setBoost();
+    void addBoost();
     bool containsBoost() const override;
     void collectBoost() const override;
 

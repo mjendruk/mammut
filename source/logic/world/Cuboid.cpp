@@ -35,7 +35,7 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
     return boundingBox;
 }
 
-void Cuboid::setBoost()
+void Cuboid::addBoost()
 {
     m_containsBoost = true;
 }

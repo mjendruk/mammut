@@ -51,6 +51,8 @@ protected:
 protected:
     static const glm::vec3 s_size;
     static const int s_maxNumBoosts;
+    static const double s_startIncreasingSpeed;
+    static const double s_stopIncreasingSpeed;
     
     MammutPhysics m_physics;
     
