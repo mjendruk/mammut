@@ -61,4 +61,6 @@ protected:
     bool m_boostIsActive;
     unsigned int m_collectedBoosts;
     int physicSteps;
+
+    double m_zDistance;
 };
