@@ -22,7 +22,6 @@ Mammut::Mammut(const glm::vec3 & translation)
 ,   m_boostIsActive(false)
 ,   m_collectedBoosts(5)
 {
-    maxLength = 0.f;
 }
 
 Mammut::~Mammut()
