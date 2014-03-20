@@ -32,7 +32,7 @@ Mammut::~Mammut()
 void Mammut::update()
 {
     m_physics.clearForcesAndApplyGravity();
-    updateBoost();
+    updateBoostState();
 
     // in air
     if (!isStillOnObject()) {
@@ -119,9 +119,6 @@ void Mammut::addBoost()
 
 void Mammut::applyBoost(BoostDirection direction)
 {
-    if (m_boostIsActive)
-        assert(false); //TODO -> return?
-
     if (m_collectedBoosts < 1)
         return;
 
@@ -146,25 +143,20 @@ void Mammut::applyBoost(BoostDirection direction)
         break;
     }
 
-    m_boostDirection = direction;
+    glm::vec3 velocity = Util::toGlmVec3(m_physics.rigidBody()->getLinearVelocity());
+    glm::vec3 boostWithGravityTransform = glm::inverse(m_gravityTransform) * boostForce;
+    float length = glm::length(velocity) * 0.05f;
+    glm::vec3 resultVelocity = velocity + boostWithGravityTransform * length;
+    m_physics.rigidBody()->setLinearVelocity(Util::toBtVec3(resultVelocity));
+
     m_boostIsActive = true;
     --m_collectedBoosts;
-
-    glm::vec3 velocity = Util::toGlmVec3(m_physics.rigidBody()->getLinearVelocity());
-
-    glm::vec3 boostWithGravityTransform = glm::inverse(m_gravityTransform) * boostForce;
-
-    float length = glm::length(velocity);
-    maxLength = std::max(length, maxLength);
-
-    glm::vec3 resultVelocity = velocity + boostWithGravityTransform * (length * 0.05f);
-
-    m_physics.rigidBody()->setLinearVelocity(Util::toBtVec3(resultVelocity));
     physicSteps = 80;
+
     qDebug() << "start Boost: " << boostForce.x << " | " << boostForce.y;
 }
 
-void Mammut::updateBoost()
+void Mammut::updateBoostState()
 {
     if (!m_boostIsActive)
         return;

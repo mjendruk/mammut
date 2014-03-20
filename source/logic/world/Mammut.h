@@ -45,7 +45,7 @@ protected:
     bool isStillOnObject() const;
 
     void addBoost();
-    void updateBoost();
+    void updateBoostState();
     
 protected:
     static const glm::vec3 s_size;
@@ -62,7 +62,4 @@ protected:
     bool m_boostIsActive;
     unsigned int m_collectedBoosts;
     int physicSteps;
-    BoostDirection m_boostDirection;
-
-    float maxLength;
 };
