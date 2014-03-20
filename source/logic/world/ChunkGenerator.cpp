@@ -236,7 +236,6 @@ void ChunkGenerator::createBoostDistribution()
         else 
         {
             m_boostDistribution[i] = 0;
-            break;
         }
     }
 
