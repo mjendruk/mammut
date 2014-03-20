@@ -29,8 +29,6 @@ protected:
 protected:
     static const int s_numGrammarChunks;
 
-    static const int s_chunksPerBoostDistribution;
-
     static const float s_chunkLength;
     static const double s_startIncreasingSeverity;
     static const double s_stopIncreasingSeverity;
@@ -40,6 +38,9 @@ protected:
     static const int s_wallStep;
     static const float s_wallSize;
     static const float s_wallThickness;
+
+    static const int s_chunksPerBoostDistribution;
+    static const int s_maxBoostsPerChunk;
 
     GrammarBasedChunkGenerator m_grammarChunkGenerator;
 

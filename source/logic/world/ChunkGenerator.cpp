@@ -9,8 +9,6 @@
 
 #include "Cuboid.h"
 
-const int ChunkGenerator::s_chunksPerBoostDistribution = 10;
-
 const int ChunkGenerator::s_numGrammarChunks = 5;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
@@ -23,21 +21,21 @@ const int ChunkGenerator::s_wallStep = 1000;
 const float ChunkGenerator::s_wallSize = 500.f;
 const float ChunkGenerator::s_wallThickness = 5.f;
 
+const int ChunkGenerator::s_chunksPerBoostDistribution = 10;
+const int ChunkGenerator::s_maxBoostsPerChunk = 2;
+
 ChunkGenerator::ChunkGenerator(long long seed)
 :   m_grammarChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
 ,   m_generator(seed)
 ,   m_zDistance(0.0)
 ,   m_numUsedBoostDistributions(0)
 {
-    for (int i = 0; i < s_chunksPerBoostDistribution; ++i)
-        m_boostDistribution[i] = 0;
-
     createBoostDistribution();
 }
 
 QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 {
-    // recalculate boostDistribution if neccessary
+    // recalculate boostDistribution if necessary
     if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
         createBoostDistribution();
 
@@ -224,26 +222,23 @@ void ChunkGenerator::createWall(CuboidChunk & chunk, float distanceToNextThousan
 void ChunkGenerator::createBoostDistribution()
 {
     m_numUsedBoostDistributions = 0;
-    int numBoosts = 6; // <> distance
+    int numRemainingBoosts = 6; // <> distance
     std::uniform_int_distribution<> dist(0, 2);
 
-    for (int i = 0; i < s_chunksPerBoostDistribution; ++i)
-        m_boostDistribution[i] = 0;
-
-    for (int i = 0; i < s_chunksPerBoostDistribution - 1; i++)
+    for (int i = 0; i < s_chunksPerBoostDistribution - 1; ++i)
     {
-        if (numBoosts > 0)
+        if (numRemainingBoosts > 0)
         {
-            int count = std::min(dist(m_generator), numBoosts);
-
-            numBoosts -= count;
-
-            m_boostDistribution[i] = count;
+            int numBoosts = std::min(dist(m_generator), numRemainingBoosts);
+            m_boostDistribution[i] = numBoosts;
+            numRemainingBoosts -= numBoosts;
         }
-        else
+        else 
+        {
+            m_boostDistribution[i] = 0;
             break;
-
+        }
     }
 
-    m_boostDistribution[s_chunksPerBoostDistribution - 1] = std::min(numBoosts, 2);
+    m_boostDistribution[s_chunksPerBoostDistribution - 1] = std::min(numRemainingBoosts, 2);
 }
