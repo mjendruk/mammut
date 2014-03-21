@@ -83,7 +83,7 @@ void Game::initializeWindow()
     
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
-    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
+    m_canvas->setSwapInterval(Canvas::VerticalSyncronization);
     m_canvas->show();
 }
 
