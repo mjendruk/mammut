@@ -13,10 +13,10 @@ const float GameMechanics::s_zResetDistance = 800.f;
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(std::chrono::system_clock::now().time_since_epoch().count())
 ,   m_mammut(glm::vec3(0.f, 0.05f, 0.0f))
-,   m_gameOver(false)
-,   m_backgroundLoop(Sound::kLoop, true)
 ,   m_totalZShift(0.0f)
 ,   m_lastZShift(0.0f)
+,   m_gameOver(false)
+,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
     
@@ -198,6 +198,7 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
+    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;

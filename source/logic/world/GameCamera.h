@@ -17,6 +17,7 @@ public:
                 float normalizedCaveDistance);
     
     void gravityChangeEvent(const glm::mat3 & rotation);
+    void pauseEvent();
 
     const glm::vec3 & eye() const;
     const glm::vec3 & center() const;

@@ -18,8 +18,8 @@ const int CaveDrawable::s_numRings = 35;
 const int CaveDrawable::s_numSafetyMarginRings = 7;
 
 CaveDrawable::CaveDrawable(const Cave & cave)
-:   m_lastRingIndex(-s_numSafetyMarginRings)
-,   m_cave(cave)
+:   m_cave(cave)
+,   m_lastRingIndex(-s_numSafetyMarginRings)
 ,   m_vao(nullptr)
 ,   m_vertexBuffer(nullptr)
 ,   m_normalBuffer(nullptr)

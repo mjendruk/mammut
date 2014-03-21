@@ -41,6 +41,11 @@ void GameCamera::gravityChangeEvent(const glm::mat3 & rotation)
     m_rotationProgress = 0.0f;
 }
 
+void GameCamera::pauseEvent()
+{
+    m_noise.setVolume(0.0);
+}
+
 void GameCamera::updateRotationProgress(float seconds)
 {
     m_rotationProgress = std::min(m_rotationProgress + seconds, s_rotationDuration);
