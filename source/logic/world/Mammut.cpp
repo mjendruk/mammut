@@ -18,7 +18,7 @@ Mammut::Mammut(const glm::vec3 & translation)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
 ,   m_boostIsActive(false)
-,   m_collectedBoosts(0)
+,   m_collectedBoosts(1)
 ,   m_zDistance(0.f)
 {
 }
