@@ -8,8 +8,8 @@
 
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 const int Mammut::s_maxNumBoosts = 5;
-const double Mammut::s_startIncreasingSpeed = 100.f;
-const double Mammut::s_stopIncreasingSpeed = 1500.f;
+const float Mammut::s_startIncreasingSpeed = 100.f;
+const float Mammut::s_stopIncreasingSpeed = 1500.f;
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
@@ -17,7 +17,7 @@ Mammut::Mammut(const glm::vec3 & translation)
 ,   m_isCrashed(false)
 ,   m_boostIsActive(false)
 ,   m_collectedBoosts(0)
-,   m_zDistance(0.0)
+,   m_zDistance(0.f)
 {
 }
 

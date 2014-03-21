@@ -35,8 +35,8 @@ protected:
     static const int s_numGrammarChunks;
 
     static const float s_chunkLength;
-    static const double s_startIncreasingDifficulty;
-    static const double s_stopIncreasingDifficulty;
+    static const float s_startIncreasingDifficulty;
+    static const float s_stopIncreasingDifficulty;
 
     static const float s_minCuboidOverlapSize;
 
@@ -52,8 +52,8 @@ protected:
     LevelStartChunkGenerator m_levelStartChunkGenerator;
 
     std::mt19937 m_generator;
-    double m_zDistance;
-    double m_zPosition;
+    float m_zDistance;
+    float m_zPosition;
     int m_boostDistribution[10];
     int m_numUsedBoostDistributions;
 

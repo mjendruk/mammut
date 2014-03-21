@@ -12,8 +12,8 @@
 const int ChunkGenerator::s_numGrammarChunks = 5;
 
 const float ChunkGenerator::s_chunkLength = 70.f;
-const double ChunkGenerator::s_startIncreasingDifficulty = 500.0;
-const double ChunkGenerator::s_stopIncreasingDifficulty = 3500.0;
+const float ChunkGenerator::s_startIncreasingDifficulty = 500.0;
+const float ChunkGenerator::s_stopIncreasingDifficulty = 3500.0;
 
 const float ChunkGenerator::s_minCuboidOverlapSize = 1.f;
 
@@ -29,8 +29,8 @@ const bool ChunkGenerator::s_printDebug = false;
 ChunkGenerator::ChunkGenerator(long long seed)
 :   m_levelStartChunkGenerator(seed, s_chunkLength, s_numGrammarChunks)
 ,   m_generator(seed)
-,   m_zDistance(0.0)
-,   m_zPosition(0.0)
+,   m_zDistance(0.f)
+,   m_zPosition(0.f)
 ,   m_numUsedBoostDistributions(0)
 {
     createBoostDistribution();
