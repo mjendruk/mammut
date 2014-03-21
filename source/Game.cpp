@@ -45,7 +45,7 @@ void Game::run()
 {
     m_loop = true;
 
-    long double lastTime = m_timer.elapsed();
+    long double lastTime = m_timer.elapsed() -  1 / 60.0f * std::nano::den;
     long double currentTime;
     long double frameTime;
     
