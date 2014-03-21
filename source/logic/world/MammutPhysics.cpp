@@ -64,4 +64,5 @@ void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
     m_rigidBody.reset(new btRigidBody(info));
     m_rigidBody->setUserPointer(this);
     m_rigidBody->setAngularFactor(btVector3(0,0,0));
+    m_rigidBody->setLinearVelocity(btVector3(0.0f, 0.0f, -15.0f));
 }

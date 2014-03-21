@@ -9,7 +9,7 @@
 const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 const int Mammut::s_maxNumBoosts = 5;
 const float Mammut::s_startIncreasingSpeed = 100.f;
-const float Mammut::s_stopIncreasingSpeed = 1500.f;
+const float Mammut::s_stopIncreasingSpeed = 3000.f;
 const float Mammut::s_magnitude = 15.f;
 const float Mammut::s_boostVelocityMixFactor = 0.05f;
 
