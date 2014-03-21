@@ -37,6 +37,10 @@ protected:
     void moveTranslationDown(float lineHeightScale);
 
 protected:
+    static const glm::vec3 s_titleColor;
+    static const glm::vec3 s_focusColor;
+    static const glm::vec3 s_textColor;
+
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;
     TextRenderer m_textRenderer;

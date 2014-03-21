@@ -19,6 +19,9 @@
 
 #include "AbstractBackground.h"
 
+const glm::vec3 MenuRenderer::s_titleColor = glm::vec3(0.6f, 0.13f, 0.02f);
+const glm::vec3 MenuRenderer::s_focusColor = glm::vec3(0, 0.65f, 0.65f);
+const glm::vec3 MenuRenderer::s_textColor = glm::vec3(1.f);
 
 MenuRenderer::MenuRenderer()
 :   m_background(nullptr)
@@ -69,7 +72,7 @@ void MenuRenderer::render(glow::FrameBufferObject * fbo, float devicePixelRatio)
 
 void MenuRenderer::render(const MenuButton * button)
 {
-    const glm::vec3 color = m_menu->isFocusedItem(button) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
+    const glm::vec3 color = m_menu->isFocusedItem(button) ? s_focusColor : s_textColor;
     
     m_textRenderer.paint(button->label(), 
                          m_translation,
@@ -81,13 +84,12 @@ void MenuRenderer::render(const MenuButton * button)
 
 void MenuRenderer::render(const MenuLogo * logo)
 {
-    const glm::vec3 color(0.6f, 0.13f, 0.02f);
     const float scale = 2.0f;
     
     m_textRenderer.paint("Mammut",
                          m_translation * glm::scale(glm::vec3(scale)),
                          TextRenderer::kAlignCenter,
-                         color);
+                         s_titleColor);
     
     moveTranslationDown(scale * 1.5f);
 }
@@ -96,18 +98,17 @@ void MenuRenderer::render(const HighscoreListItem * item)
 {
     const float namePosition = -0.6f;
     const float scorePosition = 0.3f;
-    const glm::vec3 titleColor(0.6f, 0.13f, 0.02f);
     const glm::mat4 entryScale = glm::scale(glm::vec3(0.7f));
     
     m_textRenderer.paint("Name",
                          m_translation * glm::translate(namePosition, 0.0f, 0.0f),
                          TextRenderer::kAlignLeft,
-                         titleColor);
+                         s_titleColor);
     
     m_textRenderer.paint("Score",
                          m_translation * glm::translate(scorePosition, 0.0f, 0.0f),
                          TextRenderer::kAlignLeft,
-                         titleColor);
+                         s_titleColor);
     
     moveTranslationDown(1.1f);
     
@@ -125,13 +126,11 @@ void MenuRenderer::render(const HighscoreListItem * item)
 void MenuRenderer::render(const CreditsListItem * item)
 {
     glm::vec3 forenamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
-    glm::vec3 forenameColor = glm::vec3(0, 0.65f, 0.65f);
     glm::vec3 surnamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
     const glm::mat4 forenameScale = glm::scale(glm::vec3(0.9f));
     const glm::mat4 surnameScale = glm::scale(glm::vec3(0.6f));
 
     const float thanksPosition = 0.0f;
-    const glm::vec3 titleColor(0.6f, 0.2f, 0.02f);
     const glm::mat4 thanksToScale = glm::scale(glm::vec3(0.8f));
     const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.6f));
 
@@ -139,7 +138,7 @@ void MenuRenderer::render(const CreditsListItem * item)
 
     for (const QString & name : item->creditsForenames())
     {
-        m_textRenderer.paint(name, m_translation * glm::translate(forenamePosition) * forenameScale, TextRenderer::kAlignCenter, forenameColor);
+        m_textRenderer.paint(name, m_translation * glm::translate(forenamePosition) * forenameScale, TextRenderer::kAlignCenter, s_focusColor);
         forenamePosition += glm::vec3(0.6, 0.f, 0.f);
     }
 
@@ -147,7 +146,7 @@ void MenuRenderer::render(const CreditsListItem * item)
 
     for (const QString & name : item->creditsSurnames())
     {
-        m_textRenderer.paint(name, m_translation * glm::translate(surnamePosition) * surnameScale, TextRenderer::kAlignCenter, titleColor);
+        m_textRenderer.paint(name, m_translation * glm::translate(surnamePosition) * surnameScale, TextRenderer::kAlignCenter, s_titleColor);
         surnamePosition += glm::vec3(0.6, 0.f, 0.f);
     }
 
@@ -156,7 +155,7 @@ void MenuRenderer::render(const CreditsListItem * item)
     m_textRenderer.paint("Thanks to",
         m_translation * glm::translate(thanksPosition, 0.1f, 0.0f) * thanksHeadingScale,
         TextRenderer::kAlignCenter,
-        titleColor);
+        s_titleColor);
 
     moveTranslationDown(1.5f);
 
@@ -173,7 +172,7 @@ void MenuRenderer::render(const CreditsListItem * item)
 
 void MenuRenderer::render(const MenuInput * input)
 {
-    const glm::vec3 color = m_menu->isFocusedItem(input) ? glm::vec3(0, 0.65f, 0.65f) : glm::vec3(1.0f);
+    const glm::vec3 color = m_menu->isFocusedItem(input) ? s_focusColor : s_textColor;
     
     m_textRenderer.paint(input->label() + ": ",
                          m_translation,
@@ -189,12 +188,11 @@ void MenuRenderer::render(const MenuInput * input)
 
 void MenuRenderer::render(const MenuText * text)
 {
-    const glm::vec3 color(0.6f, 0.13f, 0.02f);
     
     m_textRenderer.paint(text->text(), 
                          m_translation,
                          TextRenderer::kAlignCenter,
-                         color);
+                         s_titleColor);
 
     moveTranslationDown(1.5f);
 }
