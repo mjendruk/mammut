@@ -48,3 +48,12 @@ glm::vec3 PhysicsObject::velocity() const
 {
     return Util::toGlmVec3(m_rigidBody->getLinearVelocity());
 }
+
+bool PhysicsObject::containsBoost() const
+{
+    return false;
+}
+
+void PhysicsObject::collectBoost() const
+{
+}

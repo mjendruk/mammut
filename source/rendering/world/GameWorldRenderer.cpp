@@ -61,7 +61,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     //paint HUD over
     fbo->bind();
     int velocity = int(-m_gameMechanics->mammut().velocity().z);
-    m_hud.paint(velocity, m_gameMechanics->score());
+    m_hud.paint(velocity, m_gameMechanics->score(), m_gameMechanics->mammut().collectedBoosts());
     fbo->unbind();
 
     // update previous view projection matrix for next frame
@@ -82,7 +82,7 @@ void GameWorldRenderer::drawGeometry()
     
     m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform());
+        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
     });
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]

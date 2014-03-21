@@ -44,5 +44,6 @@ void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMat
 {
     m_program->setUniform("model", modelMatrix);
     m_program->setUniform("prevModel", prevModelMatrix);
+    m_program->setUniform("containsBoost", false);
     drawable.draw();
 }

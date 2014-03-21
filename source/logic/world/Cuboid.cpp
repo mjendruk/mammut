@@ -9,6 +9,7 @@
 
 Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
+,   m_containsBoost(false)
 {    
     initializeRigidBody(size, translation);
 }
@@ -32,6 +33,22 @@ glowutils::AxisAlignedBoundingBox Cuboid::boundingBox() const
     boundingBox.extend(Util::toGlmVec3(urb));
     
     return boundingBox;
+}
+
+void Cuboid::addBoost()
+{
+    m_containsBoost = true;
+}
+
+bool Cuboid::containsBoost() const
+{
+    return m_containsBoost;
+}
+
+void Cuboid::collectBoost() const
+{
+    assert(containsBoost());
+    m_containsBoost = false;
 }
 
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)

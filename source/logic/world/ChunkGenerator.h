@@ -3,24 +3,59 @@
 #include <random>
 
 #include <QSharedPointer>
+#include <QStringList>
+
 #include <glm/glm.hpp>
 
-#include "CuboidChunk.h"
+#include "LevelStartChunkGenerator.h"
 
-class btDiscreteDynamicsWorld;
+class CuboidChunk;
 
 class ChunkGenerator
 {
 public:
-    ChunkGenerator(int seed);
-    ~ChunkGenerator();
+    ChunkGenerator(long long seed = 2156);
 
     QSharedPointer<CuboidChunk> nextChunk();
 
     void addZShift(float zShift);
 
-protected:
-    std::mt19937 m_generator;
-    glm::vec3 m_nextTranslation;
+protected: 
+    void createOrdinaryLevel(CuboidChunk & chunk);
+    void createRawChunk(CuboidChunk & chunk, int numCouboids);
+    void removeOverlaps(CuboidChunk & chunk, int maxNumOverlaps);
+    void distributeBoosts(CuboidChunk & chunk);
 
+    void createWall(CuboidChunk & chunk, float distanceToNextWall, bool createStripe);
+    void createBoostDistribution();
+
+    void printDebugStream();
+
+protected:
+    static const int s_numGrammarChunks;
+
+    static const float s_chunkLength;
+    static const float s_startIncreasingDifficulty;
+    static const float s_stopIncreasingDifficulty;
+
+    static const float s_minCuboidOverlapSize;
+
+    static const int s_wallStep;
+    static const float s_wallSize;
+    static const float s_wallThickness;
+
+    static const int s_chunksPerBoostDistribution;
+    static const int s_maxBoostsPerChunk;
+
+    static const bool s_printDebug;
+
+    LevelStartChunkGenerator m_levelStartChunkGenerator;
+
+    std::mt19937 m_generator;
+    float m_zDistance;
+    float m_zPosition;
+    int m_boostDistribution[10];
+    int m_numUsedBoostDistributions;
+
+    QStringList m_debugStream;
 };
