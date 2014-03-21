@@ -39,7 +39,7 @@ void Mammut::update()
     if (!m_boostIsActive)
         slowDownDrifting();
 
-    float forwardIntensity = glm::smoothstep(s_startIncreasingSpeed, s_stopIncreasingSpeed, m_zDistance + m_physics.position().z) * 15.0 + 15.0; // [15, 30] 
+    float forwardIntensity = glm::smoothstep(s_startIncreasingSpeed, s_stopIncreasingSpeed, m_zDistance - m_physics.position().z) * 15.0 + 15.0; // [15, 30] 
     const glm::vec3 forwardForce = glm::vec3(0.0f, 0.0f, -forwardIntensity);
     m_physics.applyForce(forwardForce);
 }
