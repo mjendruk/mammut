@@ -217,10 +217,14 @@ set(sources
     ${source_path}/logic/highscore/HighscoreEntry.cpp
     ${source_path}/logic/highscore/HighscoreEntry.h
 
+    ${source_path}/logic/menu/CreditsMenu.cpp
+    ${source_path}/logic/menu/CreditsMenu.h    
     ${source_path}/logic/menu/GameOverMenu.cpp
     ${source_path}/logic/menu/GameOverMenu.h
     ${source_path}/logic/menu/HighscoreMenu.cpp
     ${source_path}/logic/menu/HighscoreMenu.h
+    ${source_path}/logic/menu/HowtoMenu.cpp
+    ${source_path}/logic/menu/HowtoMenu.h
     ${source_path}/logic/menu/MainMenu.cpp
     ${source_path}/logic/menu/MainMenu.h
     ${source_path}/logic/menu/Menu.cpp
