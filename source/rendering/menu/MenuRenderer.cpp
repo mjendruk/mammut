@@ -21,7 +21,7 @@
 
 const glm::vec3 MenuRenderer::s_titleColor = glm::vec3(0.6f, 0.13f, 0.02f);
 const glm::vec3 MenuRenderer::s_focusColor = glm::vec3(0, 0.65f, 0.65f);
-const glm::vec3 MenuRenderer::s_textColor = glm::vec3(1.f);
+const glm::vec3 MenuRenderer::s_textColor = glm::vec3(0.9f);
 
 MenuRenderer::MenuRenderer()
 :   m_background(nullptr)
@@ -130,47 +130,48 @@ void MenuRenderer::render(const CreditsListItem * item)
     const glm::vec3 thanksToStartPosition = glm::vec3(-0.5f, 0.0f, 0.f);
     const glm::vec3 thanksToPositionOffset = -thanksToStartPosition;
 
-    glm::vec3 currentRowPosition = nameStartPosition;
-    const glm::vec3 thanksHeadingPosition = glm::vec3(0.f);
-    const glm::vec3 thanksToPosition = glm::vec3(0.3f, 0.f, 0.f);
-
-    const glm::mat4 forenameScale = glm::scale(glm::vec3(0.9f));
-    const glm::mat4 surnameScale = glm::scale(glm::vec3(0.6f));
-    const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.8f));
+    const glm::mat4 nicknameScale = glm::scale(glm::vec3(0.7f));
+    const glm::mat4 nameScale = glm::scale(glm::vec3(0.6f));
+    const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.7f));
     const glm::mat4 thanksToScale = glm::scale(glm::vec3(0.5f));
 
+    glm::vec3 currentRowPosition = nameStartPosition;
     const int maxIndexPerRow = 2;
 
     moveTranslationDown(0.5f);
 
-    for (const QString & name : item->creditsForenames())
-    {
-        m_textRenderer.paint(name, m_translation * glm::translate(currentRowPosition) * surnameScale, TextRenderer::kAlignCenter, s_textColor);
+    for (const QString & name : item->creditsForenames()) {
+        m_textRenderer.paint(name, 
+            m_translation * glm::translate(currentRowPosition) * nameScale, 
+            TextRenderer::kAlignCenter);
         currentRowPosition += namePositionOffset;
     }
 
-    moveTranslationDown(0.85f);
+    moveTranslationDown(0.8f);
     currentRowPosition = nameStartPosition;
 
-    for (const QString & name : item->creditsNicknames())
-    {
-        m_textRenderer.paint(name, m_translation * glm::translate(currentRowPosition) * forenameScale, TextRenderer::kAlignCenter, s_focusColor);
+    for (const QString & name : item->creditsNicknames()) {
+        m_textRenderer.paint(name, 
+            m_translation * glm::translate(currentRowPosition) * nicknameScale, 
+            TextRenderer::kAlignCenter, 
+            glm::vec3(0.3));
         currentRowPosition += namePositionOffset;
     }
 
-     moveTranslationDown(0.95f);
+     moveTranslationDown(0.85f);
      currentRowPosition = nameStartPosition;
 
-    for (const QString & name : item->creditsSurnames())
-    {
-        m_textRenderer.paint(name, m_translation * glm::translate(currentRowPosition) * surnameScale, TextRenderer::kAlignCenter, s_textColor);
+    for (const QString & name : item->creditsSurnames()) {
+        m_textRenderer.paint(name, 
+            m_translation * glm::translate(currentRowPosition) * nameScale, 
+            TextRenderer::kAlignCenter);
         currentRowPosition += namePositionOffset;
     }
 
     moveTranslationDown(1.6f);
 
     m_textRenderer.paint("Thanks to",
-        m_translation * glm::translate(thanksHeadingPosition) * thanksHeadingScale,
+        m_translation * glm::translate(glm::vec3(0.f)) * thanksHeadingScale,
         TextRenderer::kAlignCenter,
         s_titleColor);
 
@@ -179,20 +180,21 @@ void MenuRenderer::render(const CreditsListItem * item)
     int index = 0;
     currentRowPosition = thanksToStartPosition;
 
-    for (const QString & name : item->thanks())
-    {
+    for (const QString & name : item->thanks()) {
         if (index == maxIndexPerRow + 1) {
             currentRowPosition = thanksToStartPosition;
             moveTranslationDown(0.7f);
             index = 0;
         }
 
-        m_textRenderer.paint(name, m_translation * glm::translate(currentRowPosition) * thanksToScale, TextRenderer::kAlignCenter);
+        m_textRenderer.paint(name, 
+            m_translation * glm::translate(currentRowPosition) * thanksToScale, 
+            TextRenderer::kAlignCenter);
         currentRowPosition += thanksToPositionOffset;
         ++index;
     }
 
-    moveTranslationDown(1.5f);
+    moveTranslationDown(1.8f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
