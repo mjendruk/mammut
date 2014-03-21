@@ -11,6 +11,7 @@
 #include <logic/menu/items/MenuButton.h>
 #include <logic/menu/items/MenuLogo.h>
 #include <logic/menu/items/HighscoreListItem.h>
+#include <logic/menu/items/CreditsListItem.h>
 #include <logic/menu/items/MenuInput.h>
 #include <logic/menu/items/MenuText.h>
 
@@ -118,6 +119,55 @@ void MenuRenderer::render(const HighscoreListItem * item)
         moveTranslationDown(0.8f);
     }
     
+    moveTranslationDown(0.2f);
+}
+
+void MenuRenderer::render(const CreditsListItem * item)
+{
+    glm::vec3 forenamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
+    glm::vec3 forenameColor = glm::vec3(0, 0.65f, 0.65f);
+    glm::vec3 surnamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
+    const glm::mat4 forenameScale = glm::scale(glm::vec3(0.9f));
+    const glm::mat4 surnameScale = glm::scale(glm::vec3(0.6f));
+
+    const float thanksPosition = 0.0f;
+    const glm::vec3 titleColor(0.6f, 0.2f, 0.02f);
+    const glm::mat4 thanksToScale = glm::scale(glm::vec3(0.8f));
+    const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.6f));
+
+    moveTranslationDown(1.0f);
+
+    for (const QString & name : item->creditsForenames())
+    {
+        m_textRenderer.paint(name, m_translation * glm::translate(forenamePosition) * forenameScale, TextRenderer::kAlignCenter, forenameColor);
+        forenamePosition += glm::vec3(0.6, 0.f, 0.f);
+    }
+
+     moveTranslationDown(0.9f);
+
+    for (const QString & name : item->creditsSurnames())
+    {
+        m_textRenderer.paint(name, m_translation * glm::translate(surnamePosition) * surnameScale, TextRenderer::kAlignCenter, titleColor);
+        surnamePosition += glm::vec3(0.6, 0.f, 0.f);
+    }
+
+    moveTranslationDown(1.2f);
+
+    m_textRenderer.paint("Thanks to",
+        m_translation * glm::translate(thanksPosition, 0.1f, 0.0f) * thanksHeadingScale,
+        TextRenderer::kAlignCenter,
+        titleColor);
+
+    moveTranslationDown(1.5f);
+
+    for (const QString & name : item->thanks())
+    {
+        m_textRenderer.paint(name, m_translation * glm::translate(thanksPosition, 0.05f, 0.0f) * thanksHeadingScale, TextRenderer::kAlignCenter);
+        //m_textRenderer.paint(name, m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);
+
+        moveTranslationDown(0.8f);
+    }
+
     moveTranslationDown(0.2f);
 }
 

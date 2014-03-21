@@ -234,6 +234,8 @@ set(sources
     ${source_path}/logic/menu/NewHighscoreMenu.cpp
     ${source_path}/logic/menu/NewHighscoreMenu.h
     
+    ${source_path}/logic/menu/items/CreditsListItem.cpp
+    ${source_path}/logic/menu/items/CreditsListItem.h
     ${source_path}/logic/menu/items/MenuItem.cpp
     ${source_path}/logic/menu/items/MenuItem.h
     ${source_path}/logic/menu/items/HighscoreListItem.cpp

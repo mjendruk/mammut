@@ -15,10 +15,10 @@ HowtoMenu::~HowtoMenu()
 
 QList<MenuItem *> HowtoMenu::initializeMenuItems()
 {
-    MenuText * scoreText = new MenuText(QString("How-to"));
+    MenuText * headingText = new MenuText(QString("How-to"));
     m_toMainMenuButton = new MenuButton("Back to Main Menu");
 
-    return { scoreText, m_toMainMenuButton };
+    return{ headingText, m_toMainMenuButton };
 }
 
 void HowtoMenu::connectSignals()

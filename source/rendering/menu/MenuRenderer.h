@@ -9,6 +9,7 @@ class Menu;
 class MenuButton;
 class MenuLogo;
 class HighscoreListItem;
+class CreditsListItem;
 class MenuInput;
 class MenuText;
 class AbstractBackground;
@@ -25,6 +26,7 @@ public:
     void render(const MenuButton * button);
     void render(const MenuLogo * logo);
     void render(const HighscoreListItem * item);
+    void render(const CreditsListItem * item);
     void render(const MenuInput * input);
     void render(const MenuText * text);
 
