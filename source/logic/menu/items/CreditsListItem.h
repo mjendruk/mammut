@@ -19,11 +19,13 @@ public:
     bool isFocusable() const override;
 
     const QList<QString> & creditsForenames() const;
+    const QList<QString> & creditsNicknames() const;
     const QList<QString> & creditsSurnames() const;
     const QList<QString> & thanks() const;
 
 protected:
     static const QList<QString> m_creditsForenames;
+    static const QList<QString> m_creditsNicknames;
     static const QList<QString> m_creditsSurnames;
     static const QList<QString> m_thanks;
 
