@@ -11,7 +11,7 @@
 #include <logic/menu/items/MenuButton.h>
 #include <logic/menu/items/MenuLogo.h>
 #include <logic/menu/items/HighscoreListItem.h>
-#include <logic/menu/items/CreditsListItem.h>
+#include <logic/menu/items/CreditsItem.h>
 #include <logic/menu/items/MenuInput.h>
 #include <logic/menu/items/MenuText.h>
 
@@ -123,7 +123,7 @@ void MenuRenderer::render(const HighscoreListItem * item)
     moveTranslationDown(0.2f);
 }
 
-void MenuRenderer::render(const CreditsListItem * item)
+void MenuRenderer::render(const CreditsItem * item)
 {
     const glm::vec3 nameStartPosition = glm::vec3(-0.6f, 0.0f, 0.f);
     const glm::vec3 namePositionOffset = -nameStartPosition;

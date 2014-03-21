@@ -2,7 +2,7 @@
 
 #include <logic/menu/items/MenuButton.h>
 #include <logic/menu/items/MenuText.h>
-#include <logic/menu/items/CreditsListItem.h>
+#include <logic/menu/items/CreditsItem.h>
 
 CreditsMenu::CreditsMenu()
 :   Menu(initializeMenuItems())
@@ -17,11 +17,11 @@ CreditsMenu::~CreditsMenu()
 QList<MenuItem *> CreditsMenu::initializeMenuItems()
 {
     MenuText * creditsText = new MenuText(QString("Credits"));
-    CreditsListItem * creditsListItem = new CreditsListItem();
+    CreditsItem * creditsItem = new CreditsItem();
     //MenuText * thanksText = new MenuText(QString("Thanks to"));
     m_toMainMenuButton = new MenuButton("Back to Main Menu");
 
-    return{ creditsText, creditsListItem, m_toMainMenuButton };
+    return{ creditsText, creditsItem, m_toMainMenuButton };
 }
 
 void CreditsMenu::connectSignals()

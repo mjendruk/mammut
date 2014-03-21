@@ -5,13 +5,13 @@
 
 class HighscoreEntry;
 
-class CreditsListItem : public MenuItem
+class CreditsItem : public MenuItem
 {
     Q_OBJECT
 
 public:
-    CreditsListItem();
-    virtual ~CreditsListItem();
+    CreditsItem();
+    virtual ~CreditsItem();
 
     void accept(MenuRenderer * renderer) override;
     void keyPressed(QKeyEvent * event) override;
