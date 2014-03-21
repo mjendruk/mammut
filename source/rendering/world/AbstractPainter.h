@@ -13,8 +13,7 @@ public:
 
     virtual void paint(DrawableInterface & drawable, 
         const glm::mat4 & modelMatrix, 
-        const glm::mat4 & prevModelMatrix,
-        bool containsBoost) = 0;
+        const glm::mat4 & prevModelMatrix) = 0;
 
 protected:
     virtual void initialize() = 0;
