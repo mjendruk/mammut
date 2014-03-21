@@ -184,6 +184,7 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
+    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;
