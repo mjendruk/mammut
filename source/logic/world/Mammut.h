@@ -53,6 +53,8 @@ protected:
     static const int s_maxNumBoosts;
     static const float s_startIncreasingSpeed;
     static const float s_stopIncreasingSpeed;
+    static const float s_magnitude;
+    static const float s_boostVelocityMixFactor;
     
     MammutPhysics m_physics;
     

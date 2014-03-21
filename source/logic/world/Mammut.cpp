@@ -10,6 +10,8 @@ const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
 const int Mammut::s_maxNumBoosts = 5;
 const float Mammut::s_startIncreasingSpeed = 100.f;
 const float Mammut::s_stopIncreasingSpeed = 1500.f;
+const float Mammut::s_magnitude = 15.f;
+const float Mammut::s_boostVelocityMixFactor = 0.05f;
 
 Mammut::Mammut(const glm::vec3 & translation)
 :   m_physics(s_size, translation, this)
@@ -119,29 +121,28 @@ void Mammut::applyBoost(BoostDirection direction)
     if (m_collectedBoosts < 1)
         return;
 
-    float magnitude = 15.f;
     glm::vec3 boostVector;
 
     switch (direction)
     {
     case BoostDirection::kUp:
-        boostVector = glm::vec3(0.f, magnitude, 0.f);
+        boostVector = glm::vec3(0.f, s_magnitude, 0.f);
         break;
     case BoostDirection::kRight:
-        boostVector = glm::vec3(magnitude, 0.f, 0.f);
+        boostVector = glm::vec3(s_magnitude, 0.f, 0.f);
         break;
     case BoostDirection::kDown:
         if (isStillOnObject())
             return;
-        boostVector = glm::vec3(0.f, -magnitude, 0.f);
+        boostVector = glm::vec3(0.f, -s_magnitude, 0.f);
         break;
     case BoostDirection::kLeft:
-        boostVector = glm::vec3(-magnitude, 0.f, 0.f);
+        boostVector = glm::vec3(-s_magnitude, 0.f, 0.f);
         break;
     }
 
     glm::vec3 mammutVelocity = m_physics.velocity();
-    float length = std::max(glm::length(mammutVelocity), 15.f) * 0.05f;
+    float length = std::max(glm::length(mammutVelocity), s_magnitude) * s_boostVelocityMixFactor;
     glm::vec3 boostWithGravityTransform = glm::inverse(m_gravityTransform) * boostVector;
     glm::vec3 resultVelocity = mammutVelocity + boostWithGravityTransform * length;
     m_physics.setVelocity(resultVelocity);
