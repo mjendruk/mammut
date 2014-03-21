@@ -6,7 +6,7 @@
 
 const QList<QString> CreditsListItem::m_creditsForenames = { "Carolin", "Johannes", "Max" };
 const QList<QString> CreditsListItem::m_creditsSurnames = { "Fiedler", "Linke", "Jendruk" };
-const QList<QString> CreditsListItem::m_thanks = { "Sebastian Pasewaldt", "John Chapman", "Timothy Lottes", "Morgan McGuire et al. and G3D Engine team"};
+const QList<QString> CreditsListItem::m_thanks = { "Sebastian Pasewaldt", "John Chapman", "Timothy Lottes", "Morgan McGuire et al.", "G3D Engine"};
 
 CreditsListItem::CreditsListItem()
 {

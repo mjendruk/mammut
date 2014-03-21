@@ -127,14 +127,15 @@ void MenuRenderer::render(const CreditsListItem * item)
 {
     glm::vec3 forenamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
     glm::vec3 surnamePosition = glm::vec3(-0.6f, 0.0f, 0.f);
+    const glm::vec3 thanksHeadingPosition = glm::vec3(-0.3f, -0.1, 0.f);
+    const glm::vec3 thanksToPosition = glm::vec3(0.3f, 0.f, 0.f);
+
     const glm::mat4 forenameScale = glm::scale(glm::vec3(0.9f));
     const glm::mat4 surnameScale = glm::scale(glm::vec3(0.6f));
+    const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.8f));
+    const glm::mat4 thanksToScale = glm::scale(glm::vec3(0.5f));
 
-    const float thanksPosition = 0.0f;
-    const glm::mat4 thanksToScale = glm::scale(glm::vec3(0.8f));
-    const glm::mat4 thanksHeadingScale = glm::scale(glm::vec3(0.6f));
-
-    moveTranslationDown(1.0f);
+    moveTranslationDown(0.5f);
 
     for (const QString & name : item->creditsForenames())
     {
@@ -150,24 +151,22 @@ void MenuRenderer::render(const CreditsListItem * item)
         surnamePosition += glm::vec3(0.6, 0.f, 0.f);
     }
 
-    moveTranslationDown(1.2f);
+    moveTranslationDown(1.6f);
 
     m_textRenderer.paint("Thanks to",
-        m_translation * glm::translate(thanksPosition, 0.1f, 0.0f) * thanksHeadingScale,
+        m_translation * glm::translate(thanksHeadingPosition) * thanksHeadingScale,
         TextRenderer::kAlignCenter,
         s_titleColor);
 
-    moveTranslationDown(1.5f);
+   // moveTranslationDown(1.0f);
 
     for (const QString & name : item->thanks())
     {
-        m_textRenderer.paint(name, m_translation * glm::translate(thanksPosition, 0.05f, 0.0f) * thanksHeadingScale, TextRenderer::kAlignCenter);
-        //m_textRenderer.paint(name, m_translation * glm::translate(scorePosition, 0.0f, 0.0f) * entryScale);
-
-        moveTranslationDown(0.8f);
+        m_textRenderer.paint(name, m_translation * glm::translate(thanksToPosition) * thanksToScale, TextRenderer::kAlignCenter);
+        moveTranslationDown(0.7f);
     }
 
-    moveTranslationDown(0.2f);
+    moveTranslationDown(0.75f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
