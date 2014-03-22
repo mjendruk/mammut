@@ -47,6 +47,11 @@ void TetGenerator::processCuboidAsync(Cuboid * cuboid)
     emit gotANewCuboid(cuboid);
 }
 
+void TetGenerator::dummySlot()
+{
+    //does nothing. this method is meant to be called with a BlockingConnection.
+}
+
 void TetGenerator::processCuboid(Cuboid * cuboid)
 {
     glowutils::AxisAlignedBoundingBox aabb = cuboid->boundingBox();

@@ -40,6 +40,7 @@ public:
 signals:
     void pause();
     void gameOver(int score);
+    void waitForTetGenerator();
 
 protected slots:
     void splitOneCuboid();

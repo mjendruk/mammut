@@ -38,6 +38,7 @@ GameMechanics::GameMechanics()
 
 GameMechanics::~GameMechanics()
 {
+    waitForTetGenerator();
     for (Cuboid * cuboid : m_cuboids)
         m_physicsWorld.removeObject(cuboid);
 
@@ -224,6 +225,7 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
     connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
+    connect(this, &GameMechanics::waitForTetGenerator, &TetGenerator::instance(), &TetGenerator::dummySlot, Qt::BlockingQueuedConnection);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;

@@ -126,6 +126,7 @@ void Game::resumeGame()
 
 void Game::showMainMenu()
 {
+    m_gameMechanics.reset();
     auto menu = std::make_shared<MainMenu>();
     
     connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
