@@ -25,7 +25,7 @@ GameMechanics::GameMechanics()
 
     QTimer::singleShot(3000, this, SLOT(splitOneCuboid()));
 
-	for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
 
@@ -43,6 +43,8 @@ GameMechanics::~GameMechanics()
     forEachCuboid([this](Cuboid * cuboid) {
         m_physicsWorld.removeObject(cuboid);
     });
+
+    qDeleteAll(m_chunkList);
     
     m_physicsWorld.removeObject(m_mammut.physics());
     m_backgroundLoop.stop();
@@ -77,7 +79,7 @@ void GameMechanics::update(float seconds)
     if (m_chunkList.at(1)->cuboids()[0]->position().z > m_camera.center().z) {
         for (Cuboid * cuboid : m_chunkList.first()->cuboids())
             m_physicsWorld.removeObject(cuboid);
-        m_chunkList.removeFirst();
+        delete m_chunkList.takeFirst();
 
         m_chunkList << m_chunkGenerator.nextChunk();
         for (Cuboid * cuboid : m_chunkList.last()->cuboids()) {

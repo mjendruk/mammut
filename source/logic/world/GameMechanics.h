@@ -3,7 +3,6 @@
 #include <functional>
 
 #include <QList>
-#include <QSharedPointer>
 
 #include <logic/Mechanics.h>
 #include <sound/Sound.h>
@@ -63,7 +62,7 @@ protected:
     Mammut m_mammut;
     Cave m_cave;
     GameCamera m_camera;
-    QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    QList<CuboidChunk *> m_chunkList;
     BunchOfTets m_bunch;
     
     float m_totalZShift;

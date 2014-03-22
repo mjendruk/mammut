@@ -27,12 +27,12 @@ LevelStartChunkGenerator::LevelStartChunkGenerator(int seed, float chunkLength, 
     assert(chunkLength > 0);
 
     for (int i = 0; i < numChunks; ++i)
-        m_chunkList << QSharedPointer<CuboidChunk>(new CuboidChunk());
+        m_chunkList << new CuboidChunk();
 
-    createStartChunk(*m_chunkList.first().data());
+    createStartChunk(*m_chunkList.first());
 
     for (int i = 1; i < numChunks; ++i) {
-        createChunk(*m_chunkList.at(i).data());
+        createChunk(*m_chunkList.at(i));
     }
 }
 
@@ -46,7 +46,7 @@ bool LevelStartChunkGenerator::hasNextChunk()
     return !m_chunkList.isEmpty();
 }
 
-QSharedPointer<CuboidChunk> LevelStartChunkGenerator::nextChunk()
+CuboidChunk * LevelStartChunkGenerator::nextChunk()
 {
     assert(hasNextChunk());
     return m_chunkList.takeFirst();

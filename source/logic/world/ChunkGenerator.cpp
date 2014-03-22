@@ -36,7 +36,7 @@ ChunkGenerator::ChunkGenerator(long long seed)
     createBoostDistribution();
 }
 
-QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
+CuboidChunk * ChunkGenerator::nextChunk()
 {
     // recalculate boostDistribution if necessary
     if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
@@ -44,8 +44,8 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
 
     if (m_levelStartChunkGenerator.hasNextChunk()) {
         m_debugStream << "grammar based chunk";
-        QSharedPointer<CuboidChunk> chunk = m_levelStartChunkGenerator.nextChunk();
-        distributeBoosts(*chunk.data());
+        CuboidChunk * chunk = m_levelStartChunkGenerator.nextChunk();
+        distributeBoosts(*chunk);
         m_zDistance += s_chunkLength;
         m_zPosition -= s_chunkLength;
 
@@ -54,13 +54,13 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         return chunk;
     }
 
-    QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
+    CuboidChunk * chunk(new CuboidChunk);
 
     float distanceToNextWall = s_wallStep - int(m_zDistance) % s_wallStep;
 
     if (distanceToNextWall <= s_chunkLength) {
         createWall(
-            *chunk.data(), 
+            *chunk, 
             distanceToNextWall,
             m_zDistance > 2.f * s_wallStep ? false : true);
 
@@ -69,7 +69,7 @@ QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
         return chunk;
     }
 
-    createOrdinaryLevel(*chunk.data());
+    createOrdinaryLevel(*chunk);
 
     printDebugStream();
 

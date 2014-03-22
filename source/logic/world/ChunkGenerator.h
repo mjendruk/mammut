@@ -2,7 +2,6 @@
 
 #include <random>
 
-#include <QSharedPointer>
 #include <QStringList>
 
 #include <glm/glm.hpp>
@@ -16,7 +15,7 @@ class ChunkGenerator
 public:
     ChunkGenerator(long long seed = 2156);
 
-    QSharedPointer<CuboidChunk> nextChunk();
+    CuboidChunk * nextChunk();
 
     void addZShift(float zShift);
 
