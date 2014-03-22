@@ -240,6 +240,10 @@ set(sources
     ${source_path}/logic/menu/items/MenuItem.h
     ${source_path}/logic/menu/items/HighscoreListItem.cpp
     ${source_path}/logic/menu/items/HighscoreListItem.h
+    ${source_path}/logic/menu/items/HowtoItem.cpp
+    ${source_path}/logic/menu/items/HowtoItem.h
+    ${source_path}/logic/menu/items/HowtoListItem.cpp
+    ${source_path}/logic/menu/items/HowtoListItem.h
     ${source_path}/logic/menu/items/MenuButton.cpp
     ${source_path}/logic/menu/items/MenuButton.h    
     ${source_path}/logic/menu/items/MenuInput.cpp
