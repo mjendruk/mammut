@@ -18,6 +18,7 @@
 #include "CavePainter.h"
 #include "HUD.h"
 #include "Painter.h"
+#include "ParticleGenerator.h"
 #include "ParticleRenderer.h"
 #include "RenderCamera.h"
 
@@ -72,6 +73,7 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     std::unique_ptr<CaveDrawable> m_caveDrawable;
 
+    ParticleGenerator m_particleGenerator;
     ParticleRenderer m_particleRenderer;
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
@@ -89,8 +91,6 @@ protected:
     MotionBlurPass m_motionBlurPass;
     std::unique_ptr<SimplePostProcPass> m_FxaaPass;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
-    
-    std::vector<glm::vec3> m_particlePositions;
 
     glm::mat4 m_previousViewProjection;
     

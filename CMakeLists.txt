@@ -299,6 +299,8 @@ set(sources
     ${source_path}/rendering/world/DrawableInterface.h
     ${source_path}/rendering/world/Painter.cpp
     ${source_path}/rendering/world/Painter.h
+    ${source_path}/rendering/world/ParticleGenerator.cpp
+    ${source_path}/rendering/world/ParticleGenerator.h
     ${source_path}/rendering/world/ParticleRenderer.cpp
     ${source_path}/rendering/world/ParticleRenderer.h
     ${source_path}/rendering/world/RenderCamera.cpp

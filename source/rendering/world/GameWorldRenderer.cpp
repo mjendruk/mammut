@@ -52,25 +52,10 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
    
     m_camera.update(m_gameMechanics->camera());
     m_caveDrawable->update(m_camera.eye());
+    m_particleGenerator.update(m_camera.eye(), m_camera.center());
 
     updateFPS();
     updatePainters();
-    
-    for (int i = 0; i < 100; ++i)
-    {
-        m_particlePositions.push_back(glm::gaussRand(m_camera.eye(), glm::vec3(2.0f)));
-    }
-    
-    std::vector<glm::vec3> newPositions;
-    for (int i = 0; i < m_particlePositions.size(); ++i)
-    {
-        if (m_particlePositions[i].z < m_camera.eye().z + 10 && glm::distance(m_particlePositions[i].xy(), m_camera.eye().xy()) > 2.0f)
-            newPositions.push_back(m_particlePositions[i]);
-        
-    }
-    
-    m_particlePositions = newPositions;
-
     
     // render
     drawGeometry();
@@ -107,7 +92,7 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     
-    m_particleRenderer.paint(m_camera.view(), m_particlePositions);
+    m_particleRenderer.paint(m_camera.view(), m_particleGenerator.particles());
     
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
