@@ -72,7 +72,7 @@ void MenuRenderer::render(const MenuButton * button)
     
     m_textRenderer.paint(button->label(), 
                          m_translation,
-                         TextRenderer::kAlignCenter,
+                         SDFRenderer::kAlignCenter,
                          color);
 
     moveTranslationDown(1.5f);
@@ -88,10 +88,10 @@ void MenuRenderer::render(const MenuLogo * logo)
     
     m_textRenderer.paint("Mammut",
                          m_translation * glm::scale(glm::vec3(scale)),
-                         TextRenderer::kAlignCenter,
+                         SDFRenderer::kAlignCenter,
                          color);
-    m_symbolRenderer.paint("Mammut", 1, mammutMatrix, SymbolRenderer::Alignment::kAlignCenter, color);
-    m_symbolRenderer.paint("stones", 1, stonesMatrix, SymbolRenderer::Alignment::kAlignCenter, color);
+    m_symbolRenderer.paint("Mammut", 1, mammutMatrix, SDFRenderer::kAlignCenter, color);
+    m_symbolRenderer.paint("stones", 1, stonesMatrix, SDFRenderer::kAlignCenter, color);
     
     moveTranslationDown(scale * 1.5f);
 }
@@ -105,12 +105,12 @@ void MenuRenderer::render(const HighscoreListItem * item)
     
     m_textRenderer.paint("Name",
                          m_translation * glm::translate(namePosition, 0.0f, 0.0f),
-                         TextRenderer::kAlignLeft,
+                         SDFRenderer::kAlignLeft,
                          titleColor);
     
     m_textRenderer.paint("Score",
                          m_translation * glm::translate(scorePosition, 0.0f, 0.0f),
-                         TextRenderer::kAlignLeft,
+                         SDFRenderer::kAlignLeft,
                          titleColor);
     
     moveTranslationDown(1.1f);
@@ -132,12 +132,12 @@ void MenuRenderer::render(const MenuInput * input)
     
     m_textRenderer.paint(input->label() + ": ",
                          m_translation,
-                         TextRenderer::kAlignRight,
+                         SDFRenderer::kAlignRight,
                          color);
     
     m_textRenderer.paint(input->text() + "_",
                          m_translation,
-                         TextRenderer::kAlignLeft);
+                         SDFRenderer::kAlignLeft);
     
     moveTranslationDown(1.5f);
 }
@@ -148,7 +148,7 @@ void MenuRenderer::render(const MenuText * text)
     
     m_textRenderer.paint(text->text(), 
                          m_translation,
-                         TextRenderer::kAlignCenter,
+                         SDFRenderer::kAlignCenter,
                          color);
 
     moveTranslationDown(1.5f);
@@ -168,5 +168,5 @@ void MenuRenderer::setMenu(const Menu * menu)
 
 void MenuRenderer::moveTranslationDown(float lineHeightScale)
 {
-    m_translation *= glm::translate(0.0f, - TextRenderer::s_lineHeight * lineHeightScale, 0.0f);
+    m_translation *= glm::translate(0.0f, -m_textRenderer.lineHeight() * lineHeightScale, 0.0f);
 }
