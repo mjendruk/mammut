@@ -16,6 +16,8 @@ public:
 
     void draw(QList<Cuboid *> cuboids, Painter & painter);
 
+    void reset();
+
 protected:
     CuboidDrawable m_cuboidDrawable;
     QList<TessCuboidDrawable *> m_tessCuboidDrawables;

@@ -221,5 +221,6 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
     m_caveDrawable.reset(new CaveDrawable(mechanics->cave()));
+    m_cuboidRenderer.reset();
 }
 

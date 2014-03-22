@@ -45,3 +45,9 @@ void CuboidRenderer::draw(QList<Cuboid *> cuboids, Painter & painter)
         painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
     }
 }
+
+void CuboidRenderer::reset()
+{
+    qDeleteAll(m_tessCuboidDrawables);
+    m_tessCuboidDrawables.clear();
+}
