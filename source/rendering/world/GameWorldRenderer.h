@@ -12,12 +12,14 @@
 
 #include <rendering/world/postprocessing/MotionBlurPass.h>
 #include <rendering/world/postprocessing/SSAOPass.h>
+
 #include "CuboidDrawable.h"
 #include "CaveDrawable.h"
-#include "Painter.h"
 #include "CavePainter.h"
-#include "RenderCamera.h"
 #include "HUD.h"
+#include "Painter.h"
+#include "ParticleRenderer.h"
+#include "RenderCamera.h"
 
 namespace glow
 {
@@ -70,6 +72,8 @@ protected:
     CuboidDrawable m_cuboidDrawable;
     std::unique_ptr<CaveDrawable> m_caveDrawable;
 
+    ParticleRenderer m_particleRenderer;
+
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;
 
     glow::ref_ptr<glow::Texture> m_gBufferDepth;
@@ -86,11 +90,7 @@ protected:
     std::unique_ptr<SimplePostProcPass> m_FxaaPass;
     glow::ref_ptr<glowutils::ScreenAlignedQuad> m_renderOnScreenQuad;
     
-    QList<glm::mat4> m_viewProjectionStack;
     std::vector<glm::vec3> m_particlePositions;
-    glow::ref_ptr<glow::Buffer> m_particlesBuffer;
-    glow::ref_ptr<glow::VertexArrayObject> m_particlesVbo;
-    glow::ref_ptr<glow::Program> m_particlesProgram;
 
     glm::mat4 m_previousViewProjection;
     

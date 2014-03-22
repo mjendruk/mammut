@@ -1,8 +1,8 @@
 #version 410
 
 uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 previousView;
+uniform mat4 newView;
+uniform mat4 oldView;
 uniform vec3 eye;
 
 layout (points) in;
@@ -15,8 +15,8 @@ void main()
 {
     vec4 position = gl_in[0].gl_Position;
 
-    vec4 first_position_ss_homo = previousView * position;
-    vec4 second_position_ss_homo = view * position;
+    vec4 first_position_ss_homo = oldView * position;
+    vec4 second_position_ss_homo = newView * position;
 
     vec3 first_position_ss = first_position_ss_homo.xyz / first_position_ss_homo.w;
     vec3 second_position_ss = second_position_ss_homo.xyz / second_position_ss_homo.w;

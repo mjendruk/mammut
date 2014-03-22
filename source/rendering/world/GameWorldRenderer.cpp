@@ -56,10 +56,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     updateFPS();
     updatePainters();
     
-    m_viewProjectionStack.append(m_camera.view());
-    if (m_viewProjectionStack.count() > 2)
-        m_viewProjectionStack.removeFirst();
-    
     for (int i = 0; i < 100; ++i)
     {
         m_particlePositions.push_back(glm::gaussRand(m_camera.eye(), glm::vec3(2.0f)));
@@ -74,13 +70,6 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     }
     
     m_particlePositions = newPositions;
-    
-    m_particlesBuffer->setData(m_particlePositions);
-    
-    m_particlesProgram->setUniform("projection", m_camera.projection());
-    m_particlesProgram->setUniform("view", m_viewProjectionStack.last());
-    m_particlesProgram->setUniform("previousView", m_viewProjectionStack.first());
-    m_particlesProgram->setUniform("eye", m_camera.eye());
 
     
     // render
@@ -118,15 +107,7 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_DST_COLOR, GL_SRC_COLOR);
-    m_particlesProgram->use();
-    m_particlesVbo->bind();
-    m_particlesVbo->drawArrays(GL_POINTS, 0, m_particlePositions.size());
-    m_particlesVbo->unbind();
-    m_particlesProgram->release();
-    glDisable(GL_BLEND);
+    m_particleRenderer.paint(m_camera.view(), m_particlePositions);
     
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
@@ -171,24 +152,10 @@ void GameWorldRenderer::initialize()
     m_camera.setZNear(s_nearPlane);
     m_camera.setZFar(s_farPlane);
 
+    m_particleRenderer.setProjection(m_camera.projection());
+
     initializeGBuffers();
     initializePostProcPasses();
-
-    
-    m_particlesBuffer = new glow::Buffer(GL_ARRAY_BUFFER);
-    
-    m_particlesVbo = new glow::VertexArrayObject();
-    auto binding = m_particlesVbo->binding(0);
-    binding->setAttribute(0);
-    binding->setBuffer(m_particlesBuffer, 0, sizeof(glm::vec3));
-    binding->setFormat(3, GL_FLOAT);
-    m_particlesVbo->enable(0);
-    
-    m_particlesProgram = new glow::Program();
-    m_particlesProgram->attach(glowutils::createShaderFromFile(GL_VERTEX_SHADER, "data/shaders/particle.vert"),
-                               glowutils::createShaderFromFile(GL_GEOMETRY_SHADER, "data/shaders/particle.geom"),
-                               glowutils::createShaderFromFile(GL_FRAGMENT_SHADER, "data/shaders/particle.frag"));
-    m_particlesProgram->link();
 }
 
 void GameWorldRenderer::initializeGBuffers()
