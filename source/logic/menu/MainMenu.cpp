@@ -17,7 +17,7 @@ QList<MenuItem *> MainMenu::initializeMenuItems()
 {
     m_startButton = new MenuButton("Start");
     m_highscoreButton = new MenuButton("Highscore");
-    m_howtoButton = new MenuButton("How-to");
+    m_howtoButton = new MenuButton("Controls");
     m_creditsButton = new MenuButton("Credits");
     m_quitButton = new MenuButton("Quit");
 

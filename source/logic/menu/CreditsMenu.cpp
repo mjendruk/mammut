@@ -18,7 +18,7 @@ QList<MenuItem *> CreditsMenu::initializeMenuItems()
 {
     MenuText * creditsText = new MenuText(QString("Credits"));
     CreditsItem * creditsItem = new CreditsItem();
-    m_toMainMenuButton = new MenuButton("Back to Main Menu");
+    m_toMainMenuButton = new MenuButton("Back");
 
     return{ creditsText, creditsItem, m_toMainMenuButton };
 }
