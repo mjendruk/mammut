@@ -1,20 +1,9 @@
 #include "SymbolRenderer.h"
 
-#include <QDebug>
-
-#include <glm/gtx/transform.hpp>
-
-#include <glow/Program.h>
-#include <glow/Shader.h>
-#include <glow/Texture.h>
-
-#include <glowutils/global.h>
-
-#include <rendering/RawFile.h>
-#include "CharacterDrawable.h"
 
 const float SymbolRenderer::s_lineHeight = 0.11f;
 const float SymbolRenderer::s_textureSize = 1024.0f;
+
 QMap<QString, int> SymbolRenderer::s_idMapping = QMap<QString, int>(); 
 bool SymbolRenderer::s_idMapInitialized = false;
 

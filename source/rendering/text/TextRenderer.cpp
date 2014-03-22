@@ -1,18 +1,5 @@
 #include "TextRenderer.h"
 
-#include <QDebug>
-
-#include <glm/gtx/transform.hpp>
-
-#include <glow/Program.h>
-#include <glow/Shader.h>
-#include <glow/Texture.h>
-
-#include <glowutils/global.h>
-
-#include "SDFRenderer.h"
-#include <rendering/RawFile.h>
-#include "CharacterDrawable.h"
 
 const float TextRenderer::s_lineHeight = 0.11f;
 const float TextRenderer::s_textureSize = 1024.0f;
