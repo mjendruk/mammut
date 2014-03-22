@@ -14,10 +14,14 @@
 #include "CharacterDrawable.h"
 
 const float SymbolRenderer::s_lineHeight = 0.11f;
-const float SymbolRenderer::s_textureSize = 64.0f;
+const float SymbolRenderer::s_textureSize = 1024.0f;
+QMap<QString, int> SymbolRenderer::s_idMapping = QMap<QString, int>(); 
 
 SymbolRenderer::SymbolRenderer()
 {
+    s_idMapping.insert(QString("lighting"), 1);
+    s_idMapping.insert(QString("Mammut"), 2);
+    s_idMapping.insert(QString("stones"), 3);
     m_valid = initialize();
 }
 
@@ -34,7 +38,7 @@ bool SymbolRenderer::initialize()
     if (!initializeTexture())
         return false;
     
-    if (!m_stringComposer.readSpecificsFromFile("data/fonts/lightingSymbol.txt", s_textureSize))
+    if (!m_stringComposer.readSpecificsFromFile("data/fonts/Symbols.txt", s_textureSize))
         return false;
 
     return true;
@@ -62,7 +66,7 @@ bool SymbolRenderer::initializeTexture()
 {
     m_characterAtlas = new glow::Texture();
     
-    RawFile file("data/fonts/lightingSymbol.64.64.raw");
+    RawFile file("data/fonts/Symbols.raw");
     
     if (!file.isValid())
         return false;
@@ -78,15 +82,16 @@ bool SymbolRenderer::initializeTexture()
 }
 
 void SymbolRenderer::paint(
-    const QString & text,
+    const QString & symbolName,
+    const int repeatSymbol,
     const glm::mat4 & modelMatrix,
-    Alignment alignment, 
+    Alignment alignment,
     const glm::vec3 color)
 {
     QVector<glm::mat4> vertexTransforms;
     QVector<glm::mat4> textureCoordTransforms;
-    
-    QList<CharacterSpecifics *> characterSpecificsList = m_stringComposer.characterSequence(text);
+
+    QList<CharacterSpecifics *> characterSpecificsList = m_stringComposer.characterSequence(s_idMapping.value(symbolName, -1), repeatSymbol);
     
     prepareTransforms(characterSpecificsList,
                       modelMatrix,

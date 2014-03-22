@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <glow/ref_ptr.h>
 
+#include <QMap>
+
 #include "CharacterDrawable.h"
 #include "StringComposer.h"
 
@@ -25,10 +27,11 @@ public:
     SymbolRenderer();
     ~SymbolRenderer();
 
-    void paint(const QString & text,
-               const glm::mat4 & modelMatrix,
-               Alignment alignment = kAlignLeft,
-               const glm::vec3 color = glm::vec3(1.0f));
+    void paint(const QString & symbolName, 
+        const int repeatSymbol,
+        const glm::mat4 & modelMatrix,
+        Alignment alignment = kAlignLeft,
+        const glm::vec3 color = glm::vec3(1.0f));
 
     bool isValid() const;
 
@@ -48,6 +51,7 @@ protected:
 
 protected:
     static const float s_textureSize;
+    static QMap<QString, int> s_idMapping;
     
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glow::Texture> m_characterAtlas;
