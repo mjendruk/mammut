@@ -12,6 +12,8 @@
 #include <PerfCounter.h>
 
 const float GameMechanics::s_zResetDistance = 800.f;
+const float GameMechanics::s_cuboidDeletionDistance = 100.0f;
+const float GameMechanics::s_cuboidCreationDistance = 700.0f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(std::chrono::system_clock::now().time_since_epoch().count())
@@ -25,13 +27,7 @@ GameMechanics::GameMechanics()
 
     QTimer::singleShot(3000, this, SLOT(splitOneCuboid()));
 
-    for (int i = 0; i < 10; ++i)
-    {
-        m_chunkList << m_chunkGenerator.nextChunk();
-
-        for (Cuboid * cuboid : m_chunkList.last()->cuboids())
-            m_physicsWorld.addObject(cuboid);
-    }
+    addAndRemoveCuboids();
     
     m_physicsWorld.addObject(m_mammut.physics());
     m_physicsWorld.setMammutPhysics(m_mammut.physics());
@@ -40,11 +36,10 @@ GameMechanics::GameMechanics()
 
 GameMechanics::~GameMechanics()
 {
-    forEachCuboid([this](Cuboid * cuboid) {
+    for (Cuboid * cuboid : m_cuboids)
         m_physicsWorld.removeObject(cuboid);
-    });
 
-    qDeleteAll(m_chunkList);
+    qDeleteAll(m_cuboids);
     
     m_physicsWorld.removeObject(m_mammut.physics());
     m_backgroundLoop.stop();
@@ -52,7 +47,7 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::splitOneCuboid()
 {
-    Cuboid * cuboid = m_chunkList[1]->cuboids().takeFirst();
+    Cuboid * cuboid = m_cuboids.takeAt(2);
     m_physicsWorld.removeObject(cuboid);
     const QVector<Tet *> * tets = cuboid->splitIntoTets();
     delete cuboid;
@@ -76,16 +71,7 @@ void GameMechanics::update(float seconds)
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
     
-    if (m_chunkList.at(1)->cuboids()[0]->position().z > m_camera.center().z) {
-        for (Cuboid * cuboid : m_chunkList.first()->cuboids())
-            m_physicsWorld.removeObject(cuboid);
-        delete m_chunkList.takeFirst();
-
-        m_chunkList << m_chunkGenerator.nextChunk();
-        for (Cuboid * cuboid : m_chunkList.last()->cuboids()) {
-            m_physicsWorld.addObject(cuboid);
-        }
-    }
+    addAndRemoveCuboids();
 
     if (m_mammut.position().z < -s_zResetDistance)
         zReset();
@@ -127,9 +113,8 @@ void GameMechanics::zReset()
     m_mammut.addZShift(zShift);
     m_cave.addZShift(zShift);
     m_chunkGenerator.addZShift(zShift);
-    forEachCuboid([zShift] (Cuboid * cuboid) {
+    for (Cuboid * cuboid : m_cuboids)
         cuboid->addZShift(zShift);
-    });
 
     m_camera.update(m_mammut.position(), m_mammut.velocity(), 0.0f, normalizedMammutCaveDistance());
 
@@ -137,6 +122,24 @@ void GameMechanics::zReset()
     m_lastZShift = zShift;
 
     m_bunch.addZShift(zShift);
+}
+
+void GameMechanics::addAndRemoveCuboids()
+{
+    float createCuboidsUpTo = m_mammut.position().z - s_cuboidCreationDistance;
+    while (m_cuboids.isEmpty() || m_cuboids.last()->boundingBox().llf().z > createCuboidsUpTo) {
+        QList<Cuboid *> newCuboids = m_chunkGenerator.nextChunk();
+        for (Cuboid * cuboid : newCuboids)
+            m_physicsWorld.addObject(cuboid);
+        m_cuboids << newCuboids;
+    }
+
+    float deleteCuboidsUpTo = m_mammut.position().z + s_cuboidDeletionDistance;
+    while (m_cuboids.first()->boundingBox().llf().z > deleteCuboidsUpTo) {
+        Cuboid * cuboidToRemove = m_cuboids.takeFirst();
+        m_physicsWorld.removeObject(cuboidToRemove);
+        delete cuboidToRemove;
+    }
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -193,6 +196,12 @@ const Cave & GameMechanics::cave() const
     return m_cave;
 }
 
+const QList<Cuboid *> & GameMechanics::cuboids() const
+{
+    return m_cuboids;
+}
+
+
 const BunchOfTets & GameMechanics::bunchOfTets() const
 {
     return m_bunch;
@@ -206,20 +215,6 @@ int GameMechanics::score() const
 float GameMechanics::lastZShift() const
 {
     return m_lastZShift;
-}
-
-void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)
-{
-    for (auto chunk : m_chunkList)
-        for (Cuboid * cuboid : chunk->cuboids())
-            lambda(cuboid);
-}
-
-void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const
-{
-    for (auto chunk : m_chunkList)
-        for (Cuboid * cuboid : chunk->cuboids())
-            lambda(cuboid);
 }
 
 void GameMechanics::connectSignals()

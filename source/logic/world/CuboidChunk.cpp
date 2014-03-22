@@ -8,7 +8,6 @@ CuboidChunk::CuboidChunk()
 
 CuboidChunk::~CuboidChunk()
 {
-    qDeleteAll(m_cuboids);
 }
 
 void CuboidChunk::add(Cuboid * cuboid)

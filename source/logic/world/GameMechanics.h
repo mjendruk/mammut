@@ -32,12 +32,10 @@ public:
     const GameCamera & camera() const;
     const Mammut & mammut() const;
     const Cave & cave() const;
+    const QList<Cuboid *> & cuboids() const;
     const BunchOfTets & bunchOfTets() const;
     int score() const;
     float lastZShift() const;
-    
-    void forEachCuboid(const std::function<void(Cuboid *)> & lambda);
-    void forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const;
 
 signals:
     void pause();
@@ -50,19 +48,22 @@ protected:
     void connectSignals();
     void updateSound();
     void zReset();
+    void addAndRemoveCuboids();
     
     float normalizedMammutCaveDistance();
     bool mammutCollidesWithCave();
     
 protected:
     static const float s_zResetDistance;
+    static const float s_cuboidDeletionDistance;
+    static const float s_cuboidCreationDistance;
     PhysicsWorld m_physicsWorld;
     
     ChunkGenerator m_chunkGenerator;
     Mammut m_mammut;
     Cave m_cave;
     GameCamera m_camera;
-    QList<CuboidChunk *> m_chunkList;
+    QList<Cuboid *> m_cuboids;
     BunchOfTets m_bunch;
     
     float m_totalZShift;

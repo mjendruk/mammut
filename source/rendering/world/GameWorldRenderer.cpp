@@ -81,8 +81,7 @@ void GameWorldRenderer::drawGeometry()
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
     
-    
-    m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
+    for (const Cuboid * cuboid : m_gameMechanics->cuboids()) {
         // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
         if (!cuboid->tetsReady()) {
             m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
@@ -91,9 +90,7 @@ void GameWorldRenderer::drawGeometry()
             TessCuboidDrawable d(*cuboid);
             m_painter.paint(d, glm::translate(cuboid->position()), glm::translate(cuboid->position()), cuboid->containsBoost());
         }
-    });
-
-
+    }
 
     BunchOfTetsDrawable tetsDrawable(m_gameMechanics->bunchOfTets());
     tetsDrawable.setViewProjectionUniform(m_camera.viewProjection());

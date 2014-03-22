@@ -36,44 +36,40 @@ ChunkGenerator::ChunkGenerator(long long seed)
     createBoostDistribution();
 }
 
-CuboidChunk * ChunkGenerator::nextChunk()
+QList<Cuboid *> ChunkGenerator::nextChunk()
 {
     // recalculate boostDistribution if necessary
     if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
         createBoostDistribution();
 
+
+    float distanceToNextWall = s_wallStep - int(m_zDistance) % s_wallStep;
+    CuboidChunk * chunk;
+
     if (m_levelStartChunkGenerator.hasNextChunk()) {
         m_debugStream << "grammar based chunk";
-        CuboidChunk * chunk = m_levelStartChunkGenerator.nextChunk();
+        chunk = m_levelStartChunkGenerator.nextChunk();
         distributeBoosts(*chunk);
         m_zDistance += s_chunkLength;
         m_zPosition -= s_chunkLength;
-
-        printDebugStream();
-
-        return chunk;
     }
-
-    CuboidChunk * chunk(new CuboidChunk);
-
-    float distanceToNextWall = s_wallStep - int(m_zDistance) % s_wallStep;
-
-    if (distanceToNextWall <= s_chunkLength) {
+    else if (distanceToNextWall <= s_chunkLength) {
+        chunk = new CuboidChunk();
         createWall(
             *chunk, 
             distanceToNextWall,
             m_zDistance > 2.f * s_wallStep ? false : true);
-
-        printDebugStream();
-
-        return chunk;
     }
-
-    createOrdinaryLevel(*chunk);
+    else {
+        chunk = new CuboidChunk();
+        createOrdinaryLevel(*chunk);
+    }
 
     printDebugStream();
 
-    return chunk;
+    QList<Cuboid *> cuboids = chunk->cuboids();
+    delete chunk;
+    return cuboids;
 }
 
 void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)

@@ -15,7 +15,7 @@ class ChunkGenerator
 public:
     ChunkGenerator(long long seed = 2156);
 
-    CuboidChunk * nextChunk();
+    QList<Cuboid *> nextChunk();
 
     void addZShift(float zShift);
 
