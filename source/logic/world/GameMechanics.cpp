@@ -1,5 +1,7 @@
 #include "GameMechanics.h"
 
+#include <chrono>
+
 #include <QKeyEvent>
 
 #include <sound/SoundManager.h>
@@ -9,16 +11,16 @@
 const float GameMechanics::s_zResetDistance = 800.f;
 
 GameMechanics::GameMechanics()
-:   m_chunkGenerator(1337)
-,   m_mammut(glm::vec3(-2.2f, 7.6f, 0.0f))
-,   m_gameOver(false)
-,   m_backgroundLoop(Sound::kLoop, true)
+:   m_chunkGenerator(std::chrono::system_clock::now().time_since_epoch().count())
+,   m_mammut(glm::vec3(0.f, 0.05f, 0.0f))
 ,   m_totalZShift(0.0f)
 ,   m_lastZShift(0.0f)
+,   m_gameOver(false)
+,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
     
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         m_chunkList << m_chunkGenerator.nextChunk();
         for (Cuboid * cuboid : m_chunkList.last()->cuboids())
@@ -133,6 +135,18 @@ void GameMechanics::keyPressed(QKeyEvent * event)
     case Qt::Key_D:
         m_physicsWorld.changeGravity(PhysicsWorld::kGravityRight);
         break;
+    case Qt::Key_Left:
+        m_mammut.applyBoost(Mammut::BoostDirection::kLeft);
+        break;
+    case Qt::Key_Up:
+        m_mammut.applyBoost(Mammut::BoostDirection::kUp);
+        break;
+    case Qt::Key_Right:
+        m_mammut.applyBoost(Mammut::BoostDirection::kRight);
+        break;
+    case Qt::Key_Down:
+        m_mammut.applyBoost(Mammut::BoostDirection::kDown);
+        break;
     }
 }
 
@@ -184,6 +198,7 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
+    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;

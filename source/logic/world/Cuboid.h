@@ -21,9 +21,15 @@ public:
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
 
+    void addBoost();
+    bool containsBoost() const override;
+    void collectBoost() const override;
+
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
 
 protected:
     glm::vec3 m_size;
+
+    bool mutable m_containsBoost;
 };

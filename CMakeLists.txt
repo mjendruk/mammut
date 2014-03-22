@@ -265,6 +265,8 @@ set(sources
     ${source_path}/logic/world/GameCamera.h
     ${source_path}/logic/world/GameMechanics.cpp
     ${source_path}/logic/world/GameMechanics.h
+    ${source_path}/logic/world/LevelStartChunkGenerator.cpp
+    ${source_path}/logic/world/LevelStartChunkGenerator.h
     ${source_path}/logic/world/Mammut.cpp
     ${source_path}/logic/world/Mammut.h
     ${source_path}/logic/world/MammutPhysics.cpp
@@ -293,6 +295,10 @@ set(sources
     ${source_path}/rendering/text/CharacterDrawable.h
     ${source_path}/rendering/text/StringComposer.cpp
     ${source_path}/rendering/text/StringComposer.h
+    ${source_path}/rendering/text/SDFRenderer.cpp
+    ${source_path}/rendering/text/SDFRenderer.h
+    ${source_path}/rendering/text/SymbolRenderer.cpp
+    ${source_path}/rendering/text/SymbolRenderer.h
     ${source_path}/rendering/text/TextRenderer.cpp
     ${source_path}/rendering/text/TextRenderer.h
     

@@ -61,6 +61,8 @@ protected:
     void makeWindowNormal();
     
 protected:
+    static const bool s_printPerfCounterOutput;
+
     std::shared_ptr<GameMechanics> m_gameMechanics;
     std::shared_ptr<Mechanics> m_activeMechanics;
     

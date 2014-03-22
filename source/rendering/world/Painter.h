@@ -21,6 +21,11 @@ public:
                        const glm::mat4 & modelMatrix,
                        const glm::mat4 & prevModelMatrix);
 
+    virtual void paint(DrawableInterface & drawable,
+        const glm::mat4 & modelMatrix,
+        const glm::mat4 & prevModelMatrix,
+        bool containsBoost);
+
     void setViewProjectionUniforms(const glm::mat4 & viewProjection,
                                    const glm::mat4 & prevViewProjection);
     

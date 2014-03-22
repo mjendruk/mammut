@@ -41,8 +41,14 @@ void Painter::setViewUniform(const glm::mat4 & view)
 
 void Painter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix)
 {
+    paint(drawable, modelMatrix, prevModelMatrix, false);
+}
+
+void Painter::paint(DrawableInterface & drawable, const glm::mat4 & modelMatrix, const glm::mat4 & prevModelMatrix, bool containsBoost)
+{
     m_program->setUniform("model", modelMatrix);
     m_program->setUniform("prevModel", prevModelMatrix);
+    m_program->setUniform("containsBoost", containsBoost);
     drawable.draw();
     m_program->release();
 }

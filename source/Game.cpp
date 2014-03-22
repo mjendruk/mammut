@@ -26,6 +26,8 @@
 
 #include <sound/SoundManager.h>
 
+const bool Game::s_printPerfCounterOutput = false;
+
 Game::Game(int & argc, char ** argv)
 :   AbstractApplication(argc, argv)
 ,   m_loop(false)
@@ -47,7 +49,7 @@ void Game::run()
 {
     m_loop = true;
 
-    long double lastTime = m_timer.elapsed();
+    long double lastTime = m_timer.elapsed() -  1 / 60.0f * std::nano::den;
     long double currentTime;
     long double frameTime;
     
@@ -69,7 +71,7 @@ void Game::run()
         
         PerfCounter::end("total");
 
-        if (m_activeMechanics == m_gameMechanics)
+        if (s_printPerfCounterOutput && m_activeMechanics == m_gameMechanics)
             qDebug() << qPrintable(PerfCounter::generateString());
     }
 }
@@ -83,7 +85,7 @@ void Game::initializeWindow()
     
     m_canvas = new Canvas(format);
     m_canvas->installEventFilter(this);
-    m_canvas->setSwapInterval(Canvas::NoVerticalSyncronization);
+    m_canvas->setSwapInterval(Canvas::VerticalSyncronization);
     m_canvas->show();
 }
 

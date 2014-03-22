@@ -19,7 +19,7 @@ MotionBlurPass::MotionBlurPass()
 :   m_tmVerticalPass("data/shaders/motionBlurTM_vertical.frag", GL_RG16F)
 ,   m_tmHorizontalPass("data/shaders/motionBlurTM_horizontal.frag", GL_RG16F)
 ,   m_neighborMaxPass("data/shaders/motionBlurNM.frag", GL_RG16F)
-, m_blurPass("data/shaders/motionBlur.frag", GL_RGBA32F, GL_LINEAR)
+,   m_blurPass("data/shaders/motionBlur.frag", GL_RGBA8, GL_LINEAR)
 {
     initialize();
 }

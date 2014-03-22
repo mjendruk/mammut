@@ -25,9 +25,11 @@ public:
 
     void addZShift(float zShift);
 
+    virtual bool containsBoost() const;
+    virtual void collectBoost() const;
+
 protected:
     std::unique_ptr<btCollisionShape> m_collisionShape;
     std::unique_ptr<btMotionState> m_motionState;
     std::unique_ptr<btRigidBody> m_rigidBody;
-
 };
