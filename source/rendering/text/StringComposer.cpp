@@ -34,6 +34,18 @@ QList<CharacterSpecifics *> StringComposer::characterSequence(const QString & st
     return characterSequence;
 }
 
+QList<CharacterSpecifics *> StringComposer::characterSequence(const int id, const int repeat) const
+{
+    QList<CharacterSpecifics *> characterSequence;
+
+    if (m_characterSpecifics.contains(id)) {
+        for (int i = 0; i < repeat; ++i)
+            characterSequence << m_characterSpecifics.value(id);
+    }
+
+    return characterSequence;
+}
+
 bool StringComposer::readSpecificsFromFile(const QString & fileName, float textureSize)
 {
     m_characterSpecifics.clear();
