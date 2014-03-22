@@ -5,7 +5,7 @@
 #include <rendering/menu/MenuRenderer.h>
 
 const QList<QString> CreditsItem::m_creditsForenames = { "Carolin", "Johannes", "Max" };
-const QList<QString> CreditsItem::m_creditsNicknames = { "RNG TAMER", "DEMOMAN", "BIZGUY" };
+const QList<QString> CreditsItem::m_creditsNicknames = { "RNG TAMER", "DEMOMAN", "BIZ GUY" };
 const QList<QString> CreditsItem::m_creditsSurnames = { "Fiedler", "Linke", "Jendruk" };
 const QList<QString> CreditsItem::m_thanks = { "Sebastian Pasewaldt", "John Chapman", "Timothy Lottes", "Morgan McGuire et al.", "G3D Engine"};
 
