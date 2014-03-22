@@ -16,12 +16,17 @@
 const float SymbolRenderer::s_lineHeight = 0.11f;
 const float SymbolRenderer::s_textureSize = 1024.0f;
 QMap<QString, int> SymbolRenderer::s_idMapping = QMap<QString, int>(); 
+bool SymbolRenderer::s_idMapInitialized = false;
 
 SymbolRenderer::SymbolRenderer()
 {
-    s_idMapping.insert(QString("lighting"), 1);
-    s_idMapping.insert(QString("Mammut"), 2);
-    s_idMapping.insert(QString("stones"), 3);
+    if (!s_idMapInitialized) {
+        s_idMapping.insert(QString("lighting"), 1);
+        s_idMapping.insert(QString("Mammut"), 2);
+        s_idMapping.insert(QString("stones"), 3);
+        s_idMapInitialized = true;
+    }
+
     m_valid = initialize();
 }
 

@@ -30,7 +30,7 @@ public:
     void paint(const QString & symbolName, 
         const int repeatSymbol,
         const glm::mat4 & modelMatrix,
-        Alignment alignment = kAlignLeft,
+        Alignment alignment = kAlignCenter,
         const glm::vec3 color = glm::vec3(1.0f));
 
     bool isValid() const;
@@ -52,6 +52,7 @@ protected:
 protected:
     static const float s_textureSize;
     static QMap<QString, int> s_idMapping;
+    static bool s_idMapInitialized;
     
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glow::Texture> m_characterAtlas;
