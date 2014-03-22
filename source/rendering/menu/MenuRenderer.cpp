@@ -93,7 +93,7 @@ void MenuRenderer::render(const MenuLogo * logo)
                          TextRenderer::kAlignCenter,
                          s_titleColor);
     
-    moveTranslationDown(scale * 1.5f);
+    moveTranslationDown(scale * 1.3f);
 }
 
 void MenuRenderer::render(const HighscoreListItem * item)
