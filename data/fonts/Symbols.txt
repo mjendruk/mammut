@@ -1,4 +1,4 @@
-info face="Symbols" //lighting, Mammut, stones
+info face="Symbols" //lightning, Mammut, stones
 chars count=3
 char id=1    x=69  y=119   width=94     height=162     xoffset=0.0    yoffset=0.0     xadvance=120.625      page=0  chnl=0
 char id=2    x=450  y=84   width=440     height=382     xoffset=0.0    yoffset=0.0     xadvance=40.625      page=0  chnl=0

@@ -21,7 +21,7 @@ bool SymbolRenderer::s_idMapInitialized = false;
 SymbolRenderer::SymbolRenderer()
 {
     if (!s_idMapInitialized) {
-        s_idMapping.insert(QString("lighting"), 1);
+        s_idMapping.insert(QString("lightning"), 1);
         s_idMapping.insert(QString("Mammut"), 2);
         s_idMapping.insert(QString("stones"), 3);
         s_idMapInitialized = true;
