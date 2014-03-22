@@ -18,15 +18,13 @@ ControlsMenu::~ControlsMenu()
 QList<MenuItem *> ControlsMenu::initializeMenuItems()
 {
     QList<ControlsItem> *  gravity = new QList<ControlsItem>();
-    *gravity << ControlsItem("W", "90 degrees (cw)");
-    *gravity << ControlsItem("A", "180 degrees");
-    *gravity << ControlsItem("S", "90 degrees (ccw)");
+    *gravity << ControlsItem("A", "90 degrees (cw)");
+    *gravity << ControlsItem("W", "180 degrees");
+    *gravity << ControlsItem("D", "90 degrees (ccw)");
 
     QList<ControlsItem> *  boosts = new QList<ControlsItem>();
-    *boosts << ControlsItem("up arrow", "upward boost");
-    *boosts << ControlsItem("left arrow", "leftward boost");
-    *boosts << ControlsItem("right arrow", "rightward boost");
-    *boosts << ControlsItem("down arrow", "downward boost");
+    *boosts << ControlsItem("arrow keys", "Apply Collected Boosts");
+    *boosts << ControlsItem("ESC", "Pause Menu");
 
     ControlsListItem * keyActionItem = new ControlsListItem(*gravity, *boosts);
 

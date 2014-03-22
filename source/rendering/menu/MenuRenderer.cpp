@@ -206,44 +206,43 @@ void MenuRenderer::render(const CreditsItem * item)
 
 void MenuRenderer::render(const ControlsListItem * item)
 {
-    const float keyPosition = -0.1f;
-    const float actionPosition = -0.0f;
-    const glm::mat4 headingScale = glm::scale(glm::vec3(0.7f));
-    const glm::mat4 entryScale = glm::scale(glm::vec3(0.5f));
+    const float keyPosition = -0.3f;
+    const float actionPosition = -0.2f;
+    const glm::mat4 entryScale = glm::scale(glm::vec3(0.6f));
 
     m_textRenderer.paint("Rotate Gravity Direction",
-        m_translation * glm::translate(glm::vec3(0.f)) * headingScale,
+        m_translation * glm::translate(glm::vec3(0.f)),
         TextRenderer::kAlignCenter,
         s_titleColor);
 
-    moveTranslationDown(1.1f);
+    moveTranslationDown(1.6f);
 
     for (const ControlsItem & entry : item->gravityKeys())
     {
         m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
         m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);
 
-        moveTranslationDown(0.8f);
+        moveTranslationDown(0.9f);
     }
 
-    moveTranslationDown(0.8f);
+    moveTranslationDown(0.5f);
 
-    m_textRenderer.paint("Apply Collected Boosts",
-        m_translation * glm::translate(glm::vec3(0.f)) * headingScale,
+    m_textRenderer.paint("Additional Controls",
+        m_translation * glm::translate(glm::vec3(0.f)),
         TextRenderer::kAlignCenter,
         s_titleColor);
 
-    moveTranslationDown(1.2f);
+    moveTranslationDown(1.6f);
 
     for (const ControlsItem & entry : item->boostKeys())
     {
         m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
         m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);
 
-        moveTranslationDown(0.8f);
+        moveTranslationDown(0.9f);
     }
 
-    moveTranslationDown(0.6f);
+    moveTranslationDown(0.7f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
