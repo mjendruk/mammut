@@ -4,11 +4,11 @@
 
 class QString;
 
-class HowtoItem
+class ControlsItem
 {
 public:
-    HowtoItem(const QString & key, const QString & action);
-    virtual ~HowtoItem();
+    ControlsItem(const QString & key, const QString & action);
+    virtual ~ControlsItem();
 
     const QString & key() const;
     const QString & action() const;

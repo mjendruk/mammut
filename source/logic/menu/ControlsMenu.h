@@ -5,13 +5,13 @@
 class MenuButton;
 class MenuText;
 
-class HowtoMenu : public Menu
+class ControlsMenu : public Menu
 {
     Q_OBJECT
 
 public:
-    HowtoMenu();
-    virtual ~HowtoMenu();
+    ControlsMenu();
+    virtual ~ControlsMenu();
 
 signals:
     void toMainMenuPressed();

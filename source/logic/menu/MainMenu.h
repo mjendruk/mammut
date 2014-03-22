@@ -15,7 +15,7 @@ public:
 signals:
     void startPressed();
     void highscorePressed();
-    void howtoPressed();
+    void controlsPressed();
     void creditsPressed();
     void quitPressed();
 
@@ -26,7 +26,7 @@ protected:
 protected:
     MenuButton * m_startButton;
     MenuButton * m_highscoreButton;
-    MenuButton * m_howtoButton;
+    MenuButton * m_controlsButton;
     MenuButton * m_creditsButton;
     MenuButton * m_quitButton;
 

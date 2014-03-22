@@ -22,7 +22,7 @@
 #include <logic/menu/PauseMenu.h>
 #include <logic/menu/NewHighscoreMenu.h>
 #include <logic/menu/CreditsMenu.h>
-#include <logic/menu/HowtoMenu.h>
+#include <logic/menu/ControlsMenu.h>
 
 #include <sound/SoundManager.h>
 
@@ -130,7 +130,7 @@ void Game::showMainMenu()
     
     connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
     connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
-    connect(menu.get(), &MainMenu::howtoPressed, this, &Game::showHowtoMenu);
+    connect(menu.get(), &MainMenu::controlsPressed, this, &Game::showControlsMenu);
     connect(menu.get(), &MainMenu::creditsPressed, this, &Game::showCreditsMenu);
     connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
     
@@ -181,11 +181,11 @@ void Game::showGameOverMenu(int score)
     activateMenu(menu, m_blankBackground.get());
 }
 
-void Game::showHowtoMenu()
+void Game::showControlsMenu()
 {
-    auto menu = std::make_shared<HowtoMenu>();
+    auto menu = std::make_shared<ControlsMenu>();
 
-    connect(menu.get(), &HowtoMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    connect(menu.get(), &ControlsMenu::toMainMenuPressed, this, &Game::showMainMenu);
     activateMenu(menu, m_blankBackground.get());
 }
 

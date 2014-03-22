@@ -10,7 +10,7 @@ class MenuButton;
 class MenuLogo;
 class HighscoreListItem;
 class CreditsItem;
-class HowtoListItem;
+class ControlsListItem;
 class MenuInput;
 class MenuText;
 class AbstractBackground;
@@ -28,7 +28,7 @@ public:
     void render(const MenuLogo * logo);
     void render(const HighscoreListItem * item);
     void render(const CreditsItem * item);
-    void render(const HowtoListItem * item);
+    void render(const ControlsListItem * item);
     void render(const MenuInput * input);
     void render(const MenuText * text);
 

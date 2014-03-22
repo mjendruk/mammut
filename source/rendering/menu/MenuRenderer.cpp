@@ -12,8 +12,8 @@
 #include <logic/menu/items/MenuLogo.h>
 #include <logic/menu/items/HighscoreListItem.h>
 #include <logic/menu/items/CreditsItem.h>
-#include <logic/menu/items/HowtoListItem.h>
-#include <logic/menu/items/HowtoItem.h>
+#include <logic/menu/items/ControlsListItem.h>
+#include <logic/menu/items/ControlsItem.h>
 #include <logic/menu/items/MenuInput.h>
 #include <logic/menu/items/MenuText.h>
 
@@ -199,7 +199,7 @@ void MenuRenderer::render(const CreditsItem * item)
     moveTranslationDown(1.8f);
 }
 
-void MenuRenderer::render(const HowtoListItem * item)
+void MenuRenderer::render(const ControlsListItem * item)
 {
     const float keyPosition = -0.1f;
     const float actionPosition = -0.0f;
@@ -213,7 +213,7 @@ void MenuRenderer::render(const HowtoListItem * item)
 
     moveTranslationDown(1.1f);
 
-    for (const HowtoItem & entry : item->gravityKeys())
+    for (const ControlsItem & entry : item->gravityKeys())
     {
         m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
         m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);
@@ -230,7 +230,7 @@ void MenuRenderer::render(const HowtoListItem * item)
 
     moveTranslationDown(1.2f);
 
-    for (const HowtoItem & entry : item->boostKeys())
+    for (const ControlsItem & entry : item->boostKeys())
     {
         m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
         m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);

@@ -217,14 +217,14 @@ set(sources
     ${source_path}/logic/highscore/HighscoreEntry.cpp
     ${source_path}/logic/highscore/HighscoreEntry.h
 
+    ${source_path}/logic/menu/ControlsMenu.cpp
+    ${source_path}/logic/menu/ControlsMenu.h  
     ${source_path}/logic/menu/CreditsMenu.cpp
     ${source_path}/logic/menu/CreditsMenu.h    
     ${source_path}/logic/menu/GameOverMenu.cpp
     ${source_path}/logic/menu/GameOverMenu.h
     ${source_path}/logic/menu/HighscoreMenu.cpp
     ${source_path}/logic/menu/HighscoreMenu.h
-    ${source_path}/logic/menu/HowtoMenu.cpp
-    ${source_path}/logic/menu/HowtoMenu.h
     ${source_path}/logic/menu/MainMenu.cpp
     ${source_path}/logic/menu/MainMenu.h
     ${source_path}/logic/menu/Menu.cpp
@@ -234,16 +234,16 @@ set(sources
     ${source_path}/logic/menu/NewHighscoreMenu.cpp
     ${source_path}/logic/menu/NewHighscoreMenu.h
     
+    ${source_path}/logic/menu/items/ControlsItem.cpp
+    ${source_path}/logic/menu/items/ControlsItem.h
+    ${source_path}/logic/menu/items/ControlsListItem.cpp
+    ${source_path}/logic/menu/items/ControlsListItem.h
     ${source_path}/logic/menu/items/CreditsItem.cpp
     ${source_path}/logic/menu/items/CreditsItem.h
     ${source_path}/logic/menu/items/MenuItem.cpp
     ${source_path}/logic/menu/items/MenuItem.h
     ${source_path}/logic/menu/items/HighscoreListItem.cpp
     ${source_path}/logic/menu/items/HighscoreListItem.h
-    ${source_path}/logic/menu/items/HowtoItem.cpp
-    ${source_path}/logic/menu/items/HowtoItem.h
-    ${source_path}/logic/menu/items/HowtoListItem.cpp
-    ${source_path}/logic/menu/items/HowtoListItem.h
     ${source_path}/logic/menu/items/MenuButton.cpp
     ${source_path}/logic/menu/items/MenuButton.h    
     ${source_path}/logic/menu/items/MenuInput.cpp

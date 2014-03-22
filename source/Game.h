@@ -47,7 +47,7 @@ protected:
     void showGameOverMenu(int score);
     void showMainMenu();
     void showHighscoreMenu();
-    void showHowtoMenu();
+    void showControlsMenu();
     void showCreditsMenu();
     void quit();
     
