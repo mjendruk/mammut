@@ -35,6 +35,7 @@ public:
     const QVector<glm::vec3> * hullVertices() const;
     void setHullVertices(QVector<glm::vec3> * hullVertices);
     bool tetsReady() const;
+    bool isDummy() const;
 
 protected:
     void initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation);
@@ -42,6 +43,7 @@ protected:
 protected:
     glm::vec3 m_size;
 
+    bool m_isDummy;
     bool mutable m_containsBoost;
     QVector<Tet *> * m_tets;
     QVector<glm::vec3> * m_hullVertices;

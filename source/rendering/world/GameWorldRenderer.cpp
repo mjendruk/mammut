@@ -19,7 +19,6 @@
 #include <logic/world/GameCamera.h>
 
 #include "BunchOfTetsDrawable.h"
-#include "TessCuboidDrawable.h"
 #include "Util.h"
 #include "PerfCounter.h"
 
@@ -80,17 +79,8 @@ void GameWorldRenderer::drawGeometry()
     
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
-    
-    for (const Cuboid * cuboid : m_gameMechanics->cuboids()) {
-        // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
-        if (!cuboid->tetsReady()) {
-            m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
-        }
-        else {
-            TessCuboidDrawable d(*cuboid);
-            m_painter.paint(d, glm::translate(cuboid->position()), glm::translate(cuboid->position()), cuboid->containsBoost());
-        }
-    }
+
+    m_cuboidRenderer.draw(m_gameMechanics->cuboids(), m_painter);
 
     BunchOfTetsDrawable tetsDrawable(m_gameMechanics->bunchOfTets());
     tetsDrawable.setViewProjectionUniform(m_camera.viewProjection());

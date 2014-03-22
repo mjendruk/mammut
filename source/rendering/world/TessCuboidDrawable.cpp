@@ -13,10 +13,10 @@
 #include <logic/world/Cuboid.h>
 #include <Util.h>
 
-TessCuboidDrawable::TessCuboidDrawable(const Cuboid & cuboid)
-:   m_cuboid(&cuboid)
+TessCuboidDrawable::TessCuboidDrawable(const Cuboid * cuboid)
+:   m_cuboid(cuboid)
 {
-
+    initialize();
 }
 
 TessCuboidDrawable::~TessCuboidDrawable()
@@ -24,6 +24,18 @@ TessCuboidDrawable::~TessCuboidDrawable()
 }
 
 void TessCuboidDrawable::draw()
+{
+    m_vao->bind();
+    m_vao->drawArrays(GL_TRIANGLES, 0, m_cuboid->hullVertices()->size());
+    m_vao->unbind();
+}
+
+const Cuboid * TessCuboidDrawable::cuboid()
+{
+    return m_cuboid;
+}
+
+void TessCuboidDrawable::initialize()
 {
     const GLuint vertexAttribLocation = 0;
     const GLuint normalAttribLocation = 1;
@@ -51,12 +63,5 @@ void TessCuboidDrawable::draw()
     normalBinding->setFormat(3, GL_FLOAT, GL_TRUE);
     m_vao->enable(1);
 
-    m_vao->drawArrays(GL_TRIANGLES, 0, m_cuboid->hullVertices()->size());
     m_vao->unbind();
-
-}
-
-void TessCuboidDrawable::initialize()
-{
-
 }

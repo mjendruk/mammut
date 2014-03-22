@@ -52,7 +52,6 @@ void GameMechanics::splitOneCuboid()
     Cuboid * cuboid = m_cuboids.takeAt(2);
     m_physicsWorld.removeObject(cuboid);
     const QVector<Tet *> * tets = cuboid->splitIntoTets();
-    delete cuboid;
 
     m_bunch.add(tets);
     for (Tet * tet: *tets)

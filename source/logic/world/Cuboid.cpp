@@ -11,6 +11,7 @@
 
 Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
+,   m_isDummy(false)
 ,   m_containsBoost(false)
 ,   m_tets(nullptr)
 ,   m_hullVertices(nullptr)
@@ -29,6 +30,7 @@ Cuboid::~Cuboid()
 
 glm::mat4 Cuboid::modelTransform() const
 {
+    assert(!m_isDummy);
     return glm::translate(position()) * glm::scale(m_size);
 }
 
@@ -52,16 +54,19 @@ bool Cuboid::containsBoost() const
 
 void Cuboid::collectBoost() const
 {
+    assert(!m_isDummy);
     assert(containsBoost());
     m_containsBoost = false;
 }
 
 QVector<Tet *> * Cuboid::splitIntoTets()
 {
+    assert(!m_isDummy);
     for (Tet * tet : *m_tets)
         tet->translate(position());
     QVector<Tet *> * tets = m_tets;
     m_tets = nullptr;
+    m_isDummy = true;
     return tets;
 }
 
@@ -72,6 +77,7 @@ void Cuboid::setTets(QVector<Tet *> * tets)
 
 const QVector<glm::vec3> * Cuboid::hullVertices() const
 {
+    assert(!m_isDummy);
     return m_hullVertices;
 }
 
@@ -83,6 +89,11 @@ void Cuboid::setHullVertices(QVector<glm::vec3> * hullVertices)
 bool Cuboid::tetsReady() const
 {
     return m_tets != nullptr;
+}
+
+bool Cuboid::isDummy() const
+{
+    return m_isDummy;
 }
 
 void Cuboid::initializeRigidBody(const glm::vec3 & size, const glm::vec3 & translation)

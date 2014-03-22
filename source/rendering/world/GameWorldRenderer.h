@@ -10,7 +10,7 @@
 
 #include <rendering/world/postprocessing/MotionBlurPass.h>
 #include <rendering/world/postprocessing/SSAOPass.h>
-#include "CuboidDrawable.h"
+#include "CuboidRenderer.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "CavePainter.h"
@@ -65,7 +65,7 @@ protected:
     RenderCamera m_camera;
     HUD m_hud;
 
-    CuboidDrawable m_cuboidDrawable;
+    CuboidRenderer m_cuboidRenderer;
     std::unique_ptr<CaveDrawable> m_caveDrawable;
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

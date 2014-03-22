@@ -15,10 +15,12 @@ namespace glow
 class TessCuboidDrawable : public DrawableInterface
 {
 public:
-    TessCuboidDrawable(const Cuboid & cuboid);
+    TessCuboidDrawable(const Cuboid * cuboid);
     ~TessCuboidDrawable();
 
     void draw() override;
+
+    const Cuboid * cuboid();
 
 protected:
     void initialize() override;
