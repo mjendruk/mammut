@@ -11,7 +11,8 @@ class ParticleGenerator
 public:
     ParticleGenerator();
 
-    void update(const glm::vec3 & eye, const glm::vec3 & center);
+    void update(const glm::vec3 & eye);
+    void reset();
 
     std::vector<glm::vec3> particles();
 

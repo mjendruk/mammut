@@ -28,9 +28,12 @@ ParticleRenderer::ParticleRenderer()
     m_vao->enable(attributeIndex);
 }
 
-void ParticleRenderer::paint(const glm::mat4 & view, const std::vector<glm::vec3> & particles)
+void ParticleRenderer::paint(
+    const glm::mat4 & view,
+    const float fps,
+    const std::vector<glm::vec3> & particles)
 {
-    pushView(view);
+    pushView(view, fps);
 
     m_program->setUniform("newView", newestView());
     m_program->setUniform("oldView", oldestView());
@@ -60,11 +63,11 @@ void ParticleRenderer::setProjection(const glm::mat4 & projection)
     m_program->setUniform("projection", projection);
 }
 
-void ParticleRenderer::pushView(const glm::mat4 & view)
+void ParticleRenderer::pushView(const glm::mat4 & view, const float fps)
 {
+    const int maxSize = int(fps / 4.0f);
+    
     m_viewStack.push_front(view);
-
-    static const int maxSize = 10;
 
     while(m_viewStack.size() > maxSize)
         m_viewStack.pop_back();   

@@ -21,8 +21,8 @@ void main()
     vec3 first_position_ss = first_position_ss_homo.xyz / first_position_ss_homo.w;
     vec3 second_position_ss = second_position_ss_homo.xyz / second_position_ss_homo.w;
 
-    vec3 moveAxis = normalize(second_position_ss - first_position_ss) * 0.5;
-    vec3 upAxis = normalize(cross(first_position_ss, moveAxis)) * 0.007;
+    vec3 moveAxis = normalize(second_position_ss - first_position_ss) * 0.4;
+    vec3 upAxis = normalize(cross(first_position_ss, moveAxis)) * 0.006;
 
     gl_Position = projection * vec4(second_position_ss + upAxis, 1.0);
     g_relativePosition = vec2(1.0, 1.0);

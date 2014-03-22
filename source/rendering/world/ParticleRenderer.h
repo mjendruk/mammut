@@ -20,14 +20,15 @@ class ParticleRenderer
 public:
     ParticleRenderer();
 
-    void paint(const glm::mat4 & view, 
+    void paint(const glm::mat4 & view,
+               const float fps,
                const std::vector<glm::vec3> & particles);
 
     void setProjection(const glm::mat4 & projection);
 
 
 protected:
-    void pushView(const glm::mat4 & view);
+    void pushView(const glm::mat4 & view, const float fps);
     const glm::mat4 & newestView() const;
     const glm::mat4 & oldestView() const;
 

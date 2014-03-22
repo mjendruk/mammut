@@ -52,7 +52,7 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
    
     m_camera.update(m_gameMechanics->camera());
     m_caveDrawable->update(m_camera.eye());
-    m_particleGenerator.update(m_camera.eye(), m_camera.center());
+    m_particleGenerator.update(m_camera.eye());
 
     updateFPS();
     updatePainters();
@@ -92,7 +92,7 @@ void GameWorldRenderer::drawGeometry()
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     
-    m_particleRenderer.paint(m_camera.view(), m_particleGenerator.particles());
+    m_particleRenderer.paint(m_camera.view(), fps(), m_particleGenerator.particles());
     
     m_gBufferFBO->unbind();
     PerfCounter::endGL("geom");
@@ -225,5 +225,6 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
     m_caveDrawable.reset(new CaveDrawable());
+    m_particleGenerator.reset();
 }
 

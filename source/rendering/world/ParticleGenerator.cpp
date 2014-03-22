@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include <glm/gtx/random.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 
 ParticleGenerator::ParticleGenerator()
@@ -11,27 +10,37 @@ ParticleGenerator::ParticleGenerator()
 
 }
 
-void ParticleGenerator::update(const glm::vec3 & eye, const glm::vec3 & center)
+void ParticleGenerator::update(const glm::vec3 & eye)
 {
     static const int maxNumParticles = 200;
-
-    const glm::vec3 lookAt = glm::normalize(center - eye);
-
-    std::cout << "pre: " << m_particles.size() << std::endl;
+    static const float zOffset = 2.0f;
     
-    m_particles.remove_if([&lookAt, &eye] (const glm::vec3 & particle) {
-        return glm::dot(lookAt, particle - eye) < 0;
+    m_particles.remove_if([&eye] (const glm::vec3 & particle) {
+        return particle.z > eye.z + zOffset;
     });
     
-    std::cout << "after: " << m_particles.size() << std::endl;
-
+    int i = 0;
+    int j = 0;
+    
     while (m_particles.size() < maxNumParticles)
     {
+        i++;
         glm::vec3 newParticle = glm::vec3(glm::gaussRand(eye, glm::vec3(2.0f)));
-
-        if (glm::distance(eye, newParticle) >= 2.0f)
+        
+        if (newParticle.z < eye.z + zOffset && 
+            glm::distance(newParticle.xy(), eye.xy()) > 2.0f)
+        {
+            j++;
             m_particles.push_back(newParticle);
+        }
     }
+    
+    std::cout << i << " " << j << " " << std::endl;
+}
+
+void ParticleGenerator::reset()
+{
+    m_particles.clear();
 }
 
 std::vector<glm::vec3> ParticleGenerator::particles()

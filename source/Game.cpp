@@ -61,9 +61,10 @@ void Game::run()
         QCoreApplication::processEvents();
         
         if (!m_paused)
+        {
             m_activeMechanics->update(frameTime / std::nano::den);
-        
-        m_canvas->render();
+            m_canvas->render();
+        }
         
         PerfCounter::end("total");
 
