@@ -48,7 +48,6 @@ protected:
 protected:
     glow::ref_ptr<glow::Program> m_program;
     glow::ref_ptr<glow::Texture> m_characterAtlas;
-    glow::ref_ptr<glow::Texture> m_lightingTexture;
 
     CharacterDrawable m_drawable;
     StringComposer m_stringComposer;
