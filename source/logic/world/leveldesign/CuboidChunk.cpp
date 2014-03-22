@@ -1,7 +1,5 @@
 #include "CuboidChunk.h"
 
-#include "Cuboid.h"
-
 CuboidChunk::CuboidChunk()
 {
 }

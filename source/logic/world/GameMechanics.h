@@ -8,7 +8,7 @@
 #include <sound/Sound.h>
 
 #include "PhysicsWorld.h"
-#include "ChunkGenerator.h"
+#include "leveldesign/ChunkGenerator.h"
 #include "Mammut.h"
 #include "Cave.h"
 #include "GameCamera.h"

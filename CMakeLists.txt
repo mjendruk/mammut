@@ -248,18 +248,12 @@ set(sources
 
     ${source_path}/logic/world/Cave.cpp
     ${source_path}/logic/world/Cave.h
-    ${source_path}/logic/world/ChunkGenerator.cpp
-    ${source_path}/logic/world/ChunkGenerator.h
     ${source_path}/logic/world/Cuboid.cpp
     ${source_path}/logic/world/Cuboid.h
-    ${source_path}/logic/world/CuboidChunk.cpp
-    ${source_path}/logic/world/CuboidChunk.h
     ${source_path}/logic/world/GameCamera.cpp
     ${source_path}/logic/world/GameCamera.h
     ${source_path}/logic/world/GameMechanics.cpp
     ${source_path}/logic/world/GameMechanics.h
-    ${source_path}/logic/world/LevelStartChunkGenerator.cpp
-    ${source_path}/logic/world/LevelStartChunkGenerator.h
     ${source_path}/logic/world/Mammut.cpp
     ${source_path}/logic/world/Mammut.h
     ${source_path}/logic/world/MammutPhysics.cpp
@@ -268,6 +262,14 @@ set(sources
     ${source_path}/logic/world/PhysicsObject.h
     ${source_path}/logic/world/PhysicsWorld.cpp
     ${source_path}/logic/world/PhysicsWorld.h
+
+    ${source_path}/logic/world/leveldesign/ChunkGenerator.cpp
+    ${source_path}/logic/world/leveldesign/ChunkGenerator.h
+    ${source_path}/logic/world/leveldesign/CuboidChunk.cpp
+    ${source_path}/logic/world/leveldesign/CuboidChunk.h
+    ${source_path}/logic/world/leveldesign/LevelStartChunkGenerator.cpp
+    ${source_path}/logic/world/leveldesign/LevelStartChunkGenerator.h
+    
 
     ${source_path}/logic/world/tets/TetGenerator.cpp
     ${source_path}/logic/world/tets/TetGenerator.h

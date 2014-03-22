@@ -3,11 +3,10 @@
 #include <random>
 
 #include <QList>
-#include <QMap>
 
 #include <glm/glm.hpp>
 
-#include "CuboidChunk.h"
+class CuboidChunk;
 
 class LevelStartChunkGenerator
 {

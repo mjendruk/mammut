@@ -5,6 +5,8 @@
 #include <QKeyEvent>
 #include <QTimer>
 
+#include <glowutils/AxisAlignedBoundingBox.h>
+
 #include <sound/SoundManager.h>
 #include "tets/Tet.h"
 #include "tets/TetGenerator.h"

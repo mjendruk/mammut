@@ -3,12 +3,12 @@
 #include <random>
 
 #include <QStringList>
-
-#include <glm/glm.hpp>
+#include <QList>
 
 #include "LevelStartChunkGenerator.h"
 
 class CuboidChunk;
+class Cuboid;
 
 class ChunkGenerator
 {
