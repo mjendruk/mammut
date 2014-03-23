@@ -29,7 +29,7 @@ void HUD::paint(int velocity, int score, int collectedBoosts)
                          aspectRatioTransform * glm::translate(m_camera.aspectRatio() * 0.98f, -0.88f, 0.0f),
                          SDFRenderer::kAlignRight);
 
-    m_symbolRenderer.paint("lightning",
+    m_symbolRenderer.paint("Lightning",
                          collectedBoosts,
                          aspectRatioTransform * glm::translate(m_camera.aspectRatio() * 0.99f, 1.03f, 0.0f) * glm::scale(glm::vec3(0.8f)),
                          SDFRenderer::kAlignRight);

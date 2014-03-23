@@ -5,16 +5,15 @@ const float TextRenderer::s_lineHeight = 0.11f;
 const float TextRenderer::s_textureSize = 1024.0f;
 
 TextRenderer::TextRenderer()
-: SDFRenderer("data/fonts/P22UndergroundPro-Medium.1024.1024.r.ub.raw", 
-    "data/fonts/P22UndergroundPro-Medium.txt",
-    s_lineHeight, s_textureSize)
+:   SDFRenderer("data/fonts/P22UndergroundPro-Medium.1024.1024.r.ub.raw", 
+                "data/fonts/P22UndergroundPro-Medium.txt",
+                s_lineHeight, s_textureSize)
 {
-    m_valid = initialize();
 }
 
 TextRenderer::~TextRenderer()
 {
-
+    
 }
 
 void TextRenderer::paint(
