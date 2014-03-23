@@ -52,12 +52,7 @@ void GameMechanics::splitOneCuboid()
 {
     Cuboid * cuboid = m_cuboids.takeAt(2);
     m_physicsWorld.removeObject(cuboid);
-    const QVector<Tet *> * tets = cuboid->splitIntoTets();
-
-    m_bunch.add(tets);
-    for (Tet * tet: *tets)
-        m_physicsWorld.addObject(tet);
-    delete tets;
+    m_bunches << cuboid->splitIntoTets();
 }
 
 void GameMechanics::update(float seconds)
@@ -74,6 +69,9 @@ void GameMechanics::update(float seconds)
     m_physicsWorld.stepSimulation(seconds);
     
     addAndRemoveCuboids();
+
+    for (BunchOfTets * bunch : m_bunches)
+        bunch->update(seconds, m_physicsWorld);
 
     if (m_mammut.position().z < -s_zResetDistance)
         zReset();
@@ -123,7 +121,9 @@ void GameMechanics::zReset()
     m_totalZShift += zShift;
     m_lastZShift = zShift;
 
-    m_bunch.addZShift(zShift);
+    for (BunchOfTets * bunch : m_bunches)
+        bunch->addZShift(zShift);
+
 }
 
 void GameMechanics::addAndRemoveCuboids()
@@ -204,9 +204,13 @@ const QList<Cuboid *> & GameMechanics::cuboids() const
 }
 
 
-const BunchOfTets & GameMechanics::bunchOfTets() const
+const QVector<const BunchOfTets *> GameMechanics::bunches() const
 {
-    return m_bunch;
+    //constify all the pointers
+    QVector<const BunchOfTets *> temp;
+    for (BunchOfTets * bunch : m_bunches)
+        temp << bunch;
+    return temp;
 }
 
 int GameMechanics::score() const

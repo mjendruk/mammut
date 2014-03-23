@@ -29,6 +29,8 @@ public:
     void initialize();
     void paint();
 
+    const BunchOfTets * bunch();
+
 protected:
     const BunchOfTets & m_bunchOfTets;
 

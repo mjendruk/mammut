@@ -33,7 +33,7 @@ public:
     const Mammut & mammut() const;
     const Cave & cave() const;
     const QList<Cuboid *> & cuboids() const;
-    const BunchOfTets & bunchOfTets() const;
+    const QVector<const BunchOfTets *> bunches() const;
     int score() const;
     float lastZShift() const;
 
@@ -65,7 +65,7 @@ protected:
     Cave m_cave;
     GameCamera m_camera;
     QList<Cuboid *> m_cuboids;
-    BunchOfTets m_bunch;
+    QVector<BunchOfTets *> m_bunches;
     
     float m_totalZShift;
     float m_lastZShift;

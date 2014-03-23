@@ -11,6 +11,8 @@
 #include <rendering/world/postprocessing/MotionBlurPass.h>
 #include <rendering/world/postprocessing/SSAOPass.h>
 #include "CuboidRenderer.h"
+#include "BunchRenderer.h"
+#include "TetPainter.h"
 #include "CaveDrawable.h"
 #include "Painter.h"
 #include "CavePainter.h"
@@ -66,6 +68,8 @@ protected:
     HUD m_hud;
 
     CuboidRenderer m_cuboidRenderer;
+    BunchRenderer m_bunchRenderer;
+    TetPainter m_tetPainter;
     std::unique_ptr<CaveDrawable> m_caveDrawable;
 
     glow::ref_ptr<glow::FrameBufferObject> m_gBufferFBO;

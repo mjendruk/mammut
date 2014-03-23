@@ -1,9 +1,12 @@
 #include "BunchOfTets.h"
 
+#include "../PhysicsWorld.h"
+
 #include "Tet.h"
 
 BunchOfTets::BunchOfTets()
 :   m_zShift(0.0f)
+,   m_physicsTetIndex(0)
 {
 
 }
@@ -24,6 +27,13 @@ void BunchOfTets::add(const QVector<Tet *> * tets)
     m_tets << *tets;
 }
 
+void BunchOfTets::update(float seconds, PhysicsWorld & physicsWorld)
+{
+    if (m_physicsTetIndex < m_tets.size()) {
+        physicsWorld.addObject(m_tets[m_physicsTetIndex]);
+        m_physicsTetIndex++;
+    }
+}
 
 void BunchOfTets::collectVertices(std::vector<glm::vec3> & vertices) const
 {
