@@ -82,18 +82,11 @@ void GameWorldRenderer::drawGeometry()
 
     m_cuboidRenderer.draw(m_gameMechanics->cuboids(), m_painter);
 
-    BunchOfTetsDrawable tetsDrawable(m_gameMechanics->bunchOfTets());
-    tetsDrawable.setViewProjectionUniform(m_camera.viewProjection());
-    tetsDrawable.setViewUniform(m_camera.view());
-    tetsDrawable.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
-    tetsDrawable.setEyeUniform(m_camera.eye());
-    tetsDrawable.paint();
-
+    m_bunchRenderer.draw(m_gameMechanics->bunches(), m_tetPainter);
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
-
 
     PerfCounter::endGL("geom");
 }
@@ -209,6 +202,11 @@ void GameWorldRenderer::updatePainters()
 
     m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
+
+    m_tetPainter.setViewProjectionUniform(m_camera.viewProjection());
+    m_tetPainter.setViewUniform(m_camera.view());
+    m_tetPainter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
+    m_tetPainter.setEyeUniform(m_camera.eye());
 }
 
 int GameWorldRenderer::fps() const
@@ -221,5 +219,7 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
     m_caveDrawable.reset(new CaveDrawable(mechanics->cave()));
+    m_cuboidRenderer.reset();
+    m_bunchRenderer.reset();
 }
 

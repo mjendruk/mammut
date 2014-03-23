@@ -16,10 +16,11 @@ public:
     Tet(QVector<glm::vec3> & vertices);
     ~Tet();
 
-public:
     const QVector<glm::vec3> & duplicatedVertices() const;
     const QVector<glm::vec3> & normals() const;
     glm::mat4 modelMatrix() const;
+    
+    void scale(float factor);
 
 protected:
     static QVector<glm::vec3> buildDuplicatedVertices(const QVector<glm::vec3> & vertices);
@@ -31,6 +32,8 @@ protected:
     const QVector<glm::vec3> m_vertices;
     const QVector<glm::vec3> m_duplicatedVertices;
     const QVector<glm::vec3> m_normals;
+
+    float m_scaleFactor;
     
     
     glm::mat4 m_modelMatrix;

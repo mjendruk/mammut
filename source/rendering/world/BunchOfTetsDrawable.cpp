@@ -2,15 +2,10 @@
 
 #include <cassert>
 
-#include <glm/gtx/transform.hpp>
-
 #include <glow/Texture.h>
 #include <glow/VertexArrayObject.h>
 #include <glow/Buffer.h>
 #include <glow/VertexAttributeBinding.h>
-#include <glow/Shader.h>
-#include <glow/Program.h>
-#include <glowutils/global.h>
 
 #include <Util.h>
 #include "logic/world/tets/BunchOfTets.h"
@@ -25,37 +20,8 @@ BunchOfTetsDrawable::~BunchOfTetsDrawable()
 {
 }
 
-void BunchOfTetsDrawable::setNearFarUniform(const glm::vec2 & nearFar)
-{
-    m_program->setUniform("nearFar", nearFar);
-}
-
-void BunchOfTetsDrawable::setViewProjectionUniform(const glm::mat4 & viewProjection)
-{
-    m_program->setUniform("viewProjection", viewProjection);
-}
-
-void BunchOfTetsDrawable::setViewUniform(const glm::mat4 & view)
-{
-    m_program->setUniform("view", view);
-}
-
-void BunchOfTetsDrawable::setEyeUniform(const glm::vec3 & eye)
-{
-    m_program->setUniform("eye", eye);
-}
-
 void BunchOfTetsDrawable::initialize()
 {
-    m_program = new glow::Program();
-
-    glow::Shader * m_fragShader = glowutils::createShaderFromFile(
-        GL_FRAGMENT_SHADER, "data/shaders/tets.frag");
-    glow::Shader * m_vertShader = glowutils::createShaderFromFile(
-        GL_VERTEX_SHADER, "data/shaders/tets.vert");
-    m_program->attach(m_vertShader, m_fragShader);
-    m_program->link();
-
     std::vector<glm::vec3> dummyTet;
     for (int i = 0; i < 3; i++)
         dummyTet.push_back(glm::vec3(0.0, 0.0, 0.0));
@@ -110,12 +76,6 @@ void BunchOfTetsDrawable::paint()
     m_normalTexture->bindActive(GL_TEXTURE1);
     m_matrixTexture->bindActive(GL_TEXTURE2);
 
-
-    m_program->setUniform("vertices", 0);
-    m_program->setUniform("normals", 1);
-    m_program->setUniform("matrices", 2);
-    m_program->setUniform("model", glm::translate(0.0f, 0.0f, m_bunchOfTets.zShift()));
-
     m_vao->bind();
     m_vao->drawArraysInstanced(GL_TRIANGLES, 0, 3, vertices.size() / 3);
     m_vao->unbind();
@@ -124,4 +84,9 @@ void BunchOfTetsDrawable::paint()
     m_normalTexture->unbind(GL_TEXTURE1);
     m_vertexTexture->unbind(GL_TEXTURE0);
 
+}
+
+const BunchOfTets * BunchOfTetsDrawable::bunch()
+{
+    return &m_bunchOfTets;
 }

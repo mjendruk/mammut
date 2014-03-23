@@ -304,6 +304,8 @@ set(sources
     ${source_path}/rendering/world/AbstractPainter.h
     ${source_path}/rendering/world/BunchOfTetsDrawable.cpp
     ${source_path}/rendering/world/BunchOfTetsDrawable.h
+    ${source_path}/rendering/world/BunchRenderer.cpp
+    ${source_path}/rendering/world/BunchRenderer.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
@@ -321,6 +323,8 @@ set(sources
     ${source_path}/rendering/world/RenderCamera.h
     ${source_path}/rendering/world/TessCuboidDrawable.cpp
     ${source_path}/rendering/world/TessCuboidDrawable.h
+    ${source_path}/rendering/world/TetPainter.cpp
+    ${source_path}/rendering/world/TetPainter.h
     ${source_path}/rendering/world/CuboidRenderer.cpp
     ${source_path}/rendering/world/CuboidRenderer.h
 

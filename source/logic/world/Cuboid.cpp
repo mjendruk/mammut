@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "tets/Tet.h"
+#include "tets/BunchOfTets.h"
 #include "tets/TetGenerator.h"
 #include <Util.h>
 
@@ -59,15 +60,18 @@ void Cuboid::collectBoost() const
     m_containsBoost = false;
 }
 
-QVector<Tet *> * Cuboid::splitIntoTets()
+BunchOfTets * Cuboid::splitIntoTets()
 {
     assert(!m_isDummy);
     for (Tet * tet : *m_tets)
         tet->translate(position());
-    QVector<Tet *> * tets = m_tets;
+    BunchOfTets * bunch = new BunchOfTets();
+    bunch->add(m_tets);
+    delete m_tets;
     m_tets = nullptr;
     m_isDummy = true;
-    return tets;
+
+    return bunch;
 }
 
 void Cuboid::setTets(QVector<Tet *> * tets)

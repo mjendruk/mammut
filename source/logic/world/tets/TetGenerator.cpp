@@ -47,6 +47,16 @@ void TetGenerator::processCuboidAsync(Cuboid * cuboid)
     emit gotANewCuboid(cuboid);
 }
 
+void TetGenerator::dummySlot()
+{
+    //does nothing. this method is meant to be called with a BlockingConnection.
+}
+
+bool lessThanByZCoordinate(const Tet * t1, const Tet * t2)
+{
+    return t1->position().z > t2->position().z;
+}
+
 void TetGenerator::processCuboid(Cuboid * cuboid)
 {
     glowutils::AxisAlignedBoundingBox aabb = cuboid->boundingBox();
@@ -74,6 +84,8 @@ void TetGenerator::processCuboid(Cuboid * cuboid)
             tetVertices << randomizedVertices[split->tetrahedronlist[tetIndex * 4 + j]];
         tets->append(new Tet(tetVertices));
     }
+
+    qSort(tets->begin(), tets->end(), &lessThanByZCoordinate);
 
     QVector<glm::vec3> * hull = new QVector<glm::vec3>();
     for (int tetIndex = 0; tetIndex < split->numberoftetrahedra; tetIndex++) {

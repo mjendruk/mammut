@@ -7,6 +7,7 @@
 #include "PhysicsObject.h"
 
 class Tet;
+class BunchOfTets;
 
 namespace glowutils
 {
@@ -30,7 +31,7 @@ public:
     bool containsBoost() const override;
     void collectBoost() const override;
     
-    QVector<Tet *> * splitIntoTets();
+    BunchOfTets * splitIntoTets();
     void setTets(QVector<Tet *> * tets);
     const QVector<glm::vec3> * hullVertices() const;
     void setHullVertices(QVector<glm::vec3> * hullVertices);

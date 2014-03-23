@@ -57,7 +57,7 @@ void main()
 
     vec4 worldVertex = model * matrixFromTexture * vec4(vertexFromTexture, 1.0);
 
-    v_normal = vec3(view * model * matrixFromTexture * vec4(normalFromTexture, 0.0));
+    v_normal = normalize(vec3(view * model * matrixFromTexture * vec4(normalFromTexture, 0.0)));
 
     vec4 vertexInVS = view * worldVertex;
     v_depthInES = vertexInVS.z / vertexInVS.w;

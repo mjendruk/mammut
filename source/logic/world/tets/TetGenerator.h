@@ -25,6 +25,7 @@ public:
 
 public slots:
     void processCuboidAsync(Cuboid * cuboid);
+    void dummySlot();
 
 signals:
     void gotANewCuboid(Cuboid * cuboid);
