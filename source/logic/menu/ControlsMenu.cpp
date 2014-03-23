@@ -23,7 +23,7 @@ QList<MenuItem *> ControlsMenu::initializeMenuItems()
     *gravity << ControlsItem("D", "90 degrees (ccw)");
 
     QList<ControlsItem> *  boosts = new QList<ControlsItem>();
-    *boosts << ControlsItem("arrow keys", "Apply Collected Boosts");
+    *boosts << ControlsItem("arrow keys", "Apply Boost");
     *boosts << ControlsItem("ESC", "Pause Menu");
 
     ControlsListItem * keyActionItem = new ControlsListItem(*gravity, *boosts);

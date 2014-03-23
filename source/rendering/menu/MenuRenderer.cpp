@@ -206,11 +206,11 @@ void MenuRenderer::render(const CreditsItem * item)
 
 void MenuRenderer::render(const ControlsListItem * item)
 {
-    const float keyPosition = -0.3f;
-    const float actionPosition = -0.2f;
+    const float leftPosition = -0.2f;
+    const float rightPosition = -0.1f;
     const glm::mat4 entryScale = glm::scale(glm::vec3(0.6f));
 
-    m_textRenderer.paint("Rotate Gravity Direction",
+    m_textRenderer.paint("Change Gravity ",
         m_translation * glm::translate(glm::vec3(0.f)),
         TextRenderer::kAlignCenter,
         s_titleColor);
@@ -219,30 +219,23 @@ void MenuRenderer::render(const ControlsListItem * item)
 
     for (const ControlsItem & entry : item->gravityKeys())
     {
-        m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
-        m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);
+        m_textRenderer.paint(entry.key(), m_translation * glm::translate(leftPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
+        m_textRenderer.paint(entry.action(), m_translation * glm::translate(rightPosition, 0.0f, 0.0f) * entryScale);
 
         moveTranslationDown(0.9f);
     }
 
-    moveTranslationDown(0.5f);
-
-    m_textRenderer.paint("Additional Controls",
-        m_translation * glm::translate(glm::vec3(0.f)),
-        TextRenderer::kAlignCenter,
-        s_titleColor);
-
-    moveTranslationDown(1.6f);
+    moveTranslationDown(1.4f);
 
     for (const ControlsItem & entry : item->boostKeys())
     {
-        m_textRenderer.paint(entry.key(), m_translation * glm::translate(keyPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight);
-        m_textRenderer.paint(entry.action(), m_translation * glm::translate(actionPosition, 0.0f, 0.0f) * entryScale);
+        m_textRenderer.paint(entry.action(), m_translation * glm::translate(leftPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignRight, s_titleColor);
+        m_textRenderer.paint(entry.key(), m_translation * glm::translate(rightPosition, 0.0f, 0.0f) * entryScale, TextRenderer::kAlignLeft, s_textColor);
 
-        moveTranslationDown(0.9f);
+        moveTranslationDown(1.4f);
     }
 
-    moveTranslationDown(0.7f);
+    moveTranslationDown(0.8f);
 }
 
 void MenuRenderer::render(const MenuInput * input)
