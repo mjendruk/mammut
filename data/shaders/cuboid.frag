@@ -26,5 +26,5 @@ void main()
     vec2 position = (posTemp.xy / posTemp.w); 
     vec2 prevPosition = (prevPosTemp.xy / prevPosTemp.w); 
 
-    velocityOut = position - prevPosition;
+    velocityOut = (position - prevPosition) * 1.5f;
 }

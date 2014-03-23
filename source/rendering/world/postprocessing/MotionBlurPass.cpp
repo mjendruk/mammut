@@ -10,8 +10,8 @@
 
 #include "Util.h"
 
-const float MotionBlurPass::s_radius = 20.f;
-const int MotionBlurPass::s_numSamples = 15; //must be odd 
+const float MotionBlurPass::s_radius = 18.f;
+const int MotionBlurPass::s_numSamples = 17; //must be odd 
 const int MotionBlurPass::s_randomBufferSize = 32;
 const QList<QString> MotionBlurPass::s_requiredSamplers = { "depth", "color", "velocity" };
 
