@@ -27,7 +27,7 @@ GameMechanics::GameMechanics()
 {
     connectSignals();
 
-    QTimer::singleShot(3000, this, SLOT(splitOneCuboid()));
+    QTimer::singleShot(1500, this, SLOT(splitOneCuboid()));
 
     addAndRemoveCuboids();
     
