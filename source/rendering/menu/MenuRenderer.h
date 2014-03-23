@@ -4,6 +4,7 @@
 
 #include <rendering/Renderer.h>
 #include <rendering/text/TextRenderer.h>
+#include <rendering/text/SymbolRenderer.h>
 
 class Menu;
 class MenuButton;
@@ -38,6 +39,7 @@ protected:
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;
     TextRenderer m_textRenderer;
+    SymbolRenderer m_symbolRenderer;
 
     AbstractBackground * m_background;
     const Menu * m_menu;
