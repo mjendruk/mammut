@@ -6,6 +6,7 @@ uniform mat4 model;
 uniform mat4 prevModel;
 uniform mat4 view;
 uniform mat3 normalMatrix;
+uniform bool containsBoost;
 
 in vec3 a_vertex;
 in vec3 a_normal;
@@ -25,11 +26,24 @@ struct ColorNormal
 
 vec3 calculateColor()
 {
-    const ColorNormal colorNormals[] = ColorNormal[3](
-        ColorNormal(vec3(0.03, 0.55, 0.6), vec3(1.0, 0.0, 0.0)),
-        ColorNormal(vec3(0.75, 0.23, 0.19), vec3(0.0, 1.0, 0.0)),
-        ColorNormal(vec3(0.76, 0.6, 0.34), vec3(0.0, 0.0, 1.0))
-        );
+    ColorNormal colorNormals[3];
+
+    if (containsBoost)
+    {
+        colorNormals = ColorNormal[3](
+            ColorNormal(vec3(0.5), vec3(1.0, 0.0, 0.0)),
+            ColorNormal(vec3(0.5), vec3(0.0, 1.0, 0.0)),
+            ColorNormal(vec3(0.5), vec3(0.0, 0.0, 1.0))
+            );
+    } 
+    else
+    {
+        colorNormals = ColorNormal[3](
+            ColorNormal(vec3(0.03, 0.55, 0.6), vec3(1.0, 0.0, 0.0)),
+            ColorNormal(vec3(0.75, 0.23, 0.19), vec3(0.0, 1.0, 0.0)),
+            ColorNormal(vec3(0.76, 0.6, 0.34), vec3(0.0, 0.0, 1.0))
+            );
+    }
 
     vec3 color = vec3(0.0);
 
