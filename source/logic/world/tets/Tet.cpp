@@ -9,6 +9,7 @@ Tet::Tet(QVector<glm::vec3> & vertices)
 ,   m_vertices(Util::centerVertices(vertices, m_center))
 ,   m_duplicatedVertices(buildDuplicatedVertices(m_vertices))
 ,   m_normals(Util::generateNormals(m_duplicatedVertices))
+,   m_scaleFactor(1.0f)
 ,   m_modelMatrix(glm::mat4())
 {
     initializeRigidBody();
@@ -51,6 +52,7 @@ void Tet::initializeRigidBody()
     for (const glm::vec3 & vec : m_vertices) {
         collisionShape->addPoint(Util::toBtVec3(vec));
     }
+
     btMotionState * motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
         Util::toBtVec3(m_center)));
 
@@ -86,5 +88,13 @@ glm::mat4 Tet::modelMatrix() const
     glm::mat4 mat(1.0);
     mat *= glm::translate(Util::toGlmVec3(m_rigidBody->getWorldTransform().getOrigin()));
     mat *= Util::toGlmMat4(m_rigidBody->getWorldTransform().getRotation());
+    mat *= glm::scale(glm::vec3(m_scaleFactor));
     return mat;
+}
+
+void Tet::scale(float factor)
+{
+    assert(m_scaleFactor == 1.0f); //should be called only once
+    m_scaleFactor *= factor;
+    m_collisionShape->setLocalScaling(btVector3(m_scaleFactor, m_scaleFactor, m_scaleFactor));
 }

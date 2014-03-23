@@ -4,9 +4,13 @@
 
 #include "Tet.h"
 
+
+const float BunchOfTets::s_shrinkFactor = 0.95f;
+
 BunchOfTets::BunchOfTets()
 :   m_zShift(0.0f)
-,   m_physicsTetIndex(0)
+,   m_shrinkedTetIndex(0)
+,   m_movingTetIndex(0)
 {
 
 }
@@ -29,9 +33,14 @@ void BunchOfTets::add(const QVector<Tet *> * tets)
 
 void BunchOfTets::update(float seconds, PhysicsWorld & physicsWorld)
 {
-    if (m_physicsTetIndex < m_tets.size()) {
-        physicsWorld.addObject(m_tets[m_physicsTetIndex]);
-        m_physicsTetIndex++;
+    if (m_shrinkedTetIndex < m_tets.size()) {
+        m_tets[m_shrinkedTetIndex]->scale(s_shrinkFactor);
+        m_shrinkedTetIndex++;
+    }
+
+    if (m_shrinkedTetIndex == m_tets.size() && m_movingTetIndex < m_tets.size()) {
+        physicsWorld.addObject(m_tets[m_movingTetIndex]);
+        m_movingTetIndex++;
     }
 }
 

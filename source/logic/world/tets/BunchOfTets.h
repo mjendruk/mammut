@@ -28,8 +28,11 @@ public:
     float zShift() const;
 
 protected:
+    static const float s_shrinkFactor;
+
     QVector<Tet *> m_tets;
-    int m_physicsTetIndex;
+    int m_shrinkedTetIndex;
+    int m_movingTetIndex;
 
     float m_zShift;
 };

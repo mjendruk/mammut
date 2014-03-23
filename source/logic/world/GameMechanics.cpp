@@ -50,7 +50,7 @@ GameMechanics::~GameMechanics()
 
 void GameMechanics::splitOneCuboid()
 {
-    Cuboid * cuboid = m_cuboids.takeAt(2);
+    Cuboid * cuboid = m_cuboids.takeAt(5);
     m_physicsWorld.removeObject(cuboid);
     m_bunches << cuboid->splitIntoTets();
 }
