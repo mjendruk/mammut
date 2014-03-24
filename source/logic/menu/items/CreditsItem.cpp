@@ -6,10 +6,10 @@
 
 
 CreditsItem::CreditsItem()
-: m_creditsForenames({ "Carolin", "Johannes", "Max" })
-, m_creditsNicknames({ "RNG TAMER", "DEMOMAN", "BIZ GUY" })
-, m_creditsSurnames({ "Fiedler", "Linke", "Jendruk" })
-, m_thanks({ "Sebastian Pasewaldt", "John Chapman", "Timothy Lottes", "Morgan McGuire et al.", "G3D team" })
+:   m_creditsForenames({ "Carolin", "Johannes", "Max" })
+,   m_creditsNicknames({ "RNG TAMER", "DEMOMAN", "BIZ GUY" })
+,   m_creditsSurnames({ "Fiedler", "Linke", "Jendruk" })
+,   m_thanks({ "Sebastian Pasewaldt", "John Chapman", "Timothy Lottes", "Morgan McGuire et al.", "G3D team" })
 {
 }
 
