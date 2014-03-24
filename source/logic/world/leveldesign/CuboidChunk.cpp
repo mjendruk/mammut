@@ -15,6 +15,7 @@ void CuboidChunk::add(Cuboid * cuboid)
 
 void CuboidChunk::remove(int index)
 {
+    delete m_cuboids[index];
     m_cuboids.removeAt(index);
 }
 

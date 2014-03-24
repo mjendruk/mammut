@@ -6,7 +6,6 @@
 
 #include "tets/Tet.h"
 #include "tets/BunchOfTets.h"
-#include "tets/TetGenerator.h"
 #include <Util.h>
 
 
@@ -18,7 +17,6 @@ Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 ,   m_hullVertices(nullptr)
 {    
     initializeRigidBody(size, translation);
-    TetGenerator::instance().processCuboidAsync(this);
 }
 
 Cuboid::~Cuboid()

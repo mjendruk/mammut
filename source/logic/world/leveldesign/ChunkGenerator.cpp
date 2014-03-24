@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 
+#include <logic/world/tets/TetGenerator.h>
 #include <logic/world/Cuboid.h>
 
 #include "CuboidChunk.h"
@@ -69,6 +70,9 @@ QList<Cuboid *> ChunkGenerator::nextChunk()
 
     printDebugStream();
 
+    for (Cuboid * cuboid : chunk->cuboids())
+        TetGenerator::instance().processCuboidAsync(cuboid);
+    
     QList<Cuboid *> cuboids = chunk->cuboids();
     delete chunk;
     return cuboids;
