@@ -8,11 +8,13 @@
 #include <Util.h>
 #include "Mammut.h"
 
-MammutPhysics::MammutPhysics(const glm::vec3 & size,
-    const glm::vec3 & translation, Mammut * mammut)
+MammutPhysics::MammutPhysics(
+    float radius,
+    const glm::vec3 & translation, 
+    Mammut & mammut)
 :   m_mammut(mammut)
 {
-    initializeRigidBody(size, translation);
+    initializeRigidBody(radius, translation);
 }
 
 MammutPhysics::~MammutPhysics()
@@ -23,7 +25,7 @@ MammutPhysics::~MammutPhysics()
 void MammutPhysics::collisionEvent(const PhysicsObject & object,
     const btVector3 & collisionNormal)
 {
-    m_mammut->collisionEvent(object, Util::toGlmVec3(collisionNormal));
+    m_mammut.collisionEvent(object, Util::toGlmVec3(collisionNormal));
 }
 
 void MammutPhysics::clearForcesAndApplyGravity()
@@ -42,10 +44,10 @@ void MammutPhysics::setVelocity(const glm::vec3 & velocity)
     m_rigidBody->setLinearVelocity(Util::toBtVec3(velocity));
 }
 
-void MammutPhysics::initializeRigidBody(const glm::vec3 & size,
+void MammutPhysics::initializeRigidBody(float radius,
     const glm::vec3 & translation)
 {
-    m_collisionShape.reset(new btBoxShape(Util::toBtVec3(size / 2.0f)));
+    m_collisionShape.reset(new btSphereShape(radius));
     m_motionState.reset(new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
                                                              Util::toBtVec3(translation))));
 
