@@ -25,7 +25,7 @@ const float GameWorldRenderer::s_nearPlane = 0.01f;
 const float GameWorldRenderer::s_farPlane = 700.0f;
 
 GameWorldRenderer::GameWorldRenderer()
-:   m_hud(m_camera, *this)
+:   m_hud(m_camera)
 ,   m_caveDrawable(nullptr)
 ,   m_lastFrame(QTime::currentTime())
 ,   m_avgTimeSinceLastFrame(0.0f)
@@ -61,7 +61,10 @@ void GameWorldRenderer::render(glow::FrameBufferObject * fbo, float devicePixelR
     //paint HUD over
     fbo->bind();
     int velocity = int(-m_gameMechanics->mammut().velocity().z);
-    m_hud.paint(velocity, m_gameMechanics->score(), m_gameMechanics->mammut().collectedBoosts());
+    m_hud.paint(velocity, 
+                m_gameMechanics->score(), 
+                m_gameMechanics->mammut().collectedBoosts(),
+                fps());
     fbo->unbind();
 
     // update previous view projection matrix for next frame
