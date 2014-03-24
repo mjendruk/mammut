@@ -183,7 +183,7 @@ void Game::showGameOverMenu(int score)
 void Game::quit()
 {
     m_loop = false;
-    QApplication::quit();
+    QGuiApplication::quit();
 }
 
 void Game::activateMenu(std::shared_ptr<Menu> menu, AbstractBackground * background)

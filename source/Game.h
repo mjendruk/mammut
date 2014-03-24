@@ -2,15 +2,13 @@
 
 #include <memory>
 
-#include <QWidget>
+#include <QKeyEvent>
 
 #include <glowutils/Timer.h>
 
 #include <logic/highscore/HighscoreList.h>
 #include "AbstractApplication.h"
 
-
-class QMainWindow;
 
 class Mechanics;
 class GameMechanics;
