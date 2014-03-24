@@ -6,7 +6,7 @@
 #include <sound/Sound.h>
 #include "Cuboid.h"
 
-const glm::vec3 Mammut::s_size = glm::vec3(0.1f);
+const float Mammut::s_radius = 0.05f;
 const int Mammut::s_maxNumBoosts = 5;
 const float Mammut::s_startIncreasingSpeed = 100.f;
 const float Mammut::s_stopIncreasingSpeed = 3000.f;
@@ -14,7 +14,7 @@ const float Mammut::s_magnitude = 15.f;
 const float Mammut::s_boostVelocityMixFactor = 0.05f;
 
 Mammut::Mammut(const glm::vec3 & translation)
-:   m_physics(s_size, translation, this)
+:   m_physics(s_radius, translation, *this)
 ,   m_isOnObject(false)
 ,   m_isCrashed(false)
 ,   m_boostIsActive(false)
@@ -66,7 +66,8 @@ void Mammut::collisionEvent(const PhysicsObject & object,
         m_isOnObject = true;
         break;
     case Util::kZAxis:
-        crash();
+        if (rotatedAbsoluteNormal.z > 0.0f)
+            crash();
         break;
     }
 }
@@ -78,7 +79,7 @@ void Mammut::caveCollisionEvent()
 
 glm::mat4 Mammut::modelTransform() const
 {
-    return glm::translate(position()) * rotation() * glm::scale(s_size);
+    return glm::translate(position()) * rotation() * glm::scale(glm::vec3(s_radius * 2.0f));
 }
 
 glm::vec3 Mammut::position() const
