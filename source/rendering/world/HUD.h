@@ -9,16 +9,17 @@ class GameWorldRenderer;
 class HUD
 {
 public:
-    HUD(const RenderCamera & camera,
-        const GameWorldRenderer & renderer);
-    ~HUD();
+    HUD(const RenderCamera & camera);
 
-    void paint(int velocity, int score, int collectedBoosts);
+    void paint(int velocity, int score, int collectedBoosts, int fps);
 
 protected:
     TextRenderer m_textRenderer;
     SymbolRenderer m_symbolRenderer;
 
     const RenderCamera & m_camera;
-    const GameWorldRenderer & m_gameWorldRenderer;
+    
+protected:
+    static const bool s_showFps;
+    
 };
