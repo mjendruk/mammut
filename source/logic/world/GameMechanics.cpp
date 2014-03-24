@@ -45,7 +45,6 @@ GameMechanics::~GameMechanics()
     qDeleteAll(m_cuboids);
     
     m_physicsWorld.removeObject(m_mammut.physics());
-    m_backgroundLoop.stop();
 }
 
 void GameMechanics::splitOneCuboid()
@@ -58,6 +57,7 @@ void GameMechanics::splitOneCuboid()
 void GameMechanics::update(float seconds)
 {
     if (m_gameOver) {
+        m_backgroundLoop.stop();
         emit gameOver(score());
         return;
     }
@@ -228,8 +228,9 @@ void GameMechanics::connectSignals()
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
-    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
+    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseSound);
     connect(this, &GameMechanics::waitForTetGenerator, &TetGenerator::instance(), &TetGenerator::dummySlot, Qt::BlockingQueuedConnection);
+    connect(this, &GameMechanics::gameOver, &m_camera, &GameCamera::stopSound);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;

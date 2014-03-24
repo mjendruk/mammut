@@ -21,7 +21,6 @@ GameCamera::GameCamera()
 
 GameCamera::~GameCamera()
 {
-    m_noise.setPaused(true);
 }
 
 void GameCamera::update(
@@ -41,9 +40,14 @@ void GameCamera::gravityChangeEvent(const glm::mat3 & rotation)
     m_rotationProgress = 0.0f;
 }
 
-void GameCamera::pauseEvent()
+void GameCamera::pauseSound()
 {
     m_noise.setVolume(0.0);
+}
+
+void GameCamera::stopSound()
+{
+    m_noise.stop();
 }
 
 void GameCamera::updateRotationProgress(float seconds)

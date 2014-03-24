@@ -17,7 +17,8 @@ public:
                 float normalizedCaveDistance);
     
     void gravityChangeEvent(const glm::mat3 & rotation);
-    void pauseEvent();
+    void pauseSound();
+    void stopSound();
 
     const glm::vec3 & eye() const;
     const glm::vec3 & center() const;
@@ -28,6 +29,7 @@ protected:
     void updateLookAt(const glm::vec3 & position,
                       const glm::vec3 & direction,
                       float normalizedCaveDistance);
+
 
     static const float s_rotationDuration;
 
