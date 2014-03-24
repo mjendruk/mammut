@@ -4,25 +4,26 @@
 const float SymbolRenderer::s_lineHeight = 0.11f;
 const float SymbolRenderer::s_textureSize = 1024.0f;
 
-QMap<QString, int> SymbolRenderer::s_idMapping = QMap<QString, int>(); 
+QMap<QString, int> SymbolRenderer::s_idMapping;
 bool SymbolRenderer::s_idMapInitialized = false;
 
 SymbolRenderer::SymbolRenderer()
-: SDFRenderer("data/fonts/Symbols.raw", "data/fonts/Symbols.txt", s_lineHeight, s_textureSize)
+:   SDFRenderer("data/fonts/Symbols.raw", 
+                "data/fonts/Symbols.txt", 
+                s_lineHeight, 
+                s_textureSize)
 {
     if (!s_idMapInitialized) {
-        s_idMapping.insert(QString("lightning"), 1);
+        s_idMapping.insert(QString("Lightning"), 1);
         s_idMapping.insert(QString("Mammut"), 2);
-        s_idMapping.insert(QString("stones"), 3);
+        s_idMapping.insert(QString("Stones"), 3);
         s_idMapInitialized = true;
     }
-
-    m_valid = initialize();
 }
 
 SymbolRenderer::~SymbolRenderer()
 {
-
+    
 }
 
 void SymbolRenderer::paint(

@@ -95,8 +95,9 @@ void MenuRenderer::render(const MenuLogo * logo)
                          m_translation * glm::scale(glm::vec3(scale)),
                          SDFRenderer::kAlignCenter,
                          s_titleColor);
+    
     m_symbolRenderer.paint("Mammut", 1, mammutMatrix, SDFRenderer::kAlignCenter, s_titleColor);
-    m_symbolRenderer.paint("stones", 1, stonesMatrix, SDFRenderer::kAlignCenter, s_titleColor);
+    m_symbolRenderer.paint("Stones", 1, stonesMatrix, SDFRenderer::kAlignCenter, s_titleColor);
     
     moveTranslationDown(scale * 1.3f);
 }
