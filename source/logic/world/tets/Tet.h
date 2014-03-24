@@ -6,7 +6,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "../PhysicsObject.h"
+#include <logic/world/PhysicsObject.h>
+
 
 class btRigidBody;
 

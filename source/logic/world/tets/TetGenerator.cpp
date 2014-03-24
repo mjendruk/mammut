@@ -8,9 +8,10 @@
 #include <glowutils/AxisAlignedBoundingBox.h>
 
 #include <3rdparty/tetgen/tetgen.h>
-#include "../Cuboid.h"
-#include "Tet.h"
+#include <logic/world/Cuboid.h>
 #include <Util.h>
+
+#include "Tet.h"
 
 const float TetGenerator::s_maxVertexDisplacement = 1.2f;
 
@@ -32,14 +33,6 @@ TetGenerator & TetGenerator::instance()
 {
     static TetGenerator instance;
     return instance;
-}
-
-static glm::vec3 getRandomOffset()
-{
-    return glm::vec3(
-        glm::linearRand(0.0f, 0.1f),
-        glm::linearRand(0.0f, 0.1f),
-        glm::linearRand(0.0f, 0.1f));
 }
 
 void TetGenerator::processCuboidAsync(Cuboid * cuboid)

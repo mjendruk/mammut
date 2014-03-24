@@ -1,6 +1,6 @@
 #include "BunchOfTets.h"
 
-#include "../PhysicsWorld.h"
+#include <logic/world/PhysicsWorld.h>
 
 #include "Tet.h"
 
@@ -8,9 +8,9 @@
 const float BunchOfTets::s_shrinkFactor = 0.95f;
 
 BunchOfTets::BunchOfTets()
-:   m_zShift(0.0f)
-,   m_shrinkedTetIndex(0)
+:   m_shrinkedTetIndex(0)
 ,   m_movingTetIndex(0)
+,   m_zShift(0.0f)
 {
 
 }

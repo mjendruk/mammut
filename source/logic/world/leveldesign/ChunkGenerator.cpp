@@ -7,7 +7,8 @@
 
 #include <glm/glm.hpp>
 
-#include "../Cuboid.h"
+#include <logic/world/Cuboid.h>
+
 #include "CuboidChunk.h"
 
 const int ChunkGenerator::s_numGrammarChunks = 5;

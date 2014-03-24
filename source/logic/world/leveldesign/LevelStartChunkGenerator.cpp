@@ -6,7 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "../Cuboid.h"
+#include <logic/world/Cuboid.h>
+
 #include "CuboidChunk.h"
 
 const float LevelStartChunkGenerator::s_minSmallSize = 3.f;
