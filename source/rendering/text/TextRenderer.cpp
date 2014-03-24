@@ -11,11 +11,6 @@ TextRenderer::TextRenderer()
 {
 }
 
-TextRenderer::~TextRenderer()
-{
-    
-}
-
 void TextRenderer::paint(
     const QString & text,
     const glm::mat4 & modelMatrix,

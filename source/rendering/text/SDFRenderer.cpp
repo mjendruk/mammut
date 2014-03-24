@@ -14,18 +14,17 @@
 #include "CharacterDrawable.h"
 
 
-SDFRenderer::SDFRenderer(QString rawFile, QString specificsFile, float lineHeight, float textureSize)
+SDFRenderer::SDFRenderer(
+    const QString & rawFile, 
+    const QString & specificsFile, 
+    float lineHeight, 
+    float textureSize)
 :   m_rawFile(rawFile)
 ,   m_specificsFile(specificsFile)
 ,   m_lineHeight(lineHeight)
 ,   m_textureSize(textureSize)
 {
     m_valid = initialize();
-}
-
-SDFRenderer::~SDFRenderer()
-{
-
 }
 
 bool SDFRenderer::initialize()

@@ -9,7 +9,6 @@ class SymbolRenderer : public SDFRenderer
 {
 public:
     SymbolRenderer();
-    virtual ~SymbolRenderer();
 
     void paint(const QString & symbolName, 
                const int repeatSymbol,

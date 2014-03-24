@@ -7,7 +7,6 @@ class TextRenderer : public SDFRenderer
 {
 public:    
     TextRenderer();
-    virtual ~TextRenderer();
 
     void paint(const QString & text,
                const glm::mat4 & modelMatrix,
