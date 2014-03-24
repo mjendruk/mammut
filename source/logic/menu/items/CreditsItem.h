@@ -24,9 +24,9 @@ public:
     const QList<QString> & thanks() const;
 
 protected:
-    static const QList<QString> m_creditsForenames;
-    static const QList<QString> m_creditsNicknames;
-    static const QList<QString> m_creditsSurnames;
-    static const QList<QString> m_thanks;
+    const QList<QString> m_creditsForenames;
+    const QList<QString> m_creditsNicknames;
+    const QList<QString> m_creditsSurnames;
+    const QList<QString> m_thanks;
 
 };
