@@ -22,7 +22,6 @@ public:
          
     virtual ~Cuboid();
 
-
     glm::mat4 modelTransform() const;
 
     glowutils::AxisAlignedBoundingBox boundingBox() const;
@@ -44,8 +43,9 @@ protected:
 protected:
     glm::vec3 m_size;
 
-    bool m_isDummy;
     bool mutable m_containsBoost;
+
+    bool m_isDummy;
     QVector<Tet *> * m_tets;
     QVector<glm::vec3> * m_hullVertices;
 };

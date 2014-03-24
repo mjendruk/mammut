@@ -11,8 +11,8 @@
 
 Cuboid::Cuboid(const glm::vec3 & size, const glm::vec3 & translation)
 :   m_size(size)
-,   m_isDummy(false)
 ,   m_containsBoost(false)
+,   m_isDummy(false)
 ,   m_tets(nullptr)
 ,   m_hullVertices(nullptr)
 {    

@@ -60,7 +60,9 @@ void TetGenerator::processCuboid(Cuboid * cuboid)
     QVector<glm::vec3> vertices;
     QVector<glm::vec3> randomizedVertices;
     for (int i = 0; i < split->numberofpoints; i++) {
-        glm::vec3 vertex = glm::vec3(split->pointlist[i * 3 + 0], split->pointlist[i * 3 + 1], split->pointlist[i * 3 + 2]);
+        glm::vec3 vertex = glm::vec3(split->pointlist[i * 3 + 0],
+                                     split->pointlist[i * 3 + 1],
+                                     split->pointlist[i * 3 + 2]);
         glm::vec3 randomizedVertex = vertex;
         bool currVertexIsOnHull = centeredAabb.outside(vertex * 1.01f);
         if (currVertexIsOnHull)

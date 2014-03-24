@@ -1,5 +1,7 @@
 #include "Util.h"
 
+#include <cassert>
+
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <glow/Texture.h>
@@ -57,11 +59,12 @@ glm::vec3 center(const QVector<glm::vec3> & vecs)
     return center;
 }
 
-QVector<glm::vec3> centerVertices(QVector<glm::vec3> & vecs, const glm::vec3 & center)
+QVector<glm::vec3> centerVertices(const QVector<glm::vec3> & vecs, const glm::vec3 & center)
 {
+    QVector<glm::vec3> centeredVecs;
     for (int i = 0; i < vecs.size(); i++)
-        vecs[i] = vecs[i] - center;
-    return vecs;
+        centeredVecs << vecs[i] - center;
+    return centeredVecs;
 }
 
 void correctFaceOrientation(QVector<glm::vec3> & tri, const glm::vec3 & tetCenter)
