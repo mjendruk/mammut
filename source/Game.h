@@ -47,6 +47,8 @@ protected:
     void showGameOverMenu(int score);
     void showMainMenu();
     void showHighscoreMenu();
+    void showControlsMenu();
+    void showCreditsMenu();
     void quit();
     
     void activateMenu(std::shared_ptr<Menu> menu, AbstractBackground * background);

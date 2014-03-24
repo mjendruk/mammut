@@ -10,6 +10,8 @@ class Menu;
 class MenuButton;
 class MenuLogo;
 class HighscoreListItem;
+class CreditsItem;
+class ControlsListItem;
 class MenuInput;
 class MenuText;
 class AbstractBackground;
@@ -26,6 +28,8 @@ public:
     void render(const MenuButton * button);
     void render(const MenuLogo * logo);
     void render(const HighscoreListItem * item);
+    void render(const CreditsItem * item);
+    void render(const ControlsListItem * item);
     void render(const MenuInput * input);
     void render(const MenuText * text);
 
@@ -36,6 +40,10 @@ protected:
     void moveTranslationDown(float lineHeightScale);
 
 protected:
+    static const glm::vec3 s_titleColor;
+    static const glm::vec3 s_focusColor;
+    static const glm::vec3 s_textColor;
+
     glm::ivec2 m_viewport;
     glm::mat4 m_translation;
     TextRenderer m_textRenderer;
