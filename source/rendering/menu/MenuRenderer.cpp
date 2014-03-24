@@ -87,19 +87,13 @@ void MenuRenderer::render(const MenuButton * button)
 void MenuRenderer::render(const MenuLogo * logo)
 {
     const float scale = 2.0f;
-
-    const glm::mat4 mammutMatrix = m_translation * glm::translate(0.35f, -0.83f, 0.f) * glm::scale(glm::vec3(0.85f));
-    const glm::mat4 stonesMatrix = m_translation * glm::translate(-0.90f, -0.68f, 0.f);
     
     m_textRenderer.paint("Mammut",
                          m_translation * glm::scale(glm::vec3(scale)),
                          SDFRenderer::kAlignCenter,
                          s_titleColor);
     
-    m_symbolRenderer.paint("Mammut", 1, mammutMatrix, SDFRenderer::kAlignCenter, s_titleColor);
-    m_symbolRenderer.paint("Stones", 1, stonesMatrix, SDFRenderer::kAlignCenter, s_titleColor);
-    
-    moveTranslationDown(scale * 1.3f);
+    moveTranslationDown(scale * 1.5f);
 }
 
 void MenuRenderer::render(const HighscoreListItem * item)

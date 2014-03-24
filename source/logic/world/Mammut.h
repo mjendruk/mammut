@@ -49,7 +49,7 @@ protected:
     void updateBoostState();
     
 protected:
-    static const glm::vec3 s_size;
+    static const float s_radius;
     static const int s_maxNumBoosts;
     static const float s_startIncreasingSpeed;
     static const float s_stopIncreasingSpeed;

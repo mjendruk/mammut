@@ -20,13 +20,13 @@ class SDFRenderer
 public:
     enum Alignment { kAlignLeft, kAlignCenter, kAlignRight };
     
-    SDFRenderer(QString rawFile, QString specificsFile, float lineHeight, float textureSize);
-    virtual ~SDFRenderer();
-
-    void paint(const QList<CharacterSpecifics *> & characterSpecificsList,
-               const glm::mat4 & modelMatrix,
-               Alignment alignment = kAlignLeft,
-               const glm::vec3 color = glm::vec3(1.0f));
+public:
+    SDFRenderer(const QString & rawFile, 
+                const QString & specificsFile, 
+                float lineHeight, 
+                float textureSize);
+    
+    virtual ~SDFRenderer() = default;
 
     bool isValid() const;
     float lineHeight() const;
@@ -35,6 +35,11 @@ protected:
     bool initialize();
     bool initializeProgram();
     bool initializeTexture();
+    
+    void paint(const QList<CharacterSpecifics *> & characterSpecificsList,
+               const glm::mat4 & modelMatrix,
+               Alignment alignment = kAlignLeft,
+               const glm::vec3 color = glm::vec3(1.0f));
     
     static void prepareTransforms(const QList<CharacterSpecifics *> characterSpecificsList,
                                   const glm::mat4 & modelMatrix,
