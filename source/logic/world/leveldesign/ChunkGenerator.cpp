@@ -18,6 +18,7 @@ const float ChunkGenerator::s_chunkLength = 70.f;
 const float ChunkGenerator::s_startIncreasingDifficulty = 500.f;
 const float ChunkGenerator::s_stopIncreasingDifficulty = 3500.f;
 
+const float ChunkGenerator::s_minCuboidXYSize = 3.0f;
 const float ChunkGenerator::s_minCuboidOverlapSize = 1.f;
 
 const int ChunkGenerator::s_wallStep = 1000;
@@ -107,8 +108,8 @@ void ChunkGenerator::createRawChunk(CuboidChunk & chunk, int numCuboids)
 
     for (int i = 0; i < numCuboids; ++i)
     {
-        float xSize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
-        float ySize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
+        float xSize = std::max(float(sizeXYDistribution(m_generator)), s_minCuboidXYSize);
+        float ySize = std::max(float(sizeXYDistribution(m_generator)), s_minCuboidXYSize);
 
         const glm::vec3 size(
             xSize,

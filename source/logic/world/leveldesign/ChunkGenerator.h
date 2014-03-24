@@ -37,6 +37,7 @@ protected:
     static const float s_startIncreasingDifficulty;
     static const float s_stopIncreasingDifficulty;
 
+    static const float s_minCuboidXYSize;
     static const float s_minCuboidOverlapSize;
 
     static const int s_wallStep;
