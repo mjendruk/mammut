@@ -138,8 +138,6 @@ void Game::showMainMenu()
 
 void Game::endGame(int score)
 {
-    m_gameMechanics.reset();
-    
     if (m_highscoreList.isHighscore(score))
         showNewHighscoreMenu(score);
     else
