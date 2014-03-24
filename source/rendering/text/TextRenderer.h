@@ -7,12 +7,11 @@ class TextRenderer : public SDFRenderer
 {
 public:    
     TextRenderer();
-    virtual ~TextRenderer();
 
     void paint(const QString & text,
                const glm::mat4 & modelMatrix,
                Alignment alignment = kAlignLeft,
-               const glm::vec3 color = glm::vec3(1.0f));
+               const glm::vec3 color = glm::vec3(0.9f));
 
 protected:
     static const float s_lineHeight;

@@ -21,6 +21,8 @@
 #include <logic/menu/MainMenu.h>
 #include <logic/menu/PauseMenu.h>
 #include <logic/menu/NewHighscoreMenu.h>
+#include <logic/menu/CreditsMenu.h>
+#include <logic/menu/ControlsMenu.h>
 
 #include <sound/SoundManager.h>
 
@@ -131,6 +133,8 @@ void Game::showMainMenu()
     
     connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
     connect(menu.get(), &MainMenu::highscorePressed, this, &Game::showHighscoreMenu);
+    connect(menu.get(), &MainMenu::controlsPressed, this, &Game::showControlsMenu);
+    connect(menu.get(), &MainMenu::creditsPressed, this, &Game::showCreditsMenu);
     connect(menu.get(), &MainMenu::quitPressed, this, &Game::quit);
     
     activateMenu(menu, m_blankBackground.get());
@@ -175,6 +179,22 @@ void Game::showGameOverMenu(int score)
     connect(menu.get(), &GameOverMenu::retryPressed, this, &Game::startGame);
     connect(menu.get(), &GameOverMenu::toMainMenuPressed, this, &Game::showMainMenu);
     
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showControlsMenu()
+{
+    auto menu = std::make_shared<ControlsMenu>();
+
+    connect(menu.get(), &ControlsMenu::toMainMenuPressed, this, &Game::showMainMenu);
+    activateMenu(menu, m_blankBackground.get());
+}
+
+void Game::showCreditsMenu()
+{
+    auto menu = std::make_shared<CreditsMenu>();
+
+    connect(menu.get(), &CreditsMenu::toMainMenuPressed, this, &Game::showMainMenu);
     activateMenu(menu, m_blankBackground.get());
 }
 

@@ -9,9 +9,9 @@ class Mammut;
 class MammutPhysics : public PhysicsObject
 {
 public:
-    MammutPhysics(const glm::vec3 & size,
+    MammutPhysics(float radius,
                   const glm::vec3 & translation,
-                  Mammut * mammut);
+                  Mammut & mammut);
     
     virtual ~MammutPhysics();
 
@@ -24,10 +24,10 @@ public:
     void setVelocity(const glm::vec3 & velocity);
 
 protected:
-    void initializeRigidBody(const glm::vec3 & size,
+    void initializeRigidBody(float radius,
                              const glm::vec3 & translation);
 
 protected:
-
-    Mammut * m_mammut;
+    Mammut & m_mammut;
+    
 };
