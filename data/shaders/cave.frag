@@ -16,7 +16,7 @@ smooth in vec4 v_previousPositionInWS;
 
 void main()
 {
-	normalOut = vec4(v_normal, v_depthInES);
+    normalOut = vec4(v_normal, v_depthInES);
     colorOut =  v_color;
 
     vec4 posTemp = viewProjection * v_currentPositionInWS;
