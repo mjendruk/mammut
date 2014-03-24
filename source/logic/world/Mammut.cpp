@@ -6,7 +6,7 @@
 #include <sound/Sound.h>
 #include "Cuboid.h"
 
-const float Mammut::s_radius = 0.1f;
+const float Mammut::s_radius = 0.05f;
 const int Mammut::s_maxNumBoosts = 5;
 const float Mammut::s_startIncreasingSpeed = 100.f;
 const float Mammut::s_stopIncreasingSpeed = 3000.f;
