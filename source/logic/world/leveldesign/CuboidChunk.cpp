@@ -1,5 +1,7 @@
 #include "CuboidChunk.h"
 
+#include <logic/world/Cuboid.h>
+
 CuboidChunk::CuboidChunk()
 {
 }
