@@ -90,3 +90,4 @@ set(EXTRA_LIBS "")
 
 add_definitions("-DNOMINMAX")
 add_definitions("-DQ_COMPILER_INITIALIZER_LISTS")
+add_definitions("-D_USE_MATH_DEFINES")

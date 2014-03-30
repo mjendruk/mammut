@@ -170,8 +170,6 @@ endif()
 
 find_package(Qt5Core    REQUIRED)
 find_package(Qt5Gui     REQUIRED)
-find_package(Qt5Widgets REQUIRED) # this is important in order to get uic working 
-find_package(Qt5OpenGL  REQUIRED)
 
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
@@ -363,27 +361,22 @@ set(MAMMUT_SOURCE_GROUP "Source Files")
 source_group_by_path(${source_path} "\\\\.h$|\\\\.hpp$|\\\\.cpp$|\\\\.cxx$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
     ${MAMMUT_SOURCE_GROUP} ${sources})
 
-# wrap ui files and group wrap headers
-list_extract(uis "\\\\.ui$" ${sources})
-qt5_wrap_ui(uihs ${uis})
-
-source_group_by_path(${CMAKE_CURRENT_BINARY_DIR} "\\\\.h$" 
-    ${MAMMUT_SOURCE_GROUP} ${uihs})
-
 set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")
 set(shaders
-    ${shader_path}/cuboid.vert
     ${shader_path}/cuboid.frag
+    ${shader_path}/cuboid.vert
+    ${shader_path}/fxaa.frag
+    ${shader_path}/Fxaa3_11.h
+    ${shader_path}/horizontal_blur.frag
     ${shader_path}/motionBlur.frag
     ${shader_path}/motionBlurNM.frag
     ${shader_path}/motionBlurTM_horizontal.frag
     ${shader_path}/motionBlurTM_vertical.frag
     ${shader_path}/screenshot_background.frag
-    ${shader_path}/ssao.vert
     ${shader_path}/ssao.frag
-    ${shader_path}/string_drawer.vert
+    ${shader_path}/ssao.vert
     ${shader_path}/string_drawer.frag
-    ${shader_path}/horizontal_blur.frag
+    ${shader_path}/string_drawer.vert
     ${shader_path}/vertical_blur.frag
 )
 
@@ -394,7 +387,7 @@ source_group_by_path(${shader_path} "\\\\.vert$|\\\\.frag$"
 # Build library
 add_executable(${target} ${sources} ${shaders} ${uihs})
 
-qt5_use_modules(${target} OpenGL Gui Widgets)
+qt5_use_modules(${target} Gui)
 
 target_link_libraries(${target} 
     ${OPENGL_LIBRARIES}
@@ -418,7 +411,6 @@ set_target_properties(${target}
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
 add_definitions("-DGLM_SWIZZLE")
-add_definitions("-D_USE_MATH_DEFINES")
 
 # Deployment
 install(TARGETS ${target}

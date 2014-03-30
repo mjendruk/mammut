@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QApplication>
+#include <QGuiApplication>
 
 // Application initializes Application strings from CMake generated Meta.
 
-class AbstractApplication : public QApplication
+class AbstractApplication : public QGuiApplication
 {
 public:
     AbstractApplication(
