@@ -3,6 +3,8 @@ mammut
 
 Highspeed-Gravity Racer for Game Programmig Course at HPI
 
+__Homepage:__ http://gameprogramming.hpi3d.de/201314/mammut/
+
 ### Dependencies
 
 The following dev-libraries and programs need to be provided for correct CMake configuration:
