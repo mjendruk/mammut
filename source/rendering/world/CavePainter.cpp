@@ -22,9 +22,9 @@ void CavePainter::initialize()
     m_program = new glow::Program();
 
     glow::Shader * m_fragShader = glowutils::createShaderFromFile(
-	GL_FRAGMENT_SHADER,  "data/shaders/cuboid.frag");
+	GL_FRAGMENT_SHADER,  "data/shaders/cave.frag");
     glow::Shader * m_vertShader = glowutils::createShaderFromFile(
-	GL_VERTEX_SHADER, "data/shaders/cuboid.vert");
+	GL_VERTEX_SHADER, "data/shaders/cave.vert");
     m_program->attach(m_vertShader, m_fragShader);
     m_program->link();
 }
@@ -44,6 +44,5 @@ void CavePainter::paint(DrawableInterface & drawable, const glm::mat4 & modelMat
 {
     m_program->setUniform("model", modelMatrix);
     m_program->setUniform("prevModel", prevModelMatrix);
-    m_program->setUniform("containsBoost", false);
     drawable.draw();
 }

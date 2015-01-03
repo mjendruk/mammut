@@ -2,13 +2,11 @@
 
 #include <random>
 
-#include <QSharedPointer>
 #include <QList>
-#include <QMap>
 
 #include <glm/glm.hpp>
 
-#include "CuboidChunk.h"
+class CuboidChunk;
 
 class LevelStartChunkGenerator
 {
@@ -17,7 +15,7 @@ public:
     ~LevelStartChunkGenerator();
 
     bool hasNextChunk();
-    QSharedPointer<CuboidChunk> nextChunk();
+    CuboidChunk * nextChunk();
 
 protected: 
     enum class Layout { single, parallel, displaced, count };
@@ -42,7 +40,7 @@ protected:
     static const float s_minSmallSize;
     static const float s_minLargeSize;
 
-    QList<QSharedPointer<CuboidChunk>> m_chunkList;
+    QList<CuboidChunk *> m_chunkList;
 
     std::mt19937 m_generator;
     std::uniform_int_distribution<> m_layoutDistribution;

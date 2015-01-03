@@ -1,6 +1,6 @@
 #include "CuboidChunk.h"
 
-#include "Cuboid.h"
+#include <logic/world/Cuboid.h>
 
 CuboidChunk::CuboidChunk()
 {
@@ -8,7 +8,6 @@ CuboidChunk::CuboidChunk()
 
 CuboidChunk::~CuboidChunk()
 {
-    qDeleteAll(m_cuboids);
 }
 
 void CuboidChunk::add(Cuboid * cuboid)
@@ -16,13 +15,13 @@ void CuboidChunk::add(Cuboid * cuboid)
     m_cuboids << cuboid;
 }
 
-
 void CuboidChunk::remove(int index)
 {
+    delete m_cuboids[index];
     m_cuboids.removeAt(index);
 }
 
-const QList<Cuboid *> & CuboidChunk::cuboids() const
+QList<Cuboid *> & CuboidChunk::cuboids()
 {
     return m_cuboids;
 }

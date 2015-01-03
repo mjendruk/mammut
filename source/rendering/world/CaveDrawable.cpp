@@ -9,6 +9,7 @@
 #include <glow/VertexAttributeBinding.h>
 
 #include <logic/world/Cave.h>
+#include <Util.h>
 
 
 const int CaveDrawable::s_verticesPerRing = 20;
@@ -151,7 +152,8 @@ void CaveDrawable::addTwoRings()
 void CaveDrawable::rebuildGPUData()
 {
     buildGPUVertices();
-    buildNormals();
+    m_normals.clear();
+    Util::generateNormals(m_GPUVertices, m_normals);
 
     m_vertexBuffer->setData(m_GPUVertices);
     m_normalBuffer->setData(m_normals);
@@ -163,21 +165,5 @@ void CaveDrawable::buildGPUVertices()
     m_GPUVertices.clear();
     for (int i : m_indices) {
         m_GPUVertices.push_back(m_vertices[i] + zShiftVector);
-    }
-}
-
-void CaveDrawable::buildNormals()
-{
-    m_normals.clear();
-    for (int i = 0; i < m_GPUVertices.size(); i += 3) {
-
-        glm::vec3 ab = m_GPUVertices.at(i + 1) - m_GPUVertices.at(i);
-        glm::vec3 ac = m_GPUVertices.at(i + 2) - m_GPUVertices.at(i);
-
-        glm::vec3 normal = glm::normalize(glm::cross(ab, ac));
-
-        m_normals.push_back(normal);
-        m_normals.push_back(normal);
-        m_normals.push_back(normal);
     }
 }

@@ -3,12 +3,19 @@
 #include <chrono>
 
 #include <QKeyEvent>
+#include <QTimer>
+
+#include <glowutils/AxisAlignedBoundingBox.h>
 
 #include <sound/SoundManager.h>
+#include "tets/Tet.h"
+#include "tets/TetGenerator.h"
 #include "Cuboid.h"
 #include <PerfCounter.h>
 
 const float GameMechanics::s_zResetDistance = 800.f;
+const float GameMechanics::s_cuboidDeletionDistance = 100.0f;
+const float GameMechanics::s_cuboidCreationDistance = 700.0f;
 
 GameMechanics::GameMechanics()
 :   m_chunkGenerator(std::chrono::system_clock::now().time_since_epoch().count())
@@ -19,31 +26,38 @@ GameMechanics::GameMechanics()
 ,   m_backgroundLoop(Sound::kLoop, true)
 {
     connectSignals();
-    
-    for (int i = 0; i < 10; ++i)
-    {
-        m_chunkList << m_chunkGenerator.nextChunk();
-        for (Cuboid * cuboid : m_chunkList.last()->cuboids())
-            m_physicsWorld.addObject(cuboid);
-    }
+
+    // QTimer::singleShot(1500, this, SLOT(splitOneCuboid()));
+
+    addAndRemoveCuboids();
     
     m_physicsWorld.addObject(m_mammut.physics());
+    m_physicsWorld.setMammutPhysics(m_mammut.physics());
     m_physicsWorld.changeGravity(PhysicsWorld::kGravityDown);
 }
 
 GameMechanics::~GameMechanics()
 {
-    forEachCuboid([this](Cuboid * cuboid) {
+    waitForTetGenerator();
+    for (Cuboid * cuboid : m_cuboids)
         m_physicsWorld.removeObject(cuboid);
-    });
+
+    qDeleteAll(m_cuboids);
     
     m_physicsWorld.removeObject(m_mammut.physics());
-    m_backgroundLoop.stop();
+}
+
+void GameMechanics::splitOneCuboid()
+{
+    Cuboid * cuboid = m_cuboids.takeAt(5);
+    m_physicsWorld.removeObject(cuboid);
+    m_bunches << cuboid->splitIntoTets();
 }
 
 void GameMechanics::update(float seconds)
 {
     if (m_gameOver) {
+        m_backgroundLoop.stop();
         emit gameOver(score());
         return;
     }
@@ -54,16 +68,10 @@ void GameMechanics::update(float seconds)
     m_backgroundLoop.setPaused(false);
     m_physicsWorld.stepSimulation(seconds);
     
-    if (m_chunkList.at(1)->cuboids()[0]->position().z > m_camera.center().z) {
-        for (Cuboid * cuboid : m_chunkList.first()->cuboids())
-            m_physicsWorld.removeObject(cuboid);
-        m_chunkList.removeFirst();
+    addAndRemoveCuboids();
 
-        m_chunkList << m_chunkGenerator.nextChunk();
-        for (Cuboid * cuboid : m_chunkList.last()->cuboids()) {
-            m_physicsWorld.addObject(cuboid);
-        }
-    }
+    for (BunchOfTets * bunch : m_bunches)
+        bunch->update(seconds, m_physicsWorld);
 
     if (m_mammut.position().z < -s_zResetDistance)
         zReset();
@@ -105,14 +113,35 @@ void GameMechanics::zReset()
     m_mammut.addZShift(zShift);
     m_cave.addZShift(zShift);
     m_chunkGenerator.addZShift(zShift);
-    forEachCuboid([zShift] (Cuboid * cuboid) {
+    for (Cuboid * cuboid : m_cuboids)
         cuboid->addZShift(zShift);
-    });
 
     m_camera.update(m_mammut.position(), m_mammut.velocity(), 0.0f, normalizedMammutCaveDistance());
 
     m_totalZShift += zShift;
     m_lastZShift = zShift;
+
+    for (BunchOfTets * bunch : m_bunches)
+        bunch->addZShift(zShift);
+
+}
+
+void GameMechanics::addAndRemoveCuboids()
+{
+    float createCuboidsUpTo = m_mammut.position().z - s_cuboidCreationDistance;
+    while (m_cuboids.isEmpty() || m_cuboids.last()->boundingBox().llf().z > createCuboidsUpTo) {
+        QList<Cuboid *> newCuboids = m_chunkGenerator.nextChunk();
+        for (Cuboid * cuboid : newCuboids)
+            m_physicsWorld.addObject(cuboid);
+        m_cuboids << newCuboids;
+    }
+
+    float deleteCuboidsUpTo = m_mammut.position().z + s_cuboidDeletionDistance;
+    while (m_cuboids.first()->boundingBox().llf().z > deleteCuboidsUpTo) {
+        Cuboid * cuboidToRemove = m_cuboids.takeFirst();
+        m_physicsWorld.removeObject(cuboidToRemove);
+        delete cuboidToRemove;
+    }
 }
 
 void GameMechanics::keyPressed(QKeyEvent * event)
@@ -169,6 +198,21 @@ const Cave & GameMechanics::cave() const
     return m_cave;
 }
 
+const QList<Cuboid *> & GameMechanics::cuboids() const
+{
+    return m_cuboids;
+}
+
+
+const QVector<const BunchOfTets *> GameMechanics::bunches() const
+{
+    //constify all the pointers
+    QVector<const BunchOfTets *> temp;
+    for (BunchOfTets * bunch : m_bunches)
+        temp << bunch;
+    return temp;
+}
+
 int GameMechanics::score() const
 {
     return int(m_totalZShift + -m_mammut.position().z);
@@ -179,26 +223,14 @@ float GameMechanics::lastZShift() const
     return m_lastZShift;
 }
 
-void GameMechanics::forEachCuboid(const std::function<void (Cuboid *)> & lambda)
-{
-    for (auto chunk : m_chunkList)
-        for (Cuboid * cuboid : chunk->cuboids())
-            lambda(cuboid);
-}
-
-void GameMechanics::forEachCuboid(const std::function<void(const Cuboid *)> & lambda) const
-{
-    for (auto chunk : m_chunkList)
-        for (Cuboid * cuboid : chunk->cuboids())
-            lambda(cuboid);
-}
-
 void GameMechanics::connectSignals()
 {
     connect(&m_physicsWorld, &PhysicsWorld::simulationTick, this, &GameMechanics::tickUpdate);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_camera, &GameCamera::gravityChangeEvent);
     connect(&m_physicsWorld, &PhysicsWorld::gravityChanged, &m_mammut, &Mammut::gravityChangeEvent);
-    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseEvent);
+    connect(this, &GameMechanics::pause, &m_camera, &GameCamera::pauseSound);
+    connect(this, &GameMechanics::waitForTetGenerator, &TetGenerator::instance(), &TetGenerator::dummySlot, Qt::BlockingQueuedConnection);
+    connect(this, &GameMechanics::gameOver, &m_camera, &GameCamera::stopSound);
     
     connect(&m_mammut, &Mammut::crashed, [this]() {
         m_gameOver = true;

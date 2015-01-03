@@ -7,7 +7,10 @@
 
 #include <glm/glm.hpp>
 
-#include "Cuboid.h"
+#include <logic/world/tets/TetGenerator.h>
+#include <logic/world/Cuboid.h>
+
+#include "CuboidChunk.h"
 
 const int ChunkGenerator::s_numGrammarChunks = 5;
 
@@ -15,6 +18,7 @@ const float ChunkGenerator::s_chunkLength = 70.f;
 const float ChunkGenerator::s_startIncreasingDifficulty = 500.f;
 const float ChunkGenerator::s_stopIncreasingDifficulty = 3500.f;
 
+const float ChunkGenerator::s_minCuboidXYSize = 3.0f;
 const float ChunkGenerator::s_minCuboidOverlapSize = 1.f;
 
 const int ChunkGenerator::s_wallStep = 1000;
@@ -36,44 +40,43 @@ ChunkGenerator::ChunkGenerator(long long seed)
     createBoostDistribution();
 }
 
-QSharedPointer<CuboidChunk> ChunkGenerator::nextChunk()
+QList<Cuboid *> ChunkGenerator::nextChunk()
 {
     // recalculate boostDistribution if necessary
     if (m_numUsedBoostDistributions == s_chunksPerBoostDistribution - 1)
         createBoostDistribution();
 
-    if (m_levelStartChunkGenerator.hasNextChunk()) {
-        m_debugStream << "grammar based chunk";
-        QSharedPointer<CuboidChunk> chunk = m_levelStartChunkGenerator.nextChunk();
-        distributeBoosts(*chunk.data());
-        m_zDistance += s_chunkLength;
-        m_zPosition -= s_chunkLength;
-
-        printDebugStream();
-
-        return chunk;
-    }
-
-    QSharedPointer<CuboidChunk> chunk(new CuboidChunk);
 
     float distanceToNextWall = s_wallStep - int(m_zDistance) % s_wallStep;
+    CuboidChunk * chunk;
 
-    if (distanceToNextWall <= s_chunkLength) {
+    if (m_levelStartChunkGenerator.hasNextChunk()) {
+        m_debugStream << "grammar based chunk";
+        chunk = m_levelStartChunkGenerator.nextChunk();
+        distributeBoosts(*chunk);
+        m_zDistance += s_chunkLength;
+        m_zPosition -= s_chunkLength;
+    }
+    else if (distanceToNextWall <= s_chunkLength) {
+        chunk = new CuboidChunk();
         createWall(
-            *chunk.data(), 
+            *chunk, 
             distanceToNextWall,
             m_zDistance > 2.f * s_wallStep ? false : true);
-
-        printDebugStream();
-
-        return chunk;
     }
-
-    createOrdinaryLevel(*chunk.data());
+    else {
+        chunk = new CuboidChunk();
+        createOrdinaryLevel(*chunk);
+    }
 
     printDebugStream();
 
-    return chunk;
+    for (Cuboid * cuboid : chunk->cuboids())
+        TetGenerator::instance().processCuboidAsync(cuboid);
+    
+    QList<Cuboid *> cuboids = chunk->cuboids();
+    delete chunk;
+    return cuboids;
 }
 
 void ChunkGenerator::createOrdinaryLevel(CuboidChunk & chunk)
@@ -105,8 +108,8 @@ void ChunkGenerator::createRawChunk(CuboidChunk & chunk, int numCuboids)
 
     for (int i = 0; i < numCuboids; ++i)
     {
-        float xSize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
-        float ySize = std::max(float(sizeXYDistribution(m_generator)), 2.0f);
+        float xSize = std::max(float(sizeXYDistribution(m_generator)), s_minCuboidXYSize);
+        float ySize = std::max(float(sizeXYDistribution(m_generator)), s_minCuboidXYSize);
 
         const glm::vec3 size(
             xSize,

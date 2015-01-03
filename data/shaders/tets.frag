@@ -8,7 +8,7 @@ uniform mat4 viewProjection;
 uniform mat4 prevViewProjection;
 
 flat in vec3 v_normal;
-flat in vec3 v_color;
+flat in vec4 v_color;
 smooth in float v_depthInES;
 
 smooth in vec4 v_currentPositionInWS;
@@ -16,14 +16,14 @@ smooth in vec4 v_previousPositionInWS;
 
 void main()
 {
-	normalOut = vec4(v_normal, v_depthInES);
-    colorOut = v_color;
+    normalOut = vec4(v_normal, v_depthInES);
+    colorOut =  clamp(v_color.xyz, 0.0, 1.0);
 
     vec4 posTemp = viewProjection * v_currentPositionInWS;
-    vec4 prevPosTemp = prevViewProjection * v_previousPositionInWS;
+    vec4 prevPosTemp = posTemp;//prevViewProjection * v_previousPositionInWS;
 
     vec2 position = (posTemp.xy / posTemp.w); 
     vec2 prevPosition = (prevPosTemp.xy / prevPosTemp.w); 
 
-    velocityOut = position - prevPosition;
+    velocityOut = vec2(0.0);//position - prevPosition;
 }

@@ -196,7 +196,6 @@ configure_file(${source_path}/mammut-version.h.in mammut-version.h)
 
 set(sources
     ${source_path}/main.cpp
-
     ${source_path}/AbstractApplication.cpp
     ${source_path}/AbstractApplication.h
     ${source_path}/Game.cpp
@@ -209,6 +208,10 @@ set(sources
 
     ${source_path}/logic/Mechanics.cpp
     ${source_path}/logic/Mechanics.h
+    
+    ${source_path}/3rdparty/tetgen/predicates.cxx
+    ${source_path}/3rdparty/tetgen/tetgen.cxx
+    ${source_path}/3rdparty/tetgen/tetgen.h
 
     ${source_path}/logic/highscore/HighscoreList.cpp
     ${source_path}/logic/highscore/HighscoreList.h
@@ -253,18 +256,12 @@ set(sources
 
     ${source_path}/logic/world/Cave.cpp
     ${source_path}/logic/world/Cave.h
-    ${source_path}/logic/world/ChunkGenerator.cpp
-    ${source_path}/logic/world/ChunkGenerator.h
     ${source_path}/logic/world/Cuboid.cpp
     ${source_path}/logic/world/Cuboid.h
-    ${source_path}/logic/world/CuboidChunk.cpp
-    ${source_path}/logic/world/CuboidChunk.h
     ${source_path}/logic/world/GameCamera.cpp
     ${source_path}/logic/world/GameCamera.h
     ${source_path}/logic/world/GameMechanics.cpp
     ${source_path}/logic/world/GameMechanics.h
-    ${source_path}/logic/world/LevelStartChunkGenerator.cpp
-    ${source_path}/logic/world/LevelStartChunkGenerator.h
     ${source_path}/logic/world/Mammut.cpp
     ${source_path}/logic/world/Mammut.h
     ${source_path}/logic/world/MammutPhysics.cpp
@@ -273,6 +270,21 @@ set(sources
     ${source_path}/logic/world/PhysicsObject.h
     ${source_path}/logic/world/PhysicsWorld.cpp
     ${source_path}/logic/world/PhysicsWorld.h
+
+    ${source_path}/logic/world/leveldesign/ChunkGenerator.cpp
+    ${source_path}/logic/world/leveldesign/ChunkGenerator.h
+    ${source_path}/logic/world/leveldesign/CuboidChunk.cpp
+    ${source_path}/logic/world/leveldesign/CuboidChunk.h
+    ${source_path}/logic/world/leveldesign/LevelStartChunkGenerator.cpp
+    ${source_path}/logic/world/leveldesign/LevelStartChunkGenerator.h
+    
+
+    ${source_path}/logic/world/tets/TetGenerator.cpp
+    ${source_path}/logic/world/tets/TetGenerator.h
+    ${source_path}/logic/world/tets/Tet.cpp
+    ${source_path}/logic/world/tets/Tet.h
+    ${source_path}/logic/world/tets/BunchOfTets.cpp
+    ${source_path}/logic/world/tets/BunchOfTets.h
 
     ${source_path}/rendering/Canvas.cpp
     ${source_path}/rendering/Canvas.h
@@ -302,6 +314,10 @@ set(sources
     
     ${source_path}/rendering/world/AbstractPainter.cpp
     ${source_path}/rendering/world/AbstractPainter.h
+    ${source_path}/rendering/world/BunchOfTetsDrawable.cpp
+    ${source_path}/rendering/world/BunchOfTetsDrawable.h
+    ${source_path}/rendering/world/BunchRenderer.cpp
+    ${source_path}/rendering/world/BunchRenderer.h
     ${source_path}/rendering/world/CaveDrawable.cpp
     ${source_path}/rendering/world/CaveDrawable.h
     ${source_path}/rendering/world/CavePainter.cpp
@@ -317,6 +333,12 @@ set(sources
     ${source_path}/rendering/world/Painter.h
     ${source_path}/rendering/world/RenderCamera.cpp
     ${source_path}/rendering/world/RenderCamera.h
+    ${source_path}/rendering/world/TessCuboidDrawable.cpp
+    ${source_path}/rendering/world/TessCuboidDrawable.h
+    ${source_path}/rendering/world/TetPainter.cpp
+    ${source_path}/rendering/world/TetPainter.h
+    ${source_path}/rendering/world/CuboidRenderer.cpp
+    ${source_path}/rendering/world/CuboidRenderer.h
 
     ${source_path}/rendering/world/postprocessing/AbstractPostProcPass.h
     ${source_path}/rendering/world/postprocessing/MotionBlurPass.cpp
@@ -336,7 +358,7 @@ set(sources
 
 # Group source files
 set(MAMMUT_SOURCE_GROUP "Source Files")
-source_group_by_path(${source_path} "\\\\.h$|\\\\.hpp$|\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
+source_group_by_path(${source_path} "\\\\.h$|\\\\.hpp$|\\\\.cpp$|\\\\.cxx$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
     ${MAMMUT_SOURCE_GROUP} ${sources})
 
 set(shader_path "${CMAKE_CURRENT_SOURCE_DIR}/data/shaders")

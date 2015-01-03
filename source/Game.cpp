@@ -128,6 +128,7 @@ void Game::resumeGame()
 
 void Game::showMainMenu()
 {
+    m_gameMechanics.reset();
     auto menu = std::make_shared<MainMenu>();
     
     connect(menu.get(), &MainMenu::startPressed, this, &Game::startGame);
@@ -141,8 +142,6 @@ void Game::showMainMenu()
 
 void Game::endGame(int score)
 {
-    m_gameMechanics.reset();
-    
     if (m_highscoreList.isHighscore(score))
         showNewHighscoreMenu(score);
     else

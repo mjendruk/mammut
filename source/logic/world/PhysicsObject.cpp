@@ -36,6 +36,17 @@ void PhysicsObject::addZShift(float zShift)
     m_rigidBody->translate(btVector3(0.0f, 0.0f, zShift));
 }
 
+void PhysicsObject::translate(const glm::vec3 & translation)
+{
+    btVector3 btTranslation = Util::toBtVec3(translation);
+    btTransform transform;
+    m_motionState->getWorldTransform(transform);
+    transform.setOrigin(transform.getOrigin() + btTranslation);
+    m_motionState->setWorldTransform(transform);
+
+    m_rigidBody->translate(btTranslation);
+}
+
 glm::mat4 PhysicsObject::rotation() const
 {
     btTransform transform;

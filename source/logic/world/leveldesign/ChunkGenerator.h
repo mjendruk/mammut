@@ -2,21 +2,20 @@
 
 #include <random>
 
-#include <QSharedPointer>
 #include <QStringList>
-
-#include <glm/glm.hpp>
+#include <QList>
 
 #include "LevelStartChunkGenerator.h"
 
 class CuboidChunk;
+class Cuboid;
 
 class ChunkGenerator
 {
 public:
     ChunkGenerator(long long seed = 2156);
 
-    QSharedPointer<CuboidChunk> nextChunk();
+    QList<Cuboid *> nextChunk();
 
     void addZShift(float zShift);
 
@@ -38,6 +37,7 @@ protected:
     static const float s_startIncreasingDifficulty;
     static const float s_stopIncreasingDifficulty;
 
+    static const float s_minCuboidXYSize;
     static const float s_minCuboidOverlapSize;
 
     static const int s_wallStep;

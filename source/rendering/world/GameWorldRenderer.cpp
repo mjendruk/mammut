@@ -18,6 +18,7 @@
 #include <logic/world/GameMechanics.h>
 #include <logic/world/GameCamera.h>
 
+#include "BunchOfTetsDrawable.h"
 #include "Util.h"
 #include "PerfCounter.h"
 
@@ -81,16 +82,15 @@ void GameWorldRenderer::drawGeometry()
     
     // set the default view space depth to - s_farPlane
     m_gBufferFBO->clearBuffer(GL_COLOR, 0, glm::vec4(0.0f, 0.0f, 0.0f, -s_farPlane));
-    
-    
-    m_gameMechanics->forEachCuboid([this](const Cuboid * cuboid) {
-        // modelMatrix and previous modelMatrix are the same until they will begin to move (e.g. destruction) [motionBlur]
-        m_painter.paint(m_cuboidDrawable, cuboid->modelTransform(), cuboid->modelTransform(), cuboid->containsBoost());
-    });
+
+    m_cuboidRenderer.draw(m_gameMechanics->cuboids(), m_painter);
+
+    m_bunchRenderer.draw(m_gameMechanics->bunches(), m_tetPainter);
     
     // cave does not move at the moment, so model and prevModel are the same [motionBlur]
     m_cavePainter.paint(*m_caveDrawable, glm::mat4(), glm::mat4());
     m_gBufferFBO->unbind();
+
     PerfCounter::endGL("geom");
 }
 
@@ -205,6 +205,11 @@ void GameWorldRenderer::updatePainters()
 
     m_cavePainter.setViewProjectionUniforms(m_camera.viewProjection(), m_previousViewProjection);
     m_cavePainter.setViewUniform(m_camera.view());
+
+    m_tetPainter.setViewProjectionUniform(m_camera.viewProjection());
+    m_tetPainter.setViewUniform(m_camera.view());
+    m_tetPainter.setNearFarUniform(glm::vec2(s_nearPlane, s_farPlane));
+    m_tetPainter.setEyeUniform(m_camera.eye());
 }
 
 int GameWorldRenderer::fps() const
@@ -217,5 +222,7 @@ void GameWorldRenderer::setGameMechanics(const GameMechanics * mechanics)
     assert(mechanics != nullptr);
     m_gameMechanics = mechanics;
     m_caveDrawable.reset(new CaveDrawable(mechanics->cave()));
+    m_cuboidRenderer.reset();
+    m_bunchRenderer.reset();
 }
 

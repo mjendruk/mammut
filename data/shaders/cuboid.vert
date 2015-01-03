@@ -5,44 +5,59 @@ uniform mat4 prevViewProjection;
 uniform mat4 model;
 uniform mat4 prevModel;
 uniform mat4 view;
+uniform mat3 normalMatrix;
+uniform bool containsBoost;
 
 in vec3 a_vertex;
 in vec3 a_normal;
 
 flat out vec3 v_normal;
-flat out vec4 v_color;
+flat out vec3 v_color;
 smooth out float v_depthInES;
 
 smooth out vec4 v_currentPositionInWS;
 smooth out vec4 v_previousPositionInWS;
 
-vec3 normalToWorldSpace(vec3 normal)
+struct ColorNormal
 {
-    vec3 transformed = vec3(model * vec4(normal, 0.0));
-    return normalize(transformed);
-}
+    vec3 color;
+    vec3 normal;
+};
 
-vec3 light(vec3 lightColor, vec3 lightNormal, vec3 vertexNormal)
+vec3 calculateColor()
 {
-    return dot(normalToWorldSpace(vertexNormal),
-               normalize(lightNormal)) 
-           * lightColor;
+    ColorNormal colorNormals[3];
+
+    if (containsBoost)
+    {
+        colorNormals = ColorNormal[3](
+            ColorNormal(vec3(0.5), vec3(1.0, 0.0, 0.0)),
+            ColorNormal(vec3(0.5), vec3(0.0, 1.0, 0.0)),
+            ColorNormal(vec3(0.5), vec3(0.0, 0.0, 1.0))
+            );
+    } 
+    else
+    {
+        colorNormals = ColorNormal[3](
+            ColorNormal(vec3(0.03, 0.55, 0.6), vec3(1.0, 0.0, 0.0)),
+            ColorNormal(vec3(0.75, 0.23, 0.19), vec3(0.0, 1.0, 0.0)),
+            ColorNormal(vec3(0.76, 0.6, 0.34), vec3(0.0, 0.0, 1.0))
+            );
+    }
+
+    vec3 color = vec3(0.0);
+
+    for (int i = 0; i < colorNormals.length(); ++i)
+    {
+        color += colorNormals[i].color * abs(dot(normalize(colorNormals[i].normal), a_normal));
+    }
+
+    return clamp(color, 0.0, 1.0);
 }
 
 void main()
 {
-    v_color = vec4(clamp(
-                  vec3(0.4) + 
-                  light(vec3(1.0, 0.3, 0.0),
-                        vec3(1.0, -1.0, 1.0),
-                        a_normal) +
-                  light(vec3(0.5, 0.8, 0.5), 
-                        vec3(-1.0,-1.0, 1.0),
-                        a_normal) +
-                  light(vec3(0.5, 0.8, 0.5),
-                        vec3(0.0, 1.0, 0.0),
-                        a_normal)
-              , 0.0, 1.0), 1.0);
+    v_color = calculateColor();
 
     vec4 worldVertex = model * vec4(a_vertex, 1.0);
 
